@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("//foundation/communication/bluetooth/bluetooth.gni")
+import("//foundation/communication/bluetooth_service/bluetooth.gni")
 
 module_output_path = "bluetooth/framework_test/opp"
 
@@ -55,7 +55,7 @@ ohos_unittest("btfw_opp_unit_test") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 }
@@ -66,7 +66,7 @@ group("unittest") {
 
   deps = []
 
-  if (is_phone_product && bluetooth_opp_feature) {
+  if (is_phone_product && bluetooth_service_opp_feature) {
     deps += [ ":btfw_opp_unit_test" ]
   }
 }

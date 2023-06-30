@@ -27,34 +27,34 @@ group("etc") {
 ohos_prebuilt_etc("bt_config.xml") {
   source = "bt_config.xml"
   relative_install_dir = "bluetooth"
-  part_name = "bluetooth"
+  part_name = "bluetooth_service"
   subsystem_name = "communication"
 }
 
 ohos_prebuilt_etc("bt_device_config.xml") {
   source = "bt_device_config.xml"
   relative_install_dir = "bluetooth"
-  part_name = "bluetooth"
+  part_name = "bluetooth_service"
   subsystem_name = "communication"
 }
 
 ohos_prebuilt_etc("bt_device_info.xml") {
   source = "bt_device_info.xml"
   relative_install_dir = "bluetooth"
-  part_name = "bluetooth"
+  part_name = "bluetooth_service"
   subsystem_name = "communication"
 }
 
 ohos_prebuilt_etc("bt_profile_config.xml") {
   source = "bt_profile_config.xml"
   relative_install_dir = "bluetooth"
-  part_name = "bluetooth"
+  part_name = "bluetooth_service"
   subsystem_name = "communication"
 }
 
 ohos_prebuilt_etc("bluetooth_service_cfg") {
   source = "bluetooth_service.cfg"
   relative_install_dir = "init"
-  part_name = "bluetooth"
+  part_name = "bluetooth_service"
   subsystem_name = "communication"
 }

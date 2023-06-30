@@ -47,11 +47,8 @@ bool PbapPseAppParams::CheckParams(const ObexTlvParamters &obexTlvParamters)
         }
         int expectLen = LENS_MAP.at(tlv->GetTagId());
         if (expectLen != -1 && expectLen != tlv->GetLen()) {
-            PBAP_PSE_LOG_ERROR(
-                "Wrong Application Parameters header Length for TagId[%x]:expect is [%{public}d], actual is [%u].",
-                tlv->GetTagId(),
-                expectLen,
-                tlv->GetLen());
+            PBAP_PSE_LOG_ERROR("Wrong Application Parameters header Length for TagId[%{public}x]:expect "
+                "is [%{public}d], actual is [%{public}u].", tlv->GetTagId(), expectLen, tlv->GetLen());
             return false;
         }
     }

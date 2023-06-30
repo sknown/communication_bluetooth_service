@@ -15,11 +15,11 @@ import("//build/ohos.gni")
 import("//foundation/communication/bluetooth/bluetooth.gni")
 
 SUBSYSTEM_DIR = "//foundation/communication"
-PART_DIR = "$SUBSYSTEM_DIR/bluetooth/services/bluetooth"
+PART_DIR = "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth"
 BT_SERVICE_DIR = "$PART_DIR/service"
 
 declare_args() {
-  bluetooth_avrcp_avsession = false
+  bluetooth_service_avrcp_avsession = false
 }
 
 ServiceBleScanFilter = [ "src/ble/ble_scan_filter/src/ble_scan_filter_lsf.cpp" ]
@@ -213,7 +213,7 @@ ohos_shared_library("btservice") {
   configs = [ ":btservice_config" ]
   public_configs = [ ":btservice_public_config" ]
 
-  if (bluetooth_avrcp_avsession) {
+  if (bluetooth_service_avrcp_avsession) {
     defines = [ "AVRCP_AVSESSION" ]
   }
 
@@ -229,15 +229,15 @@ ohos_shared_library("btservice") {
   sources += ServiceDISrc
   sources += ServicePermissionSrc
 
-  if (bluetooth_a2dp_sink_feature) {
+  if (bluetooth_service_a2dp_sink_feature) {
     sources += [ "src/a2dp_snk/a2dp_snk_service.cpp" ]
   }
 
-  if (bluetooth_a2dp_source_feature) {
+  if (bluetooth_service_a2dp_source_feature) {
     sources += [ "src/a2dp_src/a2dp_src_service.cpp" ]
   }
 
-  if (bluetooth_avrcp_ct_feature) {
+  if (bluetooth_service_avrcp_ct_feature) {
     sources += [
       "src/avrcp_ct/avrcp_ct_browse.cpp",
       "src/avrcp_ct/avrcp_ct_connection.cpp",
@@ -255,7 +255,7 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_avrcp_tg_feature) {
+  if (bluetooth_service_avrcp_tg_feature) {
     sources += [
       "src/avrcp_tg/avrcp_tg_browse.cpp",
       "src/avrcp_tg/avrcp_tg_connection.cpp",
@@ -273,7 +273,7 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_hfp_ag_feature) {
+  if (bluetooth_service_hfp_ag_feature) {
     sources += [
       "src/hfp_ag/hfp_ag_audio_connection.cpp",
       "src/hfp_ag/hfp_ag_command_parser.cpp",
@@ -295,7 +295,7 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_hfp_hf_feature) {
+  if (bluetooth_service_hfp_hf_feature) {
     sources += [
       "src/hfp_hf/hfp_hf_audio_connection.cpp",
       "src/hfp_hf/hfp_hf_call_manager.cpp",
@@ -316,7 +316,7 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_map_client_feature) {
+  if (bluetooth_service_map_client_feature) {
     sources += [
       "src/map_mce/map_mce_data_analyse.cpp",
       "src/map_mce/map_mce_device_ctrl.cpp",
@@ -330,7 +330,7 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_map_server_feature) {
+  if (bluetooth_service_map_server_feature) {
     sources += [
       "src/map_mse/map_mse_bmsg.cpp",
       "src/map_mse/map_mse_event.cpp",
@@ -345,7 +345,7 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_pbap_client_feature) {
+  if (bluetooth_service_pbap_client_feature) {
     sources += [
       "src/pbap_pce/pbap_pce_app_params.cpp",
       "src/pbap_pce/pbap_pce_base_state.cpp",
@@ -361,7 +361,7 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_pbap_server_feature) {
+  if (bluetooth_service_pbap_server_feature) {
     sources += [
       "src/pbap_pse/pbap_pse_app_params.cpp",
       "src/pbap_pse/pbap_pse_gap.cpp",
@@ -373,7 +373,7 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_hid_host_feature) {
+  if (bluetooth_service_hid_host_feature) {
     sources += [
       "src/hid_host/hid_host_hogp.cpp",
       "src/hid_host/hid_host_l2cap_connection.cpp",
@@ -384,7 +384,7 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_pan_feature) {
+  if (bluetooth_service_pan_feature) {
     sources += [
       "src/pan/pan_bnep.cpp",
       "src/pan/pan_network.cpp",
@@ -394,7 +394,7 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_opp_feature) {
+  if (bluetooth_service_opp_feature) {
     sources += [
       "src/opp/opp_gap_client.cpp",
       "src/opp/opp_gap_server.cpp",
@@ -428,12 +428,12 @@ ohos_shared_library("btservice") {
     "core_service:tel_core_service_api",
     "hdf_core:libhdi",
     "hisysevent_native:libhisysevent",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
   ]
 
-  if (bluetooth_avrcp_avsession) {
+  if (bluetooth_service_avrcp_avsession) {
     external_deps += [
       "ability_runtime:wantagent_innerkits",
       "av_session:avsession_client",
@@ -443,7 +443,7 @@ ohos_shared_library("btservice") {
   }
 
   subsystem_name = "communication"
-  part_name = "bluetooth"
+  part_name = "bluetooth_service"
 }
 
 SBC_CODEC_DIR = "$BT_SERVICE_DIR/src/gavdp/a2dp_codec/sbclib"
@@ -463,9 +463,9 @@ ohos_shared_library("btsbc") {
     "//third_party/bounds_checking_function:libsec_shared",
   ]
 
-  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
+  external_deps = [ "hilog:libhilog" ]
 
   cflags = [ "-Wno-array-bounds" ]
   subsystem_name = "communication"
-  part_name = "bluetooth"
+  part_name = "bluetooth_service"
 }

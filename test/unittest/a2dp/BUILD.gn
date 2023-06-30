@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("//foundation/communication/bluetooth/bluetooth.gni")
+import("//foundation/communication/bluetooth_service/bluetooth.gni")
 
 module_output_path = "bluetooth/framework_test/a2dp/"
 SUBSYSTEM_DIR = "//foundation/communication"
@@ -56,7 +56,7 @@ ohos_unittest("btfw_a2dp_snk_unit_test") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 }
@@ -77,7 +77,7 @@ ohos_unittest("btfw_a2dp_src_unit_test") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 }
@@ -89,11 +89,11 @@ group("unittest") {
   deps = []
 
   if (is_phone_product) {
-    if (bluetooth_a2dp_sink_feature) {
+    if (bluetooth_service_a2dp_sink_feature) {
       deps += [ ":btfw_a2dp_snk_unit_test" ]
     }
 
-    if (bluetooth_a2dp_source_feature) {
+    if (bluetooth_service_a2dp_source_feature) {
       deps += [ ":btfw_a2dp_src_unit_test" ]
     }
   }

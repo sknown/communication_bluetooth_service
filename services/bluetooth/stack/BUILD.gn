@@ -15,7 +15,7 @@ import("//build/ohos.gni")
 import("//build/ohos_var.gni")
 
 SUBSYSTEM_DIR = "//foundation/communication"
-PART_DIR = "$SUBSYSTEM_DIR/bluetooth/services/bluetooth"
+PART_DIR = "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth"
 
 PlatformSrc = [
   "platform/src/alarm.c",
@@ -232,8 +232,8 @@ ohos_shared_library("btstack") {
     "//third_party/openssl:libcrypto_shared",
   ]
 
-  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
+  external_deps = [ "hilog:libhilog" ]
 
   subsystem_name = "communication"
-  part_name = "bluetooth"
+  part_name = "bluetooth_service"
 }
