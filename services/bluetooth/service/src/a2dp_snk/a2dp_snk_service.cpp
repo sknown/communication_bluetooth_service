@@ -30,12 +30,12 @@ IProfileA2dp *IProfileA2dp::GetSnkProfile()
 
 A2dpSnkService::A2dpSnkService() : A2dpService(g_name, g_version, g_role)
 {
-    HILOGI("enter");
+    HILOGI("enter!");
 }
 
 A2dpSnkService *A2dpSnkService::GetProfile(void)
 {
-    HILOGI("enter");
+    HILOGI("enter!");
 
     static A2dpSnkService service;
     return &service;
