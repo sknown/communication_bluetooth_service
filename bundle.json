@@ -1,0 +1,110 @@
+{
+  "name": "@ohos/bluetooth_service",
+  "version": "3.2.0",
+  "description": "Provides basic Bluetooth and BLE functions for applications",
+  "homePage": "https://gitee.com/openharmony",
+  "license": "Apache License 2.0",
+  "repository": "https://gitee.com/openharmony/communication_bluetooth",
+  "domain": "os",
+  "language": "",
+  "publishAs": "code-segment",
+  "private": false,
+  "scripts": {},
+  "tags": [
+    "foundation"
+  ],
+  "keywords": [
+    "communication",
+    "bluetooth_service"
+  ],
+  "envs": [],
+  "dirs": [],
+  "author": {
+    "name": "",
+    "email": "",
+    "url": ""
+  },
+  "contributors": [
+    {
+      "name": "",
+      "email": "",
+      "url": ""
+    }
+  ],
+  "segment": {
+    "destPath": "foundation/communication/bluetooth_service"
+  },
+  "component": {
+    "name": "bluetooth_service",
+    "subsystem": "communication",
+    "syscap": [
+      "SystemCapability.Communication.Bluetooth.Core",
+      "SystemCapability.Communication.Bluetooth.Lite"
+    ],
+    "features": [
+      "bluetooth_avrcp_avsession",
+      "bluetooth_a2dp_sink_feature",
+      "bluetooth_a2dp_source_feature",
+      "bluetooth_avrcp_ct_feature",
+      "bluetooth_avrcp_tg_feature",
+      "bluetooth_hfp_ag_feature",
+      "bluetooth_hfp_hf_feature",
+      "bluetooth_hid_host_feature",
+      "bluetooth_pan_feature",
+      "bluetooth_pbap_client_feature",
+      "bluetooth_pbap_server_feature",
+      "bluetooth_opp_feature",
+      "bluetooth_map_client_feature",
+      "bluetooth_map_server_feature"
+    ],
+    "adapted_system_type": [
+      "standard"
+    ],
+    "rom": "4.5MB",
+    "ram": "7.5MB",
+    "hisysevent_config": [
+      "//foundation/communication/bluetooth/hisysevent.yaml"
+    ],
+    "deps": {
+      "components": [
+        "ability_runtime",
+        "base",
+        "hilog",
+        "hisysevent_native",
+        "hiviewdfx_hilog_native",
+        "ipc",
+        "samgr_proxy",
+        "samgr"
+      ],
+      "third_party": [
+        "googletest",
+        "libuv",
+        "libxml2",
+        "openssl"
+      ]
+    },
+    "build": {
+      "group_type": {
+        "base_group": [],
+        "fwk_group": [],
+        "service_group": [
+          "//foundation/communication/bluetooth/sa_profile:communication_bluetooth_sa_profile",
+          "//foundation/communication/bluetooth/services/bluetooth/server:bluetooth_server",
+          "//foundation/communication/bluetooth/services/bluetooth/service:btsbc"
+        ]
+      },
+      "inner_api": [],
+      "test": [
+        "//foundation/communication/bluetooth/test/unittest/spp:unittest",
+        "//foundation/communication/bluetooth/test/unittest/host:unittest",
+        "//foundation/communication/bluetooth/test/unittest/ble:unittest",
+        "//foundation/communication/bluetooth/test/unittest/hid:unittest",
+        "//foundation/communication/bluetooth/test/unittest/pan:unittest",
+        "//foundation/communication/bluetooth/test/unittest/opp:unittest",
+        "//foundation/communication/bluetooth/test/unittest/gatt_c:unittest",
+        "//foundation/communication/bluetooth/test/fuzztest/host:fuzztest",
+        "//foundation/communication/bluetooth/test/example/bluetoothtest:bluetoothtest"
+      ]
+    }
+  }
+}
