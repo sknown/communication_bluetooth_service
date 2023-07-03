@@ -20,7 +20,7 @@ SUBSYSTEM_DIR = "//foundation/communication"
 ##############################fuzztest##########################################
 ohos_fuzztest("CancelPairedDeviceFuzzTest") {
   module_out_path = module_output_path
-  fuzz_config_file = "//foundation/communication/bluetooth/test/fuzztest/host/cancelpaireddevice_fuzzer"
+  fuzz_config_file = "//foundation/communication/bluetooth_service/test/fuzztest/host/cancelpaireddevice_fuzzer"
 
   cflags = [
     "-g",
@@ -37,7 +37,7 @@ ohos_fuzztest("CancelPairedDeviceFuzzTest") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
   ]
 }
 

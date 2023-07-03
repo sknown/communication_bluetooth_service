@@ -42,20 +42,20 @@
       "SystemCapability.Communication.Bluetooth.Lite"
     ],
     "features": [
-      "bluetooth_avrcp_avsession",
-      "bluetooth_a2dp_sink_feature",
-      "bluetooth_a2dp_source_feature",
-      "bluetooth_avrcp_ct_feature",
-      "bluetooth_avrcp_tg_feature",
-      "bluetooth_hfp_ag_feature",
-      "bluetooth_hfp_hf_feature",
-      "bluetooth_hid_host_feature",
-      "bluetooth_pan_feature",
-      "bluetooth_pbap_client_feature",
-      "bluetooth_pbap_server_feature",
-      "bluetooth_opp_feature",
-      "bluetooth_map_client_feature",
-      "bluetooth_map_server_feature"
+      "bluetooth_service_avrcp_avsession",
+      "bluetooth_service_a2dp_sink_feature",
+      "bluetooth_service_a2dp_source_feature",
+      "bluetooth_service_avrcp_ct_feature",
+      "bluetooth_service_avrcp_tg_feature",
+      "bluetooth_service_hfp_ag_feature",
+      "bluetooth_service_hfp_hf_feature",
+      "bluetooth_service_hid_host_feature",
+      "bluetooth_service_pan_feature",
+      "bluetooth_service_pbap_client_feature",
+      "bluetooth_service_pbap_server_feature",
+      "bluetooth_service_opp_feature",
+      "bluetooth_service_map_client_feature",
+      "bluetooth_service_map_server_feature"
     ],
     "adapted_system_type": [
       "standard"
@@ -71,7 +71,6 @@
         "base",
         "hilog",
         "hisysevent_native",
-        "hiviewdfx_hilog_native",
         "ipc",
         "samgr_proxy",
         "samgr"
@@ -88,22 +87,22 @@
         "base_group": [],
         "fwk_group": [],
         "service_group": [
-          "//foundation/communication/bluetooth/sa_profile:communication_bluetooth_sa_profile",
-          "//foundation/communication/bluetooth/services/bluetooth/server:bluetooth_server",
-          "//foundation/communication/bluetooth/services/bluetooth/service:btsbc"
+          "//foundation/communication/bluetooth_service/sa_profile:communication_bluetooth_service_sa_profile",
+          "//foundation/communication/bluetooth_service/services/bluetooth/server:bluetooth_server",
+          "//foundation/communication/bluetooth_service/services/bluetooth/service:btsbc"
         ]
       },
       "inner_api": [],
       "test": [
-        "//foundation/communication/bluetooth/test/unittest/spp:unittest",
-        "//foundation/communication/bluetooth/test/unittest/host:unittest",
-        "//foundation/communication/bluetooth/test/unittest/ble:unittest",
-        "//foundation/communication/bluetooth/test/unittest/hid:unittest",
-        "//foundation/communication/bluetooth/test/unittest/pan:unittest",
-        "//foundation/communication/bluetooth/test/unittest/opp:unittest",
-        "//foundation/communication/bluetooth/test/unittest/gatt_c:unittest",
-        "//foundation/communication/bluetooth/test/fuzztest/host:fuzztest",
-        "//foundation/communication/bluetooth/test/example/bluetoothtest:bluetoothtest"
+        "//foundation/communication/bluetooth_service/test/unittest/spp:unittest",
+        "//foundation/communication/bluetooth_service/test/unittest/host:unittest",
+        "//foundation/communication/bluetooth_service/test/unittest/ble:unittest",
+        "//foundation/communication/bluetooth_service/test/unittest/hid:unittest",
+        "//foundation/communication/bluetooth_service/test/unittest/pan:unittest",
+        "//foundation/communication/bluetooth_service/test/unittest/opp:unittest",
+        "//foundation/communication/bluetooth_service/test/unittest/gatt_c:unittest",
+        "//foundation/communication/bluetooth_service/test/fuzztest/host:fuzztest",
+        "//foundation/communication/bluetooth_service/test/example/bluetoothtest:bluetoothtest"
       ]
     }
   }

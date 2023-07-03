@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/test.gni")
-import("//foundation/communication/bluetooth/bluetooth.gni")
+import("//foundation/communication/bluetooth_service/bluetooth.gni")
 
 module_output_path = "bluetooth/framework_test/pbap/"
 SUBSYSTEM_DIR = "//foundation/communication"
@@ -58,7 +58,7 @@ ohos_unittest("btfw_pbap_client_test") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 }
@@ -81,7 +81,7 @@ ohos_unittest("btfw_pbap_server_test") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 }
@@ -93,11 +93,11 @@ group("unittest") {
   deps = []
 
   if (is_phone_product) {
-    if (bluetooth_pbap_client_feature) {
+    if (bluetooth_service_pbap_client_feature) {
       deps += [ ":btfw_pbap_client_test" ]
     }
 
-    if (bluetooth_pbap_server_feature) {
+    if (bluetooth_service_pbap_server_feature) {
       deps += [ ":btfw_pbap_server_test" ]
     }
   }

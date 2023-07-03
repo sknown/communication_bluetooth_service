@@ -13,10 +13,10 @@
 
 import("//build/ohos.gni")
 import("//build/ohos_var.gni")
-import("//foundation/communication/bluetooth/bluetooth.gni")
+import("//foundation/communication/bluetooth_service/bluetooth.gni")
 
 SUBSYSTEM_DIR = "//foundation/communication"
-BT_ROOT = "//foundation/communication/bluetooth/services/bluetooth"
+BT_ROOT = "//foundation/communication/bluetooth_service/services/bluetooth"
 
 ohos_shared_library("bluetooth_server") {
   sanitize = {
@@ -28,10 +28,10 @@ ohos_shared_library("bluetooth_server") {
     "include",
     "//foundation/communication/bluetooth/frameworks/inner/common",
     "//foundation/communication/bluetooth/interfaces/inner_api/include",
-    "//foundation/communication/bluetooth/services/bluetooth/service/include",
-    "//foundation/communication/bluetooth/services/bluetooth/service/src/ble",
-    "//foundation/communication/bluetooth/services/bluetooth/service/src/permission",
-    "//foundation/communication/bluetooth/services/bluetooth/stack/include",
+    "//foundation/communication/bluetooth_service/services/bluetooth/service/include",
+    "//foundation/communication/bluetooth_service/services/bluetooth/service/src/ble",
+    "//foundation/communication/bluetooth_service/services/bluetooth/service/src/permission",
+    "//foundation/communication/bluetooth_service/services/bluetooth/stack/include",
   ]
 
   sources = [
@@ -48,79 +48,79 @@ ohos_shared_library("bluetooth_server") {
 
   defines = []
 
-  if (bluetooth_a2dp_sink_feature) {
+  if (bluetooth_service_a2dp_sink_feature) {
     defines += [ "BLUETOOTH_A2DP_SINK_FEATURE" ]
 
     sources += [ "src/bluetooth_a2dp_sink_server.cpp" ]
   }
 
-  if (bluetooth_a2dp_source_feature) {
+  if (bluetooth_service_a2dp_source_feature) {
     defines += [ "BLUETOOTH_A2DP_SRC_FEATURE" ]
 
     sources += [ "src/bluetooth_a2dp_source_server.cpp" ]
   }
 
-  if (bluetooth_avrcp_ct_feature) {
+  if (bluetooth_service_avrcp_ct_feature) {
     defines += [ "BLUETOOTH_AVRCP_CT_FEATURE" ]
 
     sources += [ "src/bluetooth_avrcp_ct_server.cpp" ]
   }
 
-  if (bluetooth_avrcp_tg_feature) {
+  if (bluetooth_service_avrcp_tg_feature) {
     defines += [ "BLUETOOTH_AVRCP_TG_FEATURE" ]
 
     sources += [ "src/bluetooth_avrcp_tg_server.cpp" ]
   }
 
-  if (bluetooth_hfp_ag_feature) {
+  if (bluetooth_service_hfp_ag_feature) {
     defines += [ "BLUETOOTH_HFP_AG_FEATURE" ]
 
     sources += [ "src/bluetooth_hfp_ag_server.cpp" ]
   }
 
-  if (bluetooth_hfp_hf_feature) {
+  if (bluetooth_service_hfp_hf_feature) {
     defines += [ "BLUETOOTH_HFP_HF_FEATURE" ]
 
     sources += [ "src/bluetooth_hfp_hf_server.cpp" ]
   }
 
-  if (bluetooth_hid_host_feature) {
+  if (bluetooth_service_hid_host_feature) {
     defines += [ "BLUETOOTH_HID_HOST_FEATURE" ]
 
     sources += [ "src/bluetooth_hid_host_server.cpp" ]
   }
 
-  if (bluetooth_map_client_feature) {
+  if (bluetooth_service_map_client_feature) {
     defines += [ "BLUETOOTH_MAP_CLIENT_FEATURE" ]
 
     sources += [ "src/bluetooth_map_mce_server.cpp" ]
   }
 
-  if (bluetooth_map_server_feature) {
+  if (bluetooth_service_map_server_feature) {
     defines += [ "BLUETOOTH_MAP_SERVER_FEATURE" ]
 
     sources += [ "src/bluetooth_map_mse_server.cpp" ]
   }
 
-  if (bluetooth_opp_feature) {
+  if (bluetooth_service_opp_feature) {
     defines += [ "BLUETOOTH_OPP_FEATURE" ]
 
     sources += [ "src/bluetooth_opp_server.cpp" ]
   }
 
-  if (bluetooth_pan_feature) {
+  if (bluetooth_service_pan_feature) {
     defines += [ "BLUETOOTH_PAN_FEATURE" ]
 
     sources += [ "src/bluetooth_pan_server.cpp" ]
   }
 
-  if (bluetooth_pbap_client_feature) {
+  if (bluetooth_service_pbap_client_feature) {
     defines += [ "BLUETOOTH_PBAP_CLIENT_FEATURE" ]
 
     sources += [ "src/bluetooth_pbap_pce_server.cpp" ]
   }
 
-  if (bluetooth_pbap_server_feature) {
+  if (bluetooth_service_pbap_server_feature) {
     defines += [ "BLUETOOTH_PBAP_SERVER_FEATURE" ]
 
     sources += [ "src/bluetooth_pbap_pse_server.cpp" ]
@@ -129,8 +129,8 @@ ohos_shared_library("bluetooth_server") {
   deps = [
     "$BT_ROOT/etc/init:etc",
     "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btcommon",
-    "$SUBSYSTEM_DIR/bluetooth/services/bluetooth/ipc:btipc_service",
-    "$SUBSYSTEM_DIR/bluetooth/services/bluetooth/service:btservice",
+    "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth/ipc:btipc_service",
+    "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth/service:btservice",
     "//foundation/systemabilitymgr/safwk/interfaces/innerkits/safwk:system_ability_fwk",
     "//foundation/systemabilitymgr/samgr/interfaces/innerkits/samgr_proxy:samgr_proxy",
   ]
@@ -141,11 +141,11 @@ ohos_shared_library("bluetooth_server") {
     "eventhandler:libeventhandler",
     "hisysevent_native:libhisysevent",
     "hitrace_native:hitrace_meter",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 
-  part_name = "bluetooth"
+  part_name = "bluetooth_service"
   subsystem_name = "communication"
 }
 

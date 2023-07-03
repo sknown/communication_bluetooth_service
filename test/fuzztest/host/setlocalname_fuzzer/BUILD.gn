@@ -20,7 +20,7 @@ SUBSYSTEM_DIR = "//foundation/communication"
 ##############################fuzztest##########################################
 ohos_fuzztest("SetLocalNameFuzzTest") {
   module_out_path = module_output_path
-  fuzz_config_file = "//foundation/communication/bluetooth/test/fuzztest/host/setlocalname_fuzzer"
+  fuzz_config_file = "//foundation/communication/bluetooth_service/test/fuzztest/host/setlocalname_fuzzer"
 
   cflags = [
     "-g",
@@ -36,7 +36,7 @@ ohos_fuzztest("SetLocalNameFuzzTest") {
 
   deps = [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework" ]
 
-  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
+  external_deps = [ "hilog:libhilog" ]
 }
 
 ###############################################################################
