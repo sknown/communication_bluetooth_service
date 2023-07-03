@@ -65,7 +65,7 @@ int PbapPceGap::Deregister()
     PBAP_PCE_LOG_INFO("%{public}s start", __PRETTY_FUNCTION__);
 
     if (!registered_) {
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     BtAddr btAddr;
@@ -96,7 +96,7 @@ int PbapPceGap::RequestSecurity()
         utility::Message msg(PCE_GAP_FINISH);
         ((PbapPceService &)service_).PostMessage(device_, msg);
         PBAP_PCE_LOG_INFO("%{public}s end, rfcomm", __PRETTY_FUNCTION__);
-        return RET_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     BtAddr btAddr;

@@ -182,7 +182,7 @@ int32_t BluetoothPanServer::GetDevicesByStates(const std::vector<int32_t> &state
         BluetoothRawAddress bluetoothDevice(device.GetAddress());
         result.push_back(bluetoothDevice);
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothPanServer::GetDeviceState(const BluetoothRawAddress &device, int32_t &state)
@@ -193,7 +193,7 @@ int32_t BluetoothPanServer::GetDeviceState(const BluetoothRawAddress &device, in
     }
     state = pimpl->panService_->GetDeviceState(device);
     HILOGI("addr:%{public}s, res:%{public}d", GET_ENCRYPT_ADDR(device), state);
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothPanServer::Disconnect(const BluetoothRawAddress &device)
@@ -244,7 +244,7 @@ int32_t BluetoothPanServer::IsTetheringOn(bool& result)
     }
     result = pimpl->panService_->IsTetheringOn();
     HILOGI("IsTetheringOn:%{public}d", result);
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

@@ -181,7 +181,7 @@ public:
      * @brief Connect to the peer bluetooth device.
      *
      * @param device The address of the peer bluetooth device.
-     * @return Returns <b>BT_NO_ERROR</b> Perform normal connection processing.
+     * @return Returns <b>BT_SUCCESS</b> Perform normal connection processing.
      *         Returns <b>RET_BAD_STATUS</b> Target device is on connected,or connecting.
      *         Returns <b>RET_NO_SUPPORT</b> Target device is not allowed to connect,or the connection fails.
      * @since 6.0
@@ -192,7 +192,7 @@ public:
      * @brief Disconnect with the peer bluetooth service.
      *
      * @param device The address of the peer bluetooth device.
-     * @return Returns <b>BT_NO_ERROR</b> if perform normal disconnection processing.
+     * @return Returns <b>BT_SUCCESS</b> if perform normal disconnection processing.
      *         Returns <b>RET_BAD_PARAM</b> if target device is not in the device list.
      *         Returns <b>BT_OPERATION_FAILED</b> if target device is on disconnected,or disconnecting.
      *         Returns <b>RET_NO_SUPPORT</b> if disconnection fails.
@@ -263,7 +263,7 @@ public:
      * @brief Set target device as active device.
      *
      * @param device The address of the peer bluetooth device.
-     * @return Returns <b>RET_NO_ERROR</b> Target device has already been active, or perform normal setting processing.
+     * @return Returns <b>BT_SUCCESS</b> Target device has already been active, or perform normal setting processing.
      *         Returns <b>RET_BAD_STATUS</b> Target device is not on connected, or not in device list.
      * @since 6.0
      */
@@ -283,7 +283,7 @@ public:
      *
      * @param device The address of the peer bluetooth device.
      * @param strategy The device connect strategy.
-     * @return Returns <b>RET_NO_ERROR</b> if the operation is successful.
+     * @return Returns <b>BT_SUCCESS</b> if the operation is successful.
      *         Returns <b>RET_BAD_STATUS</b> if the operation fails.
      * @since 6.0
      */
@@ -305,7 +305,7 @@ public:
      *
      * @param device The address of the peer bluetooth device.
      * @param delayValue The delay value.
-     * @return Returns <b>RET_NO_ERROR</b> if the operation is successful.
+     * @return Returns <b>BT_SUCCESS</b> if the operation is successful.
      *         Returns <b>RET_BAD_STATUS</b> if the operation fails.
      */
     int SendDelay(const RawAddress &device, uint16_t delayValue) override;
@@ -354,7 +354,7 @@ public:
      * @brief Audio start streaming.
      *
      * @param device The address of the bluetooth device.
-     * @return Returns <b>RET_NO_ERROR</b> if the operation is successful.
+     * @return Returns <b>BT_SUCCESS</b> if the operation is successful.
      *         Returns <b>RET_BAD_STATUS</b> if the operation fails, or device is not in device list.
      * @since 6.0
      */
@@ -364,7 +364,7 @@ public:
      * @brief Audio suspend streaming.
      *
      * @param device The address of the bluetooth device.
-     * @return Returns <b>RET_NO_ERROR</b> if the operation is successful.
+     * @return Returns <b>BT_SUCCESS</b> if the operation is successful.
      *         Returns <b>RET_BAD_STATUS</b> if the operation fails, or device is not in device list.
      * @since 6.0
      */
@@ -374,7 +374,7 @@ public:
      * @brief Audio stop streaming.
      *
      * @param device The address of the bluetooth device.
-     * @return Returns <b>RET_NO_ERROR</b> if the operation is successful.
+     * @return Returns <b>BT_SUCCESS</b> if the operation is successful.
      *         Returns <b>RET_BAD_STATUS</b> if the operation fails, or device is not in device list.
      * @since 6.0
      */

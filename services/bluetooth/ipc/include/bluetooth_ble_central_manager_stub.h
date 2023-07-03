@@ -46,6 +46,14 @@ private:
     ErrCode RemoveScanFilterInner(MessageParcel &data, MessageParcel &reply);
     ErrCode ProxyUidInner(MessageParcel &data, MessageParcel &reply);
     ErrCode ResetAllProxyInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SetBurstParamInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SetScanReportChannelToSensorHubInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode StartScanInShSuncInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode StopScanInShSuncInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SendParamsToSensorHubInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode IsSupportSensorAdvertiseFilterInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SetAdvFilterParamInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode RemoveAdvFilterInner(MessageParcel &data, MessageParcel &reply);
 };
 }  // namespace Bluetooth
 }  // namespace OHOS

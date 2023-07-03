@@ -330,7 +330,7 @@ int PbapPceStateMachine::ReqDisconnect(bool withObexReq) const
     }
     pceObexClient_->Disconnect(withObexReq);
     PBAP_PCE_LOG_DEBUG("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 bool PbapPceStateMachine::ObexHeaderToDataResult(const ObexHeader &resp, int actionType, IPbapPhoneBookData &retResult)

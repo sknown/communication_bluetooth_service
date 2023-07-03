@@ -54,6 +54,11 @@ public:
             [advHandle](IBluetoothBleAdvertiseCallback *observer) { observer->OnAutoStopAdvEvent(advHandle); });
     }
 
+    void OnSetAdvDataEvent(int32_t result, int32_t advHandle) override
+    {
+        return;
+    }
+
     void SetObserver(RemoteObserverList<IBluetoothBleAdvertiseCallback> *observers)
     {
         observers_ = observers;
@@ -186,7 +191,7 @@ int BluetoothBleAdvertiserServer::StartAdvertising(const BluetoothBleAdvertiserS
 
         pimpl->bleService_->StartAdvertising(settingsImpl, bleAdvertiserData, bleScanResponse, advHandle);
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int BluetoothBleAdvertiserServer::StopAdvertising(int32_t advHandle)
@@ -203,7 +208,7 @@ int BluetoothBleAdvertiserServer::StopAdvertising(int32_t advHandle)
     if (pimpl->bleService_ != nullptr) {
         pimpl->bleService_->StopAdvertising(advHandle);
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 void BluetoothBleAdvertiserServer::Close(int32_t advHandle)
@@ -260,20 +265,28 @@ void BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback(const sptr<IB
     }
 }
 
-int32_t BluetoothBleAdvertiserServer::GetAdvertiserHandle()
+int32_t BluetoothBleAdvertiserServer::GetAdvertiserHandle(int32_t &advHandle)
 {
     HILOGI("enter");
-
-    int32_t advHandle = BLE_INVALID_ADVERTISING_HANDLE;
-
     pimpl->bleService_ =
         static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
 
-    if (pimpl->bleService_ != nullptr) {
-        advHandle = pimpl->bleService_->GetAdvertiserHandle();
+    if (pimpl->bleService_ == nullptr) {
+        return BT_ERR_INTERNAL_ERROR;
+    }
+    advHandle = pimpl->bleService_->GetAdvertiserHandle();
+    if (advHandle == BLE_INVALID_ADVERTISING_HANDLE) {
+        return BT_ERR_INTERNAL_ERROR;
     }
 
-    return advHandle;
+    return NO_ERROR;
+}
+
+void BluetoothBleAdvertiserServer::SetAdvertisingData(const BluetoothBleAdvertiserData &advData,
+    const BluetoothBleAdvertiserData &scanResponse, int32_t advHandle)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

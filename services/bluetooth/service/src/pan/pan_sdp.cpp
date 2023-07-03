@@ -25,45 +25,45 @@ PanSdp::PanSdp()
 int PanSdp::Register()
 {
     LOG_DEBUG("[PAN SDP]%{public}s():enter", __PRETTY_FUNCTION__);
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     sdpHandle_ = SDP_CreateServiceRecord();
     result = RegisterServiceInfo();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] RegisterServiceInfo result = %{public}d", result);
         return result;
     }
     result = AddPanDescriptionList();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] AddPanDescriptionList result = %{public}d", result);
         return result;
     }
     result = AddPanSecurityDescriptionId();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] AddPanSecurityDescriptionId result = %{public}d", result);
         return result;
     }
     result = RegisterNetInfo();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] RegisterNetInfo result = %{public}d", result);
         return result;
     }
     result = AddBluetoothProfileDescriptorList();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] AddBluetoothProfileDescriptorList result = %{public}d", result);
         return result;
     }
     result = AddLanguageBaseAttributeIdList();
-        if (result != BT_NO_ERROR) {
+        if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] AddLanguageBaseAttributeIdList result = %{public}d", result);
         return result;
     }
     result = AddBrowseGroupList();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] AddBrowseGroupList result = %{public}d", result);
         return result;
     }
     result = RegisterServiceRecord();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] RegisterServiceRecord result = %{public}d", result);
         return result;
     }
@@ -73,14 +73,14 @@ int PanSdp::Register()
 void PanSdp::Deregister()
 {
     LOG_INFO("[PAN SDP]Call %{public}s", __PRETTY_FUNCTION__);
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     result = SDP_DeregisterServiceRecord(sdpHandle_);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] SDP_DeregisterServiceRecord result = %{public}d", result);
         return;
     }
     result = SDP_DestroyServiceRecord(sdpHandle_);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] SDP_DestroyServiceRecord result = %{public}d", result);
     }
     sdpHandle_ = 0;
@@ -195,14 +195,14 @@ int PanSdp::RegisterServiceRecord()
 }
 int PanSdp::RegisterNetInfo()
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     result = AddPanNetAccessRate();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] AddPanNetAccessRate result = %{public}d", result);
         return result;
     }
     result = AddPanNetAccessType();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] AddPanNetAccessRate result = %{public}d", result);
         return result;
     }
@@ -210,19 +210,19 @@ int PanSdp::RegisterNetInfo()
 }
 int PanSdp::RegisterServiceInfo()
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     result = AddServiceClassIdList();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] AddServiceClassIdList result = %{public}d", result);
         return result;
     }
     result = AddServiceName();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] AddServiceName result = %{public}d", result);
         return result;
     }
     result = AddServiceDescription();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN SDP] AddServiceName result = %{public}d", result);
         return result;
     }

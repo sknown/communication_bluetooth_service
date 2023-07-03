@@ -241,7 +241,7 @@ void BtmStartLeSecurity()
     if (BTM_IsControllerSupportLlPrivacy()) {
         uint8_t resolvingListSize = 0;
         int result = BtmGetResolvingListSize(&resolvingListSize);
-        if (result == BT_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             g_resolvingListSize = resolvingListSize;
         }
 
@@ -415,7 +415,7 @@ int BTM_GetLocalIdentityResolvingKey(BtmKey *irk)
     }
 
     *irk = g_localIdentityResolvingKey;
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_GetRemoteIdentityResolvingKey(const BtAddr *addr, BtmKey *irk)
@@ -428,7 +428,7 @@ int BTM_GetRemoteIdentityResolvingKey(const BtAddr *addr, BtmKey *irk)
         return BT_BAD_STATUS;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     MutexLock(g_lePairedDevicesLock);
 
     BtmLePairedDeviceBlock *block = BtmFindLePairedDeviceBlockByAddress(addr);
@@ -478,7 +478,7 @@ int BTM_GetAllRemoteIdentityResolvingKey(BtmIdentityResolvingKey **irks, uint16_
     }
 
     MutexUnlock(g_lePairedDevicesLock);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_GetAllPairedDevices(BtmLePairedDevice **devices, uint16_t *count)
@@ -517,7 +517,7 @@ int BTM_GetAllPairedDevices(BtmLePairedDevice **devices, uint16_t *count)
 
     MutexUnlock(g_lePairedDevicesLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_UpdateCurrentRemoteAddress(const BtAddr *pairedAddr, const BtAddr *currentAddr)
@@ -530,7 +530,7 @@ int BTM_UpdateCurrentRemoteAddress(const BtAddr *pairedAddr, const BtAddr *curre
         return BT_BAD_STATUS;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     MutexLock(g_lePairedDevicesLock);
 
@@ -556,7 +556,7 @@ int BTM_GetCurrentRemoteAddress(const BtAddr *pairedAddr, BtAddr *currentAddr)
         return BT_BAD_STATUS;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     MutexLock(g_lePairedDevicesLock);
 
@@ -597,7 +597,7 @@ int BTM_GetRemoteIdentityAddress(const BtAddr *addr, BtAddr *identityAddress)
         return BT_BAD_STATUS;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     MutexLock(g_lePairedDevicesLock);
 
@@ -623,7 +623,7 @@ int BTM_GetPairdAddressFromRemoteIdentityAddress(const BtAddr *identityAddress, 
         return BT_BAD_STATUS;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     MutexLock(g_lePairedDevicesLock);
 
@@ -684,16 +684,16 @@ int BTM_ConvertToPairedAddress(const BtAddr *addr, BtAddr *pairedAddress)
         block = ListGetNodeData(node);
         if (IsSameBtAddr(&block->currentAddr, addr)) {
             *pairedAddress = block->pairedInfo.addr;
-            result = BT_NO_ERROR;
+            result = BT_SUCCESS;
             break;
         } else if (IsSameBtAddr(&block->pairedInfo.remoteIdentityAddress, addr)) {
             *pairedAddress = block->pairedInfo.addr;
-            result = BT_NO_ERROR;
+            result = BT_SUCCESS;
             break;
         } else if (SMP_ResolveRPA(addr->addr, block->pairedInfo.remoteIdentityResolvingKey.key) ==
                    SMP_RESOLVE_RPA_RESULT_YES) {
             *pairedAddress = block->pairedInfo.addr;
-            result = BT_NO_ERROR;
+            result = BT_SUCCESS;
             break;
         }
 
@@ -723,7 +723,7 @@ int BTM_SetLeRandomAddress(const BtAddr *addr)
     (void)memcpy_s(param.randomAddess, BT_ADDRESS_SIZE, addr->addr, BT_ADDRESS_SIZE);
 
     int result = HCI_LeSetRandomAddress(&param);
-    if (result == BT_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         MutexLock(g_randomAddressLock);
         g_randomAddress = *addr;
         MutexUnlock(g_randomAddressLock);
@@ -746,5 +746,5 @@ int BTM_GetLeRandomAddress(BtAddr *addr)
     MutexLock(g_randomAddressLock);
     *addr = g_randomAddress;
     MutexUnlock(g_randomAddressLock);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }

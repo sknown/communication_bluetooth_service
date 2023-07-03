@@ -30,6 +30,8 @@ public:
     void OnScanCallback(const BluetoothBleScanResult &result) override;
     void OnBleBatchScanResultsEvent(std::vector<BluetoothBleScanResult> &results) override;
     void OnStartOrStopScanEvent(int resultCode, bool isStartScan) override;
+    void OnNotifyMsgReportFromSh(const bluetooth::Uuid &uuid, int msgType,
+            const std::vector<uint8_t> &notifyValue) override;
 
 private:
     ErrCode InnerTransact(uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply);

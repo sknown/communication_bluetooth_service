@@ -104,12 +104,12 @@ static void GapLePasskeyRequestProcess(
             g_lePairCallback.callback.lePairPassKeyNotification(
                 addr, *(uint32_t *)displayValue, g_lePairCallback.context);
             ret = SMP_AuthenticationRequestReply(handle, true, 0x00, pairMethod, displayValue);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_WARN("%{public}s:pairMethod:%{public}d Call SMP failed:%{public}d.", __FUNCTION__, pairMethod, ret);
             }
         } else {
             ret = SMP_AuthenticationRequestReply(handle, false, SMP_PAIR_FAILED_UNSPECIFIED_REASION, pairMethod, NULL);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_WARN("%{public}s:pairMethod:%{public}d Call SMP failed:%{public}d.", __FUNCTION__, pairMethod, ret);
             }
         }
@@ -118,7 +118,7 @@ static void GapLePasskeyRequestProcess(
             g_lePairCallback.callback.lePairPassKeyReq(addr, g_lePairCallback.context);
         } else {
             ret = SMP_AuthenticationRequestReply(handle, false, SMP_PAIR_FAILED_UNSPECIFIED_REASION, pairMethod, NULL);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_WARN("%{public}s:pairMethod:%{public}d Call SMP failed:%{public}d.", __FUNCTION__, pairMethod, ret);
             }
         }
@@ -131,7 +131,7 @@ static void GapLeUserConfirmProcess(const BtAddr *addr, uint16_t handle, uint8_t
         g_lePairCallback.callback.lePairScUserConfirmReq(addr, *(uint32_t *)displayValue, g_lePairCallback.context);
     } else {
         int ret = SMP_AuthenticationRequestReply(handle, false, SMP_PAIR_FAILED_UNSPECIFIED_REASION, pairMethod, NULL);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("%{public}s:pairMethod:%{public}d Call SMP failed:%{public}d.", __FUNCTION__, pairMethod, ret);
         }
     }
@@ -143,7 +143,7 @@ static void GapLeLegacyOOBProcess(const BtAddr *addr, uint16_t handle, uint8_t p
         g_lePairCallback.callback.lePairOobReq(addr, g_lePairCallback.context);
     } else {
         int ret = SMP_AuthenticationRequestReply(handle, false, SMP_PAIR_FAILED_UNSPECIFIED_REASION, pairMethod, NULL);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("%{public}s:pairMethod:%{public}d Call SMP failed:%{public}d.", __FUNCTION__, pairMethod, ret);
         }
     }
@@ -190,13 +190,13 @@ static void GapLeSecureConnectionOOBProcess(
     if (accept) {
         if (pairMethod == SMP_PAIR_METHOD_OOB_SC_LOCAL_SEND_PEER_RECV) {
             ret = SMP_AuthenticationRequestReply(handle, accept, 0x00, pairMethod, NULL);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_WARN("%{public}s:pairMethod:%{public}d Call SMP failed:%{public}d.", __FUNCTION__, pairMethod, ret);
             }
         }
     } else {
         ret = SMP_AuthenticationRequestReply(handle, accept, 0x00, pairMethod, NULL);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("%{public}s:pairMethod:%{public}d Call SMP failed:%{public}d.", __FUNCTION__, pairMethod, ret);
         }
     }
@@ -220,7 +220,7 @@ static void GapLeAuthenticationRequestProcess(
             break;
         case SMP_PAIR_METHOD_JUST_WORK:
             ret = SMP_AuthenticationRequestReply(handle, true, 0x00, pairMethod, NULL);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_WARN("%{public}s:pairMethod:%{public}d Call SMP failed:%{public}d.", __FUNCTION__, pairMethod, ret);
             }
             break;
@@ -251,7 +251,7 @@ void GapLeAuthenticationRequest(uint16_t handle, uint8_t pairMethod, const uint8
     if (deviceInfo != NULL) {
         if (GapLeSecurityNeedAuthentication(localInfo) && pairMethod == SMP_PAIR_METHOD_JUST_WORK) {
             ret = SMP_AuthenticationRequestReply(handle, false, SMP_PAIR_FAILED_AUTH_REQ, pairMethod, NULL);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_WARN("%{public}s:pairMethod:%{public}d Call SMP failed:%{public}d.", __FUNCTION__, pairMethod, ret);
             }
             return;
@@ -263,7 +263,7 @@ void GapLeAuthenticationRequest(uint16_t handle, uint8_t pairMethod, const uint8
         GapLeAuthenticationRequestProcess(addr, handle, pairMethod, displayValue);
     } else {
         ret = SMP_AuthenticationRequestReply(handle, false, SMP_PAIR_FAILED_UNSPECIFIED_REASION, pairMethod, NULL);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("%{public}s:pairMethod:%{public}d Call SMP failed:%{public}d.", __FUNCTION__, pairMethod, ret);
         }
     }
@@ -437,13 +437,13 @@ void GapLeRemotePairRequest(uint16_t handle, const SMP_PairParam *param)
                 &deviceInfo->addr, deviceInfo->isLocalSecurityRequest, g_lePairCallback.context);
         } else {
             ret = SMP_RemotePairRequestReply(handle, SMP_PAIR_FAILED_UNSPECIFIED_REASION, NULL, NULL, NULL);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_WARN("%{public}s:SMP_RemotePairRequestReply failed:%{public}d.", __FUNCTION__, ret);
             }
         }
     } else {
         ret = SMP_RemotePairRequestReply(handle, SMP_PAIR_FAILED_UNSPECIFIED_REASION, NULL, NULL, NULL);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("%{public}s:SMP_RemotePairRequestReply failed:%{public}d.", __FUNCTION__, ret);
         }
     }
@@ -486,7 +486,7 @@ void GapLeRemoteSecurityRequest(uint16_t handle, uint8_t authReq)
         g_leSecurityCallback.callback.leRemoteEncryptionKeyReqEvent(&addr, g_leSecurityCallback.context);
     } else {
         int ret = SMP_RemoteSecurityRequestReply(handle, false, SMP_PAIR_FAILED_UNSPECIFIED_REASION);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("%{public}s:SMP_RemoteSecurityRequestReply failed:%{public}d.", __FUNCTION__, ret);
         }
     }
@@ -508,7 +508,7 @@ void GapLeLongTermKeyRequest(uint16_t handle, const uint8_t *random, uint16_t ed
             &addr, *(uint64_t *)random, ediv, g_leSecurityCallback.context);
     } else {
         int ret = SMP_LongTermKeyRequestReply(handle, false, NULL);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("%{public}s:SMP_LongTermKeyRequestReply failed:%{public}d.", __FUNCTION__, ret);
         }
     }
@@ -588,7 +588,7 @@ int GAP_LeRemoteEncryptionKeyRsp(const BtAddr *addr, uint8_t accept, LeEncKey en
             deviceInfo->keySize = encKey.keySize;
             if (deviceInfo->isRemoteSecurityRequest) {
                 ret = SMP_RemoteSecurityRequestReply(deviceInfo->handle, true, 0x00);
-                if (ret != BT_NO_ERROR) {
+                if (ret != BT_SUCCESS) {
                     LOG_WARN("%{public}s:SMP_RemoteSecurityRequestReply failed:%{public}d.", __FUNCTION__, ret);
                 }
             }
@@ -841,7 +841,7 @@ static int GapLePair(const BtAddr *addr)
 void GapLeDoPair(const void *addr)
 {
     int ret = GapLePair(addr);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("GapLePair ret = %{public}d", ret);
     }
 }
@@ -1162,7 +1162,7 @@ int GAP_LeDataSignatureGeneration(
             ListAddLast(GapGetLeSignatureBlock()->RequestList, info);
 
             ret = SMP_GenerateSignature(deviceInfo->localSigningInfo.csrk, counter, dataInfo.data, dataInfo.dataLen);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 ListRemoveLast(GapGetLeSignatureBlock()->RequestList);
             }
         } else {
@@ -1170,7 +1170,7 @@ int GAP_LeDataSignatureGeneration(
         }
     }
 
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_INFO("%{public}s: ret = %{public}d", __FUNCTION__, ret);
         callback(GAP_SIGNATURE_ERR_EXECUTION, signature, context);
     }
@@ -1207,7 +1207,7 @@ int GAP_LeDataSignatureConfirmation(const BtAddr *addr, GapSignatureData dataInf
                 ret =
                     SMP_GenerateSignature(deviceInfo->remoteSigningInfo.csrk, counter, dataInfo.data, dataInfo.dataLen);
             }
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 ListRemoveLast(GapGetLeSignatureBlock()->RequestList);
             }
         }
@@ -1215,7 +1215,7 @@ int GAP_LeDataSignatureConfirmation(const BtAddr *addr, GapSignatureData dataInf
         ret = GAP_ERR_INVAL_STATE;
     }
 
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_INFO("%{public}s: ret = %{public}d", __FUNCTION__, ret);
         callback(GAP_SIGNATURE_ERR_EXECUTION, context);
     }

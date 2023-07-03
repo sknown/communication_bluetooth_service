@@ -379,7 +379,7 @@ typedef enum {
  * @param[in]   result              request result
  * @param[in]   status              security status of le connection
  * @param[in]   context             callback context
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 typedef void (*GapLeRequestSecurityResult)(
@@ -440,7 +440,7 @@ typedef void (*GAPSignatureConfirmationResult)(GAP_SignatureResult result, void 
 /**
  * @brief       Set BLE Roles
  * @param[in]   role                BLE Roles
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeSetRole(uint8_t role);
@@ -448,7 +448,7 @@ BTSTACK_API int GAPIF_LeSetRole(uint8_t role);
 /**
  * @brief       Set Static Identity Address if controller does not have a Public Device Address
  * @param[in/out]  addr             Static Identity Address
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeSetStaticIdentityAddr(uint8_t addr[BT_ADDRESS_SIZE]);
@@ -457,7 +457,7 @@ BTSTACK_API int GAPIF_LeSetStaticIdentityAddr(uint8_t addr[BT_ADDRESS_SIZE]);
  * @brief       Generate a local resolvable private address
  * @param[in]   callback            Generate RPA result function
  * @param[in]   context             Generate RPA result function context
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeGenResPriAddr(GenResPriAddrResult callback, void *context);
@@ -465,7 +465,7 @@ BTSTACK_API int GAPIF_LeGenResPriAddr(GenResPriAddrResult callback, void *contex
 /**
  * @brief       Read the maximum length of intended advertising data supported by the Controller
  * @param[out]  len                length of intended advertising data or scan response data
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeExAdvGetMaxDataLen(uint16_t *len);
@@ -473,7 +473,7 @@ BTSTACK_API int GAPIF_LeExAdvGetMaxDataLen(uint16_t *len);
 /**
  * @brief       Read the maximum number of advertising sets supported by the advertising Controller at the same time.
  * @param[out]  num                maximum number of advertising sets
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeExAdvGetMaxHandleNum(uint8_t *num);
@@ -482,14 +482,14 @@ BTSTACK_API int GAPIF_LeExAdvGetMaxHandleNum(uint8_t *num);
  * @brief       Register Extended advertising callback function
  * @param[in]   callback            Extended advertising callback structure
  * @param[in]   context             Extended advertising result callback context parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_RegisterExAdvCallback(const GapExAdvCallback *callback, void *context);
 
 /**
  * @brief       Degegister Extended advertising callback function
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_DeregisterExAdvCallback(void);
@@ -498,7 +498,7 @@ BTSTACK_API int GAPIF_DeregisterExAdvCallback(void);
  * @brief       Set the random device address used by advertising.
  * @param[in]   advHandle           used to identify an advertising set (0x00-0xEF)
  * @param[in]   addr                random device address
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeExAdvSetRandAddr(uint8_t advHandle, const uint8_t addr[BT_ADDRESS_SIZE]);
@@ -509,7 +509,7 @@ BTSTACK_API int GAPIF_LeExAdvSetRandAddr(uint8_t advHandle, const uint8_t addr[B
  * @param[in]   properties          intended Advertising property
  * @param[in]   txPower            advertising TX power
  * @param[in]   advExParam          advertising parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeExAdvSetParam(
@@ -522,7 +522,7 @@ BTSTACK_API int GAPIF_LeExAdvSetParam(
  * @param[in]   fragmentPreference  fragment preference
  * @param[in]   advDataLength       advertising data length
  * @param[in]   advData             advertising data
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeExAdvSetData(
@@ -535,7 +535,7 @@ BTSTACK_API int GAPIF_LeExAdvSetData(
  * @param[in]   fragmentPreference  fragment preference
  * @param[in]   scanResponseDataLen scan response data length
  * @param[in]   scanResponseData    scan response data
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeExAdvSetScanRspData(uint8_t advHandle, uint8_t operation, uint8_t fragmentPreference,
@@ -546,14 +546,14 @@ BTSTACK_API int GAPIF_LeExAdvSetScanRspData(uint8_t advHandle, uint8_t operation
  * @param[in]   enable              advertising enable (0x00 is disable, 0x01 is enable)
  * @param[in]   numberOfSet         number of parameter (When disabled, 0 is to disable all)
  * @param[in]   advSet              advertising enable parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeExAdvSetEnable(uint8_t enable, uint8_t numberOfSet, const GapExAdvSet *advSet);
 
 /**
  * @brief       Remove all advertising set of advertising.
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeExAdvClearHandle(void);
@@ -562,14 +562,14 @@ BTSTACK_API int GAPIF_LeExAdvClearHandle(void);
  * @brief       Register legacy advertising result callback
  * @param[in]   callback            legacy advertising callback
  * @param[in]   context             legacy advertising callback context parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_RegisterAdvCallback(const GapAdvCallback *callback, void *context);
 
 /**
  * @brief       Deregister legacy advertising result callback
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_DeregisterAdvCallback(void);
@@ -578,14 +578,14 @@ BTSTACK_API int GAPIF_DeregisterAdvCallback(void);
  * @brief       Set legacy advertising parameter
  * @param[in]   advType             legacy advertising type
  * @param[in]   advParam            legacy advertising parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeAdvSetParam(uint8_t advType, GapLeAdvParam advParam);
 
 /**
  * @brief       Read legacy advertising TX power
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeAdvReadTxPower(void);
@@ -594,7 +594,7 @@ BTSTACK_API int GAPIF_LeAdvReadTxPower(void);
  * @brief       Set legacy advertising data
  * @param[in]   advDataLength       legacy advertising data length
  * @param[in]   advData             legacy advertising data
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeAdvSetData(uint8_t advDataLength, const uint8_t *advData);
@@ -603,7 +603,7 @@ BTSTACK_API int GAPIF_LeAdvSetData(uint8_t advDataLength, const uint8_t *advData
  * @brief       Set legacy advertising scan response data
  * @param[in]   advDataLength       legacy advertising scan response data length
  * @param[in]   advData             legacy advertising scan response data
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeAdvSetScanRspData(uint8_t advDataLength, const uint8_t *advData);
@@ -611,7 +611,7 @@ BTSTACK_API int GAPIF_LeAdvSetScanRspData(uint8_t advDataLength, const uint8_t *
 /**
  * @brief       Set legacy advertising enable
  * @param[in]   enable              advertising enable (0x00 is disable, 0x01 is enable)
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeAdvSetEnable(uint8_t enable);
@@ -620,14 +620,14 @@ BTSTACK_API int GAPIF_LeAdvSetEnable(uint8_t enable);
  * @brief       Register scan result callback
  * @param[in]   callback            scan result callback
  * @param[in]   context             scan result callback context parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_RegisterScanCallback(const GapScanCallback *callback, void *context);
 
 /**
  * @brief       Deregister scan result callback
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_DeregisterScanCallback(void);
@@ -636,7 +636,7 @@ BTSTACK_API int GAPIF_DeregisterScanCallback(void);
  * @brief       Set scan parameter
  * @param[in]   param               scan parameter
  * @param[in]   scanFilterPolity    scan filter policy
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeScanSetParam(GapLeScanParam param, uint8_t scanFilterPolity);
@@ -645,7 +645,7 @@ BTSTACK_API int GAPIF_LeScanSetParam(GapLeScanParam param, uint8_t scanFilterPol
  * @brief       Set scan enable
  * @param[in]   scanEnable          scan enable (0x00 is disable, 0x01 is enable)
  * @param[in]   filterDuplicates    filter duplicates (0x00 is disable, 0x01 is enable)
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeScanSetEnable(uint8_t scanEnable, uint8_t filterDuplicates);
@@ -654,14 +654,14 @@ BTSTACK_API int GAPIF_LeScanSetEnable(uint8_t scanEnable, uint8_t filterDuplicat
  * @brief       Register extended scan result callback
  * @param[in]   callback            extended scan result callback
  * @param[in]   context             extended scan result callback context parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_RegisterExScanCallback(const GapExScanCallback *callback, void *context);
 
 /**
  * @brief       Deregister extended scan result callback
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_DeregisterExScanCallback(void);
@@ -671,7 +671,7 @@ BTSTACK_API int GAPIF_DeregisterExScanCallback(void);
  * @param[in]   scanFilterPolity    scan filter policy
  * @param[in]   scanPhys            scan PHYs
  * @param[in]   param               scan parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeExScanSetParam(uint8_t scanFilterPolity, uint8_t scanPhys, const GapLeScanParam param[]);
@@ -682,7 +682,7 @@ BTSTACK_API int GAPIF_LeExScanSetParam(uint8_t scanFilterPolity, uint8_t scanPhy
  * @param[in]   filterDuplicates    filter duplicates (0x00 is disable, 0x01 is enable)
  * @param[in]   duration            (n * 10ms, 0 is scan continuously)
  * @param[in]   period              (n * 1.28s, 0 is periodic scanning disabled)
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeExScanSetEnable(
@@ -692,14 +692,14 @@ BTSTACK_API int GAPIF_LeExScanSetEnable(
  * @brief       Register link layer control callback
  * @param[in]   callback            link layer control callback
  * @param[in]   context             link layer control callback context parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_RegisterLeConnCallback(const GapLeConnCallback *callback, void *context);
 
 /**
  * @brief       Deregister link layer control callback
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_DeregisterLeConnCallback(void);
@@ -708,7 +708,7 @@ BTSTACK_API int GAPIF_DeregisterLeConnCallback(void);
  * @brief       Send Connection parameter update request
  * @param[in]   addr                target device address
  * @param[in]   connParam           connection parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeConnParamUpdate(const BtAddr *addr, const GapLeConnectionParameter *connParam);
@@ -718,7 +718,7 @@ BTSTACK_API int GAPIF_LeConnParamUpdate(const BtAddr *addr, const GapLeConnectio
  * @param[in]   addr                target device address
  * @param[in]   accept              accept or reject
  * @param[in]   connParam           connection parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeConnectionParameterRsp(
@@ -728,14 +728,14 @@ BTSTACK_API int GAPIF_LeConnectionParameterRsp(
  * @brief       Register BLE security callback
  * @param[in]   callback            BLE security callback
  * @param[in]   context             BLE security callback context parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_RegisterLeSecurityCallback(const GapLeSecurityCallback *callback, void *context);
 
 /**
  * @brief       Deregister BLE security callback
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_DeregisterLeSecurityCallback(void);
@@ -746,7 +746,7 @@ BTSTACK_API int GAPIF_DeregisterLeSecurityCallback(void);
  * @param[in]   accept              accept or reject
  * @param[in]   remoteEncKey        remote encryption key
  * @param[in]   keyType             remote encryption key type
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeRemoteEncryptionKeyRsp(
@@ -758,7 +758,7 @@ BTSTACK_API int GAPIF_LeRemoteEncryptionKeyRsp(
  * @param[in]   accept              accept or reject
  * @param[in]   localEncKey         local encryption key
  * @param[in]   keyType             local encryption key type
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeLocalEncryptionKeyRsp(
@@ -769,7 +769,7 @@ BTSTACK_API int GAPIF_LeLocalEncryptionKeyRsp(
  * @param[in]   addr                target device address
  * @param[in]   accept              accept or reject
  * @param[in]   info                signing key info
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_RequestSigningAlgorithmInfoRsp(const BtAddr *addr, uint8_t accept, GapSigningAlgorithmInfo info);
@@ -777,7 +777,7 @@ BTSTACK_API int GAPIF_RequestSigningAlgorithmInfoRsp(const BtAddr *addr, uint8_t
 /**
  * @brief       Set BLE bondable mode
  * @param[in]   mode                boneable mode
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeSetBondMode(uint8_t mode);
@@ -786,7 +786,7 @@ BTSTACK_API int GAPIF_LeSetBondMode(uint8_t mode);
  * @brief       Set BLE security mode
  * @param[in]   mode1Level          level of LE security mode 1
  * @param[in]   mode2Level          level of LE security mode 2
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeSetSecurityMode(GAP_LeSecMode1Level mode1Level, GAP_LeSecMode2Level mode2Level);
@@ -796,7 +796,7 @@ BTSTACK_API int GAPIF_LeSetSecurityMode(GAP_LeSecMode1Level mode1Level, GAP_LeSe
  * @param[in]   addr                target device address
  * @param[out]  status              security status of le connection
  * @param[out]  encKeySize          encryption Key Size
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeGetSecurityStatus(const BtAddr *addr, GAP_LeSecurityStatus *status, uint8_t *encKeySize);
@@ -807,7 +807,7 @@ BTSTACK_API int GAPIF_LeGetSecurityStatus(const BtAddr *addr, GAP_LeSecurityStat
  * @param[in]   status              security status of le connection
  * @param[in]   callback            result callback
  * @param[in]   context             result callback context parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeRequestSecurity(
@@ -816,7 +816,7 @@ BTSTACK_API int GAPIF_LeRequestSecurity(
 /**
  * @brief       BLE bonding procedure
  * @param[in]   addr                target device address
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LePair(const BtAddr *addr);
@@ -824,7 +824,7 @@ BTSTACK_API int GAPIF_LePair(const BtAddr *addr);
 /**
  * @brief       Cancel BLE bonding procedure
  * @param[in]   addr                target device address
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeCancelPair(const BtAddr *addr);
@@ -832,7 +832,7 @@ BTSTACK_API int GAPIF_LeCancelPair(const BtAddr *addr);
 /**
  * @brief       Set minimum of Long Term Key size
  * @param[in]   minSize             minimum of Long Term Key size
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeSetMinEncKeySize(uint8_t minSize);
@@ -841,14 +841,14 @@ BTSTACK_API int GAPIF_LeSetMinEncKeySize(uint8_t minSize);
  * @brief       Register BLE pair callback
  * @param[in]   callback            BLE pair callback
  * @param[in]   context             BLE pair callback context parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_RegisterLePairCallback(const GapLePairCallback *callback, void *context);
 
 /**
  * @brief       Deregister BLE pair callback
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_DeregisterLePairCallback(void);
@@ -857,7 +857,7 @@ BTSTACK_API int GAPIF_DeregisterLePairCallback(void);
  * @brief       Respond BLE pair feature request
  * @param[in]   addr                target device address
  * @param[in]   localFrature        local BLE pair feature
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LePairFeatureRsp(const BtAddr *addr, GapLePairFeature localFrature);
@@ -867,7 +867,7 @@ BTSTACK_API int GAPIF_LePairFeatureRsp(const BtAddr *addr, GapLePairFeature loca
  * @param[in]   addr                target device address
  * @param[in]   accept              accept orr reject
  * @param[in]   number              passkey number (000000-999999)
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LePairPassKeyRsp(const BtAddr *addr, uint8_t accept, uint32_t number);
@@ -877,7 +877,7 @@ BTSTACK_API int GAPIF_LePairPassKeyRsp(const BtAddr *addr, uint8_t accept, uint3
  * @param[in]   addr                target device address
  * @param[in]   accept              accept orr reject
  * @param[in]   oobData             legacy OOB data
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LePairOobRsp(const BtAddr *addr, uint8_t accept, uint8_t oobData[GAP_OOB_DATA_SIZE]);
@@ -888,7 +888,7 @@ BTSTACK_API int GAPIF_LePairOobRsp(const BtAddr *addr, uint8_t accept, uint8_t o
  * @param[in]   accept              accept orr reject
  * @param[in]   oobDataC            Secure connection OOB confirm data
  * @param[in]   oobDataR            Secure connection OOB random data
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LePairScOobRsp(const BtAddr *addr, uint8_t accept,
@@ -898,7 +898,7 @@ BTSTACK_API int GAPIF_LePairScOobRsp(const BtAddr *addr, uint8_t accept,
  * @brief       Respond user confirmation request
  * @param[in]   addr                target device address
  * @param[in]   accept              accept orr reject
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LePairScUserConfirmRsp(const BtAddr *addr, uint8_t accept);
@@ -909,7 +909,7 @@ BTSTACK_API int GAPIF_LePairScUserConfirmRsp(const BtAddr *addr, uint8_t accept)
  * @param[in]   dataInfo            data PDU
  * @param[in]   callback            result callback function
  * @param[in]   context             result callback function context
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeDataSignatureGenerationAsync(
@@ -922,7 +922,7 @@ BTSTACK_API int GAPIF_LeDataSignatureGenerationAsync(
  * @param[in]   signature           signature data
  * @param[in]   callback            result callback function
  * @param[in]   context             result callback function context
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int GAPIF_LeDataSignatureConfirmationAsync(const BtAddr *addr, GapSignatureData dataInfo,

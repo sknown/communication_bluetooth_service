@@ -25,15 +25,12 @@ using namespace OHOS::bluetooth;
 
 namespace OHOS {
 namespace Bluetooth {
-int BluetoothSocketServer::Connect(ConnectSokectParam &param, int &fd)
+int BluetoothSocketServer::Connect(ConnectSocketParam &param, int &fd)
 {
-    HILOGI("addr: %{public}s, securityFlag: %{public}d, type: %{public}d",
-        GetEncryptAddr(addr).c_str(), securityFlag, type);
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
         return RET_NO_SUPPORT;
     }
-    int ret = RET_NO_SUPPORT;
     IProfileSocket *socket = (IProfileSocket *)IProfileManager::GetInstance()->GetProfileService(PROFILE_NAME_SPP);
     if (socket != nullptr) {
         fd = socket->Connect(param.addr, param.uuid, (int)param.securityFlag, (int)param.type);
@@ -42,14 +39,13 @@ int BluetoothSocketServer::Connect(ConnectSokectParam &param, int &fd)
     return NO_ERROR;
 }
 
-int BluetoothSocketServer::Listen(ListenSokectParam &param, int &fd)
+int BluetoothSocketServer::Listen(ListenSocketParam &param, int &fd)
 {
-    HILOGI("name: %{public}s, securityFlag: %{public}d, type: %{public}d", name.c_str(), securityFlag, type);
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
         return RET_NO_SUPPORT;
     }
-    int ret = RET_NO_SUPPORT;
+
     IProfileSocket *socket = (IProfileSocket *)IProfileManager::GetInstance()->GetProfileService(PROFILE_NAME_SPP);
     if (socket != nullptr) {
         fd = socket->Listen(param.name, param.uuid, (int)param.securityFlag, (int)param.type);

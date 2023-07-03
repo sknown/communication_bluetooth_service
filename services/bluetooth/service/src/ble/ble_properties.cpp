@@ -97,7 +97,7 @@ int BleProperties::SetBondableMode(int mode) const
     LOG_DEBUG("[BleProperties] %{public}s", __func__);
 
     if (pimpl->bondableMode_ == mode) {
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
     switch (mode) {
         case BLE_BONDABLE_MODE_NONE:
@@ -142,7 +142,7 @@ bool BleProperties::GetAddrFromController() const
     BtAddr btAddr;
     (void)memset_s(&btAddr, sizeof(btAddr), 0x00, sizeof(btAddr));
     int ret = GAPIF_GetLocalAddr(&btAddr);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("BleProperties::GAP_GetLocalAddr Failed");
         return false;
     }
@@ -212,7 +212,7 @@ bool BleProperties::SetBleRoles(uint8_t roles)
 {
     LOG_DEBUG("[BleProperties] %{public}s:%u", __func__, roles);
     int ret = GAPIF_LeSetRole(roles);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleProperties] %{public}s:%{public}s", __func__, "Set ble roles failed!");
     }
 

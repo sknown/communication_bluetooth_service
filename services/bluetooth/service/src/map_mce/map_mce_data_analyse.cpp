@@ -772,7 +772,7 @@ int MceTypesConversationListing::BuildObjectData(
     const IProfileConversationListingParamStruct &stringParam, const std::string &stringObject)
 {
     LOG_INFO("%{public}s execute", __PRETTY_FUNCTION__);
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     conversationListingParam_ = stringParam;
     conversationListingObject_ = stringObject;
     IProfileConversation converOutline;
@@ -867,7 +867,7 @@ int MceTypesMessagesListing::BuildObjectData(
     const IProfileMessagesListingParamStruct &stringParam, const std::string &stringObject)
 {
     LOG_INFO("%{public}s enter", __PRETTY_FUNCTION__);
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     IProfileMessageOutline msgOutline;
     std::string tempStr;
     messagesListingParam_ = stringParam;
@@ -908,7 +908,7 @@ std::string MceTypesMessagesListing::GetStringObject() const
 int MceTypesBMessage::BuildObjectData(const std::string &stringObject)
 {
     LOG_INFO("%{public}s execute", __PRETTY_FUNCTION__);
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     bMessageObject_ = stringObject;
     MceBmessageParamAnalyser analyser(stringObject);
     analyser.StartAnalyse();
@@ -920,7 +920,7 @@ int MceTypesBMessage::SetFractionDeliver(MapFractionDeliverType value)
 {
     LOG_INFO("%{public}s execute", __PRETTY_FUNCTION__);
     FractionDeliver = value;
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 MapFractionDeliverType MceTypesBMessage::GetFractionDeliver() const
@@ -986,7 +986,7 @@ int MceTypesEventReport::BuildObjectData(const uint8_t &masInstanceId, const std
             }
         }
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 IProfileMapEventReport MceTypesEventReport::GetParam() const
@@ -1020,7 +1020,7 @@ int MceTypesFolderListing::BuildObjectData(const std::string &stringObject)
         }
     }
 
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 std::vector<std::string> MceTypesFolderListing::GetList() const

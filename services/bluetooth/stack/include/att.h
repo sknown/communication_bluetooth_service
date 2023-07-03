@@ -748,7 +748,7 @@ void BTSTACK_API ATT_HandleValueConfirmation(uint16_t connectHandle);
 /**
  * @brief Cancel Le ACL connection
  *
- * @return Returns BT_NO_ERROR if the operation is successful, otherwise the operation fails.
+ * @return Returns BT_SUCCESS if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API ATT_LeConnectCancel(const BtAddr *addr);
 

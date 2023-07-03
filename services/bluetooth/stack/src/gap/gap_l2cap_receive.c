@@ -57,7 +57,7 @@ static void GapRecvL2capParameterUpdateReq(
     l2capParam->ctx = ctx;
 
     int ret = GapRunTaskUnBlockProcess(GapReceiveL2capParameterUpdateReqTask, l2capParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -83,7 +83,7 @@ static void GapRecvL2capParameterUpdateRsp(uint16_t aclHandle, uint16_t result, 
     l2capParam->ctx = ctx;
 
     int ret = GapRunTaskUnBlockProcess(GapReceiveL2capParameterUpdateRspTask, l2capParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -105,14 +105,14 @@ void GapDeregisterL2capCallbacks(void)
 
 void GapLeConnectionParameterUpdateReqResult(uint16_t aclHandle, int result)
 {
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("%{public}s: aclHandle:0x%04x result:%{public}d", __FUNCTION__, aclHandle, result);
     }
 }
 
 void GapLeConnectionParameterUpdateRspResult(uint16_t aclHandle, int result)
 {
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("%{public}s: aclHandle:0x%04x result:%{public}d", __FUNCTION__, aclHandle, result);
     }
 }

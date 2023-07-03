@@ -424,7 +424,7 @@ AvrcpTgService::AvrcpTgService() : utility::Context(PROFILE_NAME_AVRCP_TG, "1.6.
 
     using namespace std::placeholders;
     AvrcTgProfile::Observer observer = {
-        std::bind(&AvrcpTgService::OnProfileDisabled, this, RET_NO_ERROR),
+        std::bind(&AvrcpTgService::OnProfileDisabled, this, BT_SUCCESS),
         std::bind(&AvrcpTgService::OnConnectionStateChanged, this, _1, _2),
         std::bind(&AvrcpTgService::FindCtService, this, _1),
         std::bind(&AvrcpTgService::OnButtonPressed, this, _1, _2, _3),
@@ -551,7 +551,7 @@ void AvrcpTgService::EnableNative(void)
 {
     HILOGI("enter");
 
-    int result = RET_NO_ERROR;
+    int result = BT_SUCCESS;
 
     stub::MediaService::GetInstance()->RegisterObserver(mdObserver_.get());
 #ifdef AVRCP_AVSESSION
@@ -562,22 +562,22 @@ void AvrcpTgService::EnableNative(void)
 
     do {
         result = RegisterSecurity();
-        if (result != RET_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             break;
         }
 
         result = RegisterService();
-        if (result != RET_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             break;
         }
 
         result = EnableProfile();
-        if (result != RET_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             break;
         }
     } while (false);
 
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         SetServiceState(AVRC_TG_SERVICE_STATE_ENABLED);
     } else {
         SetServiceState(AVRC_TG_SERVICE_STATE_DISABLED);
@@ -590,7 +590,7 @@ void AvrcpTgService::DisableNative(void)
 {
     HILOGI("enter");
 
-    if (DisableProfile() != RET_NO_ERROR) {
+    if (DisableProfile() != BT_SUCCESS) {
         OnProfileDisabled(RET_BAD_STATUS);
     }
 }
@@ -715,7 +715,7 @@ void AvrcpTgService::OnProfileDisabled(int result)
     result |= UnregisterSecurity();
     stub::MediaService::GetInstance()->UnregisterObserver(mdObserver_.get());
 
-    GetContext()->OnDisable(PROFILE_NAME_AVRCP_TG, result == RET_NO_ERROR);
+    GetContext()->OnDisable(PROFILE_NAME_AVRCP_TG, result == BT_SUCCESS);
 }
 
 bool AvrcpTgService::IsEnabled(void)
@@ -830,7 +830,7 @@ int AvrcpTgService::Connect(const RawAddress &rawAddr)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpTgService::ConnectNative, this, peerAddr));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -860,7 +860,7 @@ int AvrcpTgService::Disconnect(const RawAddress &rawAddr)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpTgService::DisconnectNative, this, peerAddr));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -879,7 +879,7 @@ void AvrcpTgService::DisconnectNative(RawAddress rawAddr)
             break;
         }
 
-        if (profile_->Disconnect(rawAddr) != RET_NO_ERROR) {
+        if (profile_->Disconnect(rawAddr) != BT_SUCCESS) {
             HILOGI("Call AvrcTgProfile::Disconnect Failed Address%{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
         }
     } while (false);
@@ -920,7 +920,7 @@ void AvrcpTgService::AcceptActiveConnect(const RawAddress &rawAddr)
             break;
         }
 
-        if (profile_->Connect(rawAddr) != RET_NO_ERROR) {
+        if (profile_->Connect(rawAddr) != BT_SUCCESS) {
             HILOGI("Call Connect Failed! Address: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
         }
     } while (false);
@@ -956,7 +956,7 @@ void AvrcpTgService::FindCtService(const RawAddress &rawAddr)
 {
     HILOGI("rawAddr: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
 
-    if (sdpManager_->FindCtService(rawAddr, FindCtServiceCallback) != RET_NO_ERROR) {
+    if (sdpManager_->FindCtService(rawAddr, FindCtServiceCallback) != BT_SUCCESS) {
         RejectPassiveConnect(rawAddr);
     }
 }
@@ -1034,7 +1034,7 @@ void AvrcpTgService::OnButtonPressed(const RawAddress &rawAddr, uint8_t button, 
 #else
     OHOS::AVSession::AVControlCommand command;
     SetAvControlCommand(button, command, false);
-    profile_->SendPressButtonRsp(rawAddr, button, label, RET_NO_ERROR);
+    profile_->SendPressButtonRsp(rawAddr, button, label, BT_SUCCESS);
 #endif
 }
 
@@ -1071,7 +1071,7 @@ void AvrcpTgService::SetAddressedPlayer(
 
     int result =
         stub::MediaService::GetInstance()->SetAddressedPlayer(rawAddr.GetAddress(), playerId, uidCounter, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendSetAddressedPlayerRsp(rawAddr, AVRC_ES_CODE_INTERNAL_ERROR, label, result);
     }
 }
@@ -1107,7 +1107,7 @@ void AvrcpTgService::OnSetAddressedPlayerNative(RawAddress rawAddr, uint8_t labe
             break;
         }
 
-        profile_->SendSetAddressedPlayerRsp(rawAddr, status, label, RET_NO_ERROR);
+        profile_->SendSetAddressedPlayerRsp(rawAddr, status, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -1118,7 +1118,7 @@ void AvrcpTgService::SetBrowsedPlayer(const RawAddress &rawAddr, uint16_t player
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), playerId, uidCounter, label);
 
     int result = stub::MediaService::GetInstance()->SetBrowsedPlayer(rawAddr.GetAddress(), playerId, uidCounter, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         std::vector<std::string> folderNames;
         profile_->SendSetBrowsedPlayerRsp(rawAddr, 0x00, 0x00, folderNames, label, AVRC_ES_CODE_INTERNAL_ERROR);
     }
@@ -1190,7 +1190,7 @@ void AvrcpTgService::GetCapabilities(const RawAddress &rawAddr, uint8_t label)
             break;
         }
 
-        profile_->SendGetCapabilitiesRsp(rawAddr, events, label, RET_NO_ERROR);
+        profile_->SendGetCapabilitiesRsp(rawAddr, events, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -1203,7 +1203,7 @@ void AvrcpTgService::GetPlayerAppSettingAttributes(const RawAddress &rawAddr, ui
     HILOGI("rawAddr:%{public}s, label:%{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), label);
 
     int result = stub::MediaService::GetInstance()->GetPlayerAppSettingAttributes(rawAddr.GetAddress(), label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         std::deque<uint8_t> attribtues;
         profile_->SendListPlayerApplicationSettingAttributesRsp(rawAddr, attribtues, label, result);
     }
@@ -1243,7 +1243,7 @@ void AvrcpTgService::OnGetPlayerAppSettingAttributesNative(
             break;
         }
 
-        profile_->SendListPlayerApplicationSettingAttributesRsp(rawAddr, attributes, label, RET_NO_ERROR);
+        profile_->SendListPlayerApplicationSettingAttributesRsp(rawAddr, attributes, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -1253,7 +1253,7 @@ void AvrcpTgService::GetPlayerAppSettingValues(const RawAddress &rawAddr, uint8_
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), attribute, label);
 
     int result = stub::MediaService::GetInstance()->GetPlayerAppSettingValues(rawAddr.GetAddress(), attribute, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         std::deque<uint8_t> values;
         profile_->SendListPlayerApplicationSettingValuesRsp(rawAddr, values, label, result);
     }
@@ -1292,7 +1292,7 @@ void AvrcpTgService::OnGetPlayerAppSettingValuesNative(RawAddress rawAddr, std::
             break;
         }
 
-        profile_->SendListPlayerApplicationSettingValuesRsp(rawAddr, values, label, RET_NO_ERROR);
+        profile_->SendListPlayerApplicationSettingValuesRsp(rawAddr, values, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -1303,7 +1303,7 @@ void AvrcpTgService::GetPlayerAppSettingCurrentValue(
 
     int result = stub::MediaService::GetInstance()->GetPlayerAppSettingCurrentValue(
         rawAddr.GetAddress(), attributes, label, context);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         std::deque<uint8_t> attrs;
         std::deque<uint8_t> vals;
         if (context == AVRC_ACTION_TYPE_GET_PLAYER_APP_SETTING_CURRENT_VALUE) {
@@ -1354,9 +1354,9 @@ void AvrcpTgService::OnGetCurrentPlayerAppSettingValueNative(
         }
 
         if (context == AVRC_ACTION_TYPE_GET_PLAYER_APP_SETTING_CURRENT_VALUE) {
-            profile_->SendGetCurrentPlayerApplicationSettingValueRsp(rawAddr, attributes, values, label, RET_NO_ERROR);
+            profile_->SendGetCurrentPlayerApplicationSettingValueRsp(rawAddr, attributes, values, label, BT_SUCCESS);
         } else {
-            profile_->SendPlayerApplicationSettingChangedRsp(true, attributes, values, label, RET_NO_ERROR);
+            profile_->SendPlayerApplicationSettingChangedRsp(true, attributes, values, label, BT_SUCCESS);
         }
     } while (false);
 }
@@ -1369,7 +1369,7 @@ void AvrcpTgService::SetPlayerAppSettingCurrentValue(
 
     int result = stub::MediaService::GetInstance()->SetPlayerAppSettingCurrentValue(
         rawAddr.GetAddress(), attributes, values, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendSetPlayerApplicationSettingValueRsp(rawAddr, label, result);
     }
 }
@@ -1406,7 +1406,7 @@ void AvrcpTgService::OnSetPlayerAppSettingCurrentValueNative(RawAddress rawAddr,
             break;
         }
 
-        profile_->SendSetPlayerApplicationSettingValueRsp(rawAddr, label, RET_NO_ERROR);
+        profile_->SendSetPlayerApplicationSettingValueRsp(rawAddr, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -1417,7 +1417,7 @@ void AvrcpTgService::GetPlayerAppSettingAttributeText(
 
     int result =
         stub::MediaService::GetInstance()->GetPlayerAppSettingAttributeText(rawAddr.GetAddress(), attributes, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendSetPlayerApplicationSettingValueRsp(rawAddr, label, result);
     }
 }
@@ -1456,7 +1456,7 @@ void AvrcpTgService::OnGetPlayerAppSettingAttributeTextNative(
             break;
         }
 
-        profile_->SendGetPlayerApplicationSettingAttributeTextRsp(rawAddr, attributes, attrStr, label, BT_NO_ERROR);
+        profile_->SendGetPlayerApplicationSettingAttributeTextRsp(rawAddr, attributes, attrStr, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -1468,7 +1468,7 @@ void AvrcpTgService::GetPlayerAppSettingValueText(
 
     int result = stub::MediaService::GetInstance()->GetPlayerAppSettingValueText(
         rawAddr.GetAddress(), attributeId, values, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendSetPlayerApplicationSettingValueRsp(rawAddr, label, result);
     }
 }
@@ -1507,7 +1507,7 @@ void AvrcpTgService::OnGetPlayerAppSettingValueTextNative(
             break;
         }
 
-        profile_->SendGetPlayerApplicationSettingValueTextRsp(rawAddr, values, valueStr, label, BT_NO_ERROR);
+        profile_->SendGetPlayerApplicationSettingValueTextRsp(rawAddr, values, valueStr, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -1522,7 +1522,7 @@ void AvrcpTgService::GetElementAttributes(
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), static_cast<unsigned long long>(identifier), label);
     int result =
         stub::MediaService::GetInstance()->GetElementAttributes(rawAddr.GetAddress(), identifier, attributes, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         std::vector<std::string> values;
         profile_->SendGetElementAttributesRsp(rawAddr, attributes, values, label, result);
     }
@@ -1560,7 +1560,7 @@ void AvrcpTgService::OnGetElementAttributesNative(
             break;
         }
 
-        profile_->SendGetElementAttributesRsp(rawAddr, attributes, values, label, BT_NO_ERROR);
+        profile_->SendGetElementAttributesRsp(rawAddr, attributes, values, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -1573,7 +1573,7 @@ void AvrcpTgService::GetPlayStatus(const RawAddress &rawAddr, uint8_t label, uin
     HILOGI("addr:%{public}s, label:%{public}d, context:%{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), label, context);
 #ifndef AVRCP_AVSESSION
     int result = stub::MediaService::GetInstance()->GetPlayStatus(rawAddr.GetAddress(), label, context);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         if (context == AVRC_ACTION_TYPE_GET_PLAY_STATUS) {
             profile_->SendGetPlayStatusRsp(rawAddr,
                 AVRC_PLAY_STATUS_INVALID_SONG_LENGTH,
@@ -1652,11 +1652,11 @@ void AvrcpTgService::OnGetPlayStatusNative(
         }
 
         if (context == AVRC_ACTION_TYPE_GET_PLAY_STATUS) {
-            profile_->SendGetPlayStatusRsp(rawAddr, songLength, songPosition, playStatus, label, RET_NO_ERROR);
+            profile_->SendGetPlayStatusRsp(rawAddr, songLength, songPosition, playStatus, label, BT_SUCCESS);
         } else if (context == AVRC_ACTION_TYPE_NOTIFY_PLAYBACK_STATUS_CHANGED) {
-            profile_->SendPlaybackStatusChangedRsp(true, AVRC_PLAY_STATUS_ERROR, label, RET_NO_ERROR);
+            profile_->SendPlaybackStatusChangedRsp(true, AVRC_PLAY_STATUS_ERROR, label, BT_SUCCESS);
         } else if (context == AVRC_ACTION_TYPE_NOTIFY_PLAYBACK_POS_CHANGED) {
-            profile_->SendPlaybackPosChangedRsp(true, AVRC_PLAY_STATUS_INVALID_SONG_POSITION, label, RET_NO_ERROR);
+            profile_->SendPlaybackPosChangedRsp(true, AVRC_PLAY_STATUS_INVALID_SONG_POSITION, label, BT_SUCCESS);
         }
     } while (false);
 }
@@ -1667,7 +1667,7 @@ void AvrcpTgService::PlayItem(
     HILOGI("addr:%{public}s, scope:%{public}d, uid:%{public}llu, uidCounter:%{public}d, label:%{public}d",
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), scope, static_cast<unsigned long long>(uid), uidCounter, label);
     int result = stub::MediaService::GetInstance()->PlayItem(rawAddr.GetAddress(), scope, uid, uidCounter, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendPlayItemRsp(rawAddr, AVRC_ES_CODE_INTERNAL_ERROR, label, result);
     }
 }
@@ -1701,7 +1701,7 @@ void AvrcpTgService::OnPlayItemNative(RawAddress rawAddr, uint8_t label, int sta
             break;
         }
 
-        profile_->SendPlayItemRsp(rawAddr, status, label, RET_NO_ERROR);
+        profile_->SendPlayItemRsp(rawAddr, status, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -1712,7 +1712,7 @@ void AvrcpTgService::AddToNowPlaying(
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), scope, static_cast<unsigned long long>(uid), uidCounter, label);
     int result =
         stub::MediaService::GetInstance()->AddToNowPlaying(rawAddr.GetAddress(), scope, uid, uidCounter, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendAddToNowPlayingRsp(rawAddr, AVRC_ES_CODE_INTERNAL_ERROR, label, result);
     }
 }
@@ -1748,7 +1748,7 @@ void AvrcpTgService::OnAddToNowPlayingNative(RawAddress rawAddr, uint8_t label, 
             break;
         }
 
-        profile_->SendAddToNowPlayingRsp(rawAddr, status, label, RET_NO_ERROR);
+        profile_->SendAddToNowPlayingRsp(rawAddr, status, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -1763,7 +1763,7 @@ void AvrcpTgService::ChangePath(
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), uidCounter, direction, static_cast<unsigned long long>(folderUid), label);
     int result =
         stub::MediaService::GetInstance()->ChangePath(rawAddr.GetAddress(), uidCounter, direction, folderUid, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendChangePathRsp(rawAddr, AVRC_TG_CP_NUMBER_OF_ITEMS, label, AVRC_ES_CODE_INTERNAL_ERROR);
     }
 }
@@ -1812,7 +1812,7 @@ void AvrcpTgService::GetFolderItems(const RawAddress &rawAddr, uint8_t scope, ui
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), scope, startItem, endItem, label);
     int result = stub::MediaService::GetInstance()->GetFolderItems(
         rawAddr.GetAddress(), scope, startItem, endItem, attributes, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         if (scope == AVRC_MEDIA_SCOPE_PLAYER_LIST) {
             std::vector<AvrcMpItem> items;
             profile_->SendGetFolderItemsRsp(rawAddr, 0x00, items, label, AVRC_ES_CODE_INTERNAL_ERROR);
@@ -1906,7 +1906,7 @@ void AvrcpTgService::GetItemAttributes(const RawAddress &rawAddr, uint8_t scope,
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), scope, static_cast<unsigned long long>(uid), uidCounter, label);
     int result = stub::MediaService::GetInstance()->GetItemAttributes(
         rawAddr.GetAddress(), scope, uid, uidCounter, attributes, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         std::vector<uint32_t> attrs;
         std::vector<std::string> vals;
         profile_->SendGetItemAttributesRsp(rawAddr, attrs, vals, label, AVRC_ES_CODE_INTERNAL_ERROR);
@@ -1953,7 +1953,7 @@ void AvrcpTgService::OnGetItemAttributesNative(
 void AvrcpTgService::GetTotalNumberOfItems(const RawAddress &rawAddr, uint8_t scope, uint8_t label) const
 {
     int result = stub::MediaService::GetInstance()->GetTotalNumberOfItems(rawAddr.GetAddress(), scope, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendGetTotalNumberOfItemsRsp(rawAddr, 0x00, 0x00, label, AVRC_ES_CODE_INTERNAL_ERROR);
     }
 }
@@ -2005,7 +2005,7 @@ void AvrcpTgService::SetAbsoluteVolume(const RawAddress &rawAddr, uint8_t volume
 {
     HILOGI("addr:%{public}s, volume:%{public}d, label:%{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), volume, label);
     int result = stub::MediaService::GetInstance()->SetAbsoluteVolume(rawAddr.GetAddress(), volume, label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendSetAbsoluteVolumeRsp(rawAddr, AVRC_ABSOLUTE_VOLUME_PERCENTAGE_0, label, result);
     }
 }
@@ -2041,7 +2041,7 @@ void AvrcpTgService::OnSetAbsoluteVolumeNative(RawAddress rawAddr, uint8_t volum
             break;
         }
 
-        profile_->SendSetAbsoluteVolumeRsp(rawAddr, volume, label, RET_NO_ERROR);
+        profile_->SendSetAbsoluteVolumeRsp(rawAddr, volume, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2054,7 +2054,7 @@ void AvrcpTgService::GetSelectedTrack(const RawAddress &rawAddr, uint8_t label) 
     HILOGI("addr:%{public}s, label:%{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), label);
 
     int result = stub::MediaService::GetInstance()->GetSelectedTrack(rawAddr.GetAddress(), label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendTrackChangedRsp(true, 0xFFFFFFFFFFFFFFFF, label, result);
     }
 }
@@ -2091,7 +2091,7 @@ void AvrcpTgService::OnGetSelectedTrackNative(RawAddress rawAddr, uint64_t uid, 
             break;
         }
 
-        profile_->SendTrackChangedRsp(true, uid, label, RET_NO_ERROR);
+        profile_->SendTrackChangedRsp(true, uid, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2100,7 +2100,7 @@ void AvrcpTgService::GetAddressedPlayer(const RawAddress &rawAddr, uint8_t label
     HILOGI("addr:%{public}s, label:%{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), label);
 
     int result = stub::MediaService::GetInstance()->GetAddressedPlayer(rawAddr.GetAddress(), label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendAddressedPlayerChangedRsp(true, 0xFFFF, 0xFFFF, label, result);
     }
 }
@@ -2140,7 +2140,7 @@ void AvrcpTgService::OnGetAddressedPlayerNative(
             break;
         }
 
-        profile_->SendAddressedPlayerChangedRsp(true, playerId, uidCounter, label, RET_NO_ERROR);
+        profile_->SendAddressedPlayerChangedRsp(true, playerId, uidCounter, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2149,7 +2149,7 @@ void AvrcpTgService::GetUidCounter(const RawAddress &rawAddr, uint8_t label) con
     HILOGI("addr:%{public}s, label:%{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), label);
 
     int result = stub::MediaService::GetInstance()->GetUidCounter(rawAddr.GetAddress(), label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendUidsChangedRsp(true, 0xFFFF, label, result);
     }
 }
@@ -2186,7 +2186,7 @@ void AvrcpTgService::OnGetUidCounterNative(const RawAddress &rawAddr, uint16_t u
             break;
         }
 
-        profile_->SendUidsChangedRsp(true, uidCounter, label, RET_NO_ERROR);
+        profile_->SendUidsChangedRsp(true, uidCounter, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2195,7 +2195,7 @@ void AvrcpTgService::GetCurrentAbsoluteVolume(const RawAddress &rawAddr, uint8_t
     HILOGI("addr:%{public}s, label:%{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), label);
 
     int result = stub::MediaService::GetInstance()->GetCurrentAbsoluteVolume(rawAddr.GetAddress(), label);
-    if (result != RET_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         profile_->SendVolumeChangedRsp(true, AVRC_ABSOLUTE_VOLUME_INVALID, label, result);
     }
 }
@@ -2231,7 +2231,7 @@ void AvrcpTgService::OnGetCurrentAbsoluteVolumeNative(const RawAddress &rawAddr,
             break;
         }
 
-        profile_->SendVolumeChangedRsp(true, volume, label, RET_NO_ERROR);
+        profile_->SendVolumeChangedRsp(true, volume, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2264,8 +2264,8 @@ void AvrcpTgService::NotifyPlaybackStatusChangedNative(uint8_t playStatus, uint3
             break;
         }
 
-        profile_->SendPlaybackStatusChangedRsp(false, playStatus, label, RET_NO_ERROR);
-        profile_->SendPlaybackPosChangedRsp(false, playbackPos, label, RET_NO_ERROR);
+        profile_->SendPlaybackStatusChangedRsp(false, playStatus, label, BT_SUCCESS);
+        profile_->SendPlaybackPosChangedRsp(false, playbackPos, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2292,8 +2292,8 @@ void AvrcpTgService::NotifyTrackChangedNative(uint64_t uid, uint32_t playbackPos
             break;
         }
 
-        profile_->SendTrackChangedRsp(false, uid, label, RET_NO_ERROR);
-        profile_->SendPlaybackPosChangedRsp(false, playbackPos, label, RET_NO_ERROR);
+        profile_->SendTrackChangedRsp(false, uid, label, BT_SUCCESS);
+        profile_->SendPlaybackPosChangedRsp(false, playbackPos, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2319,8 +2319,8 @@ void AvrcpTgService::NotifyTrackReachedEndNative(uint32_t playbackPos, uint8_t l
             break;
         }
 
-        profile_->SendTrackReachedEndRsp(false, label, RET_NO_ERROR);
-        profile_->SendPlaybackPosChangedRsp(false, playbackPos, label, RET_NO_ERROR);
+        profile_->SendTrackReachedEndRsp(false, label, BT_SUCCESS);
+        profile_->SendPlaybackPosChangedRsp(false, playbackPos, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2346,8 +2346,8 @@ void AvrcpTgService::NotifyTrackReachedStartNative(uint32_t playbackPos, uint8_t
             break;
         }
 
-        profile_->SendTrackReachedStartRsp(false, label, RET_NO_ERROR);
-        profile_->SendPlaybackPosChangedRsp(false, playbackPos, label, RET_NO_ERROR);
+        profile_->SendTrackReachedStartRsp(false, label, BT_SUCCESS);
+        profile_->SendPlaybackPosChangedRsp(false, playbackPos, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2373,7 +2373,7 @@ void AvrcpTgService::NotifyPlaybackPosChangedNative(uint32_t playbackPos, uint8_
             break;
         }
 
-        profile_->SendPlaybackPosChangedRsp(false, playbackPos, label, RET_NO_ERROR);
+        profile_->SendPlaybackPosChangedRsp(false, playbackPos, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2402,7 +2402,7 @@ void AvrcpTgService::NotifyPlayerAppSettingChangedNative(
             break;
         }
 
-        profile_->SendPlayerApplicationSettingChangedRsp(false, attributes, values, label, RET_NO_ERROR);
+        profile_->SendPlayerApplicationSettingChangedRsp(false, attributes, values, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2427,7 +2427,7 @@ void AvrcpTgService::NotifyNowPlayingContentChangedNative(uint8_t label)
         if (!IsEnabled()) {
             break;
         }
-        profile_->SendNowPlayingContentChangedRsp(false, label, RET_NO_ERROR);
+        profile_->SendNowPlayingContentChangedRsp(false, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2452,7 +2452,7 @@ void AvrcpTgService::NotifyAvailablePlayersChangedNative(uint8_t label)
         if (!IsEnabled()) {
             break;
         }
-        profile_->SendAvailablePlayersChangedRsp(false, label, RET_NO_ERROR);
+        profile_->SendAvailablePlayersChangedRsp(false, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2478,7 +2478,7 @@ void AvrcpTgService::NotifyAddressedPlayerChangedNative(uint16_t playerId, uint1
         if (!IsEnabled()) {
             break;
         }
-        profile_->SendAddressedPlayerChangedRsp(false, playerId, uidCounter, label, RET_NO_ERROR);
+        profile_->SendAddressedPlayerChangedRsp(false, playerId, uidCounter, label, BT_SUCCESS);
         profile_->SendPlaybackStatusChangedRsp(false, AVRC_PLAY_STATUS_ERROR, label, RET_BAD_STATUS);
         profile_->SendTrackChangedRsp(true, 0xFFFFFFFFFFFFFFFF, label, RET_BAD_STATUS);
         profile_->SendTrackReachedEndRsp(false, label, RET_BAD_STATUS);
@@ -2513,7 +2513,7 @@ void AvrcpTgService::NotifyUidChangedNative(uint16_t uidCounter, uint8_t label)
             break;
         }
 
-        profile_->SendUidsChangedRsp(false, uidCounter, label, RET_NO_ERROR);
+        profile_->SendUidsChangedRsp(false, uidCounter, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2540,7 +2540,7 @@ void AvrcpTgService::NotifyVolumeChangedNative(uint8_t volume, uint8_t label)
         if (!IsEnabled()) {
             break;
         }
-        profile_->SendVolumeChangedRsp(false, volume, label, RET_NO_ERROR);
+        profile_->SendVolumeChangedRsp(false, volume, label, BT_SUCCESS);
     } while (false);
 }
 
@@ -2640,7 +2640,7 @@ void AvrcpTgService::ChannelEventCallback(
         switch (event) {
             case AVCT_CONNECT_IND_EVT:
             case AVCT_CONNECT_CFM_EVT:
-                if (result != RET_NO_ERROR) {
+                if (result != BT_SUCCESS) {
                     service->DecConnectionNum();
                 }
                 break;

@@ -15,12 +15,11 @@
 import("//build/config/features.gni")
 import("//build/test.gni")
 module_output_path = "bluetooth/host"
-SUBSYSTEM_DIR = "//foundation/communication"
 
 ##############################fuzztest##########################################
 ohos_fuzztest("SetBluetoothScanModeFuzzTest") {
   module_out_path = module_output_path
-  fuzz_config_file = "//foundation/communication/bluetooth/test/fuzztest/host/setbluetoothscanmode_fuzzer"
+  fuzz_config_file = "//foundation/communication/bluetooth_service/test/fuzztest/host/setbluetoothscanmode_fuzzer"
 
   cflags = [
     "-g",
@@ -33,9 +32,12 @@ ohos_fuzztest("SetBluetoothScanModeFuzzTest") {
 
   sources = [ "setbluetoothscanmode_fuzzer.cpp" ]
 
-  deps = [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework" ]
+  deps = [ ]
 
-  external_deps = [ "hilog:libhilog" ]
+  external_deps = [
+    "bluetooth:btframework",
+    "hilog:libhilog"
+  ]
 }
 
 ###############################################################################

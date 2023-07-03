@@ -156,7 +156,7 @@ int BTM_Initialize()
 {
     LOG_DEBUG("%{public}s start", __FUNCTION__);
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     do {
         int32_t ret = AlarmModuleInit();
         if (ret != 0) {
@@ -203,10 +203,10 @@ NO_SANITIZE("cfi") int BTM_Close()
 {
     LOG_DEBUG("%{public}s start", __FUNCTION__);
 
-    if (BTM_Disable(LE_CONTROLLER) != BT_NO_ERROR) {
+    if (BTM_Disable(LE_CONTROLLER) != BT_SUCCESS) {
         LOG_WARN("Disable LE Failed");
     }
-    if (BTM_Disable(BREDR_CONTROLLER) != BT_NO_ERROR) {
+    if (BTM_Disable(BREDR_CONTROLLER) != BT_SUCCESS) {
         LOG_WARN("Disable BREDR Failed");
     }
 
@@ -240,7 +240,7 @@ NO_SANITIZE("cfi") int BTM_Close()
 
     LOG_DEBUG("%{public}s end", __FUNCTION__);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static int BtmEnableBrEdrAndSharedModules()
@@ -248,11 +248,11 @@ static int BtmEnableBrEdrAndSharedModules()
     BtmStartSnoopOutput();
 
     int result = HCI_Initialize();
-    if (result == BT_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         HCI_RegisterFailureCallback(&g_hciFailureCallbacks);
 
         result = BtmInitController();
-        if (result == BT_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             BtmStartAcl();
             BtmStartPm();
             BtmStartSco();
@@ -266,7 +266,7 @@ static int BtmEnableBrEdrAndSharedModules()
         }
     }
 
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HCI_Close();
 
         BtmStopSnoopOutput();
@@ -287,7 +287,7 @@ static int BtmEnableBrEdrModules()
     }
     LOG_DEBUG("ModuleStartup end");
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static int BtmEnableLeAndSharedModules()
@@ -295,11 +295,11 @@ static int BtmEnableLeAndSharedModules()
     BtmStartSnoopOutput();
 
     int result = HCI_Initialize();
-    if (result == BT_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         HCI_RegisterFailureCallback(&g_hciFailureCallbacks);
 
         result = BtmInitController();
-        if (result == BT_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             BtmStartAcl();
             BtmStartLeSecurity();
             BtmStartWhiteList();
@@ -313,7 +313,7 @@ static int BtmEnableLeAndSharedModules()
         }
     }
 
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HCI_Close();
 
         BtmStopSnoopOutput();
@@ -334,7 +334,7 @@ static int BtmEnableLeModules()
     }
     LOG_DEBUG("ModuleStartup end");
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static void BtmDisableBrEdrAndSharedModules()
@@ -425,7 +425,7 @@ int BTM_Enable(int controller)
         return BT_BAD_STATUS;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     MutexLock(g_modeLock);
 
@@ -436,7 +436,7 @@ int BTM_Enable(int controller)
             result = BtmEnableBrEdrModules();
         }
 
-        if (result == BT_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             g_currentMode |= MODE_BREDR;
         }
     } else if (controller == LE_CONTROLLER) {
@@ -446,7 +446,7 @@ int BTM_Enable(int controller)
             result = BtmEnableLeModules();
         }
 
-        if (result == BT_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             g_currentMode |= MODE_LE;
         }
     }
@@ -497,7 +497,7 @@ int BTM_Disable(int controller)
 
     MutexUnlock(g_modeLock);
     LOG_DEBUG("%{public}s end", __FUNCTION__);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 bool BTM_IsEnabled(int controller)
@@ -540,7 +540,7 @@ int BTM_RegisterCallbacks(const BtmCallbacks *callbacks, void *context)
     ListAddLast(g_btmCallbackList, block);
     MutexUnlock(g_btmCallbackListLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_DeregisterCallbacks(const BtmCallbacks *callbacks)
@@ -570,7 +570,7 @@ int BTM_DeregisterCallbacks(const BtmCallbacks *callbacks)
 
     MutexUnlock(g_btmCallbackListLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static void BtmOnHCIFailure()

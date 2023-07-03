@@ -11,7 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-domain: BLUETOOTH
+domain: BT_SERVICE
 
 BR_SWITCH_STATE:
   __BASE: {type: STATISTIC, level: MINOR, tag: PowerStats, desc: bluetooth br state message}
@@ -67,14 +67,6 @@ BLE_SCAN_DUTY_CYCLE:
   WINDOW: {type: INT32, desc: scan duration time}
   INTERVAL: {type: INT32, desc: Total time, scan time + rest time}
   TYPE: {type: INT32, desc: scan type}
-
-SPP_CONNECT_STATE:
-  __BASE: {type: STATISTIC, level: MINOR, desc: bluetooth spp connect message}
-  ACTION: {type: STRING, desc: connect or close}
-  ID: {type: INT32, desc: socket number}
-  ADDRESS: {type: STRING, desc: bt device address}
-  PID: {type: INT32, desc: PID value}
-  UID: {type: INT32, desc: UID value}
 
 GATT_CONNECT_STATE:
   __BASE: {type: STATISTIC, level: MINOR, desc: bluetooth gatt connect message}

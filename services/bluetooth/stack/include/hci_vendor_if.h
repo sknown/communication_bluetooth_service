@@ -40,7 +40,7 @@ typedef struct {
  * @brief       Register hci vendor event callback
  * @param       callback            hci vendor event callback
  * @param[in]   context             hci vendor event parameter
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int HCIVIF_RegisterVendorEventCallback(
@@ -49,7 +49,7 @@ BTSTACK_API int HCIVIF_RegisterVendorEventCallback(
 /**
  * @brief       Deregister vendor event callback
  * @param       callback            hci vendor event callback
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 BTSTACK_API int HCIVIF_DeregisterVendorEventCallback(const HCIVendorEventCallback *callback);
@@ -60,7 +60,7 @@ BTSTACK_API int HCIVIF_DeregisterVendorEventCallback(const HCIVendorEventCallbac
  * @param       opCode              The cmd opcode.
  * @param       param               The cmd parameter.
  * @param       paramLength         The cmd parameter length.
- * @return      @c BT_NO_ERROR      : The function is executed successfully.
+ * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
 int BTSTACK_API HCIVIF_SendCmd(uint16_t opCode, const void *param, size_t paramLength);

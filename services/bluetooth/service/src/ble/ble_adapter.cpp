@@ -103,6 +103,11 @@ struct BleAdapter::impl {
             LOG_DEBUG("%{public}s:%{public}d:%{public}s", __FILE__, __LINE__, __FUNCTION__);
         }
 
+        void OnReadRemoteRssiValue(const RawAddress &addr, int rssi, int status) override
+        {
+            LOG_DEBUG("%{public}s:%{public}d:%{public}s", __FILE__, __LINE__, __FUNCTION__);
+        }
+
     private:
         BleAdapter &bleAdapter_;
     };
@@ -167,14 +172,14 @@ bool BleAdapter::EnableTask()
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
-    bool ret = (BTM_Enable(LE_CONTROLLER) == BT_NO_ERROR);
+    bool ret = (BTM_Enable(LE_CONTROLLER) == BT_SUCCESS);
     if (!ret) {
         pimpl->btmEnableFlag_ = false;
         LOG_ERROR("[BleAdapter] %{public}s:BTM enable failed!", __func__);
     } else {
         pimpl->btmEnableFlag_ = true;
         LoadConfig();
-        ret = (InitBtmAndGap() == BT_NO_ERROR);
+        ret = (InitBtmAndGap() == BT_SUCCESS);
         LOG_DEBUG("[BleAdapter] %{public}s:BTM enable successfully!", __func__);
     }
 
@@ -186,17 +191,17 @@ bool BleAdapter::EnableTask()
 int BleAdapter::InitBtmAndGap()
 {
     int ret = RegisterCallbackToBtm();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleAdapter] %{public}s:RegisterCallbackToBtm failed!", __func__);
     }
 
     ret = SetLocalIrkAndIdentityAddrToBtm();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleAdapter] %{public}s:SetLocalIrkAndIdentityAddrToBtm failed!", __func__);
     }
 
     ret = SetRpaAddrAndTypeToBtm();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleAdapter] %{public}s:SetRpaAddrAndTypeToBtm failed!", __func__);
     }
 
@@ -205,7 +210,7 @@ int BleAdapter::InitBtmAndGap()
     ret = GAPIF_LeSetSecurityMode(level1, level2);
     if (ret == BT_NOT_SUPPORT) {
         ret = GAPIF_LeSetSecurityMode(LE_MODE_1_LEVEL_3, level2);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_ERROR("[BleAdapter] %{public}s:GAP_LeSetSecurityMode failed!", __func__);
         }
     }
@@ -213,12 +218,12 @@ int BleAdapter::InitBtmAndGap()
     RegisterBleSecurityCallback(*pimpl->observer_.get());
 
     ret = GAPIF_LeSetMinEncKeySize(GAP_ENC_KEY_MIN_SIZE);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleAdapter] %{public}s:GAP_LeSetMinEncKeySize failed!", __func__);
     }
 
     ret = BleProperties::GetInstance().SetBondableMode(GAP_BONDABLE_MODE);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleAdapter] %{public}s:SetBondableMode failed!", __func__);
     }
 
@@ -249,7 +254,7 @@ bool BleAdapter::DisableTask()
     SavePeerDeviceInfoToConf(pimpl->peerConnDeviceList_);
     ClearPeerDeviceInfo();
     int ret = BleProperties::GetInstance().SetBondableMode(GAP_BONDABLE_MODE_NON);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleAdapter] %{public}s:SetBondableMode failed!", __func__);
     }
 
@@ -260,7 +265,7 @@ bool BleAdapter::DisableTask()
     ClearScanResultInfo();
     DeregisterAllCallback();
 
-    ret = (BTM_Disable(LE_CONTROLLER) == BT_NO_ERROR);
+    ret = (BTM_Disable(LE_CONTROLLER) == BT_SUCCESS);
     if (!ret) {
         LOG_ERROR("[BleAdapter] %{public}s:BTM Disable failed!", __func__);
     } else {
@@ -287,7 +292,7 @@ void BleAdapter::PostEnable()
     }
 
     int ret = SetBleRoles();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleAdvertiserImpl] %{public}s:Set ble roles failed!.", __func__);
     }
 
@@ -385,7 +390,7 @@ void BleAdapter::GenResPriAddrResult(uint8_t result, const uint8_t addr[BT_ADDRE
     (void)memcpy_s(&btAddr.addr, BT_ADDRESS_SIZE, addr, BT_ADDRESS_SIZE);
     btAddr.type = BLE_ADDR_TYPE_RANDOM;
     int ret = BTM_SetLeRandomAddress(&btAddr);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleAdapter] %{public}s:GenResPriAddrResult failed!", __func__);
     }
     BTM_SetOwnAddressType(BLE_ADDR_TYPE_RANDOM);
@@ -398,12 +403,12 @@ int BleAdapter::SetRpaAddrAndTypeToBtm()
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
     /// btm set address type and rpa address
-    int ret = BT_NO_ERROR;
+    int ret = BT_SUCCESS;
     switch (BleConfig::GetInstance().GetBleAddrType()) {
         case BLE_ADDR_TYPE_RPA: {
             std::unique_lock<std::mutex> lock(pimpl->mutexRpa_);
             ret = GAPIF_LeGenResPriAddr(&BleAdapter::GenResPriAddrResult, this);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_ERROR("[BleAdapter] %{public}s:GAP_LeGenResPriAddrAsync failed!", __func__);
             }
             if (pimpl->cvfull_.wait_for(lock, std::chrono::seconds(BLE_THREAD_WAIT_TIMEOUT)) ==
@@ -441,7 +446,7 @@ int BleAdapter::SetLocalIrkAndIdentityAddrToBtm() const
     BTM_SetLocalIdentityResolvingKey(&btmKey);
     /// check public address
     std::string addr = BleConfig::GetInstance().GetLocalAddress();
-    int ret = BT_NO_ERROR;
+    int ret = BT_SUCCESS;
     if ((addr.empty()) || (INVALID_MAC_ADDRESS.compare(addr) == 0)) {
         std::vector<uint8_t>().swap(vec);
         BleUtils::GetRandomAddress(vec, false);
@@ -450,7 +455,7 @@ int BleAdapter::SetLocalIrkAndIdentityAddrToBtm() const
         BTM_SetOwnAddressType(BLE_ADDR_TYPE::BLE_ADDR_TYPE_RANDOM);
         HILOGI("GAP_LeSetStaticIdentityAddr random addr = %{public}s!", GetEncryptAddr(addr).c_str());
         ret = GAPIF_LeSetStaticIdentityAddr(&vec[0]);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_DEBUG("[BleAdapter] %{public}s:GAP_LeSetStaticIdentityAddr failed!", __func__);
         }
     }
@@ -623,7 +628,7 @@ bool BleAdapter::StartPair(const RawAddress &device)
         return false;
     }
 
-    uint8_t peerAddrType = GetPeerDeviceAddrType(device.GetAddress());
+    uint8_t peerAddrType = GetPeerDeviceAddrType(RawAddress(device.GetAddress()));
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
         peerAddrType = it->second.GetAddressType();
@@ -660,7 +665,7 @@ bool BleAdapter::CancelPairing(const RawAddress &device)
             return false;
         }
 
-        if (BT_NO_ERROR == pimpl->bleSecurity_->CancelPairing(device)) {
+        if (BT_SUCCESS == pimpl->bleSecurity_->CancelPairing(device)) {
             it->second.SetPairedStatus(BLE_PAIR_CANCELING);
         } else {
             LOG_ERROR("[BleAdapter] %{public}s:CancelPairing failed, because of gap cancel pair failed!", __func__);
@@ -687,7 +692,7 @@ bool BleAdapter::RemovePairWithDisConnect(const RawAddress &device, bool isDisco
 
     if ((it->second.IsAclConnected()) && (isDisconnect)) {
         int ret = BTM_AclDisconnect(it->second.GetConnectionHandle(), BTM_ACL_DISCONNECT_REASON);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_ERROR("[BleAdapter] %{public}s:BTM_AclDisconnect failed!", __func__);
         }
     }
@@ -740,13 +745,13 @@ bool BleAdapter::RemoveAllPairs()
 
         std::string addr = it->second.GetRawAddress().GetAddress();
         BleConfig::GetInstance().RemovePairedDevice(addr);
-        removeDevices.push_back(it->second.GetRawAddress().GetAddress());
+        removeDevices.push_back(it->second.GetRawAddress());
 
-        int ret = BT_NO_ERROR;
+        int ret = BT_SUCCESS;
         if (it->second.IsAclConnected()) {
             ret = BTM_AclDisconnect(it->second.GetConnectionHandle(), BTM_ACL_DISCONNECT_REASON);
         }
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_ERROR("[BleAdapter] %{public}s:BTM_AclDisconnect failed!", __func__);
         }
         pimpl->peerConnDeviceList_.erase(it++);
@@ -816,7 +821,7 @@ bool BleAdapter::SetDevicePasskey(const RawAddress &device, int passkey, bool ac
     } else {
         ret = pimpl->bleSecurity_->SetDevicePasskey(device, passkey, GAP_ACCEPT);
     }
-    if (BT_NO_ERROR != ret) {
+    if (BT_SUCCESS != ret) {
         LOG_ERROR("[BleAdapter] %{public}s:SetDevicePasskey failed!", __func__);
         return false;
     }
@@ -893,7 +898,7 @@ bool BleAdapter::SetBondableMode(int mode) const
     LOG_DEBUG("[BleAdapter] %{public}s:%{public}d", __func__, mode);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
-    return (BleProperties::GetInstance().SetBondableMode(mode) == BT_NO_ERROR);
+    return (BleProperties::GetInstance().SetBondableMode(mode) == BT_SUCCESS);
 }
 
 bool BleAdapter::SetDevicePairingConfirmation(const RawAddress &device, bool accept) const
@@ -923,7 +928,7 @@ bool BleAdapter::SetDevicePairingConfirmation(const RawAddress &device, bool acc
     } else {
         ret = pimpl->bleSecurity_->SetUserConfirm(device, GAP_ACCEPT);
     }
-    if (BT_NO_ERROR != ret) {
+    if (BT_SUCCESS != ret) {
         LOG_ERROR("[BleAdapter] %{public}s:failed!", __func__);
         return false;
     }
@@ -1219,7 +1224,7 @@ int BleAdapter::RegisterCallbackToBtm()
     pimpl->btmAclCb_.readRssiComplete = &BleAdapter::OnReadRemoteRssiEvent;
 
     int ret = BTM_RegisterAclCallbacks(&pimpl->btmAclCb_, this);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleAdapter] %{public}s:BTM_RegisterAclCallbacks failed!", __func__);
     }
     return ret;
@@ -1234,7 +1239,7 @@ int BleAdapter::DeregisterCallbackToBtm() const
     }
 
     int ret = BTM_DeregisterAclCallbacks(&pimpl->btmAclCb_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleAdapter] %{public}s:DeregisterCallbackToBtm failed!", __func__);
     }
     return ret;
@@ -1245,7 +1250,7 @@ void BleAdapter::LeConnectionComplete(
 {
     HILOGI("status: %{public}u", status);
 
-    if (status != BT_NO_ERROR) {
+    if (status != BT_SUCCESS) {
         HILOGI("status: %{public}u", status);
         return;
     }
@@ -1300,7 +1305,7 @@ void BleAdapter::LeDisconnectionComplete(uint8_t status, uint16_t connectionHand
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    if (status != BT_NO_ERROR) {
+    if (status != BT_SUCCESS) {
         LOG_DEBUG("[BleAdapter] %{public}s:%u", __func__, status);
         return;
     }
@@ -1329,7 +1334,7 @@ void BleAdapter::LePairComplete(const RawAddress &device, const int status) cons
     LOG_DEBUG("[BleAdapter] %{public}s:result %{public}d.", __func__, status);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
-    if (status == BT_NO_ERROR) {
+    if (status == BT_SUCCESS) {
         auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
         if (it == pimpl->peerConnDeviceList_.end()) {
             HILOGI("addr %{public}s.", GetEncryptAddr(device.GetAddress()).c_str());
@@ -1450,7 +1455,7 @@ bool BleAdapter::ReadRemoteRssiValue(const RawAddress &device) const
     (void)memset_s(&addr, sizeof(addr), 0x00, sizeof(addr));
     addr.type = GetPeerDeviceAddrType(device);
     device.ConvertToUint8(addr.addr);
-    return (BTM_ReadRssi(&addr) == BT_NO_ERROR);
+    return (BTM_ReadRssi(&addr) == BT_SUCCESS);
 }
 
 int BleAdapter::GetDeviceType(const RawAddress &device) const

@@ -31,14 +31,14 @@ int HfpHfGapClient::RegisterServiceSecurity(const BtAddr &address, uint8_t scn)
         &securityInfo_,
         GAP_SEC_IN_ENCRYPTION | GAP_SEC_IN_AUTHENTICATION | GAP_SEC_OUT_ENCRYPTION | GAP_SEC_OUT_AUTHENTICATION);
     HFP_HF_RETURN_IF_FAIL(ret);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HfpHfGapClient::DeregisterServiceSecurity(const BtAddr &address) const
 {
     int ret = GAPIF_DeregisterServiceSecurity(&address, &securityInfo_);
     HFP_HF_RETURN_IF_FAIL(ret);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 }  // namespace bluetooth
 }  // namespace OHOS

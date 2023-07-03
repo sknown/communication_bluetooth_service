@@ -109,42 +109,42 @@ bool DIService::RegisterDIService()
     classid.type = BT_UUID_16;
     classid.uuid16 = UUID_SERVICE_CLASS_PNP_INFORMATION;
     int ret = SDP_AddServiceClassIdList(handle, &classid, CLASS_ID_NUMBER);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("%{public}s::SDP_AddServiceClassIdList Failed", __FUNCTION__);
     }
 
     ret = SDP_AddAttribute(handle, ATTR_ID_SPECIFICATION_ID, SDP_TYPE_UINT_16, (void *)&specId_, sizeof(specId_));
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("%{public}s::SDP_AddAttribute ATTR_ID_SPECIFICATION_ID Failed", __FUNCTION__);
     }
 
     ret = SDP_AddAttribute(handle, ATTR_ID_VENDOR_ID, SDP_TYPE_UINT_16, (void *)&vendorId_, sizeof(vendorId_));
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("%{public}s::SDP_AddAttribute ATTR_ID_VENDOR_ID Failed", __FUNCTION__);
     }
 
     ret = SDP_AddAttribute(handle, ATTR_ID_PRODUCT_ID, SDP_TYPE_UINT_16, (void *)&procId_, sizeof(procId_));
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("%{public}s::SDP_AddAttribute ATTR_ID_PRODUCT_ID Failed", __FUNCTION__);
     }
 
     ret = SDP_AddAttribute(handle, ATTR_ID_VERSION, SDP_TYPE_UINT_16, (void *)&version_, sizeof(version_));
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("%{public}s::SDP_AddAttribute ATTR_ID_VERSION Failed", __FUNCTION__);
     }
 
     ret = SDP_AddAttribute(handle, ATTR_ID_PRIMARY_RECORD, SDP_TYPE_BOOL, (void *)&priRecord_, sizeof(priRecord_));
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("%{public}s::SDP_AddAttribute ATTR_ID_PRIMARY_RECORD Failed", __FUNCTION__);
     }
 
     ret = SDP_AddAttribute(handle, ATTR_ID_VENDOR_ID_SOURCE, SDP_TYPE_UINT_16, (void *)&venIdSrc_, sizeof(venIdSrc_));
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("%{public}s::SDP_AddAttribute ATTR_ID_VENDOR_ID_SOURCE Failed", __FUNCTION__);
     }
 
     ret = SDP_RegisterServiceRecord(handle);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s::SDP_RegisterServiceRecord Failed", __FUNCTION__);
         return false;
     }
@@ -156,13 +156,13 @@ bool DIService::DeregisterDIService() const
 {
     LOG_DEBUG("[DIService]::%{public}s", __FUNCTION__);
     int ret = SDP_DeregisterServiceRecord(handle_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s::SDP_DeregisterServiceRecord Failed", __FUNCTION__);
         return false;
     }
 
     ret = SDP_DestroyServiceRecord(handle_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s::SDP_DestroyServiceRecord Failed", __FUNCTION__);
         return false;
     }

@@ -222,7 +222,7 @@ int MapMceRequestSetNotificationFilter::SendRequest(ObexMpClient &obexIns)
 
     // send request
     ret = obexIns.Put(*header);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex Put error,ret=%{public}d ", __PRETTY_FUNCTION__, ret);
     }
     LOG_INFO("%{public}s end,FilterMask_ = 0x%x", __PRETTY_FUNCTION__, notificationFilterMask_);
@@ -280,7 +280,7 @@ int MapMceRequestSetNotificationRegistration::SendRequest(ObexMpClient &obexIns)
 
     // send request
     ret = obexIns.Put(*header);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex Put error,ret=%{public}d ", __PRETTY_FUNCTION__, ret);
     }
     LOG_INFO("%{public}s end, value = 0x%x", __PRETTY_FUNCTION__, setupValue_);
@@ -334,7 +334,7 @@ int MapMceRequestGetMasInstanceInformation::SendRequest(ObexMpClient &obexIns)
 
     // send request
     ret = obexIns.Get(*header, writer);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex Get error,ret=%{public}d ", __PRETTY_FUNCTION__, ret);
     }
     LOG_INFO("%{public}s end, instanceId_ = %{public}d", __PRETTY_FUNCTION__, instanceId_);
@@ -433,7 +433,7 @@ int MapMceRequestGetFolderListing::SendRequest(ObexMpClient &obexIns)
 
     // send request
     ret = obexIns.Get(*header, writer);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex Get error,ret=%{public}d ", __PRETTY_FUNCTION__, ret);
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -528,7 +528,7 @@ int MapMceRequestSetPath::SendRequest(ObexMpClient &obexIns)
         ret = obexIns.SetPath(pathFlags_, pathsString_);
     }
 
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex setpath error", __PRETTY_FUNCTION__);
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -684,7 +684,7 @@ int MapMceRequestGetMessage::SendRequest(ObexMpClient &obexIns)
     } else {
         ret = obexIns.Get(*header, writer);
     }
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex put error", __PRETTY_FUNCTION__);
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -819,7 +819,7 @@ int MapMceRequestGetUreadMessages::ProcessResponse(
         requestPtr_ = std::make_unique<MapMceRequestGetMessage>(msgHandle, para);
         requestPtr_->SetSupportMessageType(GetSupportMessageType());
         int sendRet = requestPtr_->SendRequest(*obexInsBackup_);
-        if (sendRet != RET_NO_ERROR) {
+        if (sendRet != BT_SUCCESS) {
             msgHandleList_.clear();
             ret = MCE_RESPONSE_FINISH_NG;
         }
@@ -860,7 +860,7 @@ int MapMceRequestUpdateInbox::SendRequest(ObexMpClient &obexIns)
     header->AppendItemEndBody(&emptyBody, 1);
     // send request
     ret = obexIns.Put(*header);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex Put error,ret=%{public}d ", __PRETTY_FUNCTION__, ret);
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -939,7 +939,7 @@ int MapMceRequestSetOwnerStatus::SendRequest(ObexMpClient &obexIns)
 
     // send request
     ret = obexIns.Put(*header);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex Put error,ret=%{public}d ", __PRETTY_FUNCTION__, ret);
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -995,7 +995,7 @@ int MapMceRequestGetOwnerStatus::SendRequest(ObexMpClient &obexIns)
 
     // send request
     ret = obexIns.Get(*header);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex Put error,ret=%{public}d ", __PRETTY_FUNCTION__, ret);
     }
     LOG_INFO("%{public}s end, ownerConversationId_ = %{public}s", __PRETTY_FUNCTION__, ownerConversationId_.c_str());
@@ -1108,7 +1108,7 @@ int MapMceRequestSetMessageStatus::SendRequest(ObexMpClient &obexIns)
 
     // send request
     ret = obexIns.Put(*header);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex Put error,ret=%{public}d ", __PRETTY_FUNCTION__, ret);
     }
     return ret;
@@ -1208,7 +1208,7 @@ int MapMceRequestGetConversationListing::SendRequest(ObexMpClient &obexIns)
 
     // send request
     ret = obexIns.Get(*header, writer);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex Put error,ret=%{public}d ", __PRETTY_FUNCTION__, ret);
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -1438,7 +1438,7 @@ int MapMceRequestGetMessagesListing::SendRequest(ObexMpClient &obexIns)
 
     // send request
     ret = obexIns.Get(*header, writer);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s obex put error", __PRETTY_FUNCTION__);
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);

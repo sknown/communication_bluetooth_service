@@ -33,7 +33,7 @@ int AvrcTgGapManager::RegisterSecurity(void)
 {
     HILOGI("enter");
 
-    uint8_t result = RET_NO_ERROR;
+    uint8_t result = BT_SUCCESS;
 
     GapServiceSecurityInfo avctInfo = {INCOMING, AVRCP_TG, SEC_PROTOCOL_L2CAP, {AVCT_PSM}};
     result |= GAPIF_RegisterServiceSecurity(nullptr, &avctInfo, GAP_SEC_IN_AUTHENTICATION | GAP_SEC_OUT_AUTHENTICATION);
@@ -47,7 +47,7 @@ int AvrcTgGapManager::RegisterSecurity(void)
     result |=
         GAPIF_RegisterServiceSecurity(nullptr, &avctBrinfo, GAP_SEC_IN_AUTHENTICATION | GAP_SEC_OUT_AUTHENTICATION);
 
-    (result == BT_NO_ERROR) ? (result = RET_NO_ERROR) : (result = RET_BAD_STATUS);
+    (result == BT_SUCCESS) ? (result = BT_SUCCESS) : (result = RET_BAD_STATUS);
 
     return result;
 }
@@ -56,7 +56,7 @@ int AvrcTgGapManager::UnregisterSecurity(void)
 {
     HILOGI("enter");
 
-    uint8_t result = RET_NO_ERROR;
+    uint8_t result = BT_SUCCESS;
 
     GapServiceSecurityInfo avctInfo = {INCOMING, AVRCP_TG, SEC_PROTOCOL_L2CAP, {AVCT_PSM}};
     result |= GAPIF_DeregisterServiceSecurity(nullptr, &avctInfo);
@@ -68,7 +68,7 @@ int AvrcTgGapManager::UnregisterSecurity(void)
     avctBrinfo.direction = OUTGOING;
     result |= GAPIF_DeregisterServiceSecurity(nullptr, &avctBrinfo);
 
-    (result == BT_NO_ERROR) ? (result = RET_NO_ERROR) : (result = RET_BAD_STATUS);
+    (result == BT_SUCCESS) ? (result = BT_SUCCESS) : (result = RET_BAD_STATUS);
 
     return result;
 }

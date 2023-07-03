@@ -100,7 +100,7 @@ void RfcommRecvConnectReqCallback(
     (void)memcpy_s(&ctx->info, sizeof(L2capConnectionInfo), info, sizeof(L2capConnectionInfo));
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommRecvConnectReqTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 }
@@ -146,7 +146,7 @@ void RfcommRecvConnectRspCallback(
     (void)memcpy_s(&ctx->info, sizeof(L2capConnectionInfo), info, sizeof(L2capConnectionInfo));
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommRecvConnectRspTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 }
@@ -189,7 +189,7 @@ void RfcommRecvConfigReqCallback(uint16_t lcid, uint8_t id, const L2capConfigInf
     (void)memcpy_s(&ctx->cfg, sizeof(L2capConfigInfo), cfg, sizeof(L2capConfigInfo));
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommRecvConfigReqTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 }
@@ -232,7 +232,7 @@ void RfcommRecvConfigRspCallback(uint16_t lcid, const L2capConfigInfo *cfg, uint
     (void)memcpy_s(&ctx->cfg, sizeof(L2capConfigInfo), cfg, sizeof(L2capConfigInfo));
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommRecvConfigRspTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 }
@@ -273,7 +273,7 @@ void RfcommRecvDisconnectReqCallback(uint16_t lcid, uint8_t id, void *context)
     ctx->context = context;
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommRecvDisconnectReqTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 }
@@ -326,7 +326,7 @@ void RfcommDisconnectAbnormalCallback(uint16_t lcid, uint8_t reason, void *conte
     ctx->context = context;
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommDisconnectAbnormalTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 }
@@ -368,7 +368,7 @@ void RfcommRecvDataCallback(uint16_t lcid, Packet *pkt, void *context)
     ctx->context = context;
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommRecvDataTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         PacketFree(ctx->pkt);
         free(ctx);
     }
@@ -412,7 +412,7 @@ static void RfcommSendConnectReqCallback(const BtAddr *addr, uint16_t lcid, int 
     ctx->context = context;
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommSendConnectReqCbackTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 }

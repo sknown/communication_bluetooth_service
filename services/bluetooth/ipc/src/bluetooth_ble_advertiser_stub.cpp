@@ -19,6 +19,7 @@
 #include "bluetooth_log.h"
 #include "ipc_types.h"
 #include "parcel_bt_uuid.h"
+#include "bt_def.h"
 
 using std::placeholders::_1;
 using std::placeholders::_2;
@@ -143,9 +144,11 @@ ErrCode BluetoothBleAdvertiserStub::CloseInner(MessageParcel &data, MessageParce
 
 ErrCode BluetoothBleAdvertiserStub::GetAdvertiserHandleInner(MessageParcel &data, MessageParcel &reply)
 {
-    int result = GetAdvertiserHandle();
-    bool ret = reply.WriteInt32(result);
-    if (!ret) {
+    int advHandle = bluetooth::BLE_INVALID_ADVERTISING_HANDLE;
+    int result = GetAdvertiserHandle(advHandle);
+    bool resultRet = reply.WriteInt32(result);
+    bool advHandleRet = reply.WriteInt32(advHandle);
+    if (!(resultRet && advHandleRet)) {
         HILOGE("GetAdvertiserHandleInner: reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
     }

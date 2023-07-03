@@ -66,7 +66,7 @@ int L2CIF_LeRegisterService(
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifLeRegisterService, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -153,7 +153,7 @@ int L2CIF_LeCreditBasedConnectionReq(const BtAddr *addr, uint16_t lpsm, uint16_t
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifLeCreditBasedConnectionReq, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -201,7 +201,7 @@ int L2CIF_LeCreditBasedConnectionRsp(
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifLeCreditBasedConnectionRsp, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -333,7 +333,7 @@ int L2CIF_LeSendData(uint16_t lcid, const Packet *pkt, void (*cb)(uint16_t lcid,
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifLeSendData, L2cifLeSendDataContextDestroy, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -376,7 +376,7 @@ int L2CIF_LeRegisterFixChannel(uint16_t cid, const L2capLeFixChannel *chan, void
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifLeRegisterFixChannel, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -461,7 +461,7 @@ int L2CIF_LeConnect(
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifLeConnect, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -495,7 +495,7 @@ int L2CIF_LeConnectCancel(const BtAddr *addr)
 
     (void)memcpy_s(&(ctx->addr), sizeof(BtAddr), addr, sizeof(BtAddr));
     L2capAsynchronousProcess(L2cifLeConnectCancel, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -594,7 +594,7 @@ int L2CIF_LeSendFixChannelData(
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifLeSendFixChannelData, L2cifLeSendFixChannelDataContextDestroy, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -631,7 +631,7 @@ int L2CIF_LeRegisterConnectionParameterUpdate(const L2capLeConnectionParameterUp
     ctx->context = context;
 
     L2capAsynchronousProcess(L2cifLeRegisterConnectionParameterUpdate, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static void L2cifLeDeregisterConnectionParameterUpdate(const void *context)
@@ -686,7 +686,7 @@ int L2CIF_LeConnectionParameterUpdateReq(
     (void)memcpy_s(&(ctx->param), sizeof(L2capLeConnectionParameter), param, sizeof(L2capLeConnectionParameter));
 
     L2capAsynchronousProcess(L2cifLeConnectionParameterUpdateReq, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {

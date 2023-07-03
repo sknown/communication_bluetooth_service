@@ -128,7 +128,7 @@ uint32_t SdpCreateServiceRecord()
     serviceRecordItem->serviceRecordHandle = handle;
     ListAddLast(g_serviceRecordList, serviceRecordItem);
     ret = SdpAddServiceRecordHandle(handle);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         ListRemoveLast(g_serviceRecordList);
         handle = 0;
     }
@@ -152,7 +152,7 @@ int SdpDestroyServiceRecord(uint32_t handle)
     }
     ListRemoveNode(g_serviceRecordList, item);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int SdpRegisterServiceRecord(uint32_t handle)
@@ -170,7 +170,7 @@ int SdpRegisterServiceRecord(uint32_t handle)
     /// Set registration flag
     item->flag = true;
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int SdpDeregisterServiceRecord(uint32_t handle)
@@ -190,7 +190,7 @@ int SdpDeregisterServiceRecord(uint32_t handle)
     /// Set deregistration flag
     item->flag = false;
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 /**
@@ -1039,7 +1039,7 @@ static int SdpAddAttributeToServiceRecord(
     item->attributeItem[item->attributeNumber].attributeLength = offset;
     item->totalLength += offset;
     item->attributeNumber++;
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void SdpParseClientRequest(uint16_t lcid, const Packet *data)

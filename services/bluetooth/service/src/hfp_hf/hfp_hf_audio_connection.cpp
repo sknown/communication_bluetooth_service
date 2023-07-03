@@ -251,7 +251,7 @@ int HfpHfAudioConnection::AcceptByCvsd(AudioDevice &dev, BtAddr btAddr) const
 
 int HfpHfAudioConnection::AcceptAudioConnection() const
 {
-    int ret = BT_NO_ERROR;
+    int ret = BT_SUCCESS;
     BtAddr btAddr = ConvertToBtAddr(remoteAddr_);
 
     // Only accpet CVSD sco from remote device.

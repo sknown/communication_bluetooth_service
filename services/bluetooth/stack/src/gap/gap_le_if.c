@@ -250,7 +250,7 @@ int GAPIF_LeSetRole(uint8_t role)
     ctx->role = role;
 
     int ret = GapRunTaskBlockProcess(GapLeSetRoleTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -277,7 +277,7 @@ int GAPIF_LeSetStaticIdentityAddr(uint8_t addr[BT_ADDRESS_SIZE])
     ctx->pointer = addr;
 
     int ret = GapRunTaskBlockProcess(GapLeSetStaticIdentityAddrTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -305,7 +305,7 @@ int GAPIF_LeGenResPriAddr(GenResPriAddrResult callback, void *context)
     ctx->context = context;
 
     int ret = GapRunTaskBlockProcess(GapLeGenResPriAddrTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -332,7 +332,7 @@ int GAPIF_LeExAdvGetMaxDataLen(uint16_t *len)
     ctx->pointer = len;
 
     int ret = GapRunTaskBlockProcess(GapLeExAdvGetMaxDataLenTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -359,7 +359,7 @@ int GAPIF_LeExAdvGetMaxHandleNum(uint8_t *num)
     ctx->pointer = num;
 
     int ret = GapRunTaskBlockProcess(GapLeExAdvGetMaxHandleNumTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -387,7 +387,7 @@ int GAPIF_RegisterExAdvCallback(const GapExAdvCallback *callback, void *context)
     ctx->context = context;
 
     int ret = GapRunTaskBlockProcess(GapRegisterExAdvCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -412,7 +412,7 @@ int GAPIF_DeregisterExAdvCallback(void)
     (void)memset_s(ctx, sizeof(GapGeneralVoidInfo), 0x00, sizeof(GapGeneralVoidInfo));
 
     int ret = GapRunTaskBlockProcess(GapDeregisterExAdvCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -440,7 +440,7 @@ int GAPIF_LeExAdvSetRandAddr(uint8_t advHandle, const uint8_t addr[BT_ADDRESS_SI
     ctx->addr = (uint8_t *)addr;
 
     int ret = GapRunTaskBlockProcess(GapLeExAdvSetRandAddrTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -470,7 +470,7 @@ int GAPIF_LeExAdvSetParam(uint8_t advHandle, uint8_t properties, int8_t txPower,
     ctx->advExParam = advExParam;
 
     int ret = GapRunTaskBlockProcess(GapLeExAdvSetParamTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -503,7 +503,7 @@ int GAPIF_LeExAdvSetData(
     ctx->advData = (uint8_t *)advData;
 
     int ret = GapRunTaskBlockProcess(GapLeExAdvSetDataTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -536,7 +536,7 @@ int GAPIF_LeExAdvSetScanRspData(uint8_t advHandle, uint8_t operation, uint8_t fr
     ctx->advData = (uint8_t *)scanResponseData;
 
     int ret = GapRunTaskBlockProcess(GapLeExAdvSetScanRspDataTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -565,7 +565,7 @@ int GAPIF_LeExAdvSetEnable(uint8_t enable, uint8_t numberOfSet, const GapExAdvSe
     ctx->advSet = (GapExAdvSet *)advSet;
 
     int ret = GapRunTaskBlockProcess(GapLeExAdvSetEnableTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -590,7 +590,7 @@ int GAPIF_LeExAdvClearHandle(void)
     (void)memset_s(ctx, sizeof(GapGeneralVoidInfo), 0x00, sizeof(GapGeneralVoidInfo));
 
     int ret = GapRunTaskBlockProcess(GapLeExAdvClearHandleTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -618,7 +618,7 @@ int GAPIF_RegisterAdvCallback(const GapAdvCallback *callback, void *context)
     ctx->context = context;
 
     int ret = GapRunTaskBlockProcess(GapRegisterAdvCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -643,7 +643,7 @@ int GAPIF_DeregisterAdvCallback(void)
     (void)memset_s(ctx, sizeof(GapGeneralVoidInfo), 0x00, sizeof(GapGeneralVoidInfo));
 
     int ret = GapRunTaskBlockProcess(GapDeregisterAdvCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -671,7 +671,7 @@ int GAPIF_LeAdvSetParam(uint8_t advType, GapLeAdvParam advParam)
     ctx->advParam = advParam;
 
     int ret = GapRunTaskBlockProcess(GapLeAdvSetParamTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -696,7 +696,7 @@ int GAPIF_LeAdvReadTxPower(void)
     (void)memset_s(ctx, sizeof(GapGeneralVoidInfo), 0x00, sizeof(GapGeneralVoidInfo));
 
     int ret = GapRunTaskBlockProcess(GapLeAdvReadTxPowerTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -724,7 +724,7 @@ int GAPIF_LeAdvSetData(uint8_t advDataLength, const uint8_t *advData)
     ctx->advData = (uint8_t *)advData;
 
     int ret = GapRunTaskBlockProcess(GapLeAdvSetDataTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -752,7 +752,7 @@ int GAPIF_LeAdvSetScanRspData(uint8_t advDataLength, const uint8_t *advData)
     ctx->advData = (uint8_t *)advData;
 
     int ret = GapRunTaskBlockProcess(GapLeAdvSetScanRspDataTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -779,7 +779,7 @@ int GAPIF_LeAdvSetEnable(uint8_t enable)
     ctx->enable = enable;
 
     int ret = GapRunTaskBlockProcess(GapLeAdvSetEnableTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -807,7 +807,7 @@ int GAPIF_RegisterScanCallback(const GapScanCallback *callback, void *context)
     ctx->context = context;
 
     int ret = GapRunTaskBlockProcess(GapRegisterScanCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -832,7 +832,7 @@ int GAPIF_DeregisterScanCallback(void)
     (void)memset_s(ctx, sizeof(GapGeneralVoidInfo), 0x00, sizeof(GapGeneralVoidInfo));
 
     int ret = GapRunTaskBlockProcess(GapDeregisterScanCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -860,7 +860,7 @@ int GAPIF_LeScanSetParam(GapLeScanParam param, uint8_t scanFilterPolity)
     ctx->scanFilterPolity = scanFilterPolity;
 
     int ret = GapRunTaskBlockProcess(GapLeScanSetParamTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -888,7 +888,7 @@ int GAPIF_LeScanSetEnable(uint8_t scanEnable, uint8_t filterDuplicates)
     ctx->filterDuplicates = filterDuplicates;
 
     int ret = GapRunTaskBlockProcess(GapLeScanSetEnableTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -916,7 +916,7 @@ int GAPIF_RegisterExScanCallback(const GapExScanCallback *callback, void *contex
     ctx->context = context;
 
     int ret = GapRunTaskBlockProcess(GapRegisterExScanCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -941,7 +941,7 @@ int GAPIF_DeregisterExScanCallback(void)
     (void)memset_s(ctx, sizeof(GapGeneralVoidInfo), 0x00, sizeof(GapGeneralVoidInfo));
 
     int ret = GapRunTaskBlockProcess(GapDeregisterExScanCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -970,7 +970,7 @@ int GAPIF_LeExScanSetParam(uint8_t scanFilterPolity, uint8_t scanPhys, const Gap
     ctx->param = (GapLeScanParam *)param;
 
     int ret = GapRunTaskBlockProcess(GapLeExScanSetParamTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1000,7 +1000,7 @@ int GAPIF_LeExScanSetEnable(uint8_t scanEnable, uint8_t filterDuplicates, uint16
     ctx->period = period;
 
     int ret = GapRunTaskBlockProcess(GapLeExScanSetEnableTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1028,7 +1028,7 @@ int GAPIF_RegisterLeConnCallback(const GapLeConnCallback *callback, void *contex
     ctx->context = context;
 
     int ret = GapRunTaskBlockProcess(GapRegisterLeConnCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1053,7 +1053,7 @@ int GAPIF_DeregisterLeConnCallback(void)
     (void)memset_s(ctx, sizeof(GapGeneralVoidInfo), 0x00, sizeof(GapGeneralVoidInfo));
 
     int ret = GapRunTaskBlockProcess(GapDeregisterLeConnCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1081,7 +1081,7 @@ int GAPIF_LeConnParamUpdate(const BtAddr *addr, const GapLeConnectionParameter *
     ctx->connParam = connParam;
 
     int ret = GapRunTaskBlockProcess(GapLeConnParamUpdateTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1110,7 +1110,7 @@ int GAPIF_LeConnectionParameterRsp(const BtAddr *addr, uint8_t accept, const Gap
     ctx->connParam = connParam;
 
     int ret = GapRunTaskBlockProcess(GapLeConnectionParameterRspTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1138,7 +1138,7 @@ int GAPIF_RegisterLeSecurityCallback(const GapLeSecurityCallback *callback, void
     ctx->context = context;
 
     int ret = GapRunTaskBlockProcess(GapRegisterLeSecurityCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1163,7 +1163,7 @@ int GAPIF_DeregisterLeSecurityCallback(void)
     (void)memset_s(ctx, sizeof(GapGeneralVoidInfo), 0x00, sizeof(GapGeneralVoidInfo));
 
     int ret = GapRunTaskBlockProcess(GapDeregisterLeSecurityCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1194,7 +1194,7 @@ int GAPIF_LeRemoteEncryptionKeyRsp(const BtAddr *addr, uint8_t accept, LeEncKey 
     ctx->keyType = keyType;
 
     int ret = GapRunTaskBlockProcess(GapLeRemoteEncryptionKeyRspTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1225,7 +1225,7 @@ int GAPIF_LeLocalEncryptionKeyRsp(const BtAddr *addr, uint8_t accept, LeEncKey l
     ctx->keyType = keyType;
 
     int ret = GapRunTaskBlockProcess(GapLeLocalEncryptionKeyRspTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1260,7 +1260,7 @@ int GAPIF_RequestSigningAlgorithmInfoRsp(const BtAddr *addr, uint8_t accept, Gap
     ctx->info = info;
 
     int ret = GapRunTaskBlockProcess(GapRequestSigningAlgorithmInfoRspTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1287,7 +1287,7 @@ int GAPIF_LeSetBondMode(uint8_t mode)
     ctx->mode = mode;
 
     int ret = GapRunTaskBlockProcess(GapLeSetBondModeTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1315,7 +1315,7 @@ int GAPIF_LeSetSecurityMode(GAP_LeSecMode1Level mode1Level, GAP_LeSecMode2Level 
     ctx->mode2Level = mode2Level;
 
     int ret = GapRunTaskBlockProcess(GapLeSetSecurityModeTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1344,7 +1344,7 @@ int GAPIF_LeGetSecurityStatus(const BtAddr *addr, GAP_LeSecurityStatus *status, 
     ctx->encKeySize = encKeySize;
 
     int ret = GapRunTaskBlockProcess(GapLeGetSecurityStatusTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1375,7 +1375,7 @@ int GAPIF_LeRequestSecurity(
     ctx->context = context;
 
     int ret = GapRunTaskBlockProcess(GapLeRequestSecurityTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1402,7 +1402,7 @@ int GAPIF_LePair(const BtAddr *addr)
     ctx->pointer = (void *)addr;
 
     int ret = GapRunTaskBlockProcess(GapLePairTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1429,7 +1429,7 @@ int GAPIF_LeCancelPair(const BtAddr *addr)
     ctx->pointer = (void *)addr;
 
     int ret = GapRunTaskBlockProcess(GapLeCancelPairTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1456,7 +1456,7 @@ int GAPIF_LeSetMinEncKeySize(uint8_t minSize)
     ctx->minSize = minSize;
 
     int ret = GapRunTaskBlockProcess(GapLeSetMinEncKeySizeTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1484,7 +1484,7 @@ int GAPIF_RegisterLePairCallback(const GapLePairCallback *callback, void *contex
     ctx->context = context;
 
     int ret = GapRunTaskBlockProcess(GapRegisterLePairCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1509,7 +1509,7 @@ int GAPIF_DeregisterLePairCallback(void)
     (void)memset_s(ctx, sizeof(GapGeneralVoidInfo), 0x00, sizeof(GapGeneralVoidInfo));
 
     int ret = GapRunTaskBlockProcess(GapDeregisterLePairCallbackTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1537,7 +1537,7 @@ int GAPIF_LePairFeatureRsp(const BtAddr *addr, GapLePairFeature localFrature)
     ctx->localFrature = localFrature;
 
     int ret = GapRunTaskBlockProcess(GapLePairFeatureRspTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1566,7 +1566,7 @@ int GAPIF_LePairPassKeyRsp(const BtAddr *addr, uint8_t accept, uint32_t number)
     ctx->number = number;
 
     int ret = GapRunTaskBlockProcess(GapLePairPassKeyRspTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1595,7 +1595,7 @@ int GAPIF_LePairOobRsp(const BtAddr *addr, uint8_t accept, uint8_t oobData[GAP_O
     ctx->oobData = oobData;
 
     int ret = GapRunTaskBlockProcess(GapLePairOobRsptask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1626,7 +1626,7 @@ int GAPIF_LePairScOobRsp(const BtAddr *addr, uint8_t accept, const uint8_t oobDa
     ctx->oobDataR = (uint8_t *)oobDataR;
 
     int ret = GapRunTaskBlockProcess(GapLePairScOobRsptask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1654,7 +1654,7 @@ int GAPIF_LePairScUserConfirmRsp(const BtAddr *addr, uint8_t accept)
     ctx->accept = accept;
 
     int ret = GapRunTaskBlockProcess(GapLePairScUserConfirmRspTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1700,7 +1700,7 @@ int GAPIF_LeDataSignatureGenerationAsync(
     ctx->dataInfo.data = data;
 
     int ret = GapRunTaskUnBlockProcess(GapLeDataSignatureGenerationTask, ctx, GapFreeLeDataSignatureGeneration);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 
@@ -1747,7 +1747,7 @@ int GAPIF_LeDataSignatureConfirmationAsync(const BtAddr *addr, GapSignatureData 
     ctx->dataInfo.data = data;
 
     int ret = GapRunTaskUnBlockProcess(GapLeDataSignatureConfirmationTask, ctx, GapFreeLeDataSignatureConfirmation);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = ctx->result;
     }
 

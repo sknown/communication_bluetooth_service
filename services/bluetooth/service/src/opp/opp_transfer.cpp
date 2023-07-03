@@ -38,7 +38,7 @@ OppTransfer::OppTransfer(const std::string &address, const std::vector<std::stri
     IAdapterClassic *adapterClassic = (IAdapterClassic *)(IAdapterManager::GetInstance()->
         GetAdapter(ADAPTER_BREDR));
     if (adapterClassic != nullptr) {
-        deviceName_ = adapterClassic->GetDeviceName(address);
+        deviceName_ = adapterClassic->GetDeviceName(RawAddress(address));
     }
     auto filePathItr = filePaths.begin();
     auto mimeTypeItr = mimeTypes.begin();
@@ -224,7 +224,7 @@ int OppTransfer::AcceptConnect()
     } else {
         HILOGE("[OPP TRANSFER] obexSession is null");
     }
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         OppService::GetService()->OnObexDisconnected(address_);
     }
     return ret;
@@ -247,7 +247,7 @@ int OppTransfer::StartTransfer()
         return obexClient_->SendFile(fileList_.front());
     } else if (direction_ == OPP_TRANSFER_DIRECTION_INBOND) {
         isConnected_ = true;
-        return RET_NO_ERROR;
+        return BT_SUCCESS;
     } else {
         HILOGE("[OPP TRANSFER] unknow direction");
     }
@@ -284,7 +284,7 @@ int OppTransfer::SetIncomingFileConfirmation(bool accept)
         }
         ret = obexSession_->SendResponse(*respHeader);
     }
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         OnTransferStateChangeFaild(OPP_TRANSFER_FAILED_CANCELED);
     }
     return ret;
@@ -405,7 +405,7 @@ void OppTransfer::OnTransferStateChangeSuccess()
                 return;
             }
             OnTransferStateChangeRunning();
-            if (obexClient_->SendFile(fileList_.front()) != RET_NO_ERROR) {
+            if (obexClient_->SendFile(fileList_.front()) != BT_SUCCESS) {
                 HILOGE("[OPP TRANSFER] send file error");
                 OnTransferStateChangeFaild(OPP_TRANSFER_FAILED_PROTOCOL);
                 return;

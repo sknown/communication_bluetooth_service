@@ -84,7 +84,7 @@ int AvrcTgProfile::Enable(void)
 {
     HILOGI("enter");
 
-    int result = RET_NO_ERROR;
+    int result = BT_SUCCESS;
 
     AVCT_Register(controlMtu_, browseMtu_, AVCT_TG);
 
@@ -121,7 +121,7 @@ int AvrcTgProfile::Disable(void)
         myObserver_->onDisabled();
     }
 
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void AvrcTgProfile::SetEnableFlag(bool isEnabled)
@@ -236,12 +236,12 @@ int AvrcTgProfile::Connect(const RawAddress &rawAddr) const
 {
     HILOGI("rawAddr: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
 
-    uint8_t result = RET_NO_ERROR;
+    uint8_t result = BT_SUCCESS;
 
     result |= AvrcTgConnectManager::GetInstance()->Add(
         rawAddr, 0x00, AVCT_INIT, controlMtu_, browseMtu_, companyId_, 0x0000, eventCallback_, msgCallback_);
     result |= AvrcTgStateMachineManager::GetInstance()->AddControlStateMachine(rawAddr);
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         myObserver_->onConnectionStateChanged(rawAddr, static_cast<int>(BTConnectState::CONNECTING));
     }
 
@@ -270,7 +270,7 @@ int AvrcTgProfile::Disconnect(const RawAddress &rawAddr) const
         myObserver_->onConnectionStateChanged(rawAddr, static_cast<int>(BTConnectState::DISCONNECTING));
     }
 
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int AvrcTgProfile::DisconnectBr(const RawAddress &rawAddr)
@@ -280,7 +280,7 @@ int AvrcTgProfile::DisconnectBr(const RawAddress &rawAddr)
     utility::Message msg(AVRC_TG_SM_EVENT_TO_DISCONNECTING_STATE);
     AvrcTgStateMachineManager::GetInstance()->SendMessageToBrowseStateMachine(rawAddr, msg);
 
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int AvrcTgProfile::GetConnectState(void)
@@ -621,7 +621,7 @@ void AvrcTgProfile::ReceiveGetCapabilitiesCmd(const RawAddress &rawAddr, uint8_t
             std::vector<uint32_t> companies;
             companies.push_back(cnManager->GetCompanyId(rawAddr));
 
-            SendGetCapabilitiesRsp(rawAddr, companies, label, RET_NO_ERROR);
+            SendGetCapabilitiesRsp(rawAddr, companies, label, BT_SUCCESS);
         } else {
             myObserver_->getCapabilities(rawAddr, label);
         }
@@ -1410,12 +1410,12 @@ void AvrcTgProfile::ReceiveRegisterNotificationCmd(const RawAddress &rawAddr, ui
             break;
         case AVRC_TG_EVENT_ID_TRACK_REACHED_END: {
             SetNotificationLabel(AVRC_TG_EVENT_ID_TRACK_REACHED_END, label);
-            SendTrackReachedEndRsp(true, label, RET_NO_ERROR);
+            SendTrackReachedEndRsp(true, label, BT_SUCCESS);
             break;
         }
         case AVRC_TG_EVENT_ID_TRACK_REACHED_START:
             SetNotificationLabel(AVRC_TG_EVENT_ID_TRACK_REACHED_START, label);
-            SendTrackReachedStartRsp(true, label, RET_NO_ERROR);
+            SendTrackReachedStartRsp(true, label, BT_SUCCESS);
             break;
         case AVRC_TG_EVENT_ID_PLAYBACK_POS_CHANGED:
             if (notifyPkt->IsValid()) {
@@ -1439,11 +1439,11 @@ void AvrcTgProfile::ReceiveRegisterNotificationCmd(const RawAddress &rawAddr, ui
             break;
         case AVRC_TG_EVENT_ID_NOW_PLAYING_CONTENT_CHANGED:
             SetNotificationLabel(AVRC_TG_EVENT_ID_NOW_PLAYING_CONTENT_CHANGED, label);
-            SendNowPlayingContentChangedRsp(true, label, RET_NO_ERROR);
+            SendNowPlayingContentChangedRsp(true, label, BT_SUCCESS);
             break;
         case AVRC_TG_EVENT_ID_AVAILABLE_PLAYERS_CHANGED:
             SetNotificationLabel(AVRC_TG_EVENT_ID_AVAILABLE_PLAYERS_CHANGED, label);
-            SendAvailablePlayersChangedRsp(true, label, RET_NO_ERROR);
+            SendAvailablePlayersChangedRsp(true, label, BT_SUCCESS);
             break;
         case AVRC_TG_EVENT_ID_ADDRESSED_PLAYER_CHANGED:
             if (notifyPkt->IsValid()) {
@@ -1819,11 +1819,11 @@ void AvrcTgProfile::ProcessChannelEventConnectIndEvt(
     AvrcTgStateMachineManager *smManager = AvrcTgStateMachineManager::GetInstance();
     utility::Message msg(AVRC_TG_SM_EVENT_INVALID);
 
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         result |= cnManager->Add(
             rawAddr, connectId, AVCT_ACPT, controlMtu_, browseMtu_, companyId_, 0x0000, eventCallback_, msgCallback_);
         result |= smManager->AddControlStateMachine(rawAddr);
-        if (result == RET_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             cnManager->SetControlMtu(rawAddr, AVCT_GetPeerMtu(connectId));
             AcceptPassiveConnect(rawAddr);
             if (cnManager->GetActiveDevice().compare(AVRC_TG_DEFAULT_BLUETOOTH_ADDRESS) == 0x00) {
@@ -1913,9 +1913,9 @@ void AvrcTgProfile::ProcessChannelEventBrConnectIndEvt(
     AvrcTgStateMachineManager *smManager = AvrcTgStateMachineManager::GetInstance();
     utility::Message msg(AVRC_TG_SM_EVENT_INVALID);
 
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         result |= smManager->AddBrowseStateMachine(rawAddr);
-        if (result == RET_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             msg.what_ = AVRC_TG_SM_EVENT_TO_CONNECTED_STATE;
             smManager->SendMessageToBrowseStateMachine(rawAddr, msg);
         }
@@ -1937,7 +1937,7 @@ void AvrcTgProfile::ProcessChannelEventBrConnectCfmEvt(
     AvrcTgStateMachineManager *smManager = AvrcTgStateMachineManager::GetInstance();
     utility::Message msg(AVRC_TG_SM_EVENT_INVALID);
 
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         cnManager->SetBrowseMtu(rawAddr, AVCT_BrGetPeerMtu(connectId));
         smManager->AddBrowseStateMachine(rawAddr);
         msg.what_ = AVRC_TG_SM_EVENT_TO_CONNECTED_STATE;
@@ -1955,7 +1955,7 @@ void AvrcTgProfile::ProcessChannelEventConnectCfmEvt(
     AvrcTgStateMachineManager *smManager = AvrcTgStateMachineManager::GetInstance();
     utility::Message msg(AVRC_TG_SM_EVENT_INVALID);
 
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         cnManager->SetConnectId(rawAddr, connectId);
         cnManager->SetActiveDevice(rawAddr.GetAddress());
         msg.what_ = AVRC_TG_SM_EVENT_TO_CONNECTED_STATE;
@@ -2045,7 +2045,7 @@ int AvrcTgProfile::ExpainAvctResult(uint16_t avctRet)
 
     switch (avctRet) {
         case AVCT_SUCCESS:
-            result = RET_NO_ERROR;
+            result = BT_SUCCESS;
             break;
         case AVCT_FAILED:
         default:
@@ -2062,7 +2062,7 @@ uint8_t AvrcTgProfile::ExplainResultToPassCrCode(int result)
     uint8_t crCode = AVRC_TG_RSP_CODE_STABLE;
 
     switch (result) {
-        case RET_NO_ERROR:
+        case BT_SUCCESS:
             crCode = AVRC_TG_RSP_CODE_ACCEPTED;
             break;
         case RET_NO_SUPPORT:
@@ -2085,7 +2085,7 @@ uint8_t AvrcTgProfile::ExplainResultToStatusCrCode(int result)
     uint8_t crCode = AVRC_TG_RSP_CODE_STABLE;
 
     switch (result) {
-        case RET_NO_ERROR:
+        case BT_SUCCESS:
             crCode = AVRC_TG_RSP_CODE_STABLE;
             break;
         case RET_NO_SUPPORT:
@@ -2108,7 +2108,7 @@ uint8_t AvrcTgProfile::ExplainResultToControlCrCode(int result)
     uint8_t crCode = AVRC_TG_RSP_CODE_STABLE;
 
     switch (result) {
-        case RET_NO_ERROR:
+        case BT_SUCCESS:
             crCode = AVRC_TG_RSP_CODE_ACCEPTED;
             break;
         case RET_NO_SUPPORT:

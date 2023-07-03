@@ -146,7 +146,7 @@ ErrCode BluetoothA2dpSrcStub::GetDevicesByStatesInner(MessageParcel &data, Messa
     std::vector<int32_t> states = {};
     int32_t stateSize = data.ReadInt32();
     if (stateSize > A2DP_MAX_SRC_CONNECTION_NUMS) {
-        return BT_ERR_INVALID_PARAM;
+        return ERR_INVALID_DATA;
     }
 
     for (int i = 0; i < stateSize; i++) {
@@ -158,20 +158,20 @@ ErrCode BluetoothA2dpSrcStub::GetDevicesByStatesInner(MessageParcel &data, Messa
     int ret = GetDevicesByStates(states,rawAdds);
     if (!reply.WriteInt32(ret)) {
       HILOGE("reply WriteInt32 failed");
-      return BT_ERR_IPC_TARNS_FAILED;
+      return TRANSACTION_ERR;
     }
 
     if (ret == NO_ERROR) {
       if (!reply.WriteInt32(rawAdds.size())) {
         HILOGE("reply WriteInt32 failed");
-        return BT_ERR_IPC_TARNS_FAILED;
+        return TRANSACTION_ERR;
       }
     }
 
     for (auto rawAdd : rawAdds) {
         if (!reply.WriteString(rawAdd.GetAddress())) {
             HILOGE("write WriteString failed");
-            return BT_ERR_IPC_TARNS_FAILED;
+            return TRANSACTION_ERR;
         }
     }
     return NO_ERROR;
@@ -185,13 +185,13 @@ ErrCode BluetoothA2dpSrcStub::GetDeviceStateInner(MessageParcel &data, MessagePa
     int result = GetDeviceState(RawAddress(addr), state);
     if (!reply.WriteInt32(result)) {
       HILOGE("reply WriteInt32 failed");
-      return BT_ERR_IPC_TARNS_FAILED;
+      return TRANSACTION_ERR;
     }
 
     if (result == NO_ERROR) {
       if (!reply.WriteInt32(state)) {
         HILOGE("reply WriteInt32 failed");
-        return BT_ERR_IPC_TARNS_FAILED;
+        return TRANSACTION_ERR;
       }
     }
     return NO_ERROR;

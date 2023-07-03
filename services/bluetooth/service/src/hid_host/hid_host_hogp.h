@@ -67,6 +67,7 @@ private:
         void OnMtuChanged(int state, int mtu) override;
         void OnConnectionParameterChanged(int interval, int latency, int timeout, int status) override;
         void OnServicesDiscovered(int status) override;
+        void OnReadRemoteRssiValue(const RawAddress &addr, int rssi, int status) override;
 
     private:
         HidHostHogp *hogp_;

@@ -37,6 +37,7 @@ public:
     void OnServicesDiscovered(int32_t status) override;
     void OnConnectionParameterChanged(int32_t interval, int32_t latency, int32_t timeout, int32_t status) override;
     void OnServicesChanged(std::vector<BluetoothGattService> &service) override;
+    void OnReadRemoteRssiValue(const bluetooth::RawAddress &addr, int rssi, int status) override;
 
 private:
     static inline BrokerDelegator<BluetoothGattClientCallbackProxy> delegator_;

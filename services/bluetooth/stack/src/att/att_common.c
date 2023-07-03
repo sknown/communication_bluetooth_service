@@ -568,7 +568,7 @@ int AttSendSequenceScheduling(const AttConnectInfo *connect)
 {
     LOG_INFO("%{public}s enter, listsize = %u", __FUNCTION__, ListGetSize(connect->instruct));
 
-    int ret = BT_NO_ERROR;
+    int ret = BT_SUCCESS;
 
     if (ListGetSize(connect->instruct) == 1) {
         ListNode *listNodePtr = ListGetFirstNode(connect->instruct);
@@ -584,7 +584,7 @@ int AttSendSequenceScheduling(const AttConnectInfo *connect)
         if (connect->transportType == BT_TRANSPORT_BR_EDR) {
             ret = L2CIF_SendData(connect->AttConnectID.bredrcid, packet, BREDRRecvSendDataCallback);
         }
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_INFO("%{public}s call l2cap interface return not success", __FUNCTION__);
         } else {
             AlarmSet(
@@ -624,7 +624,7 @@ void AttReceiveSequenceScheduling(const AttConnectInfo *connect)
             ret = L2CIF_SendData(connect->AttConnectID.bredrcid, PacketPtr, BREDRRecvSendDataCallback);
         }
 
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_INFO("%{public}s call l2cap interface return not success", __FUNCTION__);
         } else {
             AlarmSet(connect->alarm,
@@ -934,7 +934,7 @@ static void LeRecvSendDataCallbackAsync(const void *context)
         g_attClientSendDataCB.attSendDataCB(
             connect->retGattConnectHandle, leRecvSendDataCallPtr->result, g_attClientSendDataCB.context);
     }
-    if (leRecvSendDataCallPtr->result == BT_NO_ERROR) {
+    if (leRecvSendDataCallPtr->result == BT_SUCCESS) {
         AlarmSet(connect->alarm, (uint64_t)INSTRUCTIONTIMEOUT, (void (*)(void *))AttTransactionTimeOut, connect);
     } else {
         LOG_WARN("L2CAP error code = %{public}d", leRecvSendDataCallPtr->result);
@@ -1009,7 +1009,7 @@ static void BREDRRecvSendDataCallbackAsync(const void *context)
         g_attClientSendDataCB.attSendDataCB(
             connect->retGattConnectHandle, bredrRecvSendDataCallPtr->result, g_attClientSendDataCB.context);
     }
-    if (bredrRecvSendDataCallPtr->result == BT_NO_ERROR) {
+    if (bredrRecvSendDataCallPtr->result == BT_SUCCESS) {
         AlarmSet(connect->alarm, (uint64_t)INSTRUCTIONTIMEOUT, (void (*)(void *))AttTransactionTimeOut, connect);
     } else {
         LOG_WARN("L2CAP error code = %{public}d", bredrRecvSendDataCallPtr->result);
@@ -1092,7 +1092,7 @@ void AttAsyncProcess(
     int ret;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_ATT, (void (*)(void *))callback, (void *)context);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         if (destroyCallback != NULL) {
             destroyCallback(context);
         }
@@ -1179,7 +1179,7 @@ void ClientCallbackReturnValue(int ret, const AttConnectInfo *connect)
 {
     LOG_INFO("%{public}s enter", __FUNCTION__);
 
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         if (g_attClientSendDataCB.attSendDataCB != NULL) {
             g_attClientSendDataCB.attSendDataCB(connect->retGattConnectHandle, ret, g_attClientSendDataCB.context);
         }
@@ -1198,7 +1198,7 @@ void ServerCallbackReturnValue(int ret, const AttConnectInfo *connect)
 {
     LOG_INFO("%{public}s enter", __FUNCTION__);
 
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         if (g_attServerSendDataCB.attSendDataCB != NULL) {
             g_attServerSendDataCB.attSendDataCB(connect->retGattConnectHandle, ret, g_attServerSendDataCB.context);
         }
@@ -1491,7 +1491,7 @@ static void AttBREDRSendRespCallbackAsync(const void *context)
         goto ATTBREDRSENDRESPCALLBACK_END;
     }
 
-    if (attBredrSendRspPtr->result != BT_NO_ERROR) {
+    if (attBredrSendRspPtr->result != BT_SUCCESS) {
         LOG_WARN("L2CAP Send Resp error ,error code = %{public}d", attBredrSendRspPtr->result);
     }
 
@@ -1555,7 +1555,7 @@ static void AttLeSendRespCallbackAsync(const void *context)
         goto ATTLESENDRESPCALLBACK_END;
     }
 
-    if (attLeSendRspPtr->result != BT_NO_ERROR) {
+    if (attLeSendRspPtr->result != BT_SUCCESS) {
         LOG_WARN("L2CAP Send Resp error ,error code = %{public}d", attLeSendRspPtr->result);
     }
 

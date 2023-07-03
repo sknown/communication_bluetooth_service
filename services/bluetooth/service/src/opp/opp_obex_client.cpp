@@ -81,7 +81,7 @@ size_t OppSendFileBodyObject::GetFileSendSize() const
 int OppSendFileBodyObject::Close()
 {
     ifs_.close();
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 OppObexClient::OppObexClient(const ObexClientConfig &config, utility::Dispatcher &dispatcher)
@@ -152,7 +152,7 @@ int OppObexClient::CancelSendFile()
     HILOGI("[OPP OBEX CLIENT] start");
     sendAbort_ = true;
     HILOGI("[OPP OBEX CLIENT] end");
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int OppObexClient::SendFile(IOppTransferInformation fileInfo)
@@ -232,7 +232,7 @@ void OppObexClient::SendFileBody()
             return;
         }
         ret = client_->Put(*sendReq);
-        if (ret != RET_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             client_->GetClientSession().FreeSendObject();
             OnTransferStateChangeFaild(OPP_TRANSFER_FAILED_PROTOCOL);
             return;

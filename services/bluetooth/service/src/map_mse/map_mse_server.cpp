@@ -438,7 +438,7 @@ int MapMseServer::CreateBMessage(
     MSE_LOG_INFO("body data: %{public}s", data.c_str());
     bMessage_ = std::make_unique<MapMseBmsg>();
     bMessage_->SetVersion(messageVersion_);
-    if (bMessage_->Init(data, charset) != RET_NO_ERROR) {
+    if (bMessage_->Init(data, charset) != BT_SUCCESS) {
         return RET_BAD_STATUS;
     }
     if (MessageType::SMS_GSM == bMessage_->GetType() || MessageType::SMS_CDMA == bMessage_->GetType()) {
@@ -449,7 +449,7 @@ int MapMseServer::CreateBMessage(
             bMessage_->SetType(MessageType::SMS_CDMA);
         }
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void MapMseServer::PushMessageResponse(ObexServerSession &session, const ObexHeader &req)
@@ -922,7 +922,7 @@ int MapMseServer::SetStatusParam(const MapMseParams &appParams, stub::OwnerStatu
             statusParam.chatState = *appParams.chatState_;
         }
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void MapMseServer::SetOwnerStatus(const ObexServerSession &session, const ObexHeader &req)

@@ -303,5 +303,10 @@ void BluetoothGattClientCallbackProxy::OnServicesChanged(std::vector<BluetoothGa
         return;
     }
 }
+
+void BluetoothGattClientCallbackProxy::OnReadRemoteRssiValue(const bluetooth::RawAddress &addr, int rssi, int status)
+{
+    return;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

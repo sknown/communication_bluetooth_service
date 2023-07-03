@@ -48,16 +48,16 @@ ohos_unittest("btfw_hfp_ag_unit_test") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework",
-    "//base/global/resource_management/frameworks/resmgr:global_resmgr",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
+    "bluetooth:btframework",
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "resource_management:global_resmgr"
   ]
 }
 
@@ -69,16 +69,16 @@ ohos_unittest("btfw_hfp_hf_unit_test") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework",
-    "//base/global/resource_management/frameworks/resmgr:global_resmgr",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
+    "bluetooth:btframework",
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "resource_management:global_resmgr"
   ]
 }
 
@@ -90,17 +90,17 @@ ohos_unittest("btfw_hf_call_unit_test") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework",
     "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth/server:bluetooth_server",
-    "//base/global/resource_management/frameworks/resmgr:global_resmgr",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
+    "bluetooth:btframework",
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "resource_management:global_resmgr"
   ]
 }
 

@@ -32,7 +32,7 @@
 #define EXTENDED_FEATURES_PAGE_2 2
 
 #define CHECK_RESULT_BREAK(x) \
-    if ((x) != BT_NO_ERROR) { \
+    if ((x) != BT_SUCCESS) { \
         break;                \
     }
 
@@ -309,7 +309,7 @@ static uint64_t BtmGetLeEventMask()
 static int BtmHciReset()
 {
     int result = HCI_Reset();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_Reset failed: %{public}d", result);
         return result;
     }
@@ -329,7 +329,7 @@ static int BtmHciReset()
 static int BtmReadBufferSize()
 {
     int result = HCI_ReadBufferSize();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_ReadBufferSize failed: %{public}d", result);
         return result;
     }
@@ -337,7 +337,7 @@ static int BtmReadBufferSize()
         switch (g_readBufferSizeResult.status) {
             case HCI_SUCCESS:
             case HCI_UNKNOWN_HCI_COMMAND:
-                result = BT_NO_ERROR;
+                result = BT_SUCCESS;
                 break;
             default:
                 LOG_ERROR("HCI_ReadBufferSize status: 0x%02x", g_readBufferSizeResult.status);
@@ -360,7 +360,7 @@ static int BtmHostBufferSize()
         .hostTotalNumSynchronousDataPackets = HOST_SCO_DATA_PACKETS,
     };
     int result = HCI_HostBufferSize(&hostBufferSizeParam);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_HostBufferSize failed: %{public}d", result);
         return result;
     }
@@ -368,7 +368,7 @@ static int BtmHostBufferSize()
         switch (g_hostBufferSizeResult.status) {
             case HCI_SUCCESS:
             case HCI_UNKNOWN_HCI_COMMAND:
-                result = BT_NO_ERROR;
+                result = BT_SUCCESS;
                 break;
             default:
                 LOG_ERROR("HCI_HostBufferSize status: 0x%02x", g_hostBufferSizeResult.status);
@@ -385,7 +385,7 @@ static int BtmHostBufferSize()
 static int BtmReadLocalVersionInformation()
 {
     int result = HCI_ReadLocalVersionInformation();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_ReadLocalVersionInformation failed: %{public}d", result);
         return result;
     }
@@ -404,14 +404,14 @@ static int BtmReadLocalVersionInformation()
 static int BtmReadBdAddr()
 {
     int result = HCI_ReadBdAddr();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_ReadBdAddr failed: %{public}d", result);
         return result;
     }
     if (EventWait(g_waitSetupController, WAIT_CMD_TIMEOUT) == 0) {
         if (g_readBdAddrResult.status != HCI_SUCCESS) {
             LOG_INFO("No public address");
-            result = BT_NO_ERROR;
+            result = BT_SUCCESS;
         }
     } else {
         LOG_ERROR("HCI_ReadBdAddr Timeout");
@@ -423,7 +423,7 @@ static int BtmReadBdAddr()
 static int BtmReadLocalSupportedCommands()
 {
     int result = HCI_ReadLocalSupportedCommands();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_ReadLocalSupportedCommands failed: %{public}d", result);
         return result;
     }
@@ -442,7 +442,7 @@ static int BtmReadLocalSupportedCommands()
 static int BtmReadLocalSupportedFeatures()
 {
     int result = HCI_ReadLocalSupportedFeatures();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_ReadLocalSupportedFeatures failed: %{public}d", result);
         return result;
     }
@@ -470,7 +470,7 @@ static int BtmReadLocalExtendedFeatures()
         readLocalExtendedFeaturesParam.pageNumber = i;
 
         result = HCI_ReadLocalExtendedFeatures(&readLocalExtendedFeaturesParam);
-        if (result != BT_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             LOG_ERROR("HCI_ReadLocalExtendedFeatures failed: %{public}d", result);
             break;
         }
@@ -483,7 +483,7 @@ static int BtmReadLocalExtendedFeatures()
         switch (g_readLocalExtendedFeaturesResult[i].status) {
             case HCI_SUCCESS:
             case HCI_UNKNOWN_HCI_COMMAND:
-                result = BT_NO_ERROR;
+                result = BT_SUCCESS;
                 break;
             default:
                 LOG_ERROR("HCI_ReadLocalExtendedFeatures status: 0x%02x", g_readLocalExtendedFeaturesResult[i].status);
@@ -491,7 +491,7 @@ static int BtmReadLocalExtendedFeatures()
                 break;
         }
 
-        if (result != BT_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             break;
         }
 
@@ -509,7 +509,7 @@ static int BtmSetEventMask()
         .eventMask = HCI_EVENT_MASK_CORE_5_0,
     };
     int result = HCI_SetEventMask(&setEventMaskParam);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_SetEventMask failed: %{public}d", result);
         return result;
     }
@@ -528,7 +528,7 @@ static int BtmSetEventMask()
 static int BtmReadLocalSupportedCodecs()
 {
     int result = HCI_ReadLocalSupportedCodecs();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_ReadLocalSupportedCodecs failed: %{public}d", result);
         return result;
     }
@@ -551,7 +551,7 @@ static int BtmWriteLeHostSupport()
         .simultaneousLeHost = HCI_SIMULTANEOUS_LE_HOST_DISABLED,
     };
     int result = HCI_WriteLeHostSupport(&writeLeHostSupportParam);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_WriteLeHostSupport failed: %{public}d", result);
         return result;
     }
@@ -559,7 +559,7 @@ static int BtmWriteLeHostSupport()
         switch (g_writeLeHostSupportedResult.status) {
             case HCI_SUCCESS:
             case HCI_UNKNOWN_HCI_COMMAND:
-                result = BT_NO_ERROR;
+                result = BT_SUCCESS;
                 break;
             default:
                 LOG_ERROR("HCI_WriteLeHostSupport status: 0x%02x", g_writeLeHostSupportedResult.status);
@@ -576,7 +576,7 @@ static int BtmWriteLeHostSupport()
 static int BtmLeReadBufferSize()
 {
     int result = HCI_LeReadBufferSize();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_LeReadBufferSize failed: %{public}d", result);
         return result;
     }
@@ -595,7 +595,7 @@ static int BtmLeReadBufferSize()
 static int BtmLeReadWhiteListSize()
 {
     int result = HCI_LeReadWhiteListSize();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_LeReadWhiteListSize failed: %{public}d", result);
         return result;
     }
@@ -614,7 +614,7 @@ static int BtmLeReadWhiteListSize()
 static int BtmLeReadLocalSupportedFeatures()
 {
     int result = HCI_LeReadLocalSupportedFeatures();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_LeReadLocalSupportedFeatures failed: %{public}d", result);
         return result;
     }
@@ -633,7 +633,7 @@ static int BtmLeReadLocalSupportedFeatures()
 static int BtmLeReadResolvingListSize()
 {
     int result = HCI_LeReadResolvingListSize();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_LeReadResolvingListSize failed: %{public}d", result);
         return result;
     }
@@ -655,7 +655,7 @@ static int BtmLeSetEventMask()
         .leEventMask = BtmGetLeEventMask(),
     };
     int result = HCI_LeSetEventMask(&lsSetEventMaskParam);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("HCI_LeSetEventMask failed: %{public}d", result);
         return result;
     }
@@ -882,7 +882,7 @@ int BTM_GetLocalAddr(BtAddr *addr)
         return BT_BAD_PARAM;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     if (g_readBdAddrResult.status != HCI_SUCCESS) {
         result = BT_BAD_STATUS;
     } else {
@@ -898,9 +898,9 @@ int BTM_GetLocalAddr(BtAddr *addr)
 
 int BTM_GetLocalSupportedFeatures(uint8_t features[8])
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
-    if (g_readLocalSupportedFeaturesResult.status == BT_NO_ERROR) {
+    if (g_readLocalSupportedFeaturesResult.status == BT_SUCCESS) {
         errno_t err = memcpy_s(
             features, LMP_FEATURES_SIZE, g_readLocalSupportedFeaturesResult.lmpFeatures.raw, LMP_FEATURES_SIZE);
         if (err != EOK) {
@@ -929,7 +929,7 @@ int BTM_GetLocalVersionInformation(BtmLocalVersionInformation *localVersion)
     localVersion->manufacturerName = g_readLocalVersionResult.manufacturerName;
     localVersion->lmpSubversion = g_readLocalVersionResult.lmpSubversion;
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BtmGetWhiteListSize(uint8_t *whiteListSize)
@@ -940,7 +940,7 @@ int BtmGetWhiteListSize(uint8_t *whiteListSize)
 
     *whiteListSize = g_leReadWhiteListSizeResult.whiteListSize;
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BtmGetResolvingListSize(uint8_t *resolvingListSize)
@@ -951,7 +951,7 @@ int BtmGetResolvingListSize(uint8_t *resolvingListSize)
 
     *resolvingListSize = g_leReadResolvingListSizeResult.resolvingListSize;
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_GetLocalSupportedCodecs(BtmLocalSupportedCodecs **localSupportedCodes)
@@ -962,7 +962,7 @@ int BTM_GetLocalSupportedCodecs(BtmLocalSupportedCodecs **localSupportedCodes)
 
     *localSupportedCodes = &g_localSupportedCodecs;
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_GetAclDataPacketLength(uint16_t *aclDataPacketLength)
@@ -973,7 +973,7 @@ int BTM_GetAclDataPacketLength(uint16_t *aclDataPacketLength)
 
     *aclDataPacketLength = g_readBufferSizeResult.hcAclDataPacketLength;
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_GetLeAclDataPacketLength(uint16_t *leAclDataPacketLength)
@@ -988,7 +988,7 @@ int BTM_GetLeAclDataPacketLength(uint16_t *leAclDataPacketLength)
         *leAclDataPacketLength = g_readBufferSizeResult.hcAclDataPacketLength;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void BtmCloseController()

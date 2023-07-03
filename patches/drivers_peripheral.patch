@@ -1,0 +1,49 @@
+From a17b853edf3cdf090147777703fce963586c69be Mon Sep 17 00:00:00 2001
+From: lverpeng <lverpeng118@163.com>
+Date: Sat, 1 Jul 2023 15:49:04 +0800
+Subject: [PATCH] change build.gn
+
+Signed-off-by: lee <lilong32@huawei.com>
+---
+ bluetooth/audio/hal/hdi_passthrough/BUILD.gn | 7 +------
+ bluetooth/bundle.json                        | 2 +-
+ 2 files changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/bluetooth/audio/hal/hdi_passthrough/BUILD.gn b/bluetooth/audio/hal/hdi_passthrough/BUILD.gn
+index 9fca7f0b3..4e3e0890a 100644
+--- a/bluetooth/audio/hal/hdi_passthrough/BUILD.gn
++++ b/bluetooth/audio/hal/hdi_passthrough/BUILD.gn
+@@ -66,16 +66,11 @@ ohos_shared_library("hdi_audio_bluetooth") {
+     "//drivers/peripheral/bluetooth/audio/supportlibs/adm_adapter/include",
+     "//third_party/cJSON",
+     "//drivers/peripheral/bluetooth/audio/interfaces/include",
+-    "//foundation/communication/bluetooth/services/bluetooth/ipc/include",
+-    "//foundation/communication/bluetooth/services/bluetooth/common",
+-    "//foundation/communication/bluetooth/interfaces/inner_api/include",
+-    "//foundation/communication/bluetooth/frameworks/inner/common",
+-    "//foundation/communication/bluetooth/interfaces/inner_api/include/c_header",
+     "//third_party/bounds_checking_function/include",
+   ]
+ 
+   deps = [
+-    "//foundation/communication/bluetooth/services/bluetooth/ipc:btipc_static",
++     "//foundation/communication/bluetooth_service/services/bluetooth/ipc:btipc_static",
+   ]
+ 
+   if (is_standard_system) {
+diff --git a/bluetooth/bundle.json b/bluetooth/bundle.json
+index 770e1e5b7..de8fc8800 100644
+--- a/bluetooth/bundle.json
++++ b/bluetooth/bundle.json
+@@ -24,7 +24,7 @@
+         "ipc",
+         "samgr",
+         "drivers_interface_bluetooth",
+-        "btipc_static"
++        "bluetooth_service"
+       ]
+     },
+     "build": {
+-- 
+Gitee
+

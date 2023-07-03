@@ -81,6 +81,11 @@ void BluetoothBleAdvertiseCallbackProxy::OnAutoStopAdvEvent(int32_t advHandle)
     }
 }
 
+void BluetoothBleAdvertiseCallbackProxy::OnSetAdvDataEvent(int32_t result, int32_t advHandle)
+{
+    return;
+}
+
 ErrCode BluetoothBleAdvertiseCallbackProxy::InnerTransact(
     uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply)
 {

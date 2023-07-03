@@ -51,7 +51,7 @@ public:
      * @brief Registers the service record into the SDP.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int RegisterService(void);
@@ -67,7 +67,7 @@ public:
      * @param[in] rawAddr  The address of the bluetooth device.
      * @param[in] callback The callback function that receives the search result.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     static int FindCtService(const RawAddress &rawAddr,

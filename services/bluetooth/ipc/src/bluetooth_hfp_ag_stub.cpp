@@ -118,7 +118,7 @@ int32_t BluetoothHfpAgStub::GetConnectDevicesInner(MessageParcel &data, MessageP
             return BT_ERR_IPC_TRANS_FAILED;
         }
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHfpAgStub::GetDevicesByStatesInner(MessageParcel &data, MessageParcel &reply) {
@@ -151,7 +151,7 @@ ErrCode BluetoothHfpAgStub::GetDeviceStateInner(MessageParcel &data, MessageParc
         HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    if (errCode != BT_SUCCESS) {
+    if (errCode != NO_ERROR) {
         HILOGE("internal error.");
         return BT_ERR_INTERNAL_ERROR;
     }
@@ -160,7 +160,7 @@ ErrCode BluetoothHfpAgStub::GetDeviceStateInner(MessageParcel &data, MessageParc
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHfpAgStub::ConnectInner(MessageParcel &data, MessageParcel &reply)
@@ -174,7 +174,7 @@ int32_t BluetoothHfpAgStub::ConnectInner(MessageParcel &data, MessageParcel &rep
         HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHfpAgStub::DisconnectInner(MessageParcel &data, MessageParcel &reply)
@@ -188,7 +188,7 @@ int32_t BluetoothHfpAgStub::DisconnectInner(MessageParcel &data, MessageParcel &
         HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHfpAgStub::GetScoStateInner(MessageParcel &data, MessageParcel &reply) {

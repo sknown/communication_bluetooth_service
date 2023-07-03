@@ -25,7 +25,7 @@ OppGapServer::OppGapServer(uint8_t rfcommScn, uint16_t l2capPsm) : rfcommScn_(rf
 int OppGapServer::Register() const
 {
     HILOGI("[OPP GAP SERVER]Call");
-    int retVal = BT_NO_ERROR;
+    int retVal = BT_SUCCESS;
     GapSecChannel secChannel;
     secChannel.l2capPsm = l2capPsm_;
     secChannel.rfcommChannel = rfcommScn_;
@@ -38,7 +38,7 @@ int OppGapServer::Register() const
     retVal = GAPIF_RegisterServiceSecurity(nullptr,
         &securityInfoL2cap,
         GAP_SEC_IN_AUTHENTICATION | GAP_SEC_IN_ENCRYPTION | GAP_SEC_OUT_AUTHENTICATION | GAP_SEC_OUT_ENCRYPTION);
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         HILOGE("[OPP GAP SERVER]Gap GAPIF_RegisterServiceSecurity retVal = %{public}d", retVal);
         return retVal;
     }
@@ -51,7 +51,7 @@ int OppGapServer::Register() const
     retVal = GAPIF_RegisterServiceSecurity(nullptr,
         &securityInfoRfcomm,
         GAP_SEC_IN_AUTHENTICATION | GAP_SEC_IN_ENCRYPTION | GAP_SEC_OUT_AUTHENTICATION | GAP_SEC_OUT_ENCRYPTION);
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         HILOGE("[OPP GAP SERVER]Gap GAPIF_RegisterServiceSecurity retVal = %{public}d", retVal);
         return retVal;
     }
@@ -64,14 +64,14 @@ void OppGapServer::Deregister() const
     GapSecChannel secChannel;
     secChannel.l2capPsm = l2capPsm_;
     secChannel.rfcommChannel = rfcommScn_;
-    int retVal = BT_NO_ERROR;
+    int retVal = BT_SUCCESS;
     GapServiceSecurityInfo securityInfoL2cap;
     securityInfoL2cap.direction = INCOMING;
     securityInfoL2cap.serviceId = GAP_Service::OPP_SERVER;
     securityInfoL2cap.protocolId = GAP_SecMultiplexingProtocol::SEC_PROTOCOL_L2CAP;
     securityInfoL2cap.channelId = secChannel;
     retVal = GAPIF_DeregisterServiceSecurity(nullptr, &securityInfoL2cap);
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         HILOGE("[OPP GAP SERVER]Gap GAPIF_DeregisterServiceSecurity retVal = %{public}d", retVal);
     }
 
@@ -81,7 +81,7 @@ void OppGapServer::Deregister() const
     securityInfoRfcomm.protocolId = GAP_SecMultiplexingProtocol::SEC_PROTOCOL_RFCOMM;
     securityInfoRfcomm.channelId = secChannel;
     retVal = GAPIF_DeregisterServiceSecurity(nullptr, &securityInfoRfcomm);
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         HILOGE("[OPP GAP SERVER]Gap GAPIF_DeregisterServiceSecurity retVal = %{public}d", retVal);
     }
 }
