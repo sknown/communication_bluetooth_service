@@ -1,0 +1,37 @@
+diff --git a/rk3568/bluetooth/BUILD.gn b/rk3568/bluetooth/BUILD.gn
+index 8a809f1..4fed466 100644
+--- a/rk3568/bluetooth/BUILD.gn
++++ b/rk3568/bluetooth/BUILD.gn
+@@ -38,7 +38,7 @@ ohos_shared_library("libbt_vendor") {
+   include_dirs = [
+     "include",
+     "//base/hiviewdfx/hilog/interfaces/native/innerkits/include",
+-    "//foundation/communication/bluetooth/services/bluetooth/hardware/include",
++    "//foundation/communication/bluetooth_service/services/bluetooth/hardware/include",
+   ]
+ 
+   cflags = [
+@@ -61,7 +61,7 @@ ohos_shared_library("libbt_vendor") {
+ 
+   external_deps = [
+     "c_utils:utils",
+-    "hiviewdfx_hilog_native:libhilog",
++    "hilog:libhilog",
+   ]
+ 
+   install_enable = true
+diff --git a/rk3568/config.json b/rk3568/config.json
+index acdeec9..e685d64 100755
+--- a/rk3568/config.json
++++ b/rk3568/config.json
+@@ -28,6 +28,10 @@
+         {
+           "component": "netmanager_ext",
+           "features": []
++        },
++        {
++          "component": "bluetooth_service",
++          "features": []
+         }
+       ]
+     },

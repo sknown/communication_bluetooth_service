@@ -1,0 +1,13 @@
+diff --git a/bluetooth/audio/hal/hdi_passthrough/BUILD.gn b/bluetooth/audio/hal/hdi_passthrough/BUILD.gn
+index 9fca7f0b3..0e13f8d5a 100644
+--- a/bluetooth/audio/hal/hdi_passthrough/BUILD.gn
++++ b/bluetooth/audio/hal/hdi_passthrough/BUILD.gn
+@@ -75,7 +75,7 @@ ohos_shared_library("hdi_audio_bluetooth") {
+   ]
+ 
+   deps = [
+-    "//foundation/communication/bluetooth/services/bluetooth/ipc:btipc_static",
++    "//foundation/communication/bluetooth_service/services/bluetooth/ipc:btipc_static",
+   ]
+ 
+   if (is_standard_system) {

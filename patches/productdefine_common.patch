@@ -1,0 +1,15 @@
+diff --git a/inherit/rich.json b/inherit/rich.json
+index 5013860..dc35ba0 100644
+--- a/inherit/rich.json
++++ b/inherit/rich.json
+@@ -319,6 +319,10 @@
+           "component": "bluetooth",
+           "features": []
+         },
++        {
++          "component": "bluetooth_service",
++          "features": []
++        },
+         {
+           "component": "ipc",
+           "features": []
