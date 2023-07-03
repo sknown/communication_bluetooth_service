@@ -17,7 +17,7 @@
 #include "../include/sbc_constant.h"
 #include "../include/sbc_math.h"
 #include "../include/sbc_tables.h"
-#include "foundation/communication/bluetooth/services/bluetooth/service/src/gavdp/a2dp_codec/sbclib/include/sbc_frame.h"
+#include "sbc_frame.h"
 #include "new"
 #include "securec.h"
 #include "sys/types.h"

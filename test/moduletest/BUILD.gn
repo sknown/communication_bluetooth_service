@@ -29,9 +29,9 @@ config("module_private_config") {
     "//third_party/json/include",
     "//third_party/bounds_checking_function/include",
     "//utils/system/safwk/native/include",
-    "//foundation/communication/bluetooth/services/bluetooth/service/src/common",
-    "//foundation/communication/bluetooth/services/bluetooth/service/src/",
-    "//foundation/communication/bluetooth/services/bluetooth/service/src/base",
+    "//foundation/communication/bluetooth_service/services/bluetooth/service/src/common",
+    "//foundation/communication/bluetooth_service/services/bluetooth/service/src/",
+    "//foundation/communication/bluetooth_service/services/bluetooth/service/src/base",
   ]
   defines = [
     "BTFW_LOG_TAG = \"bluetooth_test\"",
@@ -47,8 +47,8 @@ ohos_moduletest("btsvr_module_test") {
 
   deps = [
     "//base/global/resource_management/frameworks/resmgr:global_resmgr",
-    "//foundation/communication/bluetooth/services/bluetooth/server:bluetooth_server",
-    "//foundation/communication/bluetooth/services/bluetooth/service:btservice",
+    "//foundation/communication/bluetooth_service/services/bluetooth/server:bluetooth_server",
+    "//foundation/communication/bluetooth_service/services/bluetooth/service:btservice",
     "//third_party/bounds_checking_function:libsec_shared",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
@@ -56,7 +56,7 @@ ohos_moduletest("btsvr_module_test") {
 
   external_deps = [
     "c_utils:utils",
-    "hiviewdfx_hilog_native:libhilog",
+    "hilog:libhilog",
     "ipc:ipc_core",
   ]
 }
