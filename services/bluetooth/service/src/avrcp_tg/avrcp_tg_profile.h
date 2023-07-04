@@ -381,7 +381,7 @@ public:
      * @brief Enables the AVRCP TG profile.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int Enable(void);
@@ -390,7 +390,7 @@ public:
      * @brief Disables the AVRCP TG profile.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int Disable(void);
@@ -450,7 +450,7 @@ public:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int Connect(const RawAddress &rawAddr) const;
@@ -460,7 +460,7 @@ public:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     static int ConnectBr(const RawAddress &rawAddr);
@@ -470,7 +470,7 @@ public:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int Disconnect(const RawAddress &rawAddr) const;
@@ -480,7 +480,7 @@ public:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     static int DisconnectBr(const RawAddress &rawAddr);
@@ -548,7 +548,7 @@ public:
      * @param[in] events       The list of EventIds.
      * @param[in] label        The label which is used to distinguish different call.
      * @param[in] result       The result of calling the <b>ListPlayerApplicationSettingAttributes</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -564,7 +564,7 @@ public:
      * @param[in] attributes The attribute of the player application settings.
      * @param[in] label      The label which is used to distinguish different call.
      * @param[in] result     The result of calling the <b>ListPlayerApplicationSettingAttributes</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -578,7 +578,7 @@ public:
      * @param[in] values  The value of the player application setting attribute.
      * @param[in] label   The label which is used to distinguish different call.
      * @param[in] result  The result of calling the <b>ListPlayerApplicationSettingValues</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -593,7 +593,7 @@ public:
      * @param[in] values     The value of the player application setting attribute.
      * @param[in] label      The label which is used to distinguish different call.
      * @param[in] result     The result of calling the <b>ListPlayerApplicationSettingValues</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -606,7 +606,7 @@ public:
      * @param[in] rawAddr    The address of the bluetooth device.
      * @param[in] label      The label which is used to distinguish different call.
      * @param[in] result     The result of calling the <b>ListPlayerApplicationSettingValues</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -620,7 +620,7 @@ public:
      * @param[in] attrStr    The values associated witch the attribute.
      * @param[in] label      The label which is used to distinguish different call.
      * @param[in] result     The result of calling the <b>ListPlayerApplicationSettingValues</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -635,7 +635,7 @@ public:
      * @param[in] valueStr   Specifies the player application setting value string.
      * @param[in] label      The label which is used to distinguish different call.
      * @param[in] result     The result of calling the <b>ListPlayerApplicationSettingValues</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -651,7 +651,7 @@ public:
      * @param[in] values     The list of the value of this attribute.
      * @param[in] label      The label which is used to distinguish different call.
      * @param[in] result     The result of calling the <b>ListPlayerApplicationSettingValues</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -667,7 +667,7 @@ public:
      * @param[in] playStatus   The current status of playing. Refer to <b>AvrcPlayStatus</b>.
      * @param[in] label        The label which is used to distinguish different call.
      * @param[in] result       The result of calling the <b>GetPlayStatus</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -686,7 +686,7 @@ public:
      *            @a AVRC_ES_CODE_NO_AVAILABLE_PLAYERS
      * @param[in] label   The label which is used to distinguish different call.
      * @param[in] result  The result of calling the <b>SetAddressedPlayer</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -712,7 +712,7 @@ public:
      *            @a AVRC_ES_CODE_FOLDER_ITEM_IS_NOT_PLAYABLE
      * @param[in] label   The label which is used to distinguish different call.
      * @param[in] result  The result of calling the <b>PlayItem</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -734,7 +734,7 @@ public:
      *            @a AVRC_ES_CODE_NO_AVAILABLE_PLAYERS
      * @param[in] label   The label which is used to distinguish different call.
      * @param[in] result  The result of calling the <b>AddToNowPlaying</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -747,7 +747,7 @@ public:
      * @param[in] volume  The percentage of the absolute volume. Refer to <b>AvrcAbsoluteVolume</b>.
      * @param[in] label   The label which is used to distinguish different call.
      * @param[in] result  The result of calling the <b>SetAbsoluteVolume</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */
@@ -759,7 +759,7 @@ public:
      * @param[in] playStatus Indicates the current status of playback.
      * @param[in] label      The label which is used to distinguish different call.
      * @param[in] result  The result of calling the <b>SetAbsoluteVolume</b>.
-     *            @a RET_NO_ERROR   : Accepted.
+     *            @a BT_SUCCESS   : Accepted.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Rejected.
      */

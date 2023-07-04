@@ -159,7 +159,7 @@ int MapMceInstanceClient::StartClientConnect()
     }
     // register gap
     ret = RegisterServiceSecurity(securityInfo_);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         if (masClientConfig_.isGoepL2capPSM_ != true) {
             // base on rfcomm， request gap is doing in rfcomm
             ret = ExcuteObexConnectInternal();
@@ -201,7 +201,7 @@ int MapMceInstanceClient::ExcuteObexConnectInternal()
     ObexConnectParams obexParam;
     obexParam.appParams_ = &params;
     int ret = obexClientIns_->Connect(obexParam);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s, obex->Connect() execute error, ret=%{public}d", __PRETTY_FUNCTION__, ret);
     }
     return ret;
@@ -257,7 +257,7 @@ int MapMceInstanceClient::RequestSecurity(GapServiceSecurityInfo info)
 
     BtAddr addr = ((MapMceInstanceStm &)instanceStm_).GetBtAddress();
     int ret = GAPIF_RequestSecurity(&addr, &requestParam);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s GAPIF_RequestSecurity execute error", __PRETTY_FUNCTION__);
     }
     return ret;
@@ -268,7 +268,7 @@ void MapMceInstanceClient::OnGapRequestSecurityCb(uint16_t result)
 {
     // Request Security callback
     LOG_INFO("%{public}s enter, result = %{public}d", __PRETTY_FUNCTION__, int(result));
-    if (result == BT_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         utility::Message msg(MSG_MASSTM_GAP_REQUEST_FINISH);
         ((MapMceInstanceStm &)instanceStm_).PostMessage(msg);
     } else {  // gap request security failure
@@ -317,7 +317,7 @@ void MapMceInstanceClient::ProcessDisConnectFinish()
     BtAddr addr = ((MapMceInstanceStm &)instanceStm_).GetBtAddress();
     // unregister service security
     int ret = GAPIF_DeregisterServiceSecurity(&addr, &securityInfo_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s error,error=%{public}d", __PRETTY_FUNCTION__, ret);
     }
     if (masClientConfig_.isGoepL2capPSM_) {
@@ -359,7 +359,7 @@ int MapMceInstanceClient::ClientSendRequest(std::unique_ptr<MapMceInstanceReques
     std::lock_guard<std::recursive_mutex> lock(mceSendRequestMutex_);
 
     int ret = req->SendRequest(*obexClientIns_);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         currentRequestPtr_ = std::move(req);
         currentRequestPtr_->SaveReq();
     }
@@ -384,7 +384,7 @@ int MapMceInstanceClient::ClientSendReqSetNotificationRegistration(bool value)
     LOG_INFO("%{public}s enter", __PRETTY_FUNCTION__);
     std::lock_guard<std::recursive_mutex> lock(stmMutex_);
 
-    int ret = BT_NO_ERROR;
+    int ret = BT_SUCCESS;
     if (obexClientIns_ == nullptr) {
         return BT_OPERATION_FAILED;
     }
@@ -402,7 +402,7 @@ int MapMceInstanceClient::ClientSendReqSetPath(
     const uint8_t flags, const std::u16string &paths, std::vector<std::u16string> &pathList)
 {
     LOG_INFO("%{public}s enter", __PRETTY_FUNCTION__);
-    int ret = BT_NO_ERROR;
+    int ret = BT_SUCCESS;
     if (obexClientIns_ == nullptr) {
         return BT_OPERATION_FAILED;
     }
@@ -426,7 +426,7 @@ int MapMceInstanceClient::ClientSendReqGetMasInstanceInformation()
     ((MapMceInstanceStm &)instanceStm_).MceProcessMessageWithRequestInternal(outMsg, reqPtr);
 
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 // call by stm
@@ -517,7 +517,7 @@ int MapMceInstanceClient::ClientSendSavedRequest()
         nextReq = std::move(masRequestQue_.front());
         masRequestQue_.pop_front();
         ret = nextReq->SendRequest(*obexClientIns_);
-        if (ret == BT_NO_ERROR) {
+        if (ret == BT_SUCCESS) {
             currentRequestPtr_ = std::move(nextReq);
             break;
         } else {

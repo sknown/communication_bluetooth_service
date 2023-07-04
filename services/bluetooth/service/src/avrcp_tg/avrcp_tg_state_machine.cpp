@@ -68,7 +68,7 @@ int AvrcTgStateMachineManager::AddControlStateMachine(const RawAddress &rawAddr)
 
     std::lock_guard<std::mutex> lock(mutex_);
 
-    int result = RET_NO_ERROR;
+    int result = BT_SUCCESS;
 
     if (GetPairOfStateMachine(rawAddr.GetAddress()) == nullptr) {
         std::unique_ptr<StateMachine> statemachine =
@@ -90,7 +90,7 @@ int AvrcTgStateMachineManager::AddBrowseStateMachine(const RawAddress &rawAddr)
 
     std::lock_guard<std::mutex> lock(mutex_);
 
-    int result = RET_NO_ERROR;
+    int result = BT_SUCCESS;
 
     StateMachinePair *pair = GetPairOfStateMachine(rawAddr.GetAddress());
     if (pair == nullptr) {

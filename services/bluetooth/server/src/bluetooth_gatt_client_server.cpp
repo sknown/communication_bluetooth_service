@@ -95,7 +95,7 @@ public:
         int32_t uid = IPCSkeleton::GetCallingUid();
         if (state == static_cast<int>(BTConnectState::CONNECTED) ||
             state == static_cast<int>(BTConnectState::DISCONNECTED)) {
-            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "GATT_CLIENT_CONN_STATE",
+            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "GATT_CLIENT_CONN_STATE",
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "PID", pid, "UID", uid, "STATE", state);
         }
         callback_->OnConnectionStateChanged(state, newState);
@@ -139,6 +139,11 @@ public:
     {
         HILOGI("state: %{public}d, mtu: %{public}d", state, mtu);
         callback_->OnMtuChanged(state, mtu);
+    }
+
+    void OnReadRemoteRssiValue(const RawAddress &addr, int rssi, int status) override
+    {
+        return;
     }
 
     void OnServicesDiscovered(int status) override
@@ -277,7 +282,7 @@ int BluetoothGattClientServer::RegisterApplication(
 {
     int appId = 0;
     int ret = RegisterApplication(callback, addr, transport, appId);
-    return (ret == BT_SUCCESS) ? appId : ret;
+    return (ret == NO_ERROR) ? appId : ret;
 }
 
 int BluetoothGattClientServer::RegisterApplication(
@@ -296,7 +301,7 @@ int BluetoothGattClientServer::RegisterApplication(
     if (appId >= 0) {
         HILOGI("appId: %{public}d", appId);
         (*it)->SetAppId(appId);
-        HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "GATT_APP_REGISTER",
+        HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "GATT_APP_REGISTER",
             OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC,  "ACTION", "register",
             "SIDE", "client", "ADDRESS", GetEncryptAddr(addr.GetAddress()), "PID", OHOS::IPCSkeleton::GetCallingPid(),
             "UID", OHOS::IPCSkeleton::GetCallingUid(), "APPID", appId);
@@ -304,7 +309,7 @@ int BluetoothGattClientServer::RegisterApplication(
         HILOGE("RegisterSharedApplication failed, appId: %{public}d", appId);
         pimpl->callbacks_.erase(it);
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int BluetoothGattClientServer::DeregisterApplication(int32_t appId)
@@ -319,7 +324,7 @@ int BluetoothGattClientServer::DeregisterApplication(int32_t appId)
         HILOGE("request not support.");
         return bluetooth::GattStatus::REQUEST_NOT_SUPPORT;
     }
-    HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "GATT_APP_REGISTER",
+    HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "GATT_APP_REGISTER",
         OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC,  "ACTION", "deregister",
         "SIDE", "client", "ADDRESS", "empty", "PID", OHOS::IPCSkeleton::GetCallingPid(),
         "UID", OHOS::IPCSkeleton::GetCallingUid(), "APPID", appId);
@@ -502,21 +507,40 @@ int BluetoothGattClientServer::RequestConnectionPriority(int32_t appId, int32_t 
     return pimpl->clientService_->RequestConnectionPriority(appId, connPriority);
 }
 
-void BluetoothGattClientServer::GetServices(int32_t appId, ::std::vector<BluetoothGattService> &service)
+int BluetoothGattClientServer::GetServices(int32_t appId, ::std::vector<BluetoothGattService> &service)
 {
     HILOGI("appId: %{public}d", appId);
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("check permission failed");
-        return;
+        return RET_NO_SUPPORT;
     }
     std::lock_guard<std::mutex> lck(pimpl->registerMutex_);
     if (pimpl->clientService_ == nullptr) {
         HILOGE("request not support.");
-        return;
+        return BT_ERR_INTERNAL_ERROR;
     }
     for (auto &svc : pimpl->clientService_->GetServices(appId)) {
         service.push_back(svc);
     }
+    return NO_ERROR;
+}
+
+int BluetoothGattClientServer::RequestFastestConn(const BluetoothRawAddress &addr)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+int BluetoothGattClientServer::ReadRemoteRssiValue(int32_t appId)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+int BluetoothGattClientServer::RequestNotification(int32_t appId, uint16_t characterHandle, bool enable)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

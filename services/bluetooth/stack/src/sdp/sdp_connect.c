@@ -145,7 +145,7 @@ static void SdpConnectWaitTime(void *parameter)
     (void)memcpy_s(ctx, sizeof(SdpConnectInfo), parameter, sizeof(SdpConnectInfo));
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpConnectWaitTimeTask, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -182,7 +182,7 @@ static void SdpConnectTimeout(void *parameter)
     (void)memcpy_s(ctx, sizeof(SdpConnectInfo), parameter, sizeof(SdpConnectInfo));
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpConnectTimeoutTask, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -281,7 +281,7 @@ static void SdpConnectReqCallbackTask(const BtAddr *addr, uint16_t lcid, int res
     }
 
     /// Check if L2CAP started the connection process
-    if ((result != BT_NO_ERROR) || (lcid == 0)) {
+    if ((result != BT_SUCCESS) || (lcid == 0)) {
         LOG_ERROR("[%{public}s][%{public}d] Send connect request failed ", __FUNCTION__, __LINE__);
         SdpNextConnect(addr);
         return;
@@ -324,7 +324,7 @@ static void SdpConnectReqCallback(const BtAddr *addr, uint16_t lcid, int result,
     ctx->result = result;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpConnectReqCallbackTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -340,7 +340,7 @@ static void SdpConfigReqCallbackTask(uint16_t lcid, int result)
         return;
     }
 
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[%{public}s][%{public}d] Send config request failed ", __FUNCTION__, __LINE__);
         connect = SdpFindConnectByCid(lcid);
         if ((connect != NULL) && (connect->flag)) {
@@ -373,7 +373,7 @@ void SdpConfigReqCallback(uint16_t lcid, int result)
     ctx->result = result;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpConfigReqCallbackTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -390,7 +390,7 @@ void SdpConnectRspCallbackTask(uint16_t lcid, int result)
         return;
     }
 
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[%{public}s][%{public}d] Send connect response failed ", __FUNCTION__, __LINE__);
         return;
     }
@@ -442,7 +442,7 @@ static void SdpConnectRspCallback(uint16_t lcid, int result)
     ctx->result = result;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpConnectRspCallbackTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -465,7 +465,7 @@ static void SdpConfigRspCallbackTask(uint16_t lcid, int result)
         return;
     }
 
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[%{public}s][%{public}d] Send config response failed ", __FUNCTION__, __LINE__);
         if ((connect != NULL) && (connect->flag)) {
             SdpNextConnect(&connect->addr);
@@ -508,7 +508,7 @@ static void SdpConfigRspCallback(uint16_t lcid, int result)
     ctx->result = result;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpConfigRspCallbackTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -524,7 +524,7 @@ static void SdpDisconnectionRspCallbackTask(uint16_t lcid, int result)
         return;
     }
 
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[%{public}s][%{public}d] Disconnect response callback failed", __FUNCTION__, __LINE__);
         return;
     }
@@ -560,7 +560,7 @@ static void SdpDisconnectionRspCallback(uint16_t lcid, int result)
     ctx->result = result;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpDisconnectionRspCallbackTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -571,7 +571,7 @@ static void SdpDisconnectionRspCallback(uint16_t lcid, int result)
  *
  * @param addr   The Bluetooth address of the peer.
  * @param packet The packet point for sending data.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 static void SdpSendConnectRequest(const BtAddr *addr)
 {
@@ -654,7 +654,7 @@ static void SdpReceiveConnectRequest(
     ctx->context = context;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpReceiveConnectRequestTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -744,7 +744,7 @@ static void SdpReceiveConnectResponse(
     ctx->context = context;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpReceiveConnectResponseTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -808,7 +808,7 @@ static void SdpReceiveConfigRequest(uint16_t lcid, uint8_t id, const L2capConfig
     ctx->context = context;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpReceiveConfigRequestTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -883,7 +883,7 @@ static void SdpReceiveConfigResponse(uint16_t lcid, const L2capConfigInfo *confi
     ctx->context = context;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpReceiveConfigResponseTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -959,7 +959,7 @@ static void SdpReceiveDisconnectRequest(uint16_t lcid, uint8_t id, void *context
     ctx->context = context;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpReceiveDisconnectRequestTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -1019,7 +1019,7 @@ static void SdpReceiveDisconnectResponse(uint16_t lcid, void *context)
     ctx->context = context;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpReceiveDisconnectResponseTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -1097,7 +1097,7 @@ static void SdpDisconnectAbnormal(uint16_t lcid, uint8_t reason, void *context)
     ctx->context = context;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpDisconnectAbnormalTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -1173,7 +1173,7 @@ static void SdpReceiveData(uint16_t lcid, Packet *packet, void *context)
     ctx->context = context;
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpReceiveDataTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         PacketFree(ctx->packet);
         ctx->packet = NULL;
         MEM_MALLOC.free(ctx);
@@ -1626,5 +1626,5 @@ int SdpClientConnect(SdpClientRequest *request)
         }
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }

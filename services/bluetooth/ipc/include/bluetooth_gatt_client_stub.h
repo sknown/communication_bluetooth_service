@@ -46,6 +46,9 @@ private:
     ErrCode GetAllDeviceInner(MessageParcel &data, MessageParcel &reply);
     ErrCode RequestConnectionPriorityInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetServicesInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode RequestFastestConnInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode ReadRemoteRssiValueInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode RequestNotificationInner(MessageParcel &data, MessageParcel &reply);
 
     using BluetoothHostFunc = ErrCode (BluetoothGattClientStub::*)(MessageParcel &data, MessageParcel &reply);
     std::map<uint32_t, BluetoothHostFunc> memberFuncMap_;

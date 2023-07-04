@@ -189,7 +189,7 @@ int BTM_EnterSniffMode(const BtAddr *addr, const BtmSniffParam *param)
 
     uint16_t connectionHandle = 0;
     int result = BtmGetAclHandleByAddress(addr, &connectionHandle);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return BT_BAD_PARAM;
     }
 
@@ -221,7 +221,7 @@ int BTM_ExitSniffMode(const BtAddr *addr)
 
     uint16_t connectionHandle = 0;
     int result = BtmGetAclHandleByAddress(addr, &connectionHandle);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return BT_BAD_PARAM;
     }
 
@@ -249,7 +249,7 @@ int BTM_SetSniffSubrating(const BtAddr *addr, const BtmSniffSubrating *subRating
 
     uint16_t connectionHandle = 0;
     int result = BtmGetAclHandleByAddress(addr, &connectionHandle);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -282,7 +282,7 @@ NO_SANITIZE("cfi") static void BtmPmOnModeChange(const HciModeChangeEventParam *
 {
     BtAddr addr;
     int result = BtmGetAclAddressByHandle(param->connectionHandle, &addr);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return;
     }
 
@@ -302,7 +302,7 @@ NO_SANITIZE("cfi") static void BtmPmOnSniffSubratingComplete(const HciSniffSubra
 {
     BtAddr addr;
     int result = BtmGetAclAddressByHandle(param->connectionHandle, &addr);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return;
     }
 
@@ -349,7 +349,7 @@ int BTM_RegisterPmCallbacks(const BtmPmCallbacks *callbacks, void *context)
     ListAddLast(g_pmCallbackList, block);
     MutexUnlock(g_pmCallbackListLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_DeregisterPmCallbacks(const BtmPmCallbacks *callbacks)
@@ -369,7 +369,7 @@ int BTM_DeregisterPmCallbacks(const BtmPmCallbacks *callbacks)
         break;
     }
     FOREACH_CALLBACKS_END;
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static HciEventCallbacks g_hciEventCallbacks = {

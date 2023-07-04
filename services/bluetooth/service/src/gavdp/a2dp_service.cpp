@@ -173,7 +173,7 @@ void ObserverProfile::OnAudioStateChanged(const BtAddr &addr, const int state, v
 
     A2dpService *service = GetServiceInstance(role_);
     RawAddress btAddr = bluetooth::RawAddress::ConvertToString(addr.addr);
-    int error = RET_NO_ERROR;
+    int error = BT_SUCCESS;
 
     if (service == nullptr) {
         LOG_ERROR("[ObserverProfile] %{public}s Can't get the instance of service\n", __func__);
@@ -202,7 +202,7 @@ void ObserverProfile::OnCodecStateChanged(const BtAddr &addr, const A2dpSrcCodec
 
     RawAddress btAddr = bluetooth::RawAddress::ConvertToString(addr.addr);
     A2dpService *service = GetServiceInstance(role_);
-    int error = RET_NO_ERROR;
+    int error = BT_SUCCESS;
 
     if (service == nullptr) {
         LOG_ERROR("[ObserverProfile] %{public}s Can't get the instance of service\n", __func__);
@@ -304,7 +304,7 @@ int A2dpService::Connect(const RawAddress &device)
 {
     HILOGI("[address:%{public}s] role[%{public}u]", GET_ENCRYPT_ADDR(device), role_);
 
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     std::lock_guard<std::recursive_mutex> lock(g_a2dpServiceMutex);
 
     if (connectManager_.JudgeConnectExit(device, role_)) {
@@ -331,7 +331,7 @@ int A2dpService::Disconnect(const RawAddress &device)
 {
     LOG_INFO("[A2dpService] %{public}s role[%u]\n", __func__, role_);
 
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     A2dpDeviceInfo *info = nullptr;
     std::lock_guard<std::recursive_mutex> lock(g_a2dpServiceMutex);
 
@@ -564,7 +564,7 @@ int A2dpService::GetPlayingState(const RawAddress &device, int &state) const
         info = iter->second;
     }
     state = info->GetPlayingState() ? A2DP_IS_PLAYING : A2DP_NOT_PLAYING;
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int A2dpService::SetActiveSinkDevice(const RawAddress &device)
@@ -607,7 +607,7 @@ int A2dpService::SetActiveSinkDevice(const RawAddress &device)
         UpdateActiveDevice(rawAddr);
     }
 
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void A2dpService::ActiveDevice()
@@ -658,7 +658,7 @@ int A2dpService::SetConnectStrategy(const RawAddress &device, int strategy)
         SECTION_CONNECTION_POLICIES,
         (role_ == A2DP_ROLE_SOURCE) ? PROPERTY_A2DP_CONNECTION_POLICY : PROPERTY_A2DP_SINK_CONNECTION_POLICY,
         value);
-    int ret = returnValue ? RET_NO_ERROR : RET_BAD_STATUS;
+    int ret = returnValue ? BT_SUCCESS : RET_BAD_STATUS;
 
     if (returnValue && ((int)BTStrategyType::CONNECTION_ALLOWED == strategy)) {
         if (static_cast<int>(BTConnectState::DISCONNECTED) == (GetDeviceState(device))) {
@@ -800,7 +800,7 @@ void A2dpService::SwitchOptionalCodecs(const RawAddress &device, bool isEnable)
         return;
     }
 
-    A2dpSrcCodecStatus codecStatus = GetCodecStatus(addr);
+    A2dpSrcCodecStatus codecStatus = GetCodecStatus(RawAddress(addr));
     if (isEnable != (A2DP_CODEC_TYPE_SBC_USER == codecStatus.codecInfo.codecType)) {
         LOG_ERROR("[A2dpService] : current optional codec is the same as user setting\n");
         return;
@@ -854,7 +854,7 @@ int A2dpService::StartPlaying(const RawAddress &device)
 
     if (iter->second->GetPlayingState()) {
         LOG_INFO("[A2dpService] Device is on playing");
-        return RET_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     A2dpProfile *pflA2dp = GetProfileInstance(role_);
@@ -882,7 +882,7 @@ int A2dpService::SuspendPlaying(const RawAddress &device)
 
     if (!iter->second->GetPlayingState()) {
         LOG_ERROR("[A2dpService] Device is not on playing");
-        return RET_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     LOG_INFO("[A2dpService] %{public}s handle [%u]", __func__, handle);
@@ -911,7 +911,7 @@ int A2dpService::StopPlaying(const RawAddress &device)
 
     if (!iter->second->GetPlayingState()) {
         LOG_ERROR("[A2dpService] Device is not on playing");
-        return RET_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     LOG_INFO("[A2dpService] %{public}s handle [%u]", __func__, handle);
@@ -955,7 +955,7 @@ int A2dpService::WriteFrame(const uint8_t *data, uint32_t size)
         LOG_ERROR("[A2dpService] %{public}s Failed to get profile instance. role_(%u)\n", __func__, role_);
         return RET_BAD_STATUS;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void A2dpService::GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp)
@@ -1043,7 +1043,7 @@ void A2dpService::DeleteDeviceFromList(const RawAddress &device)
     std::lock_guard<std::recursive_mutex> lock(g_a2dpServiceMutex);
 
     for (it = a2dpDevices_.begin(); it != a2dpDevices_.end(); it++) {
-        if (strcmp(it->first.c_str(), device.GetAddress().c_str()) == RET_NO_ERROR) {
+        if (strcmp(it->first.c_str(), device.GetAddress().c_str()) == BT_SUCCESS) {
             deviceInfo = it->second;
             delete deviceInfo;
             a2dpDevices_.erase(it);

@@ -227,7 +227,7 @@ constexpr uint8_t GATT_ROLE_INVALID = 0xFF;
  */
 enum class GattPermission : uint8_t {
     READABLE = 1 << 0, /**< readable */
-    WRITABLE = 1 << 1,
+    WRITEABLE = 1 << 1,
     ENCRYPTION = 1 << 2,
     AUTHENTICATION = 1 << 3,
     AUTHORIZATION = 1 << 4

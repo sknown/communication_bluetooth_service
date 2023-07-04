@@ -28,7 +28,7 @@ namespace bluetooth {
         if (ret == BT_ALREADY) {                                  \
             LOG_WARN("[HFP AG]%{public}s():ret[%{public}d]", __FUNCTION__, ret);  \
         }                                                         \
-        if ((ret != BT_NO_ERROR) && (ret != BT_ALREADY)) {        \
+        if ((ret != BT_SUCCESS) && (ret != BT_ALREADY)) {        \
             LOG_ERROR("[HFP AG]%{public}s():ret[%{public}d]", __FUNCTION__, ret); \
             return ret;                                           \
         }                                                         \

@@ -182,7 +182,7 @@ HWTEST_F(GattServerTest, GattServer_ModuleTest_NotifyCharacteristicChanged, Test
     uuidSerPer = UUID::FromString("00001810-0000-1000-8000-00805F9B34FB");
     GattCharacteristic* aa = new GattCharacteristic(uuidSerPer, 1, 1);
     int res = server.NotifyCharacteristicChanged(deviceBle_, *aa, false);
-    EXPECT_NE(res, BT_SUCCESS);
+    EXPECT_NE(res, NO_ERROR);
 
     GTEST_LOG_(INFO) << "GattServer_ModuleTest_Notify end";
 }
@@ -205,7 +205,7 @@ HWTEST_F(GattServerTest, GattServer_ModuleTest_SendResponse, TestSize.Level1)
         1,
         (uint8_t *)valueChrTwo.c_str(),
         valueChrTwo.size());
-    EXPECT_NE(ret, BT_SUCCESS);
+    EXPECT_NE(ret, NO_ERROR);
     GTEST_LOG_(INFO) << "GattServer_ModuleTest_SendResponse end";
 }
 

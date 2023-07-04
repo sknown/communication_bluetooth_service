@@ -249,7 +249,7 @@ int BTM_SetSnoopFilePath(const char *path, uint16_t length)
 
     (void)memcpy_s(g_outputPath, length + 1, path, length);
     g_outputPath[length] = '\0';
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_EnableSnoopFileOutput(bool filter)
@@ -260,7 +260,7 @@ int BTM_EnableSnoopFileOutput(bool filter)
     } else {
         BtmDisableSnoopFilter();
     }
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_DisableSnoopFileOutput(void)
@@ -269,7 +269,7 @@ int BTM_DisableSnoopFileOutput(void)
         BtmDisableSnoopFilter();
     }
     g_output = false;
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void BtmStartSnoopOutput(void)
@@ -321,7 +321,7 @@ int BTM_EnableHciLogOutput(bool filter)
     } else {
         BtmDisableSnoopFilter();
     }
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_DisableHciLogOutput(void)
@@ -330,5 +330,5 @@ int BTM_DisableHciLogOutput(void)
         BtmDisableSnoopFilter();
     }
     g_hciLogOuput = false;
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }

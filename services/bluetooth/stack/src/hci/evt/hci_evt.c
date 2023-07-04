@@ -2013,7 +2013,7 @@ int HCI_RegisterEventCallbacks(const HciEventCallbacks *callbacks)
     ListAddLast(g_eventCallbackList, (void *)callbacks);
 
     MutexUnlock(g_lockCallbackList);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HCI_DeregisterEventCallbacks(const HciEventCallbacks *callbacks)
@@ -2023,7 +2023,7 @@ int HCI_DeregisterEventCallbacks(const HciEventCallbacks *callbacks)
     ListRemoveNode(g_eventCallbackList, (void *)callbacks);
 
     MutexUnlock(g_lockCallbackList);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 List *HciGetEventCallbackList()

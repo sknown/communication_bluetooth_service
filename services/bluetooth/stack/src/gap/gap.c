@@ -93,7 +93,7 @@ static void GapInitialize(int traceLevel)
     }
 
     int ret = GapRunTaskBlockProcess(GapInitializeTask, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Run task error.", __FUNCTION__);
     }
 
@@ -127,7 +127,7 @@ static void GapEnableLe(void)
         g_gapMng.le.isEnable = true;
         g_gapMng.le.local.minEncKeySize = GAP_ENC_KEY_MAX_SIZE;
         int ret = BTM_GetLocalAddr(&g_gapMng.le.local.addr);
-        if (ret == BT_NO_ERROR) {
+        if (ret == BT_SUCCESS) {
             g_gapMng.le.local.addr.type = LOCAL_ADDR_TYPE_PUBLIC;
         } else {
             g_gapMng.le.local.addr.type = LOCAL_ADDR_TYPE_RANDOM;
@@ -162,7 +162,7 @@ static void GapEnable(void)
     LOG_INFO("%{public}s:", __FUNCTION__);
 
     int ret = GapRunTaskBlockProcess(GapEnableTask, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Run task error.", __FUNCTION__);
     }
 }
@@ -208,7 +208,7 @@ static void GapDisable(void *ctx)
     LOG_INFO("%{public}s:", __FUNCTION__);
 
     int ret = GapRunTaskBlockProcess(GapDisableTask, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Run task error.", __FUNCTION__);
     }
 }
@@ -239,7 +239,7 @@ static void GapFinalize(void)
     LOG_INFO("%{public}s:", __FUNCTION__);
 
     int ret = GapRunTaskBlockProcess(GapFinalizeTask, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Run task error.", __FUNCTION__);
     }
 }
@@ -444,7 +444,7 @@ int GAP_SetScanMode(const GapDiscoverModeInfo *discoverInfo, const GapConnectabl
         scanModeBlock->status = GAP_SCANMODE_STATUS_CLOSING;
 
         ret = GapWriteScanEnable();
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("");
             scanModeBlock->status = GAP_SCANMODE_STATUS_IDLE;
         }
@@ -508,7 +508,7 @@ NO_SANITIZE("cfi") void GapWriteScanEnableComplete(const HciWriteScanEnableRetur
                 scanModeBlock->status = GAP_SCANMODE_STATUS_IDLE;
                 callback = scanModeBlock->callback;
             }
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_ERROR("HCI Command Error ret = %{public}d.", ret);
                 retStatus = GAP_STATUS_FAILED;
                 callback = scanModeBlock->callback;
@@ -562,7 +562,7 @@ void GapWriteInquiryScanActivityComplete(const HciWriteInquiryScanActivityReturn
     if (scanModeBlock->status == GAP_SCANMODE_STATUS_SETTING) {
         if (retStatus == HCI_SUCCESS) {
             int ret = GapWriteInquiryScanType();
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 scanModeBlock->status = GAP_SCANMODE_STATUS_IDLE;
                 retStatus = GAP_STATUS_FAILED;
                 callback = scanModeBlock->callback;
@@ -611,7 +611,7 @@ void GapWriteInquiryScanTypeComplete(const HciWriteInquiryScanTypeReturnParam *p
     if (scanModeBlock->status == GAP_SCANMODE_STATUS_SETTING) {
         if (retStatus == HCI_SUCCESS) {
             int ret = GapWriteCurrentIACLAP();
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_ERROR("HCI Command Error ret = %{public}d.", ret);
                 callback = scanModeBlock->callback;
                 retStatus = GAP_STATUS_FAILED;
@@ -676,7 +676,7 @@ void GapWriteCurrentIACLAPComplete(const HciWriteCurrentIacLapReturnParam *param
             }
 
             int ret = GapWriteClassOfDevice(g_gapMng.bredr.classOfDevice);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_ERROR("HCI Command Error ret = %{public}d.", ret);
                 retStatus = GAP_STATUS_FAILED;
                 scanModeBlock->status = GAP_SCANMODE_STATUS_IDLE;
@@ -721,7 +721,7 @@ void GapWritePageScanActivityComplete(const HciWritePageScanActivityReturnParam 
     if (scanModeBlock->status == GAP_SCANMODE_STATUS_SETTING) {
         if (retStatus == HCI_SUCCESS) {
             int ret = GapWritePageScanType();
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_ERROR("HCI Command Error ret = %{public}d.", ret);
                 scanModeBlock->status = GAP_SCANMODE_STATUS_IDLE;
                 callback = scanModeBlock->callback;
@@ -765,7 +765,7 @@ void GapWritePageScanTypeComplete(const HciWritePageScanTypeReturnParam *param)
     if (scanModeBlock->status == GAP_SCANMODE_STATUS_SETTING) {
         if (retStatus == HCI_SUCCESS) {
             int ret = GapWriteScanEnable();
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_ERROR("HCI Command Error ret = %{public}d.", ret);
                 callback = scanModeBlock->callback;
                 scanModeBlock->status = GAP_SCANMODE_STATUS_IDLE;
@@ -791,7 +791,7 @@ void GapReadLocalOobExtendedDataComplete(const HciReadLocalOobExtendedDataReturn
         (void)memcpy_s(g_gapMng.bredr.oobData192.R, GAP_OOB_DATA_RANDOM_SIZE, param->r192, GAP_OOB_DATA_RANDOM_SIZE);
     } else {
         int ret = HCI_ReadLocalOOBData();
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("%{public}s: Local OOB data read failed", __FUNCTION__);
         }
     }
@@ -820,12 +820,12 @@ int GapReadNewLocalOOBData(void)
     BTM_GetLocalVersionInformation(&version);
     if (version.hciVersion >= BLUETOOTH_CORE_SPECIFICATION_4_1) {
         ret = HCI_ReadLocalOOBExtendedData();
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("%{public}s: Local OOB data read failed", __FUNCTION__);
         }
     } else {
         ret = HCI_ReadLocalOOBData();
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_WARN("%{public}s: Local OOB data read failed", __FUNCTION__);
         }
     }
@@ -1029,7 +1029,7 @@ void GapUseAclConnectionTimeout(void *dev)
     ctx->pointer = dev;
 
     int ret = GapRunTaskUnBlockProcess(GapUseAclConnectionTimeoutTask, ctx, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -1117,7 +1117,7 @@ void GapWriteClassOfDeviceComplete(const HciWriteClassofDeviceReturnParam *param
             } else {
                 ret = GapWriteScanEnable();
             }
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_ERROR("HCI Command Error ret = %{public}d.", ret);
                 retStatus = GAP_STATUS_FAILED;
                 scanModeBlock->status = GAP_SCANMODE_STATUS_IDLE;
@@ -1353,12 +1353,12 @@ int GAP_LeGenResPriAddrAsync(GenResPriAddrResult callback, void *context)
     BtmKey localIRK = {0};
 
     ret = BTM_GetLocalIdentityResolvingKey(&localIRK);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         return ret;
     }
 
     ret = SMP_GenerateRPA(localIRK.key);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         return ret;
     }
 

@@ -36,7 +36,7 @@ extern "C" {
 
 #define BT_CONNECT_NUM_MAX 6
 
-#define BT_NO_ERROR 0
+#define BT_SUCCESS 0
 #define BT_OPERATION_FAILED (-1)
 #define BT_BAD_PARAM (-1000)
 #define BT_BAD_STATUS (-1001)

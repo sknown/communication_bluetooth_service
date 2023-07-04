@@ -151,7 +151,7 @@ int BtmAddDeviceToWhiteList(uint8_t addressType, const BtAddr *address)
 
     HCI_LeAddDeviceToWhiteList(&cmdParam);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void BtmRemoveDeviceFromWhiteList(uint8_t addressType, const BtAddr *address)
@@ -255,7 +255,7 @@ void BtmStartWhiteList()
 {
     uint8_t whiteListSize = 0;
     int result = BtmGetWhiteListSize(&whiteListSize);
-    if (result == BT_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         g_whiteListSize = whiteListSize;
     }
 

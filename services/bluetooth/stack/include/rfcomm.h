@@ -81,7 +81,7 @@ extern "C" {
 #define RFCOMM_CHANNEL_EV_REMOTE_LINE_STATUS 0x00000400
 
 // RFCOMM function's return value.
-#define RFCOMM_SUCCESS BT_NO_ERROR                   // Function successful
+#define RFCOMM_SUCCESS BT_SUCCESS                   // Function successful
 #define RFCOMM_ERR_NO_RESOURCES BT_OPERATION_FAILED  // Not enough resources
 #define RFCOMM_ERR_NOT_CONNECTED BT_BAD_STATUS       // Channel(DLC) is not connected
 #define RFCOMM_ERR_PARAM BT_BAD_PARAM                // paramas is error

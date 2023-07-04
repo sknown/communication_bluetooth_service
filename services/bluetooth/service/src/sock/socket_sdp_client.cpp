@@ -47,7 +47,7 @@ int SocketSdpClient::StartDiscovery(const std::string &addr, const Uuid &uuid, v
 
     int ret =
         SDP_ServiceSearchAttribute(&address, &sdpUUid, attributeIdList, context, &SocketSdpClient::SdpSearchCallback);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s SearchAttribute error", __FUNCTION__);
     }
     return ret;

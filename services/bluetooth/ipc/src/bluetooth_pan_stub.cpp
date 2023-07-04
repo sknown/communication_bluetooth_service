@@ -73,7 +73,7 @@ int32_t BluetoothPanStub::DisconnectInner(MessageParcel &data, MessageParcel &re
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothPanStub::GetDeviceStateInner(MessageParcel &data, MessageParcel &reply)
@@ -86,7 +86,7 @@ int32_t BluetoothPanStub::GetDeviceStateInner(MessageParcel &data, MessageParcel
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    if (errCode != BT_SUCCESS) {
+    if (errCode != NO_ERROR) {
         HILOGE("internal error.");
         return BT_ERR_INTERNAL_ERROR;
     }
@@ -95,7 +95,7 @@ int32_t BluetoothPanStub::GetDeviceStateInner(MessageParcel &data, MessageParcel
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothPanStub::GetDevicesByStatesInner(MessageParcel &data, MessageParcel &reply)
@@ -116,7 +116,7 @@ int32_t BluetoothPanStub::GetDevicesByStatesInner(MessageParcel &data, MessagePa
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    if (errCode != BT_SUCCESS) {
+    if (errCode != NO_ERROR) {
         HILOGE("internal error.");
         return BT_ERR_INTERNAL_ERROR;
     }
@@ -131,7 +131,7 @@ int32_t BluetoothPanStub::GetDevicesByStatesInner(MessageParcel &data, MessagePa
             return BT_ERR_IPC_TRANS_FAILED;
         }
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothPanStub::RegisterObserverInner(MessageParcel &data, MessageParcel &reply)
@@ -161,7 +161,7 @@ int32_t BluetoothPanStub::SetTetheringInner(MessageParcel &data, MessageParcel &
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothPanStub::IsTetheringOnInner(MessageParcel &data, MessageParcel &reply)
@@ -173,7 +173,7 @@ int32_t BluetoothPanStub::IsTetheringOnInner(MessageParcel &data, MessageParcel 
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    if (errCode != BT_SUCCESS) {
+    if (errCode != NO_ERROR) {
         HILOGE("internal error.");
         return BT_ERR_INTERNAL_ERROR;
     }
@@ -183,7 +183,7 @@ int32_t BluetoothPanStub::IsTetheringOnInner(MessageParcel &data, MessageParcel 
         return BT_ERR_IPC_TRANS_FAILED;
     }
 
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

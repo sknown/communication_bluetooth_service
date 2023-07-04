@@ -245,7 +245,7 @@ int HfpAgAudioConnection::ConnectAudio() const
         return BT_BAD_PARAM;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HfpAgAudioConnection::DisconnectAudio() const
@@ -325,7 +325,7 @@ int HfpAgAudioConnection::AcceptByCvsd(const AudioDevice &dev, BtAddr btAddr) co
 
 int HfpAgAudioConnection::AcceptAudioConnection() const
 {
-    int ret = BT_NO_ERROR;
+    int ret = BT_SUCCESS;
     BtAddr btAddr = ConvertToBtAddr(remoteAddr_);
 
     // Only accpet CVSD sco from remote device.

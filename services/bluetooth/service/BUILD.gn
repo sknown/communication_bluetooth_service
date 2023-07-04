@@ -12,7 +12,7 @@
 # limitations under the License.
 
 import("//build/ohos.gni")
-import("//foundation/communication/bluetooth/bluetooth.gni")
+import("//foundation/communication/bluetooth_service/bluetooth.gni")
 
 SUBSYSTEM_DIR = "//foundation/communication"
 PART_DIR = "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth"
@@ -411,9 +411,6 @@ ohos_shared_library("btservice") {
   deps = [
     "$PART_DIR/external:btdummy",
     "$PART_DIR/stack:btstack",
-    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btcommon",
-    "//base/telephony/call_manager/frameworks/native:tel_call_manager_api",
-    "//base/telephony/state_registry/frameworks/native/observer:tel_state_registry_api",
     "//third_party/bounds_checking_function:libsec_shared",
     "//third_party/libxml2:xml2",
     "//third_party/openssl:libcrypto_shared",
@@ -427,10 +424,14 @@ ohos_shared_library("btservice") {
     "common_event_service:cesfwk_innerkits",
     "core_service:tel_core_service_api",
     "hdf_core:libhdi",
-    "hisysevent_native:libhisysevent",
+    "hisysevent:libhisysevent",
     "hilog:libhilog",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
+    "call_manager:tel_call_manager_api",
+    "state_registry:tel_state_registry_api",
+    "bluetooth:btcommon",
+    "c_utils:utils",
   ]
 
   if (bluetooth_service_avrcp_avsession) {

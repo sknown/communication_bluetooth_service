@@ -107,6 +107,13 @@ void BluetoothBleCentralManagerCallBackProxy::OnStartOrStopScanEvent(int resultC
     }
 }
 
+void BluetoothBleCentralManagerCallBackProxy::OnNotifyMsgReportFromSh(const bluetooth::Uuid &uuid, int msgType,
+    const std::vector<uint8_t> &notifyValue)
+{
+    return;
+}
+
+
 ErrCode BluetoothBleCentralManagerCallBackProxy::InnerTransact(
     uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply)
 {

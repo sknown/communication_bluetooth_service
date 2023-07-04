@@ -753,7 +753,7 @@ void BleCentralManagerImpl::StartOrStopScan(const STOP_SCAN_TYPE &scanType, bool
         ret = SetScanEnable(isStartScan);
     }
 
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("stop or start extend scan: err: %{public}d isScan : %{public}d", ret, isStartScan);
         return;
     }
@@ -834,7 +834,7 @@ void BleCentralManagerImpl::SetScanModeDuration(int scanMode, int type) const
         default:
             break;
     }
-    HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "BLE_SCAN_DUTY_CYCLE",
+    HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "BLE_SCAN_DUTY_CYCLE",
         OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "WINDOW", pimpl->scanParams_.scanWindow,
         "INTERVAL", pimpl->scanParams_.scanInterval, "TYPE", pimpl->callBackType_);
 }
@@ -1050,7 +1050,7 @@ bool BleCentralManagerImpl::SetLegacyScanParamToGap() const
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
     bool ret = true;
     ret = pimpl->RegisterCallbackToGap();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:RegisterCallbackToGap failed.", __func__);
         pimpl->scanStatus_ = SCAN_NOT_STARTED;
         centralManagerCallbacks_->OnStartOrStopScanEvent(SCAN_FAILED_INTERNAL_ERROR, true);
@@ -1059,7 +1059,7 @@ bool BleCentralManagerImpl::SetLegacyScanParamToGap() const
 
     pimpl->isStopScan_ = false;
     ret = SetScanParamToGap();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:SetScanParamToGap failed.", __func__);
         pimpl->scanStatus_ = SCAN_NOT_STARTED;
         centralManagerCallbacks_->OnStartOrStopScanEvent(SCAN_FAILED_INTERNAL_ERROR, true);
@@ -1075,7 +1075,7 @@ bool BleCentralManagerImpl::SetExtendScanParamToGap() const
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
     bool ret = true;
     ret = pimpl->RegisterExScanCallbackToGap();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:RegisterExScanCallbackToGap failed.", __func__);
         pimpl->scanStatus_ = SCAN_NOT_STARTED;
         centralManagerCallbacks_->OnStartOrStopScanEvent(SCAN_FAILED_INTERNAL_ERROR, true);
@@ -1084,7 +1084,7 @@ bool BleCentralManagerImpl::SetExtendScanParamToGap() const
 
     pimpl->isStopScan_ = false;
     ret = SetExScanParamToGap();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:SetExScanParamToGap failed.", __func__);
         pimpl->scanStatus_ = SCAN_NOT_STARTED;
         centralManagerCallbacks_->OnStartOrStopScanEvent(SCAN_FAILED_INTERNAL_ERROR, true);
@@ -1572,7 +1572,7 @@ void BleCentralManagerImpl::Stop() const
     } else {
         ret = SetScanEnable(false);
     }
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("stop scanning: err: %{public}d", ret);
         pimpl->scanStatus_ = SCAN_FAILED_ALREADY_STARTED;
         centralManagerCallbacks_->OnStartOrStopScanEvent(SCAN_FAILED_INTERNAL_ERROR, false);
@@ -1662,7 +1662,7 @@ void BleCentralManagerImpl::GapScanParamSetCompleteEvt(int status) const
     LOG_DEBUG("[BleCentralManagerImpl] %{public}s", __func__);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
-    if (status != BT_NO_ERROR) {
+    if (status != BT_SUCCESS) {
         pimpl->scanStatus_ = SCAN_NOT_STARTED;
         centralManagerCallbacks_->OnStartOrStopScanEvent(SCAN_FAILED_INTERNAL_ERROR, true);
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:Set scan param failed! %{public}d.", __func__, status);
@@ -1674,7 +1674,7 @@ void BleCentralManagerImpl::GapScanParamSetCompleteEvt(int status) const
         return;
     }
     int ret = SetScanEnable(true);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:SetScanEnable param failed! %{public}d.", __func__, ret);
         pimpl->scanStatus_ = SCAN_NOT_STARTED;
         centralManagerCallbacks_->OnStartOrStopScanEvent(SCAN_FAILED_INTERNAL_ERROR, true);
@@ -1709,11 +1709,11 @@ void BleCentralManagerImpl::GapScanStartCompleteEvt(int status) const
 {
     LOG_DEBUG("[BleCentralManagerImpl] %{public}s:Start scan", __func__);
 
-    if (status != BT_NO_ERROR) {
+    if (status != BT_SUCCESS) {
         pimpl->scanStatus_ = SCAN_NOT_STARTED;
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:Start scan failed! %{public}d.", __func__, status);
     }
-    int tmpStatus = (status != BT_NO_ERROR ? SCAN_FAILED_INTERNAL_ERROR : SCAN_SUCCESS);
+    int tmpStatus = (status != BT_SUCCESS ? SCAN_FAILED_INTERNAL_ERROR : SCAN_SUCCESS);
     centralManagerCallbacks_->OnStartOrStopScanEvent(tmpStatus, true);
 }
 
@@ -1722,12 +1722,12 @@ void BleCentralManagerImpl::GapScanStopCompleteEvt(int status) const
     LOG_DEBUG("[BleCentralManagerImpl] %{public}s:Stop scan", __func__);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
-    if (status != BT_NO_ERROR) {
+    if (status != BT_SUCCESS) {
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:Stop scan failed! %{public}d.", __func__, status);
     }
     pimpl->advDataCache_.ClearAllData();
     pimpl->scanStatus_ = SCAN_NOT_STARTED;
-    int tmpStatus = (status != BT_NO_ERROR ? SCAN_FAILED_INTERNAL_ERROR : SCAN_SUCCESS);
+    int tmpStatus = (status != BT_SUCCESS ? SCAN_FAILED_INTERNAL_ERROR : SCAN_SUCCESS);
     centralManagerCallbacks_->OnStartOrStopScanEvent(tmpStatus, false);
 }
 
@@ -1736,7 +1736,7 @@ void BleCentralManagerImpl::GapScanResolvingCompletEvt(int status, bool isStart)
     LOG_DEBUG("[BleCentralManagerImpl] %{public}s: ", __func__);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
-    if (status != BT_NO_ERROR) {
+    if (status != BT_SUCCESS) {
         pimpl->scanStatus_ = isStart ? SCAN_NOT_STARTED : SCAN_FAILED_ALREADY_STARTED;
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:Resovling stop scan failed! %{public}d.", __func__, status);
     }
@@ -1780,7 +1780,7 @@ void BleCentralManagerImpl::GapExScanParamSetCompleteEvt(int status) const
     LOG_DEBUG("[BleCentralManagerImpl] %{public}s", __func__);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
-    if (status != BT_NO_ERROR) {
+    if (status != BT_SUCCESS) {
         pimpl->scanStatus_ = SCAN_NOT_STARTED;
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:Set scan param failed! %{public}d.", __func__, status);
         centralManagerCallbacks_->OnStartOrStopScanEvent(SCAN_FAILED_INTERNAL_ERROR, true);
@@ -1791,7 +1791,7 @@ void BleCentralManagerImpl::GapExScanParamSetCompleteEvt(int status) const
         return;
     }
     int ret = SetExScanEnable(true);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:SetExScanEnable param failed! %{public}d.", __func__, ret);
         pimpl->scanStatus_ = SCAN_NOT_STARTED;
         centralManagerCallbacks_->OnStartOrStopScanEvent(SCAN_FAILED_INTERNAL_ERROR, true);
@@ -1826,11 +1826,11 @@ void BleCentralManagerImpl::GapExScanStartCompleteEvt(int status) const
 {
     LOG_DEBUG("[BleCentralManagerImpl] %{public}s:Start scan", __func__);
 
-    if (status != BT_NO_ERROR) {
+    if (status != BT_SUCCESS) {
         pimpl->scanStatus_ = SCAN_NOT_STARTED;
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:Start scan failed! %{public}d.", __func__, status);
     }
-    int tmpStatus = (status != BT_NO_ERROR ? SCAN_FAILED_INTERNAL_ERROR : SCAN_SUCCESS);
+    int tmpStatus = (status != BT_SUCCESS ? SCAN_FAILED_INTERNAL_ERROR : SCAN_SUCCESS);
     centralManagerCallbacks_->OnStartOrStopScanEvent(tmpStatus, true);
 }
 
@@ -1839,12 +1839,12 @@ void BleCentralManagerImpl::GapExScanStopCompleteEvt(int status) const
     LOG_DEBUG("[BleCentralManagerImpl] %{public}s:Stop scan", __func__);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
-    if (status != BT_NO_ERROR) {
+    if (status != BT_SUCCESS) {
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:Stop scan failed! %{public}d.", __func__, status);
     }
     pimpl->scanStatus_ = SCAN_NOT_STARTED;
     pimpl->advDataCache_.ClearAllData();
-    int tmpStatus = (status != BT_NO_ERROR ? SCAN_FAILED_INTERNAL_ERROR : SCAN_SUCCESS);
+    int tmpStatus = (status != BT_SUCCESS ? SCAN_FAILED_INTERNAL_ERROR : SCAN_SUCCESS);
     centralManagerCallbacks_->OnStartOrStopScanEvent(tmpStatus, false);
 }
 
@@ -1852,7 +1852,7 @@ void BleCentralManagerImpl::GapExScanResolvingCompletEvt(int status, bool isStar
 {
     LOG_DEBUG("[BleCentralManagerImpl] %{public}s:", __func__);
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
-    if (status != BT_NO_ERROR) {
+    if (status != BT_SUCCESS) {
         pimpl->scanStatus_ = isStart ? SCAN_NOT_STARTED : SCAN_FAILED_ALREADY_STARTED;
         LOG_ERROR("[BleCentralManagerImpl] %{public}s:Resolving stop scan failed! %{public}d.", __func__, status);
     }

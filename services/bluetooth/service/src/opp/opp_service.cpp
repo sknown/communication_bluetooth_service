@@ -123,9 +123,9 @@ void OppService::StartUp()
     config.isSupportSrm_ = true;
     config.isSupportReliableSession_ = false;
     oppObexServer_ = std::make_unique<OppObexServer>(config, *GetDispatcher());
-    if ((oppSdpServer_->Register(rfcommScn, OPP_GOEP_L2CAP_PSM) == BT_NO_ERROR) &&
-        (oppGapServer_->Register() == BT_NO_ERROR) &&
-        (oppObexServer_->StartUp() == BT_NO_ERROR)) {
+    if ((oppSdpServer_->Register(rfcommScn, OPP_GOEP_L2CAP_PSM) == BT_SUCCESS) &&
+        (oppGapServer_->Register() == BT_SUCCESS) &&
+        (oppObexServer_->StartUp() == BT_SUCCESS)) {
         GetContext()->OnEnable(PROFILE_NAME_OPP, true);
         isStarted_ = true;
         HILOGI("[OPP Service]:PanService started");
@@ -214,7 +214,7 @@ int OppService::SendFile(const RawAddress &device, const std::vector<std::string
         event.dev_ = address;
         PostEvent(event);
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int OppService::SetIncomingFileConfirmation(const bool accept)
@@ -329,10 +329,10 @@ void OppService::OnReceiveIncomingFile(IOppTransferInformation info)
 
 void OppService::OnObexConnected(const std::string &device)
 {
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     if (!oppTransferList_.empty() && (oppTransferList_.front()->GetDeviceAddress() == device)) {
         ret = oppTransferList_.front()->StartTransfer();
-        if (ret != RET_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             oppTransferList_.front()->OnTransferStateChange(
                 OPP_TRANSFER_STATUS_FAILD, OPP_TRANSFER_FAILED_PROTOCOL);
         }
@@ -514,14 +514,14 @@ int OppService::Connect(const RawAddress &device)
 {
     HILOGI("[OPP Service] Enter");
     // DO NOTHING
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int OppService::Disconnect(const RawAddress &device)
 {
     HILOGI("[OPP Service] Enter");
     // DO NOTHING
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 std::list<RawAddress> OppService::GetConnectDevices(void)

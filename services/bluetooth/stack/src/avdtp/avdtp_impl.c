@@ -2050,7 +2050,7 @@ void AvdtStreamSendData(uint16_t lcid, int result)
     }
 
     AvdtCtrlData confirmData = {0};
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         confirmData.hdr.errCode = AVDT_FAILED;
     }
 

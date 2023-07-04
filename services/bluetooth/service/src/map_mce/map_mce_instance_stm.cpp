@@ -283,7 +283,7 @@ void MapMceInstanceStm::MapMceDisconnectingState::Entry()
     // obex client execute disconnect
     if (mceInstanceStm_.masClient_ != nullptr) {
         int retVal = mceInstanceStm_.masClient_->StartClientDisConnect();
-        if (retVal != BT_NO_ERROR) {
+        if (retVal != BT_SUCCESS) {
             // error occur
             // post msg to mns state machine instance. execute in mns service thread
             utility::Message outMsg = MSG_MASSTM_OBEX_DISCONNECTED;
@@ -350,7 +350,7 @@ void MapMceInstanceStm::MapMceConnectingState::Entry()
 {
     LOG_INFO("%{public}s execute", __PRETTY_FUNCTION__);
     // start connecting.
-    if (mceInstanceStm_.masClient_->StartClientConnect() != BT_NO_ERROR) {
+    if (mceInstanceStm_.masClient_->StartClientConnect() != BT_SUCCESS) {
         // error process
         utility::Message outMsg(MSG_MASSTM_OBEX_DISCONNECTED);
         mceInstanceStm_.PostMessage(outMsg);
@@ -416,7 +416,7 @@ void MapMceInstanceStm::MapMceConnectingState::DispatchProcObexConnectedFailed()
     // receive the obex connected failed response
     mceInstanceStm_.TansTargetState(MCE_INSTANCE_STATE_DISCONNECTED);
     int ret = mceInstanceStm_.masClient_->ObexConnectFailedDisConnect();
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         Transition(MCE_DISCONNECTING_STATE);
     } else {
         Transition(MCE_DISCONNECTED_STATE);
@@ -443,7 +443,7 @@ bool MapMceInstanceStm::MapMceConnectingState::Dispatch(const utility::Message &
 {
     LOG_INFO("%{public}s enter, msg=0x%x", __PRETTY_FUNCTION__, msg.what_);
     bool ret = true;
-    int btRet = BT_NO_ERROR;
+    int btRet = BT_SUCCESS;
     switch (msg.what_) {
         case MSG_MASSTM_OBEX_CONNECTED:
             DispatchProcObexConnected();
@@ -467,7 +467,7 @@ bool MapMceInstanceStm::MapMceConnectingState::Dispatch(const utility::Message &
             break;
         case MSG_MASSTM_GAP_REQUEST_FINISH:
             btRet = mceInstanceStm_.masClient_->ExcuteObexConnect();
-            if (btRet != BT_NO_ERROR) {
+            if (btRet != BT_SUCCESS) {
                 DispatchProcConnectedFailed();
                 LOG_ERROR("%{public}s executeObexConnect error after GAP", __PRETTY_FUNCTION__);
             }
@@ -543,7 +543,7 @@ bool MapMceInstanceStm::MapMceConnectedState::Dispatch(const utility::Message &m
             // process sending reqest
             if (mceInstanceStm_.stmRequestPtr_ != nullptr) {
                 int sendRet = mceInstanceStm_.masClient_->ClientSendRequest(mceInstanceStm_.stmRequestPtr_);
-                if (sendRet == BT_NO_ERROR) {
+                if (sendRet == BT_SUCCESS) {
                     // trans to request sending
                     Transition(MCE_CONNECTED_STATE_S_REQSENDING);
                 } else {

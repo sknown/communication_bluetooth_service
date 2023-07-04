@@ -48,7 +48,10 @@ public:
     int RequestExchangeMtu(int32_t appId, int32_t mtu) override;
     void GetAllDevice(::std::vector<BluetoothGattDevice> &device) override;
     int RequestConnectionPriority(int32_t appId, int32_t connPriority) override;
-    void GetServices(int32_t appId, ::std::vector<BluetoothGattService> &service) override;
+    int GetServices(int32_t appId, ::std::vector<BluetoothGattService> &service) override;
+    int RequestFastestConn(const BluetoothRawAddress &addr) override;
+    int ReadRemoteRssiValue(int32_t appId) override;
+    int RequestNotification(int32_t appId, uint16_t characterHandle, bool enable) override;
 
 private:
     BLUETOOTH_DISALLOW_COPY_AND_ASSIGN(BluetoothGattClientServer);

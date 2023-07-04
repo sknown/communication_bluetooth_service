@@ -227,12 +227,14 @@ ohos_shared_library("btstack") {
   deps = [
     "$PART_DIR/external:btdummy",
     "$PART_DIR/hardware:bluetooth_hdi_adapter",
-    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btcommon",
     "//third_party/bounds_checking_function:libsec_shared",
     "//third_party/openssl:libcrypto_shared",
   ]
 
-  external_deps = [ "hilog:libhilog" ]
+  external_deps = [
+    "hilog:libhilog",
+    "bluetooth:btcommon"
+  ]
 
   subsystem_name = "communication"
   part_name = "bluetooth_service"

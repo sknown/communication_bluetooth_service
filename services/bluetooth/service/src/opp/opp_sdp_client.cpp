@@ -53,7 +53,7 @@ int OppSdpClient::SdpSearch()
     attributeIdList.attributeIdRange.end = 0xFFFF;
 
     int ret = SDP_ServiceSearchAttribute(&address, &sdpUUid, attributeIdList, this, SdpSearchCallback);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         HILOGE("[OPP SDP CLIENT]:SDP_ServiceSearchAttribute failed!");
     }
 

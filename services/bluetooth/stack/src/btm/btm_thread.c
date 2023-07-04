@@ -184,7 +184,7 @@ Thread *BTM_GetProcessingThread()
 
 int BTM_CreateProcessingQueue(uint8_t queueId, uint16_t size)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     MutexLock(g_processingQueueLock);
 
     BtmProcessingQueue *queue = FindProcessingQueueById(queueId);
@@ -201,7 +201,7 @@ int BTM_CreateProcessingQueue(uint8_t queueId, uint16_t size)
 
 int BTM_DeleteProcessingQueue(uint8_t queueId)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     Queue *taskQueue = NULL;
 
@@ -227,7 +227,7 @@ int BTM_DeleteProcessingQueue(uint8_t queueId)
 
 int BTM_RunTaskInProcessingQueue(uint8_t queueId, void (*task)(void *context), void *context)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     MutexLock(g_processingQueueLock);
     BtmProcessingQueue *queue = FindProcessingQueueById(queueId);
     if (queue != NULL) {

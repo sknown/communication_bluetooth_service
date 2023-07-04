@@ -45,7 +45,7 @@ void PceConnectingState::Entry()
         observer.OnServiceConnectionStateChanged(device, static_cast<int>(BTConnectState::CONNECTING));
     });
     int retVal = stm_.GetSdp().SdpSearch(stm_.GetDevice());
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("%{public}s end, pce client Call SDP_ServiceSearchAttribute Error", __PRETTY_FUNCTION__);
         Transition(PCE_DISCONNECTING_STATE);
         Transition(PCE_DISCONNECTED_STATE);
@@ -70,7 +70,7 @@ void PceConnectingState::RegGap(const PbapPceHeaderSdpMsg &sdpMsg) const
     }
     auto gap = std::make_unique<PbapPceGap>(stm_.GetPceService(), stm_.GetDevice(), gapSecChannel, isGoepL2capPSM);
     int retVal = gap->Register();
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("%{public}s end, GAP_RegisterServiceSecurity() error", __PRETTY_FUNCTION__);
         return;
     }
@@ -144,7 +144,7 @@ int PceConnectingState::SaveObexDigestChallenge(const ObexDigestChallenge &diges
         }
     }
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PceConnectingState::ObexReconnect(const PbapPceObexMessage &obexMsg)
@@ -174,7 +174,7 @@ int PceConnectingState::ObexReconnect(const PbapPceObexMessage &obexMsg)
     auto authChallenges = header->GetItemAuthChallenges();
     auto digestChallenge = static_cast<ObexDigestChallenge *>(authChallenges->GetTlvParamters().get());
     ret = SaveObexDigestChallenge(*digestChallenge);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("%{public}s end, SaveObexDigestChallenge error, ret=%{public}d!",
             __PRETTY_FUNCTION__, ret);
         return ret;
@@ -188,7 +188,7 @@ int PceConnectingState::ObexReconnect(const PbapPceObexMessage &obexMsg)
         observer.OnServicePasswordRequired(device, authDescription, authUserCharset, authFullAccess);
     });
 
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void PceConnectingState::SetObexClientConfigDetail(ObexClientConfig &obexConfig) const
@@ -222,7 +222,7 @@ void PceConnectingState::ProcessSdpFinish(const utility::Message &msg)
     PBAP_PCE_LOG_INFO("%{public}s start, msg.what_=[%{public}d]", __PRETTY_FUNCTION__, msg.what_);
     std::unique_ptr<PbapPceHeaderSdpMsg> sdpMsg(static_cast<PbapPceHeaderSdpMsg *>(msg.arg2_));
     if (sdpMsg != nullptr) {
-        if (ObexConnect(*sdpMsg) != RET_NO_ERROR) {
+        if (ObexConnect(*sdpMsg) != BT_SUCCESS) {
             Transition(PCE_DISCONNECTING_STATE);
             Transition(PCE_DISCONNECTED_STATE);
         }
@@ -241,7 +241,7 @@ void PceConnectingState::ProcessObexConnectFailed(const utility::Message &msg)
 {
     PBAP_PCE_LOG_INFO("%{public}s start, msg.what_=[%{public}d]", __PRETTY_FUNCTION__, msg.what_);
     auto obexMsg = static_cast<PbapPceObexMessage *>(msg.arg2_);
-    if ((obexMsg != nullptr) && ObexReconnect(*obexMsg) != BT_NO_ERROR) {
+    if ((obexMsg != nullptr) && ObexReconnect(*obexMsg) != BT_SUCCESS) {
         Transition(PCE_DISCONNECTING_STATE);
     }
     PBAP_PCE_LOG_INFO("%{public}s end, msg.what_=[%{public}d]", __PRETTY_FUNCTION__, msg.what_);

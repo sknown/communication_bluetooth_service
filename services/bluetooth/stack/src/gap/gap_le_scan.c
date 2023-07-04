@@ -272,7 +272,7 @@ void GapRPAResolveProcess(void)
             const uint8_t *addrPtr = addr;
             const uint8_t *keyPtr = info->IRKList[info->resolveIndex].irk.key;
             ret = SMP_AsyncResolveRPA(addrPtr, keyPtr);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 info->doCallback = true;
                 GapDoCallbackRPAAdvertisingReport(info, NULL);
             } else {
@@ -378,7 +378,7 @@ static bool GapTryChangeAddressForIdentityAddress(BtAddr *addr)
 {
     BtAddr pairedAddr = {0};
     int ret = BTM_GetPairdAddressFromRemoteIdentityAddress(addr, &pairedAddr);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         LOG_INFO("%{public}s:" BT_ADDR_FMT " -> " BT_ADDR_FMT,
             __FUNCTION__,
             BT_ADDR_FMT_OUTPUT(addr->addr),
@@ -403,7 +403,7 @@ static void GapOnLeAdvertisingReportEventProcessOnce(const HciLeAdvertisingRepor
         BtmIdentityResolvingKey *deviceIRKList = NULL;
         uint16_t listCount = 0;
         int ret = BTM_GetAllRemoteIdentityResolvingKey(&deviceIRKList, &listCount);
-        if (ret == BT_NO_ERROR && listCount != 0) {
+        if (ret == BT_SUCCESS && listCount != 0) {
             AdvReportRPAResolveInfo *info = GapLeAllocAdvReportRPAResolveInfo(addr, ADV_REPORT, report);
             if (info != NULL) {
                 info->IRKList = deviceIRKList;
@@ -511,7 +511,7 @@ static void GapOnLeExtendedAdvertisingReportEventProcessOnce(const HciLeExtended
         BtmIdentityResolvingKey *deviceIRKList = NULL;
         uint16_t listCount = 0;
         int ret = BTM_GetAllRemoteIdentityResolvingKey(&deviceIRKList, &listCount);
-        if (ret == BT_NO_ERROR && listCount != 0) {
+        if (ret == BT_SUCCESS && listCount != 0) {
             AdvReportRPAResolveInfo *info = GapLeAllocAdvReportRPAResolveInfo(addr, EXTENDED_ADV_REPORT, report);
             if (info != NULL) {
                 info->IRKList = deviceIRKList;
@@ -559,7 +559,7 @@ static void GapOnLeDirectedAdvertisingReportProcessOnce(const HciLeDirectedAdver
         BtmIdentityResolvingKey *deviceIRKList = NULL;
         uint16_t listCount = 0;
         int ret = BTM_GetAllRemoteIdentityResolvingKey(&deviceIRKList, &listCount);
-        if (ret == BT_NO_ERROR && listCount != 0) {
+        if (ret == BT_SUCCESS && listCount != 0) {
             AdvReportRPAResolveInfo *info = GapLeAllocAdvReportRPAResolveInfo(addr, DIRECTED_ADV_REPORT, report);
             if (info != NULL) {
                 info->IRKList = deviceIRKList;

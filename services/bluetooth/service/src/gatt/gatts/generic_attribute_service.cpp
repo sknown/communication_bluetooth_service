@@ -202,7 +202,7 @@ std::unique_ptr<Service> GenericAttributeService::BuildService()
 
     characteristic.descriptors_.push_back(Descriptor(Uuid::ConvertFrom16Bits(UUID_CLIENT_CHARACTERISTIC_CONFIGURATION),
         0,
-        (int)GattPermission::READABLE | (int)GattPermission::WRITABLE,
+        (int)GattPermission::READABLE | (int)GattPermission::WRITEABLE,
         CLIENT_CHARACTERISTIC_CONFIGURATION_DEFAULT_VALUE,
         CLIENT_CHARACTERISTIC_CONFIGURATION_VALUE_LENGTH));
 

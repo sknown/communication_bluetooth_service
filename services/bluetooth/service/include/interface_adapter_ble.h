@@ -88,6 +88,8 @@ public:
      * @since 6
      */
     virtual void OnStartOrStopScanEvent(int resultCode, bool isStartScan) = 0;
+
+    virtual void OnNotifyMsgReportFromSh(FilterIdxInfo &info, int msgType, const std::vector<uint8_t> &notifyValue) = 0;
 };
 
 /**
@@ -100,6 +102,7 @@ public:
     virtual ~IBleAdvertiserCallback() = default;
     virtual void OnStartResultEvent(int result, uint8_t advHandle, int opcode = BLE_ADV_DEFAULT_OP_CODE) = 0;
     virtual void OnAutoStopAdvEvent(uint8_t advHandle) = 0;
+    virtual void OnSetAdvDataEvent(int32_t result, int32_t advHandle) = 0;
 };
 
 /**
@@ -216,6 +219,8 @@ public:
      * @since 6
      */
     virtual void OnPairStatusChanged(const BTTransport transport, const RawAddress &device, int status) = 0;
+
+    virtual void OnAclStateChanged(const RawAddress &device, int state, unsigned int reason) = 0;
 };
 
 /**

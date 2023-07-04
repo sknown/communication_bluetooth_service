@@ -136,7 +136,7 @@ public:
      * @param[in] uidCounter   The uid counter.
      * @param[in] eventCallback The callback function for receiving the channel event.
      * @param[in] msgCallback  The callback function for receiving the message.
-     * @return @c RET_NO_ERROR  : The connection information was added successfully.
+     * @return @c BT_SUCCESS  : The connection information was added successfully.
      *         @C RET_BAD_PARAM : The connection information already exists.
      */
     int Add(const RawAddress &rawAddr, uint8_t connectId, uint8_t role, uint16_t controlMtu, uint16_t browseMtu,

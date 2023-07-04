@@ -144,7 +144,7 @@ HWTEST_F(HidHostTest, HID_ModuleTest_Connect_00100, TestSize.Level1)
 
     BluetoothRemoteDevice device;
     profile_ = HidHost::GetProfile();
-    bool isOK = (profile_->Connect(device) == BT_SUCCESS ? true : false);
+    bool isOK = (profile_->Connect(device) == NO_ERROR ? true : false);
     EXPECT_FALSE(isOK);
 
     GTEST_LOG_(INFO) << "HID_ModuleTest_Connect_00100 end";
@@ -163,7 +163,7 @@ HWTEST_F(HidHostTest, HID_ModuleTest_Disconnect_00100, TestSize.Level1)
 
     BluetoothRemoteDevice device;
     profile_ = HidHost::GetProfile();
-    bool isOK = (profile_->Disconnect(device) == BT_SUCCESS ? true : false);
+    bool isOK = (profile_->Disconnect(device) == NO_ERROR ? true : false);
     EXPECT_FALSE(isOK);
 
     GTEST_LOG_(INFO) << "HID_ModuleTest_Disconnect_00100 end";

@@ -82,7 +82,7 @@ static void GapRecvAclConnectionComplete(const BtmAclConnectCompleteParam *param
     btmParam->context = context;
 
     int ret = GapRunTaskUnBlockProcess(GapAclConnectionCompleteTask, btmParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -109,7 +109,7 @@ static void GapRecvAclDisconnectionComplete(uint8_t status, uint16_t connectionH
     btmParam->context = context;
 
     int ret = GapRunTaskUnBlockProcess(GapAclDisconnectionCompleteTask, btmParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -161,7 +161,7 @@ static void GapRecvLeConnectionComplete(
     btmParam->context = context;
 
     int ret = GapRunTaskUnBlockProcess(GapLeConnectionCompleteTask, btmParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -188,7 +188,7 @@ static void GapRecvLeDisconnectionComplete(uint8_t status, uint16_t connectionHa
     btmParam->context = context;
 
     int ret = GapRunTaskUnBlockProcess(GapLeDisconnectionCompleteTask, btmParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -234,7 +234,7 @@ static void GapRecvRemoteDeviceSupportHostSecureSimplePairingCallback(const BtAd
     supportParam->support = support;
 
     int ret = GapRunTaskUnBlockProcess(GapRemoteDeviceSupportHostSecureSimplePairingCallbackTask, supportParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }

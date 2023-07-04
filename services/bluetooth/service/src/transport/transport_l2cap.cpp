@@ -249,7 +249,7 @@ void L2capTransport::TransportL2cConnectReqCallback(const BtAddr *addr, uint16_t
     BtAddr btAddr;
     (void)memcpy_s(&btAddr, sizeof(BtAddr), addr, sizeof(BtAddr));
 
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[L2capTransport]%{public}s", __func__);
         return;
     }

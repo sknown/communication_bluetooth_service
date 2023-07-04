@@ -15,7 +15,6 @@
 import("//build/config/features.gni")
 import("//build/test.gni")
 module_output_path = "bluetooth/host"
-SUBSYSTEM_DIR = "//foundation/communication"
 
 ##############################fuzztest##########################################
 ohos_fuzztest("PairDeviceFuzzTest") {
@@ -33,11 +32,12 @@ ohos_fuzztest("PairDeviceFuzzTest") {
 
   sources = [ "pairdevice_fuzzer.cpp" ]
 
-  deps = [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework" ]
+  deps = [ ]
 
   external_deps = [
+    "bluetooth:btframework",
     "c_utils:utils",
-    "hilog:libhilog",
+    "hilog:libhilog"
   ]
 }
 

@@ -1437,11 +1437,11 @@ std::string MapMseResource::UpdateData(
         if (!dataProvider->BeginTransaction()) {
             return "";
         }
-        if (UpdateMessage(dataProvider, bmessage, handle) != RET_NO_ERROR) {
+        if (UpdateMessage(dataProvider, bmessage, handle) != BT_SUCCESS) {
             dataProvider->Rollback();
             return "";
         }
-        if (UpdateMessageList(dataProvider, handle) != RET_NO_ERROR) {
+        if (UpdateMessageList(dataProvider, handle) != BT_SUCCESS) {
             dataProvider->Rollback();
             return "";
         }
@@ -1468,7 +1468,7 @@ int MapMseResource::UpdateMessage(
     if (ret != 1) {
         return RET_BAD_STATUS;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMseResource::UpdateMessageList(std::unique_ptr<DataAccess> &dataAccess, const std::string &handle)
@@ -1487,7 +1487,7 @@ int MapMseResource::UpdateMessageList(std::unique_ptr<DataAccess> &dataAccess, c
     if (ret != 1) {
         return RET_BAD_STATUS;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 std::string MapMseResource::SentConversationMessage(
@@ -1520,31 +1520,31 @@ std::string MapMseResource::InsertConvData(
             dataProvider->Rollback();
             return "";
         }
-        if (InsertMessage(dataProvider, appParameter, bmessage, handle) != RET_NO_ERROR) {
+        if (InsertMessage(dataProvider, appParameter, bmessage, handle) != BT_SUCCESS) {
             dataProvider->Rollback();
             return "";
         }
-        if (InsertMessageList(dataProvider, appParameter, bmessage, handle, folderName) != RET_NO_ERROR) {
+        if (InsertMessageList(dataProvider, appParameter, bmessage, handle, folderName) != BT_SUCCESS) {
             dataProvider->Rollback();
             return "";
         }
         for (auto &iter : bmessage.GetOriginators()) {
-            if (InsertVCard(dataProvider, iter, true, handle) != RET_NO_ERROR) {
+            if (InsertVCard(dataProvider, iter, true, handle) != BT_SUCCESS) {
                 dataProvider->Rollback();
                 return "";
             }
         }
         for (auto &iter : bmessage.GetRecipients()) {
-            if (InsertVCard(dataProvider, iter, false, handle) != RET_NO_ERROR) {
+            if (InsertVCard(dataProvider, iter, false, handle) != BT_SUCCESS) {
                 dataProvider->Rollback();
                 return "";
             }
         }
-        if (UpdateConvMessage(dataProvider, appParameter.conversationId_, handle) != RET_NO_ERROR) {
+        if (UpdateConvMessage(dataProvider, appParameter.conversationId_, handle) != BT_SUCCESS) {
             dataProvider->Rollback();
             return "";
         }
-        if (UpdateConvMessageList(dataProvider, appParameter.conversationId_, handle) != RET_NO_ERROR) {
+        if (UpdateConvMessageList(dataProvider, appParameter.conversationId_, handle) != BT_SUCCESS) {
             dataProvider->Rollback();
             return "";
         }
@@ -1571,7 +1571,7 @@ int MapMseResource::UpdateConvMessage(
     if (ret != 1) {
         return RET_BAD_STATUS;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMseResource::UpdateConvMessageList(
@@ -1590,7 +1590,7 @@ int MapMseResource::UpdateConvMessageList(
     if (ret != 1) {
         return RET_BAD_STATUS;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void MapMseResource::NotifySendMessage(const MapMseBmsg &bmessage, const MapMseParams &appParameter)
@@ -1646,21 +1646,21 @@ std::string MapMseResource::DataInsert(
         if (!dataProvider->BeginTransaction()) {
             return "";
         }
-        if (InsertMessage(dataProvider, appParameter, bmessage, handle) != RET_NO_ERROR) {
+        if (InsertMessage(dataProvider, appParameter, bmessage, handle) != BT_SUCCESS) {
             return "";
         }
-        if (InsertMessageList(dataProvider, appParameter, bmessage, handle, folderName) != RET_NO_ERROR) {
+        if (InsertMessageList(dataProvider, appParameter, bmessage, handle, folderName) != BT_SUCCESS) {
             dataProvider->Rollback();
             return "";
         }
         for (auto &iter : bmessage.GetOriginators()) {
-            if (InsertVCard(dataProvider, iter, true, handle) != RET_NO_ERROR) {
+            if (InsertVCard(dataProvider, iter, true, handle) != BT_SUCCESS) {
                 dataProvider->Rollback();
                 return "";
             }
         }
         for (auto &iter : bmessage.GetRecipients()) {
-            if (InsertVCard(dataProvider, iter, false, handle) != RET_NO_ERROR) {
+            if (InsertVCard(dataProvider, iter, false, handle) != BT_SUCCESS) {
                 dataProvider->Rollback();
                 return "";
             }
@@ -1713,7 +1713,7 @@ int MapMseResource::InsertMessageList(std::unique_ptr<DataAccess> &dataAccess, M
     auto ret = stmt->Insert();
     if (ret != 1)
         return RET_BAD_STATUS;
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void MapMseResource::GetNameAddress(
@@ -1771,7 +1771,7 @@ int MapMseResource::InsertMessage(std::unique_ptr<DataAccess> &dataAccess, MapMs
     if (ret != 1) {
         return RET_BAD_STATUS;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMseResource::InsertVCard(
@@ -1801,7 +1801,7 @@ int MapMseResource::InsertVCard(
     if (ret != 1) {
         return RET_BAD_STATUS;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 std::string MapMseResource::GetDateTime()

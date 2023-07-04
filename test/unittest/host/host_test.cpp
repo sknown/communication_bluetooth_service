@@ -384,7 +384,7 @@ HWTEST_F(HostTest, Host_ModuleTest_SetBtScanMode_00100, TestSize.Level1)
     host_ = &BluetoothHost::GetDefaultHost();
     bool ret = false;
     int result = host_->SetBtScanMode(SCAN_MODE_CONNECTABLE_GENERAL_DISCOVERABLE, 0);
-    if (result == BT_SUCCESS) {
+    if (result == NO_ERROR) {
         ret = true;
     }
     EXPECT_TRUE(ret);
@@ -405,7 +405,7 @@ HWTEST_F(HostTest, Host_ModuleTest_SetBtScanMode_00200, TestSize.Level1)
     host_ = &BluetoothHost::GetDefaultHost();
     bool ret = false;
     int result = host_->SetBtScanMode(scanModeInvalid, 0);
-    if (result == BT_SUCCESS) {
+    if (result == NO_ERROR) {
         ret = true;
     }
     EXPECT_FALSE(ret);
@@ -473,7 +473,7 @@ HWTEST_F(HostTest, Host_ModuleTest_StartBtDiscovery_00100, TestSize.Level1)
     host_ = &BluetoothHost::GetDefaultHost();
     int ret = host_->StartBtDiscovery();
     bool isSuccess = false;
-    if (ret == BT_SUCCESS) {
+    if (ret == NO_ERROR) {
         isSuccess = true;
     }
     EXPECT_TRUE(isSuccess);
@@ -509,7 +509,7 @@ HWTEST_F(HostTest, Host_ModuleTest_CancelBtDiscovery_00100, TestSize.Level1)
     host_ = &BluetoothHost::GetDefaultHost();
     int ret = host_->CancelBtDiscovery();
     bool isSuccess = false;
-    if (ret == BT_SUCCESS) {
+    if (ret == NO_ERROR) {
         isSuccess = true;
     }
     EXPECT_TRUE(isSuccess);
@@ -562,7 +562,7 @@ HWTEST_F(HostTest, Host_ModuleTest_RemovePair_00100, TestSize.Level1)
     host_ = &BluetoothHost::GetDefaultHost();
     BluetoothRemoteDevice device_("00:00:00:00:00:00", BT_TRANSPORT_BREDR);
 
-    EXPECT_NE(host_->RemovePair(device_), BT_SUCCESS);
+    EXPECT_NE(host_->RemovePair(device_), NO_ERROR);
 
     GTEST_LOG_(INFO) << "Host_ModuleTest_RemovePair_00100 end";
 }
@@ -936,7 +936,7 @@ HWTEST_F(HostTest, Host_ModuleTest_SetDevicePin_00100, TestSize.Level1)
     GTEST_LOG_(INFO) << "Host_ModuleTest_SetDevicePin_00100 start";
 
     BluetoothRemoteDevice device_("00:00:00:00:00:00", BT_TRANSPORT_BREDR);
-    EXPECT_FALSE(device_.SetDevicePin("000000") == BT_SUCCESS);
+    EXPECT_FALSE(device_.SetDevicePin("000000") == NO_ERROR);
 
     GTEST_LOG_(INFO) << "Host_ModuleTest_SetDevicePin_00100 end";
 }
@@ -953,13 +953,13 @@ HWTEST_F(HostTest, Host_ModuleTest_SetDevicePairingConfirmation_00100, TestSize.
     BluetoothRemoteDevice device_("00:00:00:00:00:00", BT_TRANSPORT_BREDR);
     bool ret = false;
     int result = device_.SetDevicePairingConfirmation(true);
-    if (result == BT_SUCCESS) {
+    if (result == NO_ERROR) {
         ret = true;
     }
     EXPECT_FALSE(ret);
     bool isSuccess = false;
     result = device_.SetDevicePairingConfirmation(true);
-    if (result == BT_SUCCESS) {
+    if (result == NO_ERROR) {
         isSuccess = true;
     }
     EXPECT_FALSE(isSuccess);
@@ -1062,7 +1062,7 @@ HWTEST_F(HostTest, Host_ModuleTest_DisableBt_00100, TestSize.Level1)
     host_ = &BluetoothHost::GetDefaultHost();
     bool isSuccess = false;
     int ret = host_->DisableBt();
-    if (ret == BT_SUCCESS) {
+    if (ret == NO_ERROR) {
         isSuccess = true;
     }
     EXPECT_TRUE(isSuccess);

@@ -25,7 +25,7 @@
 extern "C" {
 #endif
 
-#define GAP_SUCCESS BT_NO_ERROR                    /// GAP error code success
+#define GAP_SUCCESS BT_SUCCESS                    /// GAP error code success
 #define GAP_ERR_NOT_ENABLE BT_BAD_STATUS           /// GAP error code module not initialize
 #define GAP_ERR_INVAL_PARAM BT_BAD_PARAM           /// GAP error code invalid parameter
 #define GAP_ERR_INVAL_STATE BT_BAD_STATUS          /// GAP error code invalid state

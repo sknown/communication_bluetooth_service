@@ -89,7 +89,7 @@ int AvrcCtProfile::Enable(bool isTgEnabled)
 {
     HILOGI("isTgEnabled: %{public}d", isTgEnabled);
 
-    int result = RET_NO_ERROR;
+    int result = BT_SUCCESS;
     SetEnableFlag(true);
 
     if (!isTgEnabled) {
@@ -133,7 +133,7 @@ int AvrcCtProfile::Disable(void)
         myObserver_->onDisabled();
     }
 
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void AvrcCtProfile::SetEnableFlag(bool isEnabled)
@@ -239,13 +239,13 @@ int AvrcCtProfile::Connect(const RawAddress &rawAddr) const
 {
     HILOGI("address: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
 
-    int result = RET_NO_ERROR;
+    int result = BT_SUCCESS;
 
     bool absVolume = Compat::CompatCheck(bluetooth::CompatType::COMPAT_REJECT_ABSOLUTE_VOLUME, rawAddr.GetAddress());
     result |= AvrcCtConnectManager::GetInstance()->Add(
         rawAddr, 0x00, AVCT_INIT, controlMtu_, browseMtu_, companyId_, 0x0000, absVolume, eventCallback_, msgCallback_);
     result |= AvrcCtStateMachineManager::GetInstance()->AddControlStateMachine(rawAddr);
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         myObserver_->onConnectionStateChanged(rawAddr, static_cast<int>(BTConnectState::CONNECTING));
     }
 
@@ -266,7 +266,7 @@ int AvrcCtProfile::Disconnect(const RawAddress &rawAddr) const
         myObserver_->onConnectionStateChanged(rawAddr, static_cast<int>(BTConnectState::DISCONNECTING));
     }
 
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int AvrcCtProfile::ConnectBr(const RawAddress &rawAddr)
@@ -285,7 +285,7 @@ int AvrcCtProfile::DisconnectBr(const RawAddress &rawAddr)
     utility::Message msg(AVRC_CT_SM_EVENT_TO_DISCONNECTING_STATE);
     AvrcCtStateMachineManager::GetInstance()->SendMessageToBrowseStateMachine(rawAddr, msg);
 
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int AvrcCtProfile::GetConnectState(void)
@@ -1188,7 +1188,7 @@ void AvrcCtProfile::ReceiveSetAddressedPlayerRsp(const RawAddress &rawAddr, Pack
 
     int result = RET_BAD_STATUS;
     if (packet.GetStatus() == AVRC_ES_CODE_NO_ERROR) {
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     }
 
     myObserver_->onSetAddressedPlayer(rawAddr, result, packet.GetStatus());
@@ -1214,7 +1214,7 @@ void AvrcCtProfile::ReceivePlayItemRsp(const RawAddress &rawAddr, Packet *pkt)
     AvrcCtPiPacket packet(pkt);
     int result;
     if (packet.GetStatus() == AVRC_ES_CODE_NO_ERROR) {
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } else {
         result = RET_BAD_STATUS;
     }
@@ -1242,7 +1242,7 @@ void AvrcCtProfile::ReceiveAddToNowPlayingRsp(const RawAddress &rawAddr, Packet 
 
     int result = RET_BAD_STATUS;
     if (packet.GetStatus() == AVRC_ES_CODE_NO_ERROR) {
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     }
 
     myObserver_->onAddToNowPlaying(rawAddr, result, packet.GetStatus());
@@ -1764,7 +1764,7 @@ void AvrcCtProfile::ReceiveSetBrowsedPlayerRsp(const RawAddress &rawAddr, Packet
 
     int result = RET_BAD_STATUS;
     if (packet.GetStatus() == AVRC_ES_CODE_NO_ERROR) {
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     }
 
     myObserver_->onSetBrowsedPlayer(
@@ -1791,7 +1791,7 @@ void AvrcCtProfile::ReceiveChangePathRsp(const RawAddress &rawAddr, Packet *pkt)
 
     int result = RET_BAD_STATUS;
     if (packet.GetStatus() == AVRC_ES_CODE_NO_ERROR) {
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     }
 
     myObserver_->onChangePath(rawAddr, packet.GetNumOfItems(), result, packet.GetStatus());
@@ -1818,7 +1818,7 @@ void AvrcCtProfile::ReceiveGetFolderItemsRsp(const RawAddress &rawAddr, Packet *
 
     int result = RET_BAD_STATUS;
     if (packet.GetStatus() == AVRC_ES_CODE_NO_ERROR) {
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     }
 
     myObserver_->onGetFolderItems(rawAddr,
@@ -1850,7 +1850,7 @@ void AvrcCtProfile::ReceiveGetItemAttributesRsp(const RawAddress &rawAddr, Packe
 
     int result = RET_BAD_STATUS;
     if (packet.GetStatus() == AVRC_ES_CODE_NO_ERROR) {
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     }
 
     myObserver_->onGetItemAttributes(rawAddr, packet.GetAttributes(), packet.GetValues(), result, packet.GetStatus());
@@ -1877,7 +1877,7 @@ void AvrcCtProfile::ReceiveGetTotalNumberOfItemsRsp(const RawAddress &rawAddr, P
 
     int result = RET_BAD_STATUS;
     if (packet.GetStatus() == AVRC_ES_CODE_NO_ERROR) {
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     }
 
     myObserver_->onGetTotalNumberOfItems(
@@ -2021,7 +2021,7 @@ void AvrcCtProfile::ProcessChannelEventConnectIndEvt(
     AvrcCtStateMachineManager *smManager = AvrcCtStateMachineManager::GetInstance();
     utility::Message msg(AVRC_CT_SM_EVENT_INVALID);
 
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         bool absVolume =
             Compat::CompatCheck(bluetooth::CompatType::COMPAT_REJECT_ABSOLUTE_VOLUME, rawAddr.GetAddress());
         result |= cnManager->Add(rawAddr,
@@ -2035,7 +2035,7 @@ void AvrcCtProfile::ProcessChannelEventConnectIndEvt(
             eventCallback_,
             msgCallback_);
         result |= smManager->AddControlStateMachine(rawAddr);
-        if (result == RET_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             msg.what_ = AVRC_CT_SM_EVENT_TO_CONNECTED_STATE;
             AvrcCtStateMachineManager::GetInstance()->SendMessageToControlStateMachine(rawAddr, msg);
 
@@ -2055,7 +2055,7 @@ void AvrcCtProfile::ProcessChannelEventConnectCfmEvt(
     AvrcCtStateMachineManager *smManager = AvrcCtStateMachineManager::GetInstance();
     utility::Message msg(AVRC_CT_SM_EVENT_INVALID);
 
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         cnManager->SetConnectId(rawAddr, connectId);
 
         msg.what_ = AVRC_CT_SM_EVENT_TO_CONNECTED_STATE;
@@ -2129,9 +2129,9 @@ void AvrcCtProfile::ProcessChannelEventBrConnectIndEvt(
     AvrcCtConnectManager *cnManager = AvrcCtConnectManager::GetInstance();
     utility::Message msg(AVRC_CT_SM_EVENT_INVALID);
 
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         result |= smManager->AddBrowseStateMachine(rawAddr);
-        if (result == RET_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             msg.what_ = AVRC_CT_SM_EVENT_TO_CONNECTED_STATE;
             smManager->SendMessageToBrowseStateMachine(rawAddr, msg);
             cnManager->SetBrowsingState(rawAddr, true);
@@ -2151,7 +2151,7 @@ void AvrcCtProfile::ProcessChannelEventBrConnectCfmEvt(
     AvrcCtConnectManager *cnManager = AvrcCtConnectManager::GetInstance();
     utility::Message msg(AVRC_CT_SM_EVENT_INVALID);
 
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         msg.what_ = AVRC_CT_SM_EVENT_TO_CONNECTED_STATE;
         smManager->SendMessageToBrowseStateMachine(rawAddr, msg);
         cnManager->SetBrowsingState(rawAddr, true);
@@ -2225,7 +2225,7 @@ int AvrcCtProfile::ExpainAvctResult(uint16_t avctRet)
 
     switch (avctRet) {
         case AVCT_SUCCESS:
-            result = RET_NO_ERROR;
+            result = BT_SUCCESS;
             break;
         case AVCT_FAILED:
             /// FALL THROUGH
@@ -2246,7 +2246,7 @@ int AvrcCtProfile::ExpainPassCrCodeToResult(uint8_t code)
         case AVRC_CT_RSP_CODE_ACCEPTED:
         /// FALL THROUGH
         case AVRC_CT_RSP_CODE_INTERIM:
-            result = RET_NO_ERROR;
+            result = BT_SUCCESS;
             break;
         case AVRC_CT_RSP_CODE_NOT_IMPLEMENTED:
             result = RET_NO_SUPPORT;
@@ -2272,7 +2272,7 @@ int AvrcCtProfile::ExplainCrCodeToResult(uint8_t crCode)
         case AVRC_CT_RSP_CODE_CHANGED:
             /// FALL THROUGH
         case AVRC_CT_RSP_CODE_INTERIM:
-            result = RET_NO_ERROR;
+            result = BT_SUCCESS;
             break;
         case AVRC_CT_RSP_CODE_NOT_IMPLEMENTED:
             result = RET_NO_SUPPORT;

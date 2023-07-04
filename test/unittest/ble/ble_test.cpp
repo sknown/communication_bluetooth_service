@@ -67,7 +67,7 @@ bool BleTest::EnableBle()
     std::unique_lock lock(g_mx);
     bool isEnable = false;
     int32_t ret = host_->EnableBle();
-    if (ret == BT_SUCCESS) {
+    if (ret == NO_ERROR) {
         isEnable = true;
     }
     EXPECT_TRUE(isEnable);
@@ -86,7 +86,7 @@ bool BleTest::DisableBle()
     std::unique_lock lock(g_mx);
     bool isEnable = false;
     int ret = host_->DisableBle();
-    if (ret == BT_SUCCESS) {
+    if (ret == NO_ERROR) {
         isEnable = true;
     }
     EXPECT_TRUE(isEnable);

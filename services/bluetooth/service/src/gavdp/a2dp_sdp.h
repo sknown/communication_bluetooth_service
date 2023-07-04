@@ -50,8 +50,8 @@ public:
 
     /**
      * @brief Registers a record of the A2DP target service into the SDP protocol.
-     * @return @c BT_NO_ERROR            : The function is executed successfully.
-     *         Other than @c BT_NO_ERROR : The function is not executed successfully.
+     * @return @c BT_SUCCESS            : The function is executed successfully.
+     *         Other than @c BT_SUCCESS : The function is not executed successfully.
      */
     int RegisterService();
 
@@ -65,8 +65,8 @@ public:
      * @param[in] addr     The address of the peer device.
      * @param[in] a2dpInstance The instance of profile
      * @param[in] callback The callback function that receives the search result.
-     * @return @c BT_NO_ERROR            : The function is executed successfully.
-     *         Other than @c BT_NO_ERROR : The function is not executed successfully.
+     * @return @c BT_SUCCESS            : The function is executed successfully.
+     *         Other than @c BT_SUCCESS : The function is not executed successfully.
      */
     int FindSnkService(const BtAddr &addr, void *a2dpInstance, void (*callback)
         (const BtAddr *addr, const SdpService *serviceArray, uint16_t serviceNum, void *context)) const;

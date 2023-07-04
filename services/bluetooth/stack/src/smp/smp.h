@@ -61,7 +61,7 @@ extern "C" {
 #define SMP_GENERATE_SC_OOB_DATA_SUCCESS 0x00
 #define SMP_GENERATE_SC_OOB_DATA_FAILED 0x01
 
-#define SMP_SUCCESS BT_NO_ERROR                    /// < SMP error code success
+#define SMP_SUCCESS BT_SUCCESS                    /// < SMP error code success
 #define SMP_ERR_NOT_ENABLE BT_BAD_STATUS           /// < SMP error code module not initialize
 #define SMP_ERR_INVAL_PARAM BT_BAD_PARAM           /// < SMP error code invalid parameter
 #define SMP_ERR_INVAL_STATE BT_BAD_STATUS          /// < SMP error code invalid state
@@ -185,7 +185,7 @@ typedef struct {
  * @brief Set local IRk.
  *
  * @param irk Local IRK.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_SetIRK(const uint8_t *irk);
 
@@ -193,7 +193,7 @@ int SMP_SetIRK(const uint8_t *irk);
  * @brief Set Local Identity Address.
  *
  * @param addr Local Identity Address.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_SetIdentAddr(const BtAddr *addr);
 
@@ -212,7 +212,7 @@ int SMP_ResolveRPA(const uint8_t *addr, const uint8_t *irk);
  *
  * @param addr Resolvable private address.
  * @param irk Saved irk.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_AsyncResolveRPA(const uint8_t *addr, const uint8_t *irk);
 
@@ -220,7 +220,7 @@ int SMP_AsyncResolveRPA(const uint8_t *addr, const uint8_t *irk);
  * @brief Generate resolvable private address.
  *
  * @param irk Local irk.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_GenerateRPA(const uint8_t *irk);
 
@@ -228,7 +228,7 @@ int SMP_GenerateRPA(const uint8_t *irk);
  * @brief Set Secure Connection Only mode.
  *
  * @param mode Whether it is Secure Connection Only mode.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_SetSecureConnOnlyMode(bool mode);
 
@@ -237,7 +237,7 @@ int SMP_SetSecureConnOnlyMode(bool mode);
  *
  * @param handle ACL Connection Handle.
  * @param authReq Authentication Requirements Flags.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_SendSecurityRequestToRemote(uint16_t handle, uint8_t authReq);
 
@@ -248,7 +248,7 @@ int SMP_SendSecurityRequestToRemote(uint16_t handle, uint8_t authReq);
  * @param counter Signature counter .
  * @param data Data that needs to be signed.
  * @param dataLen Data length.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_GenerateSignature(const uint8_t *csrk, uint32_t counter, const uint8_t *data, uint16_t dataLen);
 
@@ -259,7 +259,7 @@ int SMP_GenerateSignature(const uint8_t *csrk, uint32_t counter, const uint8_t *
  * @param random Saved peer random.
  * @param ediv Saved peer ediv.
  * @param key Saved peer long term key.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_StartEncryption(uint16_t handle, const uint8_t *random, uint16_t ediv, const uint8_t *key);
 
@@ -270,7 +270,7 @@ int SMP_StartEncryption(uint16_t handle, const uint8_t *random, uint16_t ediv, c
  * @param localAddr Local addr.
  * @param peerAddr Peer addr.
  * @param param Paired param.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_StartPair(uint16_t handle, const BtAddr *localAddr, const BtAddr *peerAddr, const SMP_PairParam *param);
 
@@ -282,7 +282,7 @@ int SMP_StartPair(uint16_t handle, const BtAddr *localAddr, const BtAddr *peerAd
  * @param rejectReason Reject Reason.
  * @param pairMethod Paired method.
  * @param entryValue Authentication value.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_AuthenticationRequestReply(
     uint16_t handle, bool accept, uint8_t rejectReason, uint8_t pairMethod, const uint8_t *entryValue);
@@ -295,7 +295,7 @@ int SMP_AuthenticationRequestReply(
  * @param localAddr Local addr.
  * @param peerAddr Peer addr.
  * @param param Paired param.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_RemotePairRequestReply(
     uint16_t handle, uint8_t rejectReason, const BtAddr *localAddr, const BtAddr *peerAddr, const SMP_PairParam *param);
@@ -306,7 +306,7 @@ int SMP_RemotePairRequestReply(
  * @param handle ACL Connection Handle.
  * @param accept Accept or reject.
  * @param rejectReason Reject Reason.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_RemotePairResponseReply(uint16_t handle, bool accept, uint8_t rejectReason);
 
@@ -316,7 +316,7 @@ int SMP_RemotePairResponseReply(uint16_t handle, bool accept, uint8_t rejectReas
  * @param handle ACL Connection Handle.
  * @param accept Accept or reject.
  * @param rejectReason Reject reason.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_RemoteSecurityRequestReply(uint16_t handle, bool accept, uint8_t rejectReason);
 
@@ -326,7 +326,7 @@ int SMP_RemoteSecurityRequestReply(uint16_t handle, bool accept, uint8_t rejectR
  * @param handle ACL Connection Handle.
  * @param accept Accept or reject.
  * @param key Local long term key.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_LongTermKeyRequestReply(uint16_t handle, bool accept, const uint8_t *key);
 
@@ -334,7 +334,7 @@ int SMP_LongTermKeyRequestReply(uint16_t handle, bool accept, const uint8_t *key
  * @brief Proactively cancel pairing.
  *
  * @param handle ACL Connection Handle.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_CancelPair(uint16_t handle);
 
@@ -343,21 +343,21 @@ int SMP_CancelPair(uint16_t handle);
  *
  * @param cb Point to <b>SMP_Callback_t</b> struct, the struct must be available before calling to
  *                  <b>SMP_UnregisterCallback</b>.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_RegisterCallback(const SMP_Callback_t *cb);
 
 /**
  * @brief Unregister callback functions.
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_UnregisterCallback();
 
 /**
  * @brief Generate out of band data.
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int SMP_GenerateScOobData();
 

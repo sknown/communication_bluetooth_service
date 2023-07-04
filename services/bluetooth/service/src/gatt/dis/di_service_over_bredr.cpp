@@ -33,22 +33,22 @@ int DiServiceOverBredr::RegisterSDP(uint16_t startHandle, uint16_t endHandle)
     }
 
     int ret = SdpAddServiceClassIdList();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("%{public}s::SDP_AddServiceClassIdList Failed", __FUNCTION__);
     }
 
     ret = SdpAddProtocol(startHandle, endHandle);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("%{public}s::SDP_AddProtocolDescriptorList Failed", __FUNCTION__);
     }
 
     ret = SdpAddBrowseGroupList();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_WARN("%{public}s::SDP_AddBrowseGroupList Failed", __FUNCTION__);
     }
 
     ret = SDP_RegisterServiceRecord(sdpHandle_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s::SDP_RegisterServiceRecord Failed", __FUNCTION__);
         return GattStatus::GATT_FAILURE;
     }
@@ -60,12 +60,12 @@ void DiServiceOverBredr::DeregisterSDP()
 {
     LOG_DEBUG("[GenericAttributeService]::%{public}s", __FUNCTION__);
     int ret = SDP_DeregisterServiceRecord(sdpHandle_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s::SDP_DeregisterServiceRecord Failed", __FUNCTION__);
     }
 
     ret = SDP_DestroyServiceRecord(sdpHandle_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s::SDP_DestroyServiceRecord Failed", __FUNCTION__);
     }
 }

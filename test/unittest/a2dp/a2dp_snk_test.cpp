@@ -107,7 +107,7 @@ HWTEST_F(A2dpSinkTest, A2dpSink_UnitTest_GetPlayingState, TestSize.Level1)
     profile_ = A2dpSink::GetProfile();
     BluetoothRemoteDevice device;
     int state = profile_->GetPlayingState(device);
-    EXPECT_EQ(state, RET_NO_ERROR);
+    EXPECT_EQ(state, BT_SUCCESS);
     GTEST_LOG_(INFO) << "A2dpSink_UnitTest_GetPlayingState end";
 }
 

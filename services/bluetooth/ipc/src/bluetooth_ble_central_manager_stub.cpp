@@ -25,7 +25,6 @@
 namespace OHOS {
 namespace Bluetooth {
 const int32_t BLE_CENTRAL_MANAGER_STUB_READ_DATA_SIZE_MAX_LEN = 0x100;
-const int32_t BLE_CENTRAL_MANAGER_STUB_ADV_DEVICE_MAX_LEN = 0xFF;
 const std::map<uint32_t, std::function<ErrCode(BluetoothBleCentralManagerStub *, MessageParcel &, MessageParcel &)>>
     BluetoothBleCentralManagerStub::interfaces_ = {
         {IBluetoothBleCentralManager::Code::BLE_REGISTER_BLE_CENTRAL_MANAGER_CALLBACK,
@@ -64,7 +63,7 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothBleCentralManagerStub *,
         {IBluetoothBleCentralManager::Code::BLE_START_SCAN_IN_SH_SYNC,
             std::bind(&BluetoothBleCentralManagerStub::StartScanInShSuncInner, std::placeholders::_1,
             std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_START_STOP_IN_SH_SYNC,
+        {IBluetoothBleCentralManager::Code::BLE_STOP_SCAN_IN_SH_SYNC,
             std::bind(&BluetoothBleCentralManagerStub::StopScanInShSuncInner, std::placeholders::_1,
             std::placeholders::_2, std::placeholders::_3)},
         {IBluetoothBleCentralManager::Code::BLE_SEND_PARAMS_TO_SH,
@@ -182,9 +181,9 @@ ErrCode BluetoothBleCentralManagerStub::ConfigScanFilterInner(MessageParcel &dat
     }
     for (int i = 0; i < itemsSize; i++) {
         std::shared_ptr<BluetoothBleScanFilter> res(data.ReadParcelable<BluetoothBleScanFilter>());
-        if (res == nullpter) {
+        if (res == nullptr) {
             HILOGE("null pointer");
-            return ERR_INVALID_VALUE
+            return ERR_INVALID_VALUE;
         }
         BluetoothBleScanFilter item = *(res);
         filters.push_back(item);
@@ -231,42 +230,42 @@ ErrCode BluetoothBleCentralManagerStub::ResetAllProxyInner(MessageParcel &data, 
 
 ErrCode BluetoothBleCentralManagerStub::SetBurstParamInner(MessageParcel &data, MessageParcel &reply)
 {
-  return NO_ERROR
+    return NO_ERROR;
 }
 
 ErrCode BluetoothBleCentralManagerStub::SetScanReportChannelToSensorHubInner(MessageParcel &data, MessageParcel &reply)
 {
-  return NO_ERROR
+    return NO_ERROR;
 }
 
 ErrCode BluetoothBleCentralManagerStub::StartScanInShSuncInner(MessageParcel &data, MessageParcel &reply)
 {
-  return NO_ERROR
+    return NO_ERROR;
 }
 
 ErrCode BluetoothBleCentralManagerStub::StopScanInShSuncInner(MessageParcel &data, MessageParcel &reply)
 {
-  return NO_ERROR
+    return NO_ERROR;
 }
 
 ErrCode BluetoothBleCentralManagerStub::SendParamsToSensorHubInner(MessageParcel &data, MessageParcel &reply)
 {
-  return NO_ERROR
+    return NO_ERROR;
 }
 
 ErrCode BluetoothBleCentralManagerStub::IsSupportSensorAdvertiseFilterInner(MessageParcel &data, MessageParcel &reply)
 {
-  return NO_ERROR
+    return NO_ERROR;
 }
 
 ErrCode BluetoothBleCentralManagerStub::SetAdvFilterParamInner(MessageParcel &data, MessageParcel &reply)
 {
-  return NO_ERROR
+    return NO_ERROR;
 }
 
 ErrCode BluetoothBleCentralManagerStub::RemoveAdvFilterInner(MessageParcel &data, MessageParcel &reply)
 {
-  return NO_ERROR
+    return NO_ERROR;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

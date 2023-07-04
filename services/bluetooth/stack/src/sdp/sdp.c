@@ -233,7 +233,7 @@ static void SdpStartup(int traceLevel)
     (void)memset_s(ctx, sizeof(SdpInitializeInfo), 0x00, sizeof(SdpInitializeInfo));
 
     ret = BTM_CreateProcessingQueue(PROCESSING_QUEUE_ID_SDP, BTM_PROCESSING_QUEUE_SIZE_DEFAULT);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         MEM_MALLOC.free(ctx);
         return;
     }
@@ -242,7 +242,7 @@ static void SdpStartup(int traceLevel)
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpInitializeTask, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx->event);
         MEM_MALLOC.free(ctx);
         return;
@@ -278,7 +278,7 @@ static void SdpShutdown()
     Event *ctx = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpFinalizeTask, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx);
         return;
     }
@@ -319,7 +319,7 @@ uint32_t SDP_CreateServiceRecord()
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpCreateServiceRecordTask, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx->event);
         MEM_MALLOC.free(ctx);
         return handle;
@@ -363,7 +363,7 @@ int SDP_DestroyServiceRecord(uint32_t handle)
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpDestroyServiceRecordTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -405,7 +405,7 @@ int SDP_RegisterServiceRecord(uint32_t handle)
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpRegisterServiceRecordTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -445,7 +445,7 @@ int SDP_DeregisterServiceRecord(uint32_t handle)
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpDeregisterServiceRecordTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -489,7 +489,7 @@ int SDP_AddServiceClassIdList(uint32_t handle, const BtUuid *classid, uint16_t c
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddServiceClassIdListTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -530,7 +530,7 @@ int SDP_AddServiceRecordState(uint32_t handle, uint32_t state)
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddServiceRecordStateTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -571,7 +571,7 @@ int SDP_AddServiceId(uint32_t handle, const BtUuid *serviceid)
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddServiceIdTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -613,7 +613,7 @@ int SDP_AddProtocolDescriptorList(uint32_t handle, const SdpProtocolDescriptor *
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddProtocolDescriptorListTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -656,7 +656,7 @@ int SDP_AddAdditionalProtocolDescriptorList(
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddAdditionalProtocolDescriptorListTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -698,7 +698,7 @@ int SDP_AddBrowseGroupList(uint32_t handle, const BtUuid *browseUuid, uint16_t b
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddBrowseGroupListTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -741,7 +741,7 @@ int SDP_AddLanguageBaseAttributeIdList(
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddLanguageBaseAttributeIdListTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -782,7 +782,7 @@ int SDP_AddServiceInfoTimeToLive(uint32_t handle, uint32_t value)
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddServiceInfoTimeToLiveTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -823,7 +823,7 @@ int SDP_AddServiceAvailability(uint32_t handle, uint8_t value)
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddServiceAvailabilityTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -867,7 +867,7 @@ int SDP_AddBluetoothProfileDescriptorList(
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddBluetoothProfileDescriptorListTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -909,7 +909,7 @@ int SDP_AddDocumentationUrl(uint32_t handle, const uint8_t *url, uint16_t urlLen
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddDocumentationUrlTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -951,7 +951,7 @@ int SDP_AddClientExecutableUrl(uint32_t handle, const uint8_t *url, uint16_t url
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddClientExecutableUrlTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -993,7 +993,7 @@ int SDP_AddIconUrl(uint32_t handle, const uint8_t *url, uint16_t urlLen)
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddIconUrlTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -1036,7 +1036,7 @@ int SDP_AddServiceName(uint32_t handle, uint16_t baseAttributeId, const char *na
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddServiceNameTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -1080,7 +1080,7 @@ int SDP_AddServiceDescription(
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddServiceDescriptionTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -1123,7 +1123,7 @@ int SDP_AddProviderName(uint32_t handle, uint16_t baseAttributeId, const char *n
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddProviderNameTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -1169,7 +1169,7 @@ int SDP_AddAttribute(
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddAttributeTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -1214,7 +1214,7 @@ int SDP_AddSequenceAttribute(
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpAddSequenceAttributeTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -1258,7 +1258,7 @@ int SDP_ServiceSearch(const BtAddr *addr, const SdpUuid *uuidArray, void *contex
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpServiceSearchTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -1304,7 +1304,7 @@ int SDP_ServiceAttribute(const BtAddr *addr, uint32_t handle, SdpAttributeIdList
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpServiceAttributeTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -1351,7 +1351,7 @@ int SDP_ServiceSearchAttribute(const BtAddr *addr, const SdpUuid *uuidArray, Sdp
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpServiceSearchAttributeTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }
@@ -1394,7 +1394,7 @@ int SDP_ServiceBrowse(const BtAddr *addr, void *context,
     ctx->event = EventCreate(true);
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_SDP, SdpServiceBrowseTask, ctx);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         EventWait(ctx->event, WAIT_TIME);
         ret = ctx->result;
     }

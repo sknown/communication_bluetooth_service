@@ -606,7 +606,7 @@ void MapMseInstance::DisConnect(const std::string &addr)
     }
     {
         std::lock_guard<std::recursive_mutex> lock(instanceMapMutex_);
-        if (RET_NO_ERROR == pimpl->obexSessionMap_[addr]->Disconnect()) {
+        if (BT_SUCCESS == pimpl->obexSessionMap_[addr]->Disconnect()) {
             return;
         }
         MSE_LOG_INFO("Call Obex Session Disconnect error.");

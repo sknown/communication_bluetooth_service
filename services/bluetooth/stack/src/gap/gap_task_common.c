@@ -60,7 +60,7 @@ int GapRunTaskBlockProcess(void (*func)(void *), void *ctx)
     info->func = func;
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_GAP, GapBlockInTaskProcess, info);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ret = EventWait(info->event, WAIT_TIME);
         if (ret == EVENT_WAIT_TIMEOUT_ERR) {
             ret = BT_TIMEOUT;

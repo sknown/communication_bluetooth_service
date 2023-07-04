@@ -69,7 +69,7 @@ int L2CIF_RegisterService(uint16_t lpsm, const L2capService *svc, void *context,
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifRegisterService, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -156,7 +156,7 @@ int L2CIF_ConnectReq(const BtAddr *addr, uint16_t lpsm, uint16_t rpsm, void *con
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifConnectReq, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -244,7 +244,7 @@ int L2CIF_ConfigReq(uint16_t lcid, const L2capConfigInfo *cfg, void (*cb)(uint16
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifConfigReq, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -292,7 +292,7 @@ int L2CIF_ConfigRsp(
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifConfigRsp, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -464,7 +464,7 @@ int L2CIF_SendData(uint16_t lcid, const Packet *pkt, void (*cb)(uint16_t lcid, i
     ctx->cb = cb;
 
     L2capAsynchronousProcess(L2cifSendData, L2cifSendDataContextDestroy, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 typedef struct {
@@ -501,7 +501,7 @@ int L2CIF_RegisterEcho(const L2capEcho *echoCallback, void *context)
     ctx->context = context;
 
     L2capAsynchronousProcess(L2cifRegisterEcho, L2capFree, ctx);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static void L2cifDeregisterEcho(const void *context)
@@ -676,7 +676,7 @@ void L2CIF_Startup()
     Semaphore *sem = NULL;
 
     result = BTM_CreateProcessingQueue(PROCESSING_QUEUE_ID_LA2CAP, BTM_PROCESSING_QUEUE_SIZE_DEFAULT);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return;
     }
 
@@ -692,7 +692,7 @@ void L2CIF_Startup()
     ctx->traceLevel = 0;
 
     result = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_LA2CAP, L2cifStartup, ctx);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         L2capFree(ctx);
         SemaphoreDelete(sem);
         return;
@@ -735,7 +735,7 @@ void L2CIF_Shutdown()
     ctx->traceLevel = 0;
 
     result = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_LA2CAP, L2cifShutdown, ctx);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         L2capFree(ctx);
         SemaphoreDelete(sem);
         return;

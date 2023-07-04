@@ -38,7 +38,7 @@ public:
      * @brief Registers security requirements into the GAP.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     static int RegisterSecurity(void);
@@ -47,7 +47,7 @@ public:
      * @brief Unregisters security requirements from the GAP.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     static int UnregisterSecurity(void);

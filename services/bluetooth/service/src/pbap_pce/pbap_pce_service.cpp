@@ -96,7 +96,7 @@ int PbapPceService::SetConnectionStrategy(const RawAddress &device, int strategy
         }
     }
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::GetConnectionStrategy(const RawAddress &device)
@@ -122,7 +122,7 @@ void PbapPceService::EnableService()
     serviceState_ = PBAP_PCE_STATE_STARTUPING;
     LoadPceConfig();
     int retVal = pbapPceSdp_->Register();
-    if (retVal != RET_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("end, Call pbapPceSdp_->Register() Error");
         serviceState_ = PBAP_PCE_STATE_STARTUP;
         GetContext()->OnEnable(PROFILE_NAME_PBAP_PCE, false);
@@ -256,7 +256,7 @@ int PbapPceService::CheckDeviceStatusForPbapAction(const RawAddress &device)
         return RET_BAD_STATUS;
     }
 
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void PbapPceService::DisableService()
@@ -267,14 +267,14 @@ void PbapPceService::DisableService()
     int retVal = 0;
     if (pbapPceSdp_) {
         retVal = pbapPceSdp_->Deregister();
-        if (retVal != RET_NO_ERROR) {
+        if (retVal != BT_SUCCESS) {
             PBAP_PCE_LOG_ERROR("pbapPceSdp_->Deregister() error");
         }
     }
 
-    if (!TryShutDown(retVal == RET_NO_ERROR)) {
+    if (!TryShutDown(retVal == BT_SUCCESS)) {
         retVal = DisconnectAllDevices();
-        if (retVal != RET_NO_ERROR) {
+        if (retVal != BT_SUCCESS) {
             PBAP_PCE_LOG_ERROR("DisconnectAllDevices error");
         }
         TryShutDown(true);
@@ -285,7 +285,7 @@ void PbapPceService::DisableService()
 int PbapPceService::DisconnectAllDevices()
 {
     PBAP_PCE_LOG_INFO("%{public}s start", __PRETTY_FUNCTION__);
-    int retVal2 = RET_NO_ERROR;
+    int retVal2 = BT_SUCCESS;
     std::lock_guard<std::recursive_mutex> lock(machineMapMutex_);
     for (auto &stm : machineMap_) {
         int retVal1 = AbortDownloadingInternal(RawAddress(stm.first));
@@ -344,7 +344,7 @@ int PbapPceService::Connect(const RawAddress &device)
 
     GetDispatcher()->PostTask(std::bind(&PbapPceService::ConnectInternal, this, device));
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::ConnectInternal(const RawAddress &device)
@@ -377,7 +377,7 @@ int PbapPceService::ConnectInternal(const RawAddress &device)
         }
     }
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::Disconnect(const RawAddress &device)
@@ -398,7 +398,7 @@ int PbapPceService::Disconnect(const RawAddress &device)
 
     GetDispatcher()->PostTask(std::bind(&PbapPceService::DisconnectInternal, this, device));
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 bool PbapPceService::IsConnected(const RawAddress &device)
@@ -423,7 +423,7 @@ int PbapPceService::DisconnectInternal(const RawAddress &device)
         ForwardMsgToStm(device, msg);
     }
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 // for override IProfilePbapPce
@@ -672,7 +672,7 @@ int PbapPceService::SetDevicePassword(const RawAddress &device, const std::strin
     utility::Message msg(PCE_PASSWORD_INPUT, 0, static_cast<void *>(msgData.release()));
     PostMessage(device, msg);
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::PullPhoneBook(const RawAddress &device, const IPbapPullPhoneBookParam &param)
@@ -684,13 +684,13 @@ int PbapPceService::PullPhoneBook(const RawAddress &device, const IPbapPullPhone
         return RET_BAD_PARAM;
     }
     int ret = CheckDeviceStatusForPbapAction(device);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("%{public}s end, RET_BAD_STATUS", __PRETTY_FUNCTION__);
         return ret;
     }
     GetDispatcher()->PostTask(std::bind(&PbapPceService::PullPhoneBookInternal, this, device, param));
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::SetPhoneBook(const RawAddress &device, const std::u16string &name, int flag)
@@ -702,14 +702,14 @@ int PbapPceService::SetPhoneBook(const RawAddress &device, const std::u16string 
     }
 
     int ret = CheckDeviceStatusForPbapAction(device);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("%{public}s end, RET_BAD_STATUS", __PRETTY_FUNCTION__);
         return ret;
     }
 
     GetDispatcher()->PostTask(std::bind(&PbapPceService::SetPhoneBookInternal, this, device, name, flag));
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::PullvCardListing(const RawAddress &device, const IPbapPullvCardListingParam &param)
@@ -722,14 +722,14 @@ int PbapPceService::PullvCardListing(const RawAddress &device, const IPbapPullvC
     }
 
     int ret = CheckDeviceStatusForPbapAction(device);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         PBAP_PCE_LOG_INFO("%{public}s end, RET_BAD_STATUS ", __PRETTY_FUNCTION__);
         return ret;
     }
 
     GetDispatcher()->PostTask(std::bind(&PbapPceService::PullvCardListingInternal, this, device, param));
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::PullvCardEntry(const RawAddress &device, const IPbapPullvCardEntryParam &param)
@@ -741,14 +741,14 @@ int PbapPceService::PullvCardEntry(const RawAddress &device, const IPbapPullvCar
     }
 
     int ret = CheckDeviceStatusForPbapAction(device);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("%{public}s end, RET_BAD_STATUS", __PRETTY_FUNCTION__);
         return ret;
     }
 
     GetDispatcher()->PostTask(std::bind(&PbapPceService::PullvCardEntryInternal, this, device, param));
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 bool PbapPceService::IsDownloading(const RawAddress &device)
@@ -774,7 +774,7 @@ int PbapPceService::AbortDownloading(const RawAddress &device)
     GetDispatcher()->PostTask(std::bind(&PbapPceService::AbortDownloadingInternal, this, device));
 
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::PullPhoneBookInternal(const RawAddress &device, const IPbapPullPhoneBookParam &param)
@@ -800,7 +800,7 @@ int PbapPceService::PullPhoneBookInternal(const RawAddress &device, const IPbapP
     }
 
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::SetPhoneBookInternal(const RawAddress &device, const std::u16string &name, int flag)
@@ -816,7 +816,7 @@ int PbapPceService::SetPhoneBookInternal(const RawAddress &device, const std::u1
     }
 
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::PullvCardListingInternal(const RawAddress &device, const IPbapPullvCardListingParam &param)
@@ -836,7 +836,7 @@ int PbapPceService::PullvCardListingInternal(const RawAddress &device, const IPb
     utility::Message msg(PCE_REQ_PULLVCARDLISTING, 0, (void *)&pbapMsg);
     ForwardMsgToStm(device, msg);
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::PullvCardEntryInternal(const RawAddress &device, const IPbapPullvCardEntryParam &param)
@@ -847,7 +847,7 @@ int PbapPceService::PullvCardEntryInternal(const RawAddress &device, const IPbap
     utility::Message msg(PCE_REQ_PULLVCARDENTRY, 0, (void *)&pbapMsg);
     ForwardMsgToStm(device, msg);
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPceService::AbortDownloadingInternal(const RawAddress &device)
@@ -856,7 +856,7 @@ int PbapPceService::AbortDownloadingInternal(const RawAddress &device)
     utility::Message msg(PCE_REQ_ABORTDOWNLOADING);
     ForwardMsgToStm(device, msg);
     PBAP_PCE_LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void PbapPceService::LoadPceConfig()

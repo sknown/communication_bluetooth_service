@@ -14,7 +14,6 @@
  */
 
 #include "bluetooth_ble_central_manager_server.h"
-#include "ble_defs.h"
 #include "ble_service_data.h"
 #include "bluetooth_log.h"
 #include "bluetooth_utils_server.h"
@@ -204,6 +203,11 @@ public:
         });
     }
 
+    void OnNotifyMsgReportFromSh(FilterIdxInfo &info, int msgType, const std::vector<uint8_t> &notifyValue) override
+    {
+        return;
+    }
+
     void SetObserver(RemoteObserverList<IBluetoothBleCentralManagerCallback> *observers)
     {
         observers_ = observers;
@@ -366,7 +370,7 @@ int BluetoothBleCentralManagerServer::StartScan()
             HILOGI("start ble scan without params.");
             pimpl->bleService_->StartScan();
             pimpl->isScanning = true;
-            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "BLE_SCAN_START",
+            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "BLE_SCAN_START",
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "PID", pid, "UID", uid, "TYPE", 0);
         } else {
             HILOGI("scan is already started.");
@@ -416,7 +420,7 @@ int BluetoothBleCentralManagerServer::StartScan(const BluetoothBleScanSettings &
             SetScanParams(settings);
             pimpl->bleService_->StartScan(pimpl->scanSettingImpl_);
             pimpl->isScanning = true;
-            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "BLE_SCAN_START",
+            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "BLE_SCAN_START",
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "PID", pid, "UID", uid,
                 "TYPE", (settings.GetReportDelayMillisValue() > 0) ? 1 : 0);
         } else if (IsNewScanParams()) {
@@ -465,7 +469,7 @@ int BluetoothBleCentralManagerServer::StopScan()
             HILOGI("stop ble scan.");
             pimpl->bleService_->StopScan();
             pimpl->isScanning = false;
-            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "BLE_SCAN_STOP",
+            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "BLE_SCAN_STOP",
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "PID", pid, "UID", uid);
         }
     });
@@ -473,7 +477,7 @@ int BluetoothBleCentralManagerServer::StopScan()
 }
 
 int BluetoothBleCentralManagerServer::ConfigScanFilter(
-    const int clientId, const std::vector<BluetoothBleScanFilter> &filters)
+    int &clientId, const std::vector<BluetoothBleScanFilter> &filters)
 {
     HILOGI("enter, clientId: %{public}d", clientId);
 
@@ -505,9 +509,9 @@ int BluetoothBleCentralManagerServer::ConfigScanFilter(
             filterImpl.SetManufactureDataMask(filter.GetManufactureDataMask());
             filterImpls.push_back(filterImpl);
         }
-        return pimpl->bleService_->ConfigScanFilter(clientId, filterImpls);
+        clientId = pimpl->bleService_->ConfigScanFilter(clientId, filterImpls);
     }
-    return 0;
+    return NO_ERROR;
 }
 
 void BluetoothBleCentralManagerServer::RemoveScanFilter(const int clientId)
@@ -687,6 +691,55 @@ bool BluetoothBleCentralManagerServer::IsAllStop()
     pimpl->scanSettingImpl_.SetLegacy(true);
     pimpl->scanSettingImpl_.SetPhy(PHY_LE_ALL_SUPPORTED);
     return true;
+}
+
+int BluetoothBleCentralManagerServer::SetBurstParam(int duration, int maxExtAdvEvents,
+    int burstWindow, int burstInterval, int advHandle)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+int BluetoothBleCentralManagerServer::SetScanReportChannelToSensorHub(const int clientId, const int isToAp)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+int BluetoothBleCentralManagerServer::StartScanInShSync()
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+int BluetoothBleCentralManagerServer::StopScanInShSync()
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+int BluetoothBleCentralManagerServer::SendParamsToSensorhub(const std::vector<uint8_t> &dataValue, int32_t type)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+bool BluetoothBleCentralManagerServer::IsSupportSensorAdvertiseFilter()
+{
+    HILOGI("NOT SUPPORT NOW");
+    return false;
+}
+
+int BluetoothBleCentralManagerServer::SetAdvFilterParam(const BluetoothBleFilterParamSet &paramSet)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+int BluetoothBleCentralManagerServer::RemoveAdvFilter(const bluetooth::Uuid &uuid)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

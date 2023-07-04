@@ -47,7 +47,7 @@ int AvrcCtSdpManager::RegisterService(void)
 {
     HILOGI("enter");
 
-    int result = RET_NO_ERROR;
+    int result = BT_SUCCESS;
     sdpHandle_ = SDP_CreateServiceRecord();
 
     /// Service Class ID List.
@@ -94,7 +94,7 @@ int AvrcCtSdpManager::RegisterService(void)
     /// Register target service.
     result |= SDP_RegisterServiceRecord(sdpHandle_);
 
-    (result == BT_NO_ERROR) ? (result = RET_NO_ERROR) : (result = RET_BAD_STATUS);
+    (result == BT_SUCCESS) ? (result = BT_SUCCESS) : (result = RET_BAD_STATUS);
 
     return result;
 }
@@ -103,12 +103,12 @@ int AvrcCtSdpManager::UnregisterService(void) const
 {
     HILOGI("enter");
 
-    int result = RET_NO_ERROR;
+    int result = BT_SUCCESS;
 
     result |= SDP_DeregisterServiceRecord(sdpHandle_);
     result |= SDP_DestroyServiceRecord(sdpHandle_);
 
-    (result == BT_NO_ERROR) ? (result = RET_NO_ERROR) : (result = RET_BAD_STATUS);
+    (result == BT_SUCCESS) ? (result = BT_SUCCESS) : (result = RET_BAD_STATUS);
 
     return result;
 }
@@ -127,7 +127,7 @@ int AvrcCtSdpManager::FindTgService(const RawAddress &rawAddr,
     SdpUuid sdpUuid = {.uuidNum = AVRC_SERVICE_CLASS_ID_LIST_NUMBER - 1, .uuid = classIdList};
 
     int result = SDP_ServiceSearch(&btAddr, &sdpUuid, nullptr, callback);
-    (result == BT_NO_ERROR) ? (result = RET_NO_ERROR) : (result = RET_BAD_STATUS);
+    (result == BT_SUCCESS) ? (result = BT_SUCCESS) : (result = RET_BAD_STATUS);
 
     return result;
 }
@@ -136,7 +136,7 @@ int AvrcCtSdpManager::AddProtocolDescriptorList()
 {
     HILOGI("enter");
 
-    int result = RET_NO_ERROR;
+    int result = BT_SUCCESS;
 
     SdpProtocolDescriptor dscList[AVRC_PROTOCOL_DESCRIPTOR_LIST_NUMBER];
     dscList[0].parameter[0].type = SDP_TYPE_UINT_16;
