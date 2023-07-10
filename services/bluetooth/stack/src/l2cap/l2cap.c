@@ -34,7 +34,7 @@ int L2CAP_ConnectReq(const BtAddr *addr, uint16_t lpsm, uint16_t rpsm, uint16_t 
 
     LOG_INFO("%{public}s:%{public}d enter, lpsm = 0x%04X, rpsm = 0x%04X", __FUNCTION__, __LINE__, lpsm, rpsm);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -57,16 +57,16 @@ int L2CAP_ConnectReq(const BtAddr *addr, uint16_t lpsm, uint16_t rpsm, uint16_t 
 
     if (conn->state == L2CAP_CONNECTION_IDLE) {
         conn->state = L2CAP_CONNECTION_CONNECTING;
-        if (L2capConnectBdr(addr) != BT_NO_ERROR) {
+        if (L2capConnectBdr(addr) != BT_SUCCESS) {
             L2capDeleteConnection(conn);
             return BT_OPERATION_FAILED;
         }
 
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     if ((conn->state == L2CAP_CONNECTION_CONNECTING) || (conn->state == L2CAP_CONNECTION_DISCONNECTING)) {
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     if (conn->info.state == L2CAP_INFO_STATE_NONE) {
@@ -75,7 +75,7 @@ int L2CAP_ConnectReq(const BtAddr *addr, uint16_t lpsm, uint16_t rpsm, uint16_t 
         L2capSendConnectionReq(conn, chan);
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_ConnectRsp(uint16_t lcid, uint8_t id, uint16_t result, uint16_t status)
@@ -91,7 +91,7 @@ int L2CAP_ConnectRsp(uint16_t lcid, uint8_t id, uint16_t result, uint16_t status
         result,
         status);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -110,7 +110,7 @@ int L2CAP_ConnectRsp(uint16_t lcid, uint8_t id, uint16_t result, uint16_t status
         L2capDeleteChannel(conn, chan, 0);
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_ConfigReq(uint16_t lcid, const L2capConfigInfo *cfg)
@@ -120,7 +120,7 @@ int L2CAP_ConfigReq(uint16_t lcid, const L2capConfigInfo *cfg)
 
     LOG_INFO("%{public}s:%{public}d enter, lcid = 0x%04X", __FUNCTION__, __LINE__, lcid);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -175,7 +175,7 @@ int L2CAP_ConfigReq(uint16_t lcid, const L2capConfigInfo *cfg)
     }
 
     L2capSendConfigurationReq(conn, chan);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_ConfigRsp(uint16_t lcid, uint8_t id, const L2capConfigInfo *cfg, uint16_t result)
@@ -185,7 +185,7 @@ int L2CAP_ConfigRsp(uint16_t lcid, uint8_t id, const L2capConfigInfo *cfg, uint1
 
     LOG_INFO("%{public}s:%{public}d enter, lcid = 0x%04X, id = %{public}d, result = %{public}d", __FUNCTION__, __LINE__, lcid, id, result);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -231,7 +231,7 @@ int L2CAP_ConfigRsp(uint16_t lcid, uint8_t id, const L2capConfigInfo *cfg, uint1
     }
 
     L2capSendConfigurationRsp(conn, chan, id, result, cfg);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_DisconnectionReq(uint16_t lcid)
@@ -241,7 +241,7 @@ int L2CAP_DisconnectionReq(uint16_t lcid)
 
     LOG_INFO("%{public}s:%{public}d enter, lcid = 0x%04X", __FUNCTION__, __LINE__, lcid);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -255,7 +255,7 @@ int L2CAP_DisconnectionReq(uint16_t lcid)
     }
 
     L2capSendDisconnectionReq(conn, chan);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_DisconnectionRsp(uint16_t lcid, uint8_t id)
@@ -265,7 +265,7 @@ int L2CAP_DisconnectionRsp(uint16_t lcid, uint8_t id)
 
     LOG_INFO("%{public}s:%{public}d enter, lcid = 0x%04X, id = %{public}d", __FUNCTION__, __LINE__, lcid, id);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -280,7 +280,7 @@ int L2CAP_DisconnectionRsp(uint16_t lcid, uint8_t id)
 
     L2capSendDisconnectionRsp(conn, chan, id);
     L2capDeleteChannel(conn, chan, 0);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LocalBusy(uint16_t lcid, uint8_t isBusy)
@@ -290,7 +290,7 @@ int L2CAP_LocalBusy(uint16_t lcid, uint8_t isBusy)
 
     LOG_INFO("%{public}s:%{public}d enter, lcid = 0x%04X, isBusy = %{public}d", __FUNCTION__, __LINE__, lcid, isBusy);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -327,7 +327,7 @@ int L2CAP_LocalBusy(uint16_t lcid, uint8_t isBusy)
         L2capErfcStartMonitorTimer(chan);
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_SendData(uint16_t lcid, Packet *pkt)
@@ -342,7 +342,7 @@ int L2CAP_SendData(uint16_t lcid, Packet *pkt)
 
     LOG_INFO("%{public}s:%{public}d enter, lcid = 0x%04X, pktLength = %{public}d", __FUNCTION__, __LINE__, lcid, PacketSize(pkt));
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -375,7 +375,7 @@ int L2CAP_SendData(uint16_t lcid, Packet *pkt)
         L2capSendIFrame(conn, chan, pkt);
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_RegisterEcho(const L2capEcho *echoCallback, void *context)
@@ -384,7 +384,7 @@ int L2CAP_RegisterEcho(const L2capEcho *echoCallback, void *context)
 
     LOG_INFO("%{public}s:%{public}d enter", __FUNCTION__, __LINE__);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -396,7 +396,7 @@ int L2CAP_RegisterEcho(const L2capEcho *echoCallback, void *context)
     inst->echo.ctx = context;
     (void)memcpy_s(&(inst->echo.cb), sizeof(L2capEcho), echoCallback, sizeof(L2capEcho));
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_DeregisterEcho()
@@ -405,13 +405,13 @@ int L2CAP_DeregisterEcho()
 
     LOG_INFO("%{public}s:%{public}d enter", __FUNCTION__, __LINE__);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
     inst = L2capGetInstance();
     (void)memset_s(&(inst->echo), sizeof(L2capEcho), 0, sizeof(L2capEcho));
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_EchoReq(uint16_t aclHandle, const uint8_t *data, uint16_t dataLen)
@@ -420,7 +420,7 @@ int L2CAP_EchoReq(uint16_t aclHandle, const uint8_t *data, uint16_t dataLen)
 
     LOG_INFO("%{public}s:%{public}d enter, aclHandle = %{public}d, dataLen = %{public}d", __FUNCTION__, __LINE__, aclHandle, dataLen);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -434,7 +434,7 @@ int L2CAP_EchoReq(uint16_t aclHandle, const uint8_t *data, uint16_t dataLen)
     }
 
     L2capSendEchoReq(conn, data, dataLen);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_EchoRsp(uint16_t aclHandle, uint8_t id, const uint8_t *data, uint16_t dataLen)
@@ -443,7 +443,7 @@ int L2CAP_EchoRsp(uint16_t aclHandle, uint8_t id, const uint8_t *data, uint16_t 
 
     LOG_INFO("%{public}s:%{public}d enter, aclHandle = %{public}d, id = %{public}d, dataLen = %{public}d", __FUNCTION__, __LINE__, aclHandle, id, dataLen);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -457,7 +457,7 @@ int L2CAP_EchoRsp(uint16_t aclHandle, uint8_t id, const uint8_t *data, uint16_t 
     }
 
     L2capSendEchoRsp(conn, id, data, dataLen);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_RegisterService(uint16_t lpsm, const L2capService *svc, void *context)
@@ -467,7 +467,7 @@ int L2CAP_RegisterService(uint16_t lpsm, const L2capService *svc, void *context)
 
     LOG_INFO("%{public}s:%{public}d enter, psm = 0x%04X", __FUNCTION__, __LINE__, lpsm);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -497,7 +497,7 @@ int L2CAP_RegisterService(uint16_t lpsm, const L2capService *svc, void *context)
     (void)memcpy_s(&(psm->service), sizeof(L2capService), svc, sizeof(L2capService));
     ListAddFirst(inst->psmList, psm);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_DeregisterService(uint16_t lpsm)
@@ -511,7 +511,7 @@ int L2CAP_DeregisterService(uint16_t lpsm)
 
     LOG_INFO("%{public}s:%{public}d enter, psm = 0x%04X", __FUNCTION__, __LINE__, lpsm);
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -540,7 +540,7 @@ int L2CAP_DeregisterService(uint16_t lpsm)
 
     ListRemoveNode(inst->psmList, psm);
     L2capFree(psm);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void L2CAP_Initialize(int traceLevel)

@@ -48,13 +48,13 @@ static void RFCOMM_Startup()
     Event *ctx = EventCreate(true);
 
     int ret = BTM_CreateProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, BTM_PROCESSING_QUEUE_SIZE_DEFAULT);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx);
         return;
     }
 
     ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommInitializeTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx);
         return;
     }
@@ -94,7 +94,7 @@ static void RFCOMM_Shutdown()
     Event *ctx = EventCreate(true);
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommFinalizeTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx);
         return;
     }
@@ -150,7 +150,7 @@ uint8_t RFCOMM_AssignServerNum()
     ctx->event = EventCreate(true);
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommAssignServerNumTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx->event);
         free(ctx);
         return scn;
@@ -203,7 +203,7 @@ int RFCOMM_FreeServerNum(uint8_t scn)
     ctx->scn = scn;
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommFreeServerNumTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 
@@ -260,7 +260,7 @@ int RFCOMM_ConnectChannel(const RfcommConnectReqInfo *reqInfo, uint16_t *handle)
     ctx->event = EventCreate(true);
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommConnectChannelTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx->event);
         free(ctx);
         return ret;
@@ -336,7 +336,7 @@ int RFCOMM_RegisterServer(uint8_t scn, uint16_t mtu, uint32_t eventMask,
     ctx->event = EventCreate(true);
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommRegisterServerTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx->event);
         free(ctx);
         return ret;
@@ -392,7 +392,7 @@ int RFCOMM_AcceptConnection(uint16_t handle)
     ctx->handle = handle;
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommAcceptConnectionTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 
@@ -441,7 +441,7 @@ int RFCOMM_RejectConnection(uint16_t handle)
     ctx->handle = handle;
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommRejectConnectionTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 
@@ -488,7 +488,7 @@ int RFCOMM_DisconnectChannel(uint16_t handle)
     ctx->handle = handle;
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommDisconnectChannelTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 
@@ -543,7 +543,7 @@ int RFCOMM_DeregisterServer(uint8_t scn, bool isRemoveCallback)
     ctx->event = EventCreate(true);
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommDeregisterServerTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx->event);
         free(ctx);
         return ret;
@@ -602,7 +602,7 @@ int RFCOMM_SetPortConfig(uint16_t handle, const RfcommRemotePortConfig *config)
     (void)memcpy_s(&ctx->config, sizeof(RfcommRemotePortConfig), config, sizeof(RfcommRemotePortConfig));
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommSetPortConfigTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 
@@ -649,7 +649,7 @@ int RFCOMM_ReqPortConfig(uint16_t handle)
     ctx->handle = handle;
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommReqPortConfigTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 
@@ -700,7 +700,7 @@ int RFCOMM_SendRemoteLineStatus(uint16_t handle, const RfcommRemoteLineStatus *l
     (void)memcpy_s(&ctx->lineStatus, sizeof(RfcommRemoteLineStatus), lineStatus, sizeof(RfcommRemoteLineStatus));
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommSendRemoteLineStatusTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 
@@ -751,7 +751,7 @@ int RFCOMM_SetModemStatus(uint16_t handle, const RfcommModemStatus *modemStatus)
     (void)memcpy_s(&ctx->modemStatus, sizeof(RfcommModemStatus), modemStatus, sizeof(RfcommModemStatus));
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommSetModemStatusTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 
@@ -807,7 +807,7 @@ int RFCOMM_GetPortState(uint16_t handle, RfcommPortState *state)
     ctx->event = EventCreate(true);
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommGetPortStateTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx->event);
         free(ctx);
         return ret;
@@ -891,7 +891,7 @@ int RFCOMM_Write(uint16_t handle, Packet *pkt)
     ctx->event = EventCreate(true);
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommWriteTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         EventDelete(ctx->event);
         free(ctx);
         return ret;
@@ -949,7 +949,7 @@ int RFCOMM_SendTestCmd(uint16_t handle, Packet *pkt)
     ctx->pkt = PacketRefMalloc(pkt);
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommSendTestCmdTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         PacketFree(ctx->pkt);
         free(ctx);
     }

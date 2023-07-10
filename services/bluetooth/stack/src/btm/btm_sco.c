@@ -185,7 +185,7 @@ int BTM_RegisterScoCallbacks(const BtmScoCallbacks *callbacks, void *context)
     MutexLock(g_scoCallbackListLock);
     ListAddLast(g_scoCallbackList, block);
     MutexUnlock(g_scoCallbackListLock);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_DeregisterScoCallbacks(const BtmScoCallbacks *callbacks)
@@ -205,7 +205,7 @@ int BTM_DeregisterScoCallbacks(const BtmScoCallbacks *callbacks)
         break;
     }
     FOREACH_CALLBACKS_END;
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_WriteVoiceSetting(uint16_t voiceSetting)
@@ -287,7 +287,7 @@ int BTM_CreateScoConnection(const BtmCreateScoConnectionParam *param)
 
     uint16_t aclHandle = 0xffff;
     int result = BtmGetAclHandleByAddress(&param->addr, &aclHandle);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return result;
     }
 
@@ -319,7 +319,7 @@ int BTM_CreateScoConnection(const BtmCreateScoConnectionParam *param)
             .packetType = param->packetType,
         };
         result = HCI_SetupSynchronousConnection(&setupSCOParam);
-        if (result != BT_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             MutexLock(g_scoListLock);
             ListRemoveNode(g_scoList, scoConnection);
             MutexUnlock(g_scoListLock);
@@ -341,7 +341,7 @@ int BTM_AcceptScoConnectionRequest(const BtmAcceptScoConnectionRequestParam *par
 
     uint16_t aclHandle = 0xffff;
     int result = BtmGetAclHandleByAddress(&param->addr, &aclHandle);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return result;
     }
 
@@ -523,7 +523,7 @@ int BTM_CreateEscoConnection(const BtmCreateEscoConnectionParam *param)
 
     uint16_t aclHandle = 0xffff;
     int result = BtmGetAclHandleByAddress(&param->addr, &aclHandle);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return result;
     }
 
@@ -757,7 +757,7 @@ int BTM_AcceptEscoConnectionRequest(const BtmAcceptEscoConnectionRequestParam *p
 
     uint16_t aclHandle = 0xffff;
     int result = BtmGetAclHandleByAddress(&param->addr, &aclHandle);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return result;
     }
 

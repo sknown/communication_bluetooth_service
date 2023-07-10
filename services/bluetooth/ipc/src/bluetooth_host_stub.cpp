@@ -343,7 +343,7 @@ int32_t BluetoothHostStub::DisableBleInner(MessageParcel &data, MessageParcel &r
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostStub::EnableBleInner(MessageParcel &data, MessageParcel &reply)
@@ -354,7 +354,7 @@ int32_t BluetoothHostStub::EnableBleInner(MessageParcel &data, MessageParcel &re
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::IsBrEnabledInner(MessageParcel &data, MessageParcel &reply)
@@ -416,7 +416,7 @@ int32_t BluetoothHostStub::GetBtConnectionStateInner(MessageParcel &data, Messag
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostStub::GetBtProfileConnStateInner(MessageParcel &data, MessageParcel &reply)
@@ -435,7 +435,7 @@ int32_t BluetoothHostStub::GetBtProfileConnStateInner(MessageParcel &data, Messa
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::GetLocalDeviceClassInner(MessageParcel &data, MessageParcel &reply)
@@ -476,7 +476,7 @@ int32_t BluetoothHostStub::GetLocalNameInner(MessageParcel &data, MessageParcel 
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostStub::SetLocalNameInner(MessageParcel &data, MessageParcel &reply)
@@ -490,7 +490,7 @@ int32_t BluetoothHostStub::SetLocalNameInner(MessageParcel &data, MessageParcel 
         return BT_ERR_IPC_TRANS_FAILED;
     }
 
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::GetDeviceTypeInner(MessageParcel &data, MessageParcel &reply)
@@ -528,7 +528,7 @@ int32_t BluetoothHostStub::GetBtScanModeInner(MessageParcel &data, MessageParcel
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::GetPhonebookPermissionInner(MessageParcel &data, MessageParcel &reply)
@@ -559,7 +559,7 @@ int32_t BluetoothHostStub::SetBtScanModeInner(MessageParcel &data, MessageParcel
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::SetPhonebookPermissionInner(MessageParcel &data, MessageParcel &reply)
@@ -672,7 +672,7 @@ int32_t BluetoothHostStub::StartBtDiscoveryInner(MessageParcel &data, MessagePar
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostStub::CancelBtDiscoveryInner(MessageParcel &data, MessageParcel &reply)
@@ -683,7 +683,7 @@ int32_t BluetoothHostStub::CancelBtDiscoveryInner(MessageParcel &data, MessagePa
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostStub::GetDeviceNameInner(MessageParcel &data, MessageParcel &reply)
@@ -710,7 +710,7 @@ int32_t BluetoothHostStub::GetDeviceNameInner(MessageParcel &data, MessageParcel
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::GetDeviceAliasInner(MessageParcel &data, MessageParcel &reply)
@@ -830,7 +830,7 @@ int32_t BluetoothHostStub::GetPairedDevicesInner(MessageParcel &data, MessagePar
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostStub::StartPairInner(MessageParcel &data, MessageParcel &reply)
@@ -851,7 +851,7 @@ int32_t BluetoothHostStub::StartPairInner(MessageParcel &data, MessageParcel &re
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostStub::RemovePairInner(MessageParcel &data, MessageParcel &reply)
@@ -939,7 +939,7 @@ int32_t BluetoothHostStub::SetDevicePinInner(MessageParcel &data, MessageParcel 
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::IsAclConnectedInner(MessageParcel &data, MessageParcel &reply)
@@ -1036,7 +1036,7 @@ int32_t BluetoothHostStub::GetDeviceClassInner(MessageParcel &data, MessageParce
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostStub::SetDevicePairingConfirmationInner(MessageParcel &data, MessageParcel &reply)
@@ -1062,7 +1062,7 @@ int32_t BluetoothHostStub::SetDevicePairingConfirmationInner(MessageParcel &data
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::SetDevicePasskeyInner(MessageParcel &data, MessageParcel &reply)

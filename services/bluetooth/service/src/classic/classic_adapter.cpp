@@ -69,7 +69,7 @@ void ClassicAdapter::StartUp()
     bool result = adapterProperties_.LoadConfigInfo();
     ClassicUtils::CheckReturnValue("ClassicAdapter", "LoadConfigInfo", result);
 
-    btmEnableSuccess_ = (BTM_Enable(BREDR_CONTROLLER) == BT_NO_ERROR);
+    btmEnableSuccess_ = (BTM_Enable(BREDR_CONTROLLER) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "BTM_Enable", btmEnableSuccess_);
     if (!btmEnableSuccess_) {
         GetContext()->OnEnable(ADAPTER_NAME_CLASSIC, false);
@@ -154,7 +154,7 @@ void ClassicAdapter::DisablePairProcess()
     for (auto &device : devices_) {
         if (device.second->GetPairedStatus() == PAIR_PAIRING) {
             bool result =
-                (BTM_AclDisconnect(device.second->GetConnectionHandle(), BTM_ACL_DISCONNECT_REASON) == BT_NO_ERROR);
+                (BTM_AclDisconnect(device.second->GetConnectionHandle(), BTM_ACL_DISCONNECT_REASON) == BT_SUCCESS);
             ClassicUtils::CheckReturnValue("ClassicAdapter", "BTM_AclDisconnect", result);
             device.second->SetPairedStatus(PAIR_NONE);
             if (device.second->IsBondedFromLocal() && (!pinMode_)) {
@@ -188,7 +188,7 @@ void ClassicAdapter::DisableBTM()
     ClassicUtils::CheckReturnValue("ClassicAdapter", "DeregisterCallback", ret);
 
     /// Disable BTM
-    ret &= (BTM_Disable(BREDR_CONTROLLER) == BT_NO_ERROR);
+    ret &= (BTM_Disable(BREDR_CONTROLLER) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "BTM_Disable", ret);
 
     FreeMemory();
@@ -274,7 +274,7 @@ bool ClassicAdapter::RegisterCallback()
     discoveryCbs.extendedInquiryResult = ExtendedInquiryResultCallback;
     discoveryCbs.remoteName = RemoteNameCallback;
     discoveryCbs.inquiryComplete = InquiryCompleteCallback;
-    bool ret = (GAPIF_RegisterDiscoveryCallback(&discoveryCbs, this) == BT_NO_ERROR);
+    bool ret = (GAPIF_RegisterDiscoveryCallback(&discoveryCbs, this) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_RegisterDiscoveryCallback", ret);
 
     /// Register GAP Pair series callback.
@@ -291,13 +291,13 @@ bool ClassicAdapter::RegisterCallback()
     authenticationCbs.userConfirmReq = UserConfirmReqCallback;
     authenticationCbs.userPasskeyReq = UserPasskeyReqCallback;
     authenticationCbs.userPasskeyNotification = UserPasskeyNotificationCallback;
-    ret &= (GAPIF_RegisterAuthenticationCallback(&authenticationCbs, this) == BT_NO_ERROR);
+    ret &= (GAPIF_RegisterAuthenticationCallback(&authenticationCbs, this) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_RegisterAuthenticationCallback", ret);
 
     /// Register GAP security callback.
     GapSecurityCallback securityCb {};
     securityCb.authorizeInd = AuthorizeIndCallback;
-    ret &= (GAPIF_RegisterSecurityCallback(&securityCb, this) == BT_NO_ERROR);
+    ret &= (GAPIF_RegisterSecurityCallback(&securityCb, this) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_RegisterSecurityCallback", ret);
 
     /// Register BTM ACL Change status callback.
@@ -306,7 +306,7 @@ bool ClassicAdapter::RegisterCallback()
     btmAclCbs_.leConnectionComplete = nullptr;
     btmAclCbs_.leDisconnectionComplete = nullptr;
     btmAclCbs_.readRssiComplete = nullptr;
-    ret &= (BTM_RegisterAclCallbacks(&btmAclCbs_, this) == BT_NO_ERROR);
+    ret &= (BTM_RegisterAclCallbacks(&btmAclCbs_, this) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "BTM_RegisterAclCallbacks", ret);
 
     return ret;
@@ -315,19 +315,19 @@ bool ClassicAdapter::RegisterCallback()
 bool ClassicAdapter::DeregisterCallback() const
 {
     /// Deregister GAP discovery callback.
-    bool ret = (GAPIF_DeregisterDiscoveryCallback() == BT_NO_ERROR);
+    bool ret = (GAPIF_DeregisterDiscoveryCallback() == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_DeregisterDiscoveryCallback", ret);
 
     /// Deregister GAP Pair series callback.
-    ret &= (GAPIF_DeregisterAuthenticationCallback() == BT_NO_ERROR);
+    ret &= (GAPIF_DeregisterAuthenticationCallback() == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_DeregisterAuthenticationCallback", ret);
 
     /// Deregister GAP security callback.
-    ret &= (GAPIF_DeregisterSecurityCallback() == BT_NO_ERROR);
+    ret &= (GAPIF_DeregisterSecurityCallback() == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_DeregisterSecurityCallback", ret);
 
     /// Deregister BTM ACL Change status callback.
-    ret &= (BTM_DeregisterAclCallbacks(&btmAclCbs_) == BT_NO_ERROR);
+    ret &= (BTM_DeregisterAclCallbacks(&btmAclCbs_) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "BTM_DeregisterAclCallbacks", ret);
 
     return ret;
@@ -440,7 +440,7 @@ bool ClassicAdapter::SetScanMode(int mode)
     discoverMode.scanWindow = GAP_INQUIRY_SCAN_WINDOW_DEFAULT;
     connectableMode.scanInterval = GAP_PAGE_SCAN_INTERVAL_DEFAULT;
     connectableMode.scanWindow = GAP_PAGE_SCAN_WINDOW_DEFAULT;
-    bool ret = (GAPIF_SetScanMode(&discoverMode, &connectableMode, cb, this) == BT_NO_ERROR);
+    bool ret = (GAPIF_SetScanMode(&discoverMode, &connectableMode, cb, this) == BT_SUCCESS);
 
     if (timer_ != nullptr) {
         timer_->Stop();
@@ -562,7 +562,7 @@ bool ClassicAdapter::StartBtDiscovery()
     }
 
     int ret = GAPIF_Inquiry(GAP_INQUIRY_MODE_GENERAL, DEFAULT_INQ_MAX_DURATION);
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         discoveryState_ = DISCOVERY_STARTED;
         struct timeval tv {};
         gettimeofday(&tv, nullptr);
@@ -590,7 +590,7 @@ bool ClassicAdapter::CancelBtDiscovery()
     cancelDiscovery_ = true;
 
     if (!receiveInquiryComplete_) {
-        ret = (GAPIF_InquiryCancel() == BT_NO_ERROR);
+        ret = (GAPIF_InquiryCancel() == BT_SUCCESS);
         ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_InquiryCancel", ret);
     } else {
         discoveryState_ = DISCOVERY_STOPED;
@@ -1100,7 +1100,7 @@ void ClassicAdapter::ReceiveRemoteName(uint8_t status, const BtAddr &addr, const
         hwTimer_->Stop();
     }
 
-    if (status == BT_NO_ERROR) {
+    if (status == BT_SUCCESS) {
         std::vector<uint8_t> nameVec(name, (name + MAX_LOC_BT_NAME_LEN));
         std::string deviceName(nameVec.begin(), nameVec.end());
         deviceName = deviceName.c_str();
@@ -1133,7 +1133,7 @@ bool ClassicAdapter::CancelGetRemoteName() const
 
     RawAddress rawAddr = RawAddress(remoteNameAddr_);
     BtAddr btAddr = ConvertToBtAddr(rawAddr);
-    bool ret = (GAPIF_GetRemoteNameCancel(&btAddr) == BT_NO_ERROR);
+    bool ret = (GAPIF_GetRemoteNameCancel(&btAddr) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_GetRemoteNameCancel", ret);
 
     return ret;
@@ -1205,7 +1205,7 @@ void ClassicAdapter::PinCodeReq(const BtAddr &addr)
         remoteDevice->SetPairedStatus(PAIR_PAIRING);
     }
     bool bondFromLocal = false;
-    bool ret = (GAPIF_PairIsFromLocal(&addr, &bondFromLocal) == BT_NO_ERROR);
+    bool ret = (GAPIF_PairIsFromLocal(&addr, &bondFromLocal) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_PairIsFromLocal", ret);
     remoteDevice->SetBondedFromLocal(bondFromLocal);
     if (bondFromLocal) {
@@ -1636,7 +1636,7 @@ bool ClassicAdapter::GetRemoteName(const BtAddr &addr) const
 {
     HILOGI("enter");
 
-    bool ret = (GAPIF_GetRemoteName(&addr) == BT_NO_ERROR);
+    bool ret = (GAPIF_GetRemoteName(&addr) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_GetRemoteName", ret);
     if (ret && (hwTimer_ != nullptr)) {
         hwTimer_->Start(DEFAULT_HW_TIMEOUT);
@@ -1690,7 +1690,7 @@ void ClassicAdapter::SearchRemoteUuids(const RawAddress &device, uint16_t uuid)
     attributeIdList.attributeIdRange.start = 0x0000;
     attributeIdList.attributeIdRange.end = 0xFFFF;
     int ret = SDP_ServiceSearchAttribute(&btAddr, &uuidArray, attributeIdList, (void *)this, ServiceSearchAttributeCb);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         HILOGE("SDP_ServiceSearchAttribute failed!");
     }
 }
@@ -1831,7 +1831,7 @@ bool ClassicAdapter::StartPair(const RawAddress &device)
 
     BtAddr btAddr = ConvertToBtAddr(device);
     int ret = GAPIF_AuthenticationReq(&btAddr);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         HILOGE("GAPIF_AuthenticationReq failed!");
         return false;
     }
@@ -1858,7 +1858,7 @@ bool ClassicAdapter::CancelPairing(const RawAddress &device)
     int pairConfirmState = it->second->GetPairConfirmState();
     if (pairConfirmState == PAIR_CONFIRM_STATE_USER_CONFIRM_REPLY) {
         BtAddr btAddr = ConvertToBtAddr(device);
-        bool ret = (GAPIF_CancelAuthenticationReq(&btAddr) == BT_NO_ERROR);
+        bool ret = (GAPIF_CancelAuthenticationReq(&btAddr) == BT_SUCCESS);
         ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_CancelAuthenticationReq", ret);
         return ret;
     }
@@ -1886,7 +1886,7 @@ bool ClassicAdapter::RemovePair(const RawAddress &device)
         adapterProperties_.RemovePairedDeviceInfo(it->second->GetAddress());
         adapterProperties_.SaveConfigFile();
         if (it->second->IsAclConnected()) {
-            bool ret = (BTM_AclDisconnect(it->second->GetConnectionHandle(), BTM_ACL_DISCONNECT_REASON) == BT_NO_ERROR);
+            bool ret = (BTM_AclDisconnect(it->second->GetConnectionHandle(), BTM_ACL_DISCONNECT_REASON) == BT_SUCCESS);
             ClassicUtils::CheckReturnValue("ClassicAdapter", "BTM_AclDisconnect", ret);
         }
     }
@@ -1912,7 +1912,7 @@ bool ClassicAdapter::RemoveAllPairs()
             removeDevices.push_back(device);
             if (it->second->IsAclConnected()) {
                 bool ret =
-                    (BTM_AclDisconnect(it->second->GetConnectionHandle(), BTM_ACL_DISCONNECT_REASON) == BT_NO_ERROR);
+                    (BTM_AclDisconnect(it->second->GetConnectionHandle(), BTM_ACL_DISCONNECT_REASON) == BT_SUCCESS);
                 ClassicUtils::CheckReturnValue("ClassicAdapter", "BTM_AclDisconnect", ret);
             }
         }
@@ -1959,9 +1959,9 @@ bool ClassicAdapter::SetDevicePairingConfirmation(const RawAddress &device, bool
 
     BtAddr btAddr = ConvertToBtAddr(device);
     if (it->second->GetPairedStatus() == PAIR_CANCELING || accept == false) {
-        ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_NOT_ACCEPT) == BT_NO_ERROR);
+        ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_NOT_ACCEPT) == BT_SUCCESS);
     } else {
-        ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_ACCEPT) == BT_NO_ERROR);
+        ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_ACCEPT) == BT_SUCCESS);
     }
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_UserConfirmRsp", ret);
 
@@ -1986,9 +1986,9 @@ bool ClassicAdapter::SetDevicePasskey(const RawAddress &device, int passkey, boo
 
     BtAddr btAddr = ConvertToBtAddr(device);
     if (it->second->GetPairedStatus() == PAIR_CANCELING || accept == false) {
-        ret = (GAPIF_UserPasskeyRsp(&btAddr, GAP_NOT_ACCEPT, passkey) == BT_NO_ERROR);
+        ret = (GAPIF_UserPasskeyRsp(&btAddr, GAP_NOT_ACCEPT, passkey) == BT_SUCCESS);
     } else {
-        ret = (GAPIF_UserPasskeyRsp(&btAddr, GAP_ACCEPT, passkey) == BT_NO_ERROR);
+        ret = (GAPIF_UserPasskeyRsp(&btAddr, GAP_ACCEPT, passkey) == BT_SUCCESS);
     }
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_UserPasskeyRsp", ret);
 
@@ -2008,7 +2008,7 @@ bool ClassicAdapter::PairRequestReply(const RawAddress &device, bool accept) con
 
     BtAddr btAddr = ConvertToBtAddr(device);
     int io = adapterProperties_.GetIoCapability();
-    bool ret = (GAPIF_IOCapabilityRsp(&btAddr, accept, io, GAP_OOB_DATA_NOT_PRESENT, GAP_MITM_REQUIRED) == BT_NO_ERROR);
+    bool ret = (GAPIF_IOCapabilityRsp(&btAddr, accept, io, GAP_OOB_DATA_NOT_PRESENT, GAP_MITM_REQUIRED) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_IOCapabilityRsp", ret);
 
     return ret;
@@ -2166,7 +2166,7 @@ void ClassicAdapter::SetLinkKey(const BtAddr &addr)
         accept = GAP_ACCEPT;
     }
 
-    bool ret = (GAPIF_LinkKeyRsp(&addr, accept, key, keyType) == BT_NO_ERROR);
+    bool ret = (GAPIF_LinkKeyRsp(&addr, accept, key, keyType) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_LinkKeyRsp", ret);
     (void)memset_s(key, PAIR_LINK_KEY_SIZE, 0x00, PAIR_LINK_KEY_SIZE);
 }
@@ -2190,7 +2190,7 @@ void ClassicAdapter::SetIoCapability(const BtAddr &addr)
     }
 
     bool bondFromLocal = false;
-    bool ret = (GAPIF_PairIsFromLocal(&addr, &bondFromLocal) == BT_NO_ERROR);
+    bool ret = (GAPIF_PairIsFromLocal(&addr, &bondFromLocal) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_PairIsFromLocal", ret);
     remoteDevice->SetBondedFromLocal(bondFromLocal);
 
@@ -2203,9 +2203,9 @@ void ClassicAdapter::SetIoCapability(const BtAddr &addr)
     } else {
         int io = adapterProperties_.GetIoCapability();
         if (remoteDevice->GetPairedStatus() == PAIR_CANCELING) {
-            ret = (GAPIF_IOCapabilityRsp(&addr, false, io, GAP_OOB_DATA_NOT_PRESENT, GAP_MITM_REQUIRED) == BT_NO_ERROR);
+            ret = (GAPIF_IOCapabilityRsp(&addr, false, io, GAP_OOB_DATA_NOT_PRESENT, GAP_MITM_REQUIRED) == BT_SUCCESS);
         } else {
-            ret = (GAPIF_IOCapabilityRsp(&addr, true, io, GAP_OOB_DATA_NOT_PRESENT, GAP_MITM_REQUIRED) == BT_NO_ERROR);
+            ret = (GAPIF_IOCapabilityRsp(&addr, true, io, GAP_OOB_DATA_NOT_PRESENT, GAP_MITM_REQUIRED) == BT_SUCCESS);
         }
         ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_IOCapabilityRsp", ret);
     }
@@ -2254,7 +2254,7 @@ bool ClassicAdapter::SetPinCode(const RawAddress &device, const std::vector<uint
     device.ConvertToUint8(btAddr.addr);
     btAddr.type = BT_PUBLIC_DEVICE_ADDRESS;
     int result = GAPIF_PinCodeRsp(&btAddr, accept, pin.data(), pin.size());
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("GAPIF_PinCodeRsp failed!");
         return false;
     }
@@ -2265,7 +2265,7 @@ void ClassicAdapter::SetAuthorizeRes(const BtAddr &addr, GAP_Service service) co
 {
     HILOGI("enter");
     int result = GAPIF_AuthorizeRes(&addr, service, true);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("GAPIF_AuthorizeRes failed!");
     }
 }

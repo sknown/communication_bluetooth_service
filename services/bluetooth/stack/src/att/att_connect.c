@@ -270,7 +270,7 @@ static void DisconnectRespCallbackAsync(const void *context)
     if ((attConnectCallback == NULL) || (attConnectCallback->attConnect.attBREDRDisconnectCompleted == NULL)) {
         LOG_WARN("%{public}s attConnectCallback or attBREDRDisconnectCompleted is NULL", __FUNCTION__);
     } else {
-        if (disConnectRspPtr->result == BT_NO_ERROR) {
+        if (disConnectRspPtr->result == BT_SUCCESS) {
             bredrDisConnObj.reason = PASSIVECONNECT_DISCONNECT_SUCCESS;
         } else {
             bredrDisConnObj.reason = PASSIVECONNECT_DISCONNECT_FAIL;
@@ -446,7 +446,7 @@ static int AttBredrConnectStatusChange(uint8_t inputStatus, uint8_t *outStatus, 
         }
     }
 
-    ret = BT_NO_ERROR;
+    ret = BT_SUCCESS;
 
 ATTBREDRCONNECTSTATUSCHANGE_END:
     return ret;
@@ -861,7 +861,7 @@ static void L2cifLeConnectCallBackAsync(const void *context)
     }
 
     attConnectCallback = AttGetATTConnectCallback();
-    if (connectCallContextPtr->result == BT_NO_ERROR) {
+    if (connectCallContextPtr->result == BT_SUCCESS) {
         connecting->transportType = BT_TRANSPORT_LE;
     } else {
         LOG_WARN("%{public}s:L2CIF_ConnectReq error", __FUNCTION__);
@@ -966,7 +966,7 @@ static void L2cifConnectReqCallbackAsync(const void *context)
         goto L2CIFCONNECTREQCALLBACK_END;
     }
 
-    if (connectReqContextPtr->result == BT_NO_ERROR) {
+    if (connectReqContextPtr->result == BT_SUCCESS) {
         connecting->cid = connectReqContextPtr->lcid;
         connecting->transportType = BT_TRANSPORT_BR_EDR;
         connecting->mtu = DEFAULTBREDRMTU;
@@ -1222,7 +1222,7 @@ static void L2cifConfigReqCallbackAsync(const void *context)
         goto L2CIFCONFIGREQCALLBACK_END;
     }
 
-    if (configReqPtr->result != BT_NO_ERROR) {
+    if (configReqPtr->result != BT_SUCCESS) {
         AttConnectCompletedCallback(connecting, BREDR_CONNECT_FAIL);
         AttClearConnectingInfo(connecting);
     }
@@ -1460,7 +1460,7 @@ void L2cifBREDRDisconnectReqCallBackAsync(const void *context)
     }
 
     attConnectCallback = AttGetATTConnectCallback();
-    if (disBredrConnectReqPtr->result != BT_NO_ERROR) {
+    if (disBredrConnectReqPtr->result != BT_SUCCESS) {
         if (connect->transportType == BT_TRANSPORT_BR_EDR) {
             BredrData.reason = INITIATIVECONNECT_DISCONNECT_FAIL;
             attConnectCallback->attConnect.attBREDRDisconnectCompleted(
@@ -1536,7 +1536,7 @@ void LeDisconnectReqCallBackAsync(const void *context)
     }
 
     attConnectCallback = AttGetATTConnectCallback();
-    if (disLeConnectReqPtr->result != BT_NO_ERROR) {
+    if (disLeConnectReqPtr->result != BT_SUCCESS) {
         if (connect->transportType == BT_TRANSPORT_LE) {
             leData.status = LE_DISCONNECT_FAIL;
             if (attConnectCallback->attConnect.attLEDisconnectCompleted != NULL) {
@@ -1683,7 +1683,7 @@ NO_SANITIZE("cfi") static void AttLeConnectedAsync(const void *context)
     leConnectCallbackParaObj.role = attLeConnectedAsyncPtr->role;
     (void)memcpy_s(leConnectCallbackParaObj.addr.addr, ADDRESSLEN, attLeConnectedAsyncPtr->addr->addr, ADDRESSLEN);
 
-    if (attLeConnectedAsyncPtr->status == BT_NO_ERROR) {
+    if (attLeConnectedAsyncPtr->status == BT_SUCCESS) {
         leConnectCallbackParaObj.status = LE_CONNECT_SUCCESS;
         AttConnectInfoAddLe(
             attLeConnectedAsyncPtr->addr, attLeConnectedAsyncPtr->aclHandle, &connect, initPassConnFlag);
@@ -1770,7 +1770,7 @@ static void AttLeDisconnectedAsync(const void *context)
     AttConnectedCallback *attConnectCallback = AttGetATTConnectCallback();
 
     leDisConnCallbackObj.reason = attLeDisconnectedPtr->reason;
-    if (attLeDisconnectedPtr->status == BT_NO_ERROR) {
+    if (attLeDisconnectedPtr->status == BT_SUCCESS) {
         leDisConnCallbackObj.status = LE_DISCONNECT_SUCCESS;
     } else {
         leDisConnCallbackObj.status = LE_DISCONNECT_FAIL;
@@ -1864,7 +1864,7 @@ static void L2cifConnectRspPendingCallbackAsync(const void *context)
         goto L2CIFCONNECTRSPPENDINGCALLBACK_END;
     }
 
-    if (connectRspPendingPtr->result == BT_NO_ERROR) {
+    if (connectRspPendingPtr->result == BT_SUCCESS) {
         AttAssignGAPRequestSecurity(&gapReqSecurity, INCOMING, connecting);
         GAPIF_RequestSecurityAsync(&(connecting->addr), &gapReqSecurity);
     } else {
@@ -2486,7 +2486,7 @@ static void L2cifConfigRspCallbackAsync(const void *context)
 
     AttGetConnectingIndexByCid(configRspPtr->lcid, &connecting);
 
-    if (configRspPtr->result == BT_NO_ERROR) {
+    if (configRspPtr->result == BT_SUCCESS) {
         if (connecting->initPassConnFlag == INITIATIVECONNECT) {
             ret = AttBredrConnectStatusChange(connecting->initiativeConnectStatus, &outPara, INITIATIVECONNECT);
             if (ret == BT_OPERATION_FAILED) {
@@ -2740,5 +2740,5 @@ int ATT_LeConnectCancel(const BtAddr *addr)
     context->addr.type = addr->type;
     (void)memcpy_s(context->addr.addr, ADDRESSLEN, addr->addr, ADDRESSLEN);
     AttAsyncProcess(AttLeConnectCancelAsyn, AttLeConnectCancelAsyndestroy, context);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }

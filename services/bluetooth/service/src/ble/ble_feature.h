@@ -112,7 +112,7 @@ public:
         if (IsFeatureSupported(LE_DATA_PACKET_LENGTH_EXTENSION)) {
             uint16_t length = BLE_LEGACY_ADV_DATA_LEN_MAX;
             int ret = GAPIF_LeExAdvGetMaxDataLen(&length);
-            if (ret == BT_NO_ERROR) {
+            if (ret == BT_SUCCESS) {
                 return length;
             }
             return BLE_LEGACY_ADV_DATA_LEN_MAX;
@@ -130,7 +130,7 @@ public:
     {
         uint8_t num = BLE_INVALID_ADVERTISING_HANDLE;
         int ret = GAPIF_LeExAdvGetMaxHandleNum(&num);
-        if (ret == BT_NO_ERROR) {
+        if (ret == BT_SUCCESS) {
             return num;
         }
         return num;

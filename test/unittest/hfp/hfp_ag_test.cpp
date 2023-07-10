@@ -157,7 +157,7 @@ HWTEST_F(HandsFreeAudioGatewayTest, HandsFreeAudioGateway_UnitTest_Connect, Test
  
     profile_ = HandsFreeAudioGateway::GetProfile();
     BluetoothRemoteDevice device;
-    bool isOK = (profile_->Connect(device) == BT_SUCCESS ? true : false);
+    bool isOK = (profile_->Connect(device) == NO_ERROR ? true : false);
     EXPECT_EQ(isOK, true);
 
     GTEST_LOG_(INFO) << "HandsFreeAudioGateway_UnitTest_Connect end";
@@ -175,7 +175,7 @@ HWTEST_F(HandsFreeAudioGatewayTest, HandsFreeAudioGateway_UnitTest_Disconnect, T
  
     profile_ = HandsFreeAudioGateway::GetProfile();
     BluetoothRemoteDevice device;
-    bool isOK = (profile_->Disconnect(device) == BT_SUCCESS ? true : false);
+    bool isOK = (profile_->Disconnect(device) == NO_ERROR ? true : false);
     EXPECT_EQ(isOK, true);
     GTEST_LOG_(INFO) << "HandsFreeAudioGateway_UnitTest_Disconnect end";
 }

@@ -507,7 +507,7 @@ public:
      * @details Switch to the thread of the AVRCP TG service in this method.
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_NO_SUPPORT The method is not supported.
      * @retval RET_BAD_STATUS Execute failure.
      */
@@ -519,7 +519,7 @@ public:
      * @details Switch to the thread of the AVRCP TG service in this method.
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_NO_SUPPORT The method is not supported.
      * @retval RET_BAD_STATUS Execute failure.
      */
@@ -1034,7 +1034,7 @@ private:
      * @brief Registers security requirements into the GAP.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int RegisterSecurity(void);
@@ -1043,7 +1043,7 @@ private:
      * @brief Unregisters security requirements from the GAP.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int UnregisterSecurity(void);
@@ -1052,7 +1052,7 @@ private:
      * @brief Register a record of the AVRCP TG service into the SDP.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int RegisterService(void);
@@ -1061,7 +1061,7 @@ private:
      * @brief Unregister a record of the AVRCP TG service from the SDP.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int UnregisterService(void);
@@ -1070,7 +1070,7 @@ private:
      * @brief Enables the AVRCP TG profile.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int EnableProfile(void);
@@ -1079,7 +1079,7 @@ private:
      * @brief Disables the AVRCP TG profile.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int DisableProfile(void) const;
@@ -1089,7 +1089,7 @@ private:
      *
      * @param[in] result The result of the method execution.
      */
-    void OnProfileDisabled(int result = RET_NO_ERROR);
+    void OnProfileDisabled(int result = BT_SUCCESS);
 
     /**
      * @brief Checks whether the AVRCP TG service is disabled.
@@ -1216,7 +1216,7 @@ private:
      * @param[in] uidCounter The value of the uid counter.
      * @param[in] label      The label which is used to distinguish different call.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_NO_SUPPORT Not Support.
      * @retval RET_BAD_STATUS Execute failure.
      */
@@ -1244,7 +1244,7 @@ private:
      * @param[in] uidCounter The value of the uid counter.
      * @param[in] label      The label which is used to distinguish different call.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_NO_SUPPORT Not Support.
      * @retval RET_BAD_STATUS Execute failure.
      */
@@ -1575,7 +1575,7 @@ private:
      * @param[in] attributes The list of media attributes.
      * @param[in] label      The label which is used to distinguish different call.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_NO_SUPPORT Not support.
      * @retval RET_BAD_STATUS Execute failure.
      */

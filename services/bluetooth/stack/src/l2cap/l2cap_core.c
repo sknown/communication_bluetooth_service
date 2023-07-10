@@ -473,7 +473,7 @@ static int L2capCheckCrc(Packet *pkt)
         return BT_BAD_PARAM;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static Packet *L2capBuildSFrame(const L2capChannel *chan, const L2capErfcSControl *sCtrl)
@@ -523,7 +523,7 @@ int L2capSendSFrame(const L2capConnection *conn, L2capChannel *chan, uint8_t pBi
     spkt = L2capBuildSFrame(chan, &sCtrl);
 
     L2capSendPacket(conn->aclHandle, chan->lcfg.flushTimeout, spkt);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static void L2capProcessRxReqSeq(L2capChannel *chan, uint16_t reqSeq)
@@ -984,7 +984,7 @@ int L2capSendIFrame(L2capConnection *conn, L2capChannel *chan, Packet *pkt)
         L2capStreamTx(conn, chan);
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static void L2capErfcProcessFBit(L2capChannel *chan, uint8_t fBit, uint8_t reqSeq)
@@ -1184,7 +1184,7 @@ static int L2capCheckConfigurationOptionLength(uint8_t optType, uint8_t optLengt
             break;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static void L2capProcessErfcOption(const uint8_t *data, uint16_t offset, L2capConfigInfo *cfg)
@@ -1212,7 +1212,7 @@ static int L2capParseConfiguration(const uint8_t *data, uint16_t length, L2capCo
             return BT_BAD_PARAM;
         }
 
-        if (L2capCheckConfigurationOptionLength(optType, optLength) != BT_NO_ERROR) {
+        if (L2capCheckConfigurationOptionLength(optType, optLength) != BT_SUCCESS) {
             return BT_BAD_PARAM;
         }
 
@@ -1258,7 +1258,7 @@ static int L2capParseConfiguration(const uint8_t *data, uint16_t length, L2capCo
         offset += (optLength + L2CAP_SIZE_2);
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static void L2capConfigurationRspReject(const L2capConnection *conn, uint8_t ident, uint16_t rcid)
@@ -1386,7 +1386,7 @@ static int L2capProcessConfigurationReqContinueOption(
         chan->part.length += optLength;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 NO_SANITIZE("cfi") static void L2capProcessConfigurationReqParse(
@@ -1399,7 +1399,7 @@ NO_SANITIZE("cfi") static void L2capProcessConfigurationReqParse(
     if (optLength > 0) {
         L2capOptions unknown = {0};
 
-        if (L2capParseConfiguration(data, optLength, &cfg, &unknown) != BT_NO_ERROR) {
+        if (L2capParseConfiguration(data, optLength, &cfg, &unknown) != BT_SUCCESS) {
             if (unknown.options != NULL) {
                 L2capFree(unknown.options);
             }
@@ -1472,7 +1472,7 @@ static void L2capProcessConfigurationReq(uint16_t aclHandle, L2capSignalHeader *
     }
 
     if (chan->part.options != NULL) {
-        if (L2capProcessConfigurationReqContinueOption(conn, chan, signal, data, optLength) != BT_NO_ERROR) {
+        if (L2capProcessConfigurationReqContinueOption(conn, chan, signal, data, optLength) != BT_SUCCESS) {
             return;
         }
 
@@ -2048,7 +2048,7 @@ static Packet *L2capProcessStreamData(L2capChannel *chan, Packet *pkt)
     L2capErfcIControl *iCtrl = NULL;
 
     if (chan->lcfg.fcs == 0x01) {
-        if (L2capCheckCrc(pkt) != BT_NO_ERROR) {
+        if (L2capCheckCrc(pkt) != BT_SUCCESS) {
             return NULL;
         }
     }
@@ -2069,7 +2069,7 @@ static Packet *L2capProcessErfcData(L2capConnection *conn, L2capChannel *chan, P
     Packet *outPkt = NULL;
 
     if (chan->lcfg.fcs == 0x01) {
-        if (L2capCheckCrc(pkt) != BT_NO_ERROR) {
+        if (L2capCheckCrc(pkt) != BT_SUCCESS) {
             return NULL;
         }
     }
@@ -2095,7 +2095,7 @@ static int L2capProcessBasicData(const L2capChannel *chan, Packet *pkt)
         return BT_BAD_PARAM;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 NO_SANITIZE("cfi") static void L2capProcessData(uint16_t aclHandle, uint16_t cid, Packet *pkt)
@@ -2121,7 +2121,7 @@ NO_SANITIZE("cfi") static void L2capProcessData(uint16_t aclHandle, uint16_t cid
 
     switch (chan->lcfg.rfc.mode) {
         case L2CAP_BASIC_MODE:
-            if (L2capProcessBasicData(chan, pkt) == BT_NO_ERROR) {
+            if (L2capProcessBasicData(chan, pkt) == BT_SUCCESS) {
                 LOG_DEBUG("L2capCallback recvData: begin, cid = 0x%04X, pktLen = %u", cid, PacketSize(pkt));
                 psm->service.recvData(cid, pkt, psm->ctx);
                 LOG_DEBUG("L2capCallback recvData:%{public}d end", __LINE__);
@@ -2158,7 +2158,7 @@ int L2capReceivePacket(uint16_t handle, uint16_t cid, Packet *pkt)
 {
     uint8_t header[L2CAP_HEADER_LENGTH] = {0};
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -2172,7 +2172,7 @@ int L2capReceivePacket(uint16_t handle, uint16_t cid, Packet *pkt)
             break;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static void L2capAclConnectFailed(List *chanList, uint8_t status)
@@ -2205,7 +2205,7 @@ int L2capConnectComplete(const BtAddr *addr, uint16_t handle, uint8_t status)
 {
     L2capConnection *conn = NULL;
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -2237,7 +2237,7 @@ int L2capConnectComplete(const BtAddr *addr, uint16_t handle, uint8_t status)
         L2capSendInformationReq(conn, L2CAP_INFORMATION_TYPE_EXTENDED_FEATURE);
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static void L2capAclDisconnected(L2capConnection *conn, uint8_t status, uint8_t reason)
@@ -2282,7 +2282,7 @@ int L2capDisconnectComplete(uint16_t handle, uint8_t status, uint8_t reason)
 {
     L2capConnection *conn = NULL;
 
-    if (L2capInitialized() != BT_NO_ERROR) {
+    if (L2capInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -2292,5 +2292,5 @@ int L2capDisconnectComplete(uint16_t handle, uint8_t status, uint8_t reason)
     }
 
     L2capAclDisconnected(conn, status, reason);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }

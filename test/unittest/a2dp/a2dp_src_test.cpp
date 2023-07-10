@@ -108,7 +108,7 @@ HWTEST_F(A2dpSourceTest, A2dpSource_UnitTest_GetPlayingState, TestSize.Level1)
     profile_ = A2dpSource::GetProfile();
     BluetoothRemoteDevice device;
     int state = profile_->GetPlayingState(device);
-    EXPECT_EQ(state, RET_NO_ERROR);
+    EXPECT_EQ(state, BT_SUCCESS);
     GTEST_LOG_(INFO) << "A2dpSource_UnitTest_GetPlayingState end";
 }
 
@@ -185,7 +185,7 @@ HWTEST_F(A2dpSourceTest, A2dpSource_UnitTest_Connect, TestSize.Level1)
     profile_ = A2dpSource::GetProfile();
     BluetoothRemoteDevice device;
     int32_t ret = profile_->Connect(device);
-    EXPECT_NE(ret, RET_NO_ERROR);
+    EXPECT_NE(ret, BT_SUCCESS);
     GTEST_LOG_(INFO) << "A2dpSource_UnitTest_Connect end";
 }
 
@@ -201,7 +201,7 @@ HWTEST_F(A2dpSourceTest, A2dpSource_UnitTest_Disconnect, TestSize.Level1)
     profile_ = A2dpSource::GetProfile();
     BluetoothRemoteDevice device;
     int32_t ret = profile_->Disconnect(device);
-    EXPECT_NE(ret, RET_NO_ERROR);
+    EXPECT_NE(ret, BT_SUCCESS);
     GTEST_LOG_(INFO) << "A2dpSource_UnitTest_Disconnect end";
 }
 

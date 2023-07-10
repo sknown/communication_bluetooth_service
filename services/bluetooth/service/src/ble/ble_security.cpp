@@ -43,7 +43,7 @@ BleSecurity::BleSecurity(
 {
     InitGapEventFuncTable();
     int ret = RegisterCallbackToGap();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s", __func__);
     }
 }
@@ -52,7 +52,7 @@ BleSecurity::~BleSecurity()
 {
     pimpl->funcMap_.clear();
     int ret = DeregisterCallbackToGap();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s", __func__);
     }
 }
@@ -513,7 +513,7 @@ bool BleSecurity::GapEncryptionComplete(const BleGapCallbackParam &param) const
 {
     LOG_DEBUG("[BleSecurity] %{public}s", __func__);
 
-    if (param.encryptionComplete_.status != BT_NO_ERROR) {
+    if (param.encryptionComplete_.status != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s:%{public}s", __func__, "Ble encryption failed!");
         return false;
     } else {
@@ -548,7 +548,7 @@ bool BleSecurity::GapLeLocalEncryptionKeyReqEvent(const BleGapCallbackParam &par
     }
 
     int ret = GAPIF_LeLocalEncryptionKeyRsp(&param.leLocalEncryptionKeyReqEvent_.addr, accept, encKey, 1);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s:%{public}s", __func__, "Ble remote encryption key rsp failed!");
     }
     (void)memset_s(&encKey, sizeof(encKey), 0x00, sizeof(encKey));
@@ -576,7 +576,7 @@ bool BleSecurity::GapLeRemoteEncryptionKeyReqEvent(const BleGapCallbackParam &pa
     }
 
     int ret = GAPIF_LeRemoteEncryptionKeyRsp(&param.leRemoteEncryptionKeyReqEvent_.addr, accept, encKey, 1);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s:%{public}s", __func__, "Ble remote encryption key rsp failed!");
     }
     (void)memset_s(&encKey, sizeof(encKey), 0x00, sizeof(encKey));
@@ -628,7 +628,7 @@ bool BleSecurity::GapRequestSigningAlgorithmInfoEvt(const BleGapCallbackParam &p
     }
 
     int ret = GAPIF_RequestSigningAlgorithmInfoRsp(&param.gapRequestSigningAlgorithmInfo_.addr, accept, info);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s:%{public}s", __func__, "Ble request signing algorithm info rsp failed!");
     }
     return ret;
@@ -654,7 +654,7 @@ bool BleSecurity::LePairFeatureReq(const BleGapCallbackParam &param)
         (Compat::CompatCheck(CompatType::COMPAT_DISABLE_BLE_SECURE_CONNECTIONS, addr.GetAddress()))) {
         BtmLocalVersionInformation version;
         (void)memset_s(&version, sizeof(version), 0x00, sizeof(version));
-        if ((BTM_GetLocalVersionInformation(&version) == BT_NO_ERROR) &&
+        if ((BTM_GetLocalVersionInformation(&version) == BT_SUCCESS) &&
             (version.hciVersion >= BLUETOOTH_CORE_SPECIFICATION_4_2)) {
             feature.authReq &= ~GAP_LE_AUTH_REQ_BIT_SC;
         }
@@ -664,10 +664,10 @@ bool BleSecurity::LePairFeatureReq(const BleGapCallbackParam &param)
     feature.initKeyDis = GAP_LE_KEY_DIST_ENC_KEY | GAP_LE_KEY_DIST_ID_KEY | GAP_LE_KEY_DIST_SIGN_KEY;
 
     int ret = GAPIF_LePairFeatureRsp(&param.lePairFeatureReq_.peerAddr, feature);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s:%{public}s", __func__, "Ble pair feature rsp failed!");
     }
-    return ret == BT_NO_ERROR;
+    return ret == BT_SUCCESS;
 }
 
 bool BleSecurity::PairRequestReply(const RawAddress &addr, int addrType, bool accept) const
@@ -808,7 +808,7 @@ bool BleSecurity::GapLePairComplete(const BleGapCallbackParam &param) const
 
     RawAddress addr = RawAddress::ConvertToString(param.lePairComplete_.addr.addr);
 
-    if (param.lePairComplete_.result == BT_NO_ERROR) {
+    if (param.lePairComplete_.result == BT_SUCCESS) {
         BleConfig::GetInstance().SetPeerKeyType(addr.GetAddress(), std::to_string(param.lePairComplete_.keyType));
         BleConfig::GetInstance().Save();
     }
@@ -898,10 +898,10 @@ bool BleSecurity::StartPair(const RawAddress &device, uint8_t peerAddrType)
     BtAddr addr = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, peerAddrType};
     device.ConvertToUint8(addr.addr);
     int ret = GAPIF_LePair(&addr);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s:GAP_LePair failed!", __func__);
     }
-    return (ret == BT_NO_ERROR);
+    return (ret == BT_SUCCESS);
 }
 
 int BleSecurity::SetDevicePasskey(const RawAddress &device, int passkey, int accept) const
@@ -915,7 +915,7 @@ int BleSecurity::SetDevicePasskey(const RawAddress &device, int passkey, int acc
     BtAddr addr = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, peerAddrType};
     device.ConvertToUint8(addr.addr);
     int ret = GAPIF_LePairPassKeyRsp(&addr, accept, passkey);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s:%{public}s", __func__, "Ble pair passkey rsp failed!");
     }
     return ret;
@@ -932,7 +932,7 @@ int BleSecurity::SetUserConfirm(const RawAddress &device, int accept) const
     BtAddr addr = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, peerAddrType};
     device.ConvertToUint8(addr.addr);
     int ret = GAPIF_LePairScUserConfirmRsp(&addr, accept);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s:%{public}s", __func__, "Ble pair user confirm failed!");
     }
     return ret;

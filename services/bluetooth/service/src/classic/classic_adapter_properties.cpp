@@ -105,7 +105,7 @@ bool ClassicAdapterProperties::SetLocalName(const std::string &name)
     }
 
     // Update controller
-    bool ret = (GAPIF_SetLocalName(deviceName_.c_str(), length) == BT_NO_ERROR);
+    bool ret = (GAPIF_SetLocalName(deviceName_.c_str(), length) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "GAPIF_SetLocalName", ret);
 
     // Set EIR
@@ -136,7 +136,7 @@ bool ClassicAdapterProperties::SetLocalDeviceClass(int deviceClass)
     cod_ = deviceClass;
 
     int result = GAPIF_SetClassOfDevice(cod_);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("ClassicAdapterProperties::%{public}s GAPIF_SetClassOfDevice failed!", __func__);
         return ret;
     }
@@ -171,7 +171,7 @@ bool ClassicAdapterProperties::SetBondableMode(int mode)
             break;
     }
     int ret = GAPIF_SetBondableMode(bondableMode_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         return false;
     }
 
@@ -232,7 +232,7 @@ bool ClassicAdapterProperties::SetSecurityMode()
 {
     LOG_DEBUG("[ClassicAdapterProperties]::%{public}s", __func__);
 
-    bool ret = (GAPIF_SetSecurityMode((GAP_SecurityMode)securityMode_) == BT_NO_ERROR);
+    bool ret = (GAPIF_SetSecurityMode((GAP_SecurityMode)securityMode_) == BT_SUCCESS);
     ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "GAPIF_SetSecurityMode", ret);
 
     return ret;
@@ -268,7 +268,7 @@ bool ClassicAdapterProperties::ReadAddrFromController()
         return false;
     }
 
-    bool ret = (GAPIF_GetLocalAddr(&btAddr) == BT_NO_ERROR);
+    bool ret = (GAPIF_GetLocalAddr(&btAddr) == BT_SUCCESS);
     if (!ret) {
         return ret;
     }
@@ -390,7 +390,7 @@ bool ClassicAdapterProperties::SetEirData()
 
     /// Set eir data to GAP
     int result = GAPIF_SetExtendedInquiryResponse(eirData->GetClassicBluetoothData().data());
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("ClassicAdapterProperties::GAPIF_SetExtendedInquiryResponse failed, ret = %{public}d", result);
         ret = false;
     }

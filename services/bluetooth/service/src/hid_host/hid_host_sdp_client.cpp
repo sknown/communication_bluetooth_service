@@ -250,7 +250,7 @@ int HidHostSdpClient::DoPnpDiscovery(const std::string &remoteAddr)
     attributeIdList.attributeIdRange.end = 0xFFFF;
 
     int ret = SDP_ServiceSearchAttribute(&address, &sdpUUid, attributeIdList, this, SdpPnpCallback);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[HIDH SDP]%{public}s():SDP_ServiceSearchAttribute failed!", __FUNCTION__);
     }
     currentAddr_ = remoteAddr;
@@ -285,7 +285,7 @@ int HidHostSdpClient::DoHidDiscovery(const std::string &remoteAddr)
     attributeIdList.attributeIdList.attributeIdNumber = attributeIdNumber;
 
     int ret = SDP_ServiceSearchAttribute(&address, &sdpUUid, attributeIdList, this, SdpCallback);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[HIDH SDP]%{public}s():SDP_ServiceSearchAttribute failed!", __FUNCTION__);
     }
     return ret;

@@ -49,7 +49,7 @@ int HidHostL2capConnection::Startup()
         LOG_ERROR("[HIDH L2CAP] %{public}s:L2CIF_RegisterService HID_INTERRUPT_PSM failed.", __func__);
         return RET_BAD_STATUS;
     }
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void HidHostL2capConnection::Shutdown()
@@ -85,7 +85,7 @@ int HidHostL2capConnection::Connect()
         HidHostMessage event(HID_HOST_INT_OPEN_EVT);
         event.dev_ = address_;
         HidHostService::GetService()->PostEvent(event);
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     if (state_ != HID_HOST_CONN_STATE_UNUSED) {
@@ -128,11 +128,11 @@ void HidHostL2capConnection::HidHostSecurityCheckTask(uint16_t result)
 
     connFlags_ = HID_HOST_CONN_FLAGS_IS_ORIG;
 
-    if (result == BT_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         LOG_INFO("[HIDH L2CAP]%{public}s start connect HID control", __func__);
         int ret = L2CIF_ConnectReq(&btAddr, HID_CONTROL_PSM, HID_CONTROL_PSM,
             this, HidHostL2cConnectControlReqCallback);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_ERROR("[HIDH L2CAP]%{public}s L2CIF_ConnectReq return value is error.", __func__);
             state_ = HID_HOST_CONN_STATE_UNUSED;
 
@@ -182,7 +182,7 @@ void HidHostL2capConnection::HidHostSecurityCheckDeviceConnectTask(uint16_t resu
     RawAddress(address_).ConvertToUint8(btAddr.addr);
     btAddr.type = BT_PUBLIC_DEVICE_ADDRESS;
 
-    if ((result == BT_NO_ERROR) && (state_ == HID_HOST_CONN_STATE_SECURITY)) {
+    if ((result == BT_SUCCESS) && (state_ == HID_HOST_CONN_STATE_SECURITY)) {
         LOG_INFO("[HIDH L2CAP]%{public}s start send connect response", __func__);
         state_ = HID_HOST_CONN_STATE_CONNECTING_INTR;
         L2CIF_ConnectRsp(ctrlLcid_, ctrlId_, L2CAP_CONNECTION_SUCCESSFUL, 0, nullptr);
@@ -194,7 +194,7 @@ void HidHostL2capConnection::HidHostSecurityCheckDeviceConnectTask(uint16_t resu
         if (L2CIF_ConfigReq(ctrlLcid_, &l2capConfigInfo, nullptr)) {
             LOG_ERROR("[HIDH L2CAP] %{public}s:L2CIF_ConfigReq failed.", __func__);
         }
-    } else if (result != BT_NO_ERROR) {
+    } else if (result != BT_SUCCESS) {
         LOG_ERROR("[HIDH L2CAP]%{public}s Request Security faild!", __func__);
         state_ = HID_HOST_CONN_STATE_UNUSED;
 
@@ -212,7 +212,7 @@ int HidHostL2capConnection::Disconnect()
         HidHostMessage event(HID_HOST_INT_CLOSE_EVT);
         event.dev_ = address_;
         HidHostService::GetService()->PostEvent(event);
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     if ((ctrlLcid_ != 0) || (intrLcid_ != 0)) {
@@ -227,10 +227,10 @@ int HidHostL2capConnection::Disconnect()
         HidHostMessage event(HID_HOST_INT_CLOSE_EVT);
         event.dev_ = address_;
         HidHostService::GetService()->PostEvent(event);
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HidHostL2capConnection::SendData(SendHidData sendData, int length, uint8_t* pkt)
@@ -248,7 +248,7 @@ int HidHostL2capConnection::SendData(SendHidData sendData, int length, uint8_t* 
             return RET_BAD_PARAM;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void HidHostL2capConnection::SendGetReport(SendHidData sendData)
@@ -339,7 +339,7 @@ void HidHostL2capConnection::HidHostL2cConnectControlReqCallback(
     LOG_INFO("[HIDH L2CAP]%{public}s lcid:%{public}hu", __func__, lcid);
     std::string address = RawAddress::ConvertToString(addr->addr).GetAddress();
     HidHostL2capConnection* l2capConnect = (HidHostL2capConnection *)context;
-    if ((l2capConnect != nullptr) && (result == BT_NO_ERROR)) {
+    if ((l2capConnect != nullptr) && (result == BT_SUCCESS)) {
         l2capConnect->ctrlLcid_ = lcid;
     } else {
         LOG_ERROR("[HIDH L2CAP]%{public}s HidHostService is null!", __func__);
@@ -353,7 +353,7 @@ void HidHostL2capConnection::HidHostL2cConnectInterruptReqCallback
 
     std::string address = RawAddress::ConvertToString(addr->addr).GetAddress();
     HidHostL2capConnection* l2capConnect = (HidHostL2capConnection *)context;
-    if ((l2capConnect != nullptr) && (result == BT_NO_ERROR)) {
+    if ((l2capConnect != nullptr) && (result == BT_SUCCESS)) {
         l2capConnect->intrLcid_ = lcid;
     } else {
         LOG_ERROR("[HIDH L2CAP]%{public}s HidHostService is null!", __func__);
@@ -721,7 +721,7 @@ int HidHostL2capConnection::SendGapRequestSecurity(bool isIncoming, uint16_t lci
             return RET_BAD_STATUS;
         }
     }
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void HidHostL2capConnection::HidHostRecvConnectionRspCallbackTask(
@@ -733,7 +733,7 @@ void HidHostL2capConnection::HidHostRecvConnectionRspCallbackTask(
         LOG_INFO("[HIDH L2CAP]%{public}s: Connect RSP result is pending, do nothing!", __func__);
         return;
     }
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[HIDH L2CAP]%{public}s result[%{public}d]", __func__, result);
         if (lcid == ctrlLcid_) {
             ctrlLcid_ = 0;
@@ -784,7 +784,7 @@ void HidHostL2capConnection::HidHostRecvConfigReqCallbackTask(
             (connFlags_ & HID_HOST_CONN_FLAGS_IS_ORIG)) {
             int ret = L2CIF_ConnectReq(&btAddr, HID_INTERRUPT_PSM, HID_INTERRUPT_PSM,
                 this, HidHostL2cConnectInterruptReqCallback);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_ERROR("%{public}s L2CIF_ConnectReq return value is error.", __func__);
                 return;
             }
@@ -822,7 +822,7 @@ void HidHostL2capConnection::HidHostRecvConfigRspCallbackTask(
             (connFlags_ & HID_HOST_CONN_FLAGS_IS_ORIG)) {
             int ret = L2CIF_ConnectReq(&btAddr, HID_INTERRUPT_PSM, HID_INTERRUPT_PSM,
                 this, HidHostL2cConnectInterruptReqCallback);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_ERROR("[HIDH L2CAP]%{public}s L2CIF_ConnectReq return value is error.", __func__);
                 return;
             }

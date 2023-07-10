@@ -46,7 +46,7 @@ public:
      * @param addr The address of the bluetooth device.
      * @param uuid The uuid is used to search server channel number.
      * @param context The context is used to send the event in the callback.
-     * @return BT_NO_ERROR            : The function is executed successfully.
+     * @return BT_SUCCESS            : The function is executed successfully.
      */
     static int StartDiscovery(const std::string &addr, const Uuid &uuid, void *context);
 

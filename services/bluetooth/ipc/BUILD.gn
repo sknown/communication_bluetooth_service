@@ -141,21 +141,44 @@ ohos_static_library("btipc_service") {
 
   cflags_cc = [ "-fvisibility=hidden" ]
 
-  deps = [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btcommon" ]
+  deps = [ ]
 
   external_deps = [
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "bluetooth:btcommon",
+  ]
+
+  subsystem_name = "communication"
+  part_name = "bluetooth_service"
+}
+
+# Only temporary used in drivers_peripheral\bluetooth\audio
+
+config("btipc_static_public_config") {
+  visibility = [ "*" ]
+  include_dirs = [
+    "$SUBSYSTEM_DIR/bluetooth/interfaces/inner_api/include",
+    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/common",
+    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/include",
+    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/ipc/common",
+    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/ipc/include",
+    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/ipc/interface",
+    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/ipc/parcel",
+    "//foundation/communication/bluetooth_service/services/bluetooth/ipc/include",
+    "//foundation/communication/bluetooth_service/services/bluetooth/common",
   ]
 }
 
-# temporary used in drivers_peripheral\bluetooth\audio
+
 ohos_static_library("btipc_static") {
   stack_protector_ret = true
+  public_configs = [ ":btipc_static_public_config" ]
 
-  public_configs =
-      [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework_public_config" ]
+  include_dirs = [
+    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/include",
+  ]
 
   sources = [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/ipc/src/bluetooth_host_proxy.cpp" ]
 
@@ -163,14 +186,15 @@ ohos_static_library("btipc_static") {
     sources += [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/ipc/src/bluetooth_a2dp_src_proxy.cpp" ]
   }
 
-  deps = [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btcommon" ]
+  deps = [ ]
 
   external_deps = [
     "c_utils:utils",
-    "hisysevent_native:libhisysevent",
+    "hisysevent:libhisysevent",
     "hilog:libhilog",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
+    "bluetooth:btcommon",
   ]
 
   subsystem_name = "communication"

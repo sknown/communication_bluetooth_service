@@ -41,7 +41,7 @@ int A2dpSdpManager::RegisterService()
         classIdList[0].uuid16 = A2DP_SINK_SERVICE_CLASS_UUID;
     }
     rtnSts = SDP_AddServiceClassIdList(sdpHandle_, classIdList, A2DP_SERVICE_CLASS_ID_LIST_NUMBER);
-    if (rtnSts != RET_NO_ERROR) {
+    if (rtnSts != BT_SUCCESS) {
         LOG_WARN("[A2dpSdpManager]%{public}s SDP_AddServiceClassIdList[result:%{public}d]\n", __func__, rtnSts);
         return rtnSts;
     }
@@ -59,7 +59,7 @@ int A2dpSdpManager::RegisterService()
     dscList[ATTR_NUMBER1].protocolUuid.type = BT_UUID_16;
     dscList[ATTR_NUMBER1].protocolUuid.uuid16 = A2DP_PROTOCOL_UUID_AVDTP;
     rtnSts = SDP_AddProtocolDescriptorList(sdpHandle_, dscList, A2DP_PROTOCOL_DESCRIPTOR_LIST_NUMBER);
-    if (rtnSts != RET_NO_ERROR) {
+    if (rtnSts != BT_SUCCESS) {
         LOG_WARN("[A2dpSdpManager]%{public}s SDP_AddProtocolDescriptorList[result:%{public}d]\n", __func__, rtnSts);
         return rtnSts;
     }
@@ -71,7 +71,7 @@ int A2dpSdpManager::RegisterService()
     profileDsc.profileUuid.uuid16 = A2DP_PROFILE_UUID;
     rtnSts =
         SDP_AddBluetoothProfileDescriptorList(sdpHandle_, &profileDsc, A2DP_BLUETOOTH_PROFILE_DESCRIPTOR_LIST_NUMBER);
-    if (rtnSts != RET_NO_ERROR) {
+    if (rtnSts != BT_SUCCESS) {
         LOG_WARN("[A2dpSdpManager]%{public}s SDP_AddBluetoothProfileDescriptorList[result:%{public}d]\n",
             __func__, rtnSts);
         return rtnSts;
@@ -79,7 +79,7 @@ int A2dpSdpManager::RegisterService()
 
     /// Register target service.
     rtnSts = SDP_RegisterServiceRecord(sdpHandle_);
-    if (rtnSts != RET_NO_ERROR) {
+    if (rtnSts != BT_SUCCESS) {
         LOG_WARN("[A2dpSdpManager]%{public}s SDP_RegisterServiceRecord[result:%{public}d]\n", __func__, rtnSts);
     }
     return rtnSts;
@@ -91,13 +91,13 @@ int A2dpSdpManager::UnregisterService(void) const
     int rtnSts;
 
     rtnSts = SDP_DestroyServiceRecord(sdpHandle_);
-    if (rtnSts != RET_NO_ERROR) {
+    if (rtnSts != BT_SUCCESS) {
         LOG_WARN("[A2dpSdpManager]%{public}s SDP_DestroyServiceRecord[result:%{public}d]\n", __func__, rtnSts);
         return rtnSts;
     }
 
     rtnSts = SDP_DeregisterServiceRecord(sdpHandle_);
-    if (rtnSts != RET_NO_ERROR) {
+    if (rtnSts != BT_SUCCESS) {
         LOG_WARN("[A2dpSdpManager]%{public}s SDP_DeregisterServiceRecord[result:%{public}d]\n", __func__, rtnSts);
         return rtnSts;
     }

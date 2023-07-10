@@ -90,7 +90,7 @@ static int L2capLeInitialized()
     L2capLeInstance *inst = &g_l2capLeInst;
 
     if (inst->connList != NULL) {
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     return BT_BAD_STATUS;
@@ -1087,7 +1087,7 @@ static int L2capLeReceivePacket(uint16_t handle, uint16_t cid, Packet *pkt)
 {
     uint8_t header[4] = {0};
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1186,7 +1186,7 @@ static int L2capLeConnectComplete(const BtAddr *addr, uint16_t handle, uint8_t r
     L2capLeInstance *inst = &g_l2capLeInst;
     L2capLeConnection *conn = NULL;
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1225,14 +1225,14 @@ static int L2capLeConnectComplete(const BtAddr *addr, uint16_t handle, uint8_t r
     L2capAddConnectionRef(handle);
     L2capLeAclConnectProcess(conn);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static int L2capLeDisconnectComplete(uint16_t handle, uint8_t status, uint8_t reason)
 {
     L2capLeConnection *conn = NULL;
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1248,7 +1248,7 @@ static int L2capLeDisconnectComplete(uint16_t handle, uint8_t status, uint8_t re
         L2capLeDeleteConnection(conn);
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeCreditBasedConnectionReq(
@@ -1260,7 +1260,7 @@ int L2CAP_LeCreditBasedConnectionReq(
 
     LOG_INFO("%{public}s:%{public}d enter, lpsm = 0x%04X, rpsm = 0x%04X", __FUNCTION__, __LINE__, lpsm, rpsm);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1299,7 +1299,7 @@ int L2CAP_LeCreditBasedConnectionReq(
         int result;
 
         result = L2capConnectLe(addr);
-        if (result != BT_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             L2capLeDeleteConnection(conn);
         }
 
@@ -1307,7 +1307,7 @@ int L2CAP_LeCreditBasedConnectionReq(
     }
 
     L2capSendCreditBasedConnectionReq(conn, chan);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeCreditBasedConnectionRsp(uint16_t lcid, uint8_t id, const L2capLeConfigInfo *cfg, uint16_t result)
@@ -1317,7 +1317,7 @@ int L2CAP_LeCreditBasedConnectionRsp(uint16_t lcid, uint8_t id, const L2capLeCon
 
     LOG_INFO("%{public}s:%{public}d enter, lcid = 0x%04X, id = %hhu, result = %hu", __FUNCTION__, __LINE__, lcid, id, result);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1353,7 +1353,7 @@ int L2CAP_LeCreditBasedConnectionRsp(uint16_t lcid, uint8_t id, const L2capLeCon
         L2capLeDeleteChannel(conn, chan, 0);
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeDisconnectionReq(uint16_t lcid)
@@ -1361,7 +1361,7 @@ int L2CAP_LeDisconnectionReq(uint16_t lcid)
     L2capLeChannel *chan = NULL;
     L2capLeConnection *conn = NULL;
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1376,7 +1376,7 @@ int L2CAP_LeDisconnectionReq(uint16_t lcid)
 
     chan->state = L2CAP_CHANNEL_DISCONNECT_OUT_REQ;
     L2capLeSendDisconnectionReq(conn, chan);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeDisconnectionRsp(uint16_t lcid, uint8_t id)
@@ -1384,7 +1384,7 @@ int L2CAP_LeDisconnectionRsp(uint16_t lcid, uint8_t id)
     L2capLeConnection *conn = NULL;
     L2capLeChannel *chan = NULL;
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1398,7 +1398,7 @@ int L2CAP_LeDisconnectionRsp(uint16_t lcid, uint8_t id)
     }
 
     L2capLeSendDisconnectionRsp(conn, chan, id);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeSendData(uint16_t lcid, Packet *pkt)
@@ -1407,7 +1407,7 @@ int L2CAP_LeSendData(uint16_t lcid, Packet *pkt)
     L2capLeChannel *chan = NULL;
     uint16_t length;
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1450,7 +1450,7 @@ int L2CAP_LeSendData(uint16_t lcid, Packet *pkt)
     }
 
     L2capLeTxWithCredit(conn, chan);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeRegisterService(uint16_t lpsm, const L2capLeService *svc, void *context)
@@ -1460,7 +1460,7 @@ int L2CAP_LeRegisterService(uint16_t lpsm, const L2capLeService *svc, void *cont
 
     LOG_INFO("%{public}s:%{public}d enter, psm = 0x%04X", __FUNCTION__, __LINE__, lpsm);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1488,7 +1488,7 @@ int L2CAP_LeRegisterService(uint16_t lpsm, const L2capLeService *svc, void *cont
     (void)memcpy_s(&(psm->service), sizeof(L2capLeService), svc, sizeof(L2capLeService));
     ListAddFirst(inst->psmList, psm);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeDeregisterService(uint16_t lpsm)
@@ -1500,7 +1500,7 @@ int L2CAP_LeDeregisterService(uint16_t lpsm)
 
     LOG_INFO("%{public}s:%{public}d enter, psm = 0x%04X", __FUNCTION__, __LINE__, lpsm);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1531,7 +1531,7 @@ int L2CAP_LeDeregisterService(uint16_t lpsm)
 
     ListRemoveNode(inst->psmList, psm);
     L2capFree(psm);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeRegisterFixChannel(uint16_t cid, const L2capLeFixChannel *chan)
@@ -1540,7 +1540,7 @@ int L2CAP_LeRegisterFixChannel(uint16_t cid, const L2capLeFixChannel *chan)
 
     LOG_INFO("%{public}s:%{public}d enter, cid = 0x%04X", __FUNCTION__, __LINE__, cid);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1556,7 +1556,7 @@ int L2CAP_LeRegisterFixChannel(uint16_t cid, const L2capLeFixChannel *chan)
         return BT_BAD_PARAM;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeDeregisterFixChannel(uint16_t cid)
@@ -1565,7 +1565,7 @@ int L2CAP_LeDeregisterFixChannel(uint16_t cid)
 
     LOG_INFO("%{public}s:%{public}d enter, cid = 0x%04X", __FUNCTION__, __LINE__, cid);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1581,14 +1581,14 @@ int L2CAP_LeDeregisterFixChannel(uint16_t cid)
         return BT_BAD_PARAM;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeConnect(const BtAddr *addr, const L2capLeConnectionParameter *param)
 {
     LOG_INFO("%{public}s:%{public}d enter", __FUNCTION__, __LINE__);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1603,7 +1603,7 @@ int L2CAP_LeConnectCancel(const BtAddr *addr)
 {
     LOG_INFO("%{public}s:%{public}d enter", __FUNCTION__, __LINE__);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1614,7 +1614,7 @@ int L2CAP_LeDisconnect(uint16_t aclHandle)
 {
     LOG_INFO("%{public}s:%{public}d enter, handle = 0x%04X", __FUNCTION__, __LINE__, aclHandle);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1631,7 +1631,7 @@ int L2CAP_LeSendFixChannelData(uint16_t aclHandle, uint16_t cid, const Packet *p
 
     LOG_INFO("%{public}s:%{public}d enter, cid = 0x%04X, pktLength = %u", __FUNCTION__, __LINE__, cid, PacketSize(pkt));
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1650,7 +1650,7 @@ int L2CAP_LeSendFixChannelData(uint16_t aclHandle, uint16_t cid, const Packet *p
 
     L2capLeSendPacket(aclHandle, tpkt);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeRegisterConnectionParameterUpdate(const L2capLeConnectionParameterUpdate *cb, void *context)
@@ -1659,7 +1659,7 @@ int L2CAP_LeRegisterConnectionParameterUpdate(const L2capLeConnectionParameterUp
 
     LOG_INFO("%{public}s:%{public}d enter", __FUNCTION__, __LINE__);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1673,7 +1673,7 @@ int L2CAP_LeRegisterConnectionParameterUpdate(const L2capLeConnectionParameterUp
         cb,
         sizeof(L2capLeConnectionParameterUpdate));
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeDeregisterConnectionParameterUpdate()
@@ -1682,7 +1682,7 @@ int L2CAP_LeDeregisterConnectionParameterUpdate()
 
     LOG_INFO("%{public}s:%{public}d enter", __FUNCTION__, __LINE__);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1690,7 +1690,7 @@ int L2CAP_LeDeregisterConnectionParameterUpdate()
         sizeof(L2capLeConnectionParameterUpdate),
         0,
         sizeof(L2capLeConnectionParameterUpdate));
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2CAP_LeConnectionParameterUpdateReq(uint16_t aclHandle, const L2capLeConnectionParameter *param)
@@ -1702,7 +1702,7 @@ int L2CAP_LeConnectionParameterUpdateReq(uint16_t aclHandle, const L2capLeConnec
 
     LOG_INFO("%{public}s:%{public}d enter, handle = 0x%04X", __FUNCTION__, __LINE__, aclHandle);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 
@@ -1758,7 +1758,7 @@ int L2CAP_LeConnectionParameterUpdateRsp(uint16_t aclHandle, uint8_t id, uint16_
 
     LOG_INFO("%{public}s:%{public}d enter, handle = 0x%04X", __FUNCTION__, __LINE__, aclHandle);
 
-    if (L2capLeInitialized() != BT_NO_ERROR) {
+    if (L2capLeInitialized() != BT_SUCCESS) {
         return BT_BAD_STATUS;
     }
 

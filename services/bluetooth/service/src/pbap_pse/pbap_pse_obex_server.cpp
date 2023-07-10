@@ -36,7 +36,7 @@ int PbapPseObexServer::StartUp() const
 {
     HILOGI("enter");
     int ret = obexServer_->Startup();
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         HILOGE("Obex Startup Error ret = %{public}d", ret);
     }
     return ret;

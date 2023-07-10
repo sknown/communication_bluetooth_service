@@ -68,7 +68,7 @@ int OppGapClient::Deregister()
     HILOGI("[OPP GAP CLIENT]start");
 
     if (!registered_) {
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     BtAddr btAddr;
@@ -101,7 +101,7 @@ int OppGapClient::RequestSecurity()
         event.dev_ = address_;
         OppService::GetService()->PostEvent(event);
         HILOGI("[OPP GAP CLIENT]end, rfcomm");
-        return RET_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     BtAddr btAddr;

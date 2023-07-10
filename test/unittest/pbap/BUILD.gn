@@ -15,7 +15,6 @@ import("//build/test.gni")
 import("//foundation/communication/bluetooth_service/bluetooth.gni")
 
 module_output_path = "bluetooth/framework_test/pbap/"
-SUBSYSTEM_DIR = "//foundation/communication"
 
 ###############################################################################
 #1. intent(c++) get/set test without transport
@@ -48,8 +47,6 @@ ohos_unittest("btfw_pbap_client_test") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework",
-    "//base/global/resource_management/frameworks/resmgr:global_resmgr",
     "//third_party/bounds_checking_function:libsec_shared",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
@@ -57,9 +54,11 @@ ohos_unittest("btfw_pbap_client_test") {
   ]
 
   external_deps = [
+    "bluetooth:btframework",
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "resource_management:global_resmgr"
   ]
 }
 
@@ -71,8 +70,6 @@ ohos_unittest("btfw_pbap_server_test") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework",
-    "//base/global/resource_management/frameworks/resmgr:global_resmgr",
     "//third_party/bounds_checking_function:libsec_shared",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
@@ -80,9 +77,11 @@ ohos_unittest("btfw_pbap_server_test") {
   ]
 
   external_deps = [
+    "bluetooth:btframework",
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "resource_management:global_resmgr"
   ]
 }
 

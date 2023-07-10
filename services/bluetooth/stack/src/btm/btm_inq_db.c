@@ -77,7 +77,7 @@ static BtmInquiryDBEntity *BtmFindInquiryEntiryByAddress(const BtAddr *addr)
 
 int BtmAssignOrUpdateInquiryInfo(const BtAddr *addr, const BtmInquiryInfo *info)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     MutexLock(g_inquiryDbLock);
 
@@ -106,7 +106,7 @@ int BtmQueryInquiryInfoByAddr(const BtAddr *addr, BtmInquiryInfo *info)
         return BT_BAD_PARAM;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     MutexLock(g_inquiryDbLock);
 

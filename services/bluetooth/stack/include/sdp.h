@@ -148,7 +148,7 @@ uint32_t BTSTACK_API SDP_CreateServiceRecord();
  * @brief Destroy service record.
  *
  * @param handle Service record handle.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_DestroyServiceRecord(uint32_t handle);
 
@@ -156,7 +156,7 @@ int BTSTACK_API SDP_DestroyServiceRecord(uint32_t handle);
  * @brief Register service record.
  *
  * @param handle Service record handle.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_RegisterServiceRecord(uint32_t handle);
 
@@ -164,7 +164,7 @@ int BTSTACK_API SDP_RegisterServiceRecord(uint32_t handle);
  * @brief Deregister service record.
  *
  * @param handle Service record handle.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_DeregisterServiceRecord(uint32_t handle);
 
@@ -175,7 +175,7 @@ int BTSTACK_API SDP_DeregisterServiceRecord(uint32_t handle);
  * @param handle  Service record handle.
  * @param classid The list of UUIDs representing the service classes.
  * @param classidNumber The number of classid.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddServiceClassIdList(uint32_t handle, const BtUuid *classid, uint16_t classidNumber);
 
@@ -184,7 +184,7 @@ int BTSTACK_API SDP_AddServiceClassIdList(uint32_t handle, const BtUuid *classid
  *
  * @param handle Service record handle.
  * @param state  Service record state.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddServiceRecordState(uint32_t handle, uint32_t state);
 
@@ -193,7 +193,7 @@ int BTSTACK_API SDP_AddServiceRecordState(uint32_t handle, uint32_t state);
  *
  * @param handle    Service record handle.
  * @param serviceid The UUID that uniquely identifies the service.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddServiceId(uint32_t handle, const BtUuid *serviceid);
 
@@ -205,7 +205,7 @@ int BTSTACK_API SDP_AddServiceId(uint32_t handle, const BtUuid *serviceid);
  * @param handle     Service record handle.
  * @param descriptor One or more protocol descriptor.
  * @param descriptorNumber The number of protocol.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddProtocolDescriptorList(
     uint32_t handle, const SdpProtocolDescriptor *descriptor, uint16_t descriptorNumber);
@@ -218,7 +218,7 @@ int BTSTACK_API SDP_AddProtocolDescriptorList(
  * @param handle           Service record handle.
  * @param descriptorList   A sequence of ProtocolDescriptorList-elements.
  * @param descriptorNumber The number of ProtocolDescriptorList-element.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddAdditionalProtocolDescriptorList(
     uint32_t handle, const SdpAdditionalProtocolDescriptor *descriptorList, uint16_t descriptorListNumber);
@@ -231,7 +231,7 @@ int BTSTACK_API SDP_AddAdditionalProtocolDescriptorList(
  * @param handle           Service record handle.
  * @param browseUuid       The list of UUIDs that represents a browse group.
  * @param browseUuidNumber The number of UUIDs
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddBrowseGroupList(uint32_t handle, const BtUuid *browseUuid, uint16_t browseUuidNumber);
 
@@ -244,7 +244,7 @@ int BTSTACK_API SDP_AddBrowseGroupList(uint32_t handle, const BtUuid *browseUuid
  * @param handle                Service record handle.
  * @param baseAttributeId       The list of the natural languages' attribute IDs.
  * @param baseAttributeIdNum the number of the natural languages used in the service record.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddLanguageBaseAttributeIdList(
     uint32_t handle, const SdpLanguageBaseAttributeId *baseAttributeId, uint16_t baseAttributeIdNum);
@@ -256,7 +256,7 @@ int BTSTACK_API SDP_AddLanguageBaseAttributeIdList(
  *
  * @param handle Service record handle.
  * @param value  Time interval in seconds.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddServiceInfoTimeToLive(uint32_t handle, uint32_t value);
 
@@ -267,7 +267,7 @@ int BTSTACK_API SDP_AddServiceInfoTimeToLive(uint32_t handle, uint32_t value);
  *
  * @param handle Service record handle.
  * @param value  The relative ability of the service (idle - 0xFF, busy - 0x00).
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddServiceAvailability(uint32_t handle, uint8_t value);
 
@@ -280,7 +280,7 @@ int BTSTACK_API SDP_AddServiceAvailability(uint32_t handle, uint8_t value);
  * @param handle                  Service record handle.
  * @param profileDescriptor       The list of UUIDs and a 16-bit profile version number.
  * @param profileDescriptorNum The number of profile descriptors.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddBluetoothProfileDescriptorList(
     uint32_t handle, const SdpProfileDescriptor *profileDescriptor, uint16_t profileDescriptorNum);
@@ -292,7 +292,7 @@ int BTSTACK_API SDP_AddBluetoothProfileDescriptorList(
  * @param handle Service record handle.
  * @param url    The documentation url.
  * @param urlLen The length of url.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddDocumentationUrl(uint32_t handle, const uint8_t *url, uint16_t urlLen);
 
@@ -304,7 +304,7 @@ int BTSTACK_API SDP_AddDocumentationUrl(uint32_t handle, const uint8_t *url, uin
  * @param handle Service record handle.
  * @param url    The client executable url.
  * @param urlLen The length of url.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddClientExecutableUrl(uint32_t handle, const uint8_t *url, uint16_t urlLen);
 
@@ -315,7 +315,7 @@ int BTSTACK_API SDP_AddClientExecutableUrl(uint32_t handle, const uint8_t *url, 
  * @param handle Service record handle.
  * @param url    The icon url.
  * @param urlLen The length of url.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddIconUrl(uint32_t handle, const uint8_t *url, uint16_t urlLen);
 
@@ -327,7 +327,7 @@ int BTSTACK_API SDP_AddIconUrl(uint32_t handle, const uint8_t *url, uint16_t url
  * @param baseAttributeId The attribute ID base (default 0x0100).
  * @param name            The service name.
  * @param nameLen         The length of name.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddServiceName(uint32_t handle, uint16_t baseAttributeId, const char *name, uint16_t nameLen);
 
@@ -339,7 +339,7 @@ int BTSTACK_API SDP_AddServiceName(uint32_t handle, uint16_t baseAttributeId, co
  * @param baseAttributeId The attribute ID base (default 0x0100).
  * @param description     A brief description of the service.
  * @param descriptionLen  The length of description.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddServiceDescription(
     uint32_t handle, uint16_t baseAttributeId, const char *description, uint16_t descriptionLen);
@@ -352,7 +352,7 @@ int BTSTACK_API SDP_AddServiceDescription(
  * @param baseAttributeId The attribute ID base (default 0x0100).
  * @param name            The name of the person or organization providing the service.
  * @param nameLen         The length of name.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddProviderName(uint32_t handle, uint16_t baseAttributeId, const char *name, uint16_t nameLen);
 
@@ -364,7 +364,7 @@ int BTSTACK_API SDP_AddProviderName(uint32_t handle, uint16_t baseAttributeId, c
  * @param type                 The type of attribute value.
  * @param attributeValue       Attribute value.
  * @param attributeValueLength The length of attribute value.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddAttribute(
     uint32_t handle, uint16_t attributeId, SdpDataType type, void *attributeValue, uint16_t attributeValueLength);
@@ -377,7 +377,7 @@ int BTSTACK_API SDP_AddAttribute(
  * @param attributeId          Attribute undefined in Core 5.0.
  * @param attributeValue       Attribute value.
  * @param attributeValueLength The length of attribute value.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API SDP_AddSequenceAttribute(
     uint32_t handle, uint16_t attributeId, const uint8_t *attributeValue, uint16_t attributeValueLength);

@@ -38,7 +38,7 @@ public:
         HILOGI("addr: %{public}s, state: %{public}d", GET_ENCRYPT_ADDR(device), state);
         if (state == static_cast<int>(BTConnectState::CONNECTED) ||
             state == static_cast<int>(BTConnectState::DISCONNECTED)) {
-            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "A2DP_CONNECTED_STATE",
+            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "A2DP_CONNECTED_STATE",
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "STATE", state);
         }
         observers_->ForEach([device, state](sptr<IBluetoothA2dpSourceObserver> observer) {
@@ -180,7 +180,8 @@ void BluetoothA2dpSourceServer::RegisterObserver(const sptr<IBluetoothA2dpSource
     }
     // During A2DP HDF Registration, check the current status and callback
     RawAddress device = GetActiveSinkDevice();
-    int state = GetDeviceState((const RawAddress &)device);
+    int state = static_cast<int>(BTConnectState::DISCONNECTED);
+    GetDeviceState(static_cast<const RawAddress &>(device), state);
     if (state == static_cast<int>(BTConnectState::CONNECTED)) {
         HILOGI("onConnectionStateChanged");
         observer->OnConnectionStateChanged(device, state);
@@ -223,17 +224,18 @@ int32_t BluetoothA2dpSourceServer::Disconnect(const RawAddress &device)
     return pimpl->a2dpSrcService_->Disconnect(device);
 }
 
-int BluetoothA2dpSourceServer::GetDeviceState(const RawAddress &device)
+int BluetoothA2dpSourceServer::GetDeviceState(const RawAddress &device, int &state)
 {
     HILOGI("addr: %{public}s", GET_ENCRYPT_ADDR(device));
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
-        return BT_FAILURE;
+        return RET_NO_SUPPORT;
     }
-    return pimpl->a2dpSrcService_->GetDeviceState(device);
+    state = pimpl->a2dpSrcService_->GetDeviceState(device);
+    return NO_ERROR;
 }
 
-int GetDevicesByStates(const std::vector<int32_t> &states, std::vector<RawAddress> &rawAddrs)
+int BluetoothA2dpSourceServer::GetDevicesByStates(const std::vector<int32_t> &states, std::vector<RawAddress> &rawAddrs)
 {
     HILOGI("starts");
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
@@ -258,10 +260,10 @@ int32_t BluetoothA2dpSourceServer::GetPlayingState(const RawAddress &device, int
         return BT_ERR_SYSTEM_PERMISSION_FAILED;
     }
     int ret = pimpl->a2dpSrcService_->GetPlayingState(device, state);
-    if (ret != BT_SUCCESS) {
+    if (ret != NO_ERROR) {
         return BT_ERR_INTERNAL_ERROR;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int BluetoothA2dpSourceServer::SetConnectStrategy(const RawAddress &device, int strategy)

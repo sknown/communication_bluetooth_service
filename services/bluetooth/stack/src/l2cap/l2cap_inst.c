@@ -35,7 +35,7 @@ int L2capInitialized()
     L2capInstance *inst = L2capGetInstance();
 
     if (inst->connList != NULL) {
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     return BT_BAD_STATUS;
@@ -233,7 +233,7 @@ L2capChannel *L2capNewChannel(L2capConnection *conn, uint16_t lpsm, uint16_t rps
         conn->discTimer = NULL;
     } else {
         if ((conn->state == L2CAP_CONNECTION_CONNECTED) && (ListGetFirstNode(conn->chanList) == NULL)) {
-            if (L2capAddConnectionRef(conn->aclHandle) != BT_NO_ERROR) {
+            if (L2capAddConnectionRef(conn->aclHandle) != BT_SUCCESS) {
                 conn->state = L2CAP_CONNECTION_DISCONNECTING;
             }
         }

@@ -110,7 +110,7 @@ int HCIVIF_RegisterVendorEventCallback(
     ListAddLast(g_hciVendorCallbackList, block);
     MutexUnlock(g_hciVendorCallbackListLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HCIVIF_DeregisterVendorEventCallback(const HCIVendorEventCallback *callback)
@@ -141,7 +141,7 @@ int HCIVIF_DeregisterVendorEventCallback(const HCIVendorEventCallback *callback)
 
     MutexUnlock(g_hciVendorCallbackListLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HCIVIF_SendCmd(uint16_t opCode, const void *param, size_t paramLength)

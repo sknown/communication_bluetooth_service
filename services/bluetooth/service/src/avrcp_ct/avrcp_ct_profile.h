@@ -55,7 +55,7 @@ public:
          * @param[in] rawAddr The address of the bluetooth device.
          * @param[in] button  The code of the button released.
          * @param[in] result  The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -67,7 +67,7 @@ public:
          * @param[in] rawAddr The address of the bluetooth device.
          * @param[in] button  The code of the button released.
          * @param[in] result  The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -80,7 +80,7 @@ public:
          * @param[in] companies    The list of CompanyId.
          * @param[in] events       The list of EventId.
          * @param[in] result    The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -94,7 +94,7 @@ public:
          * @param[in] rawAddr   The address of the bluetooth device.
          * @param[in] attribute The attribute of the player application setting. Refer to <b>AvrcPlayerAttribute</b>.
          * @param[in] result    The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -108,7 +108,7 @@ public:
          * @param[in] attribute The attribute of the player application setting. Refer to <b>AvrcPlayerAttribute</b>.
          * @param[in] values    The values associated witch the attribute.
          * @param[in] result    The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -123,7 +123,7 @@ public:
          * @param[in] attributes The attribute of the player application settings. Refer to <b>AvrcPlayerAttribute</b>.
          * @param[in] values     The values associated witch the attribute.
          * @param[in] result     The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -136,7 +136,7 @@ public:
          *
          * @param[in] rawAddr The address of the bluetooth device.
          * @param[in] result  The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -149,7 +149,7 @@ public:
          * @param[in] attributes The attribute of the player application settings.
          * @param[in] attrStr    The values associated witch the attribute.
          * @param[in] result     The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -164,7 +164,7 @@ public:
          * @param[in] values     Player application setting value ID.
          * @param[in] valueStr   Specifies the value string of player application setting value.
          * @param[in] result     The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -179,7 +179,7 @@ public:
          * @param[in] attributes The attribute of the player application setting.
          * @param[in] values     The values associated witch the attribute.
          * @param[in] result     The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -195,7 +195,7 @@ public:
          * @param[in] songPosition The current position of the playing in milliseconds elapsed.
          * @param[in] playStatus   The current status of playing. Refer to <b>AvrcPlayStatus</b>.
          * @param[in] result       The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -208,7 +208,7 @@ public:
          *
          * @param[in] rawAddr The address of the bluetooth device.
          * @param[in] result  The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          * @param[in] detail  The detail result of the execution. Refer to <b>AvrcEsCode</b>.<br>
@@ -229,7 +229,7 @@ public:
          * @param[in] folderNames The current browsed path of the player. The first element in folderNames is the parent
          * folder. The root folder has no name. The names are in UTF-8.
          * @param[in] result      The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          * @param[in] detail      The detail result of the execution. Refer to <b>AvrcEsCode</b>.<br>
@@ -251,7 +251,7 @@ public:
          * @param[in] rawAddr    The address of the bluetooth device.
          * @param[in] numOfItems The number of items in the directory.
          * @param[in] result     The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          * @param[in] detail     The detail result of the execution. Refer to <b>AvrcEsCode</b>.<br>
@@ -275,7 +275,7 @@ public:
          * @param[in] mpItems    The list of <b>AvrcCtMpItem</b> class.
          * @param[in] meItems    The list of <b>AvrcCtMeItem</b> class.
          * @param[in] result     The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          * @param[in] detail     The detail result of the execution. Refer to <b>AvrcEsCode</b>.<br>
@@ -297,7 +297,7 @@ public:
          * @param[in] attributes The list of media attributes.
          * @param[in] values     The list of the value of this attribute.
          * @param[in] result     The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          * @param[in] detail     The detail result of the execution. Refer to <b>AvrcEsCode</b>.<br>
@@ -319,7 +319,7 @@ public:
          * @param[in] uidCounter The value of the uid counter.
          * @param[in] numOfItems The number of items in the directory.
          * @param[in] result     The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          * @param[in] detail     The detail result of the execution. Refer to <b>AvrcEsCode</b>.<br>
@@ -337,7 +337,7 @@ public:
          * @param[in] rawAddr The address of the bluetooth device.
          * @param[in] status  The current status of playing. Refer to <b>PlayItem</b>
          * @param[in] result  The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          * @param[in] detail     The detail result of the execution. Refer to <b>AvrcEsCode</b>.<br>
@@ -362,7 +362,7 @@ public:
          *
          * @param[in] rawAddr The address of the bluetooth device.
          * @param[in] result  The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          * @param[in] detail  The detail result of the execution. Refer to <b>AvrcEsCode</b>.<br>
@@ -384,7 +384,7 @@ public:
          * @param[in] rawAddr The address of the bluetooth device.
          * @param[in] volume  The percentage of the absolute volume. Refer to <b>AvrcAbsoluteVolume</b>.
          * @param[in] result  The result of the execution.<br>
-         *            @a RET_NO_ERROR   : Execute success.<br>
+         *            @a BT_SUCCESS   : Execute success.<br>
          *            @a RET_NO_SUPPORT : Not support.<br>
          *            @a RET_BAD_STATUS : Execute failure.
          */
@@ -550,7 +550,7 @@ public:
      * @param[in] isTgEnabled The config of the TG is true or not.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int Enable(bool isTgEnabled);
@@ -559,7 +559,7 @@ public:
      * @brief Disables the AVRCP CT profile.
      *
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int Disable(void);
@@ -612,7 +612,7 @@ public:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int Connect(const RawAddress &rawAddr) const;
@@ -622,7 +622,7 @@ public:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     int Disconnect(const RawAddress &rawAddr) const;
@@ -632,7 +632,7 @@ public:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     static int ConnectBr(const RawAddress &rawAddr);
@@ -642,7 +642,7 @@ public:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR   Execute success.
+     * @retval BT_SUCCESS   Execute success.
      * @retval RET_BAD_STATUS Execute failure.
      */
     static int DisconnectBr(const RawAddress &rawAddr);
@@ -1083,7 +1083,7 @@ private:
      * @param[in] button  The value of the key operation.
      * @param[in] state   The value of the key state.
      * @param[in] result  The result of the method execution.
-     *            @a RET_NO_ERROR   : Execute success.
+     *            @a BT_SUCCESS   : Execute success.
      *            @a RET_NO_SUPPORT : Not support.
      *            @a RET_BAD_STATUS : Execute failure.
      */

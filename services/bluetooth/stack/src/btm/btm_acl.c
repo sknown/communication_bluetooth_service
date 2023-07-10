@@ -399,7 +399,7 @@ static int BtmAclCreateConnection(const BtAddr *addr)
 
     BtmInquiryInfo inquiryInfo = {0};
     int queryResult = BtmQueryInquiryInfoByAddr(addr, &inquiryInfo);
-    if (queryResult == BT_NO_ERROR) {
+    if (queryResult == BT_SUCCESS) {
         pageScanRepetitionMode = inquiryInfo.pageScanRepetitionMode;
         clockOffset = inquiryInfo.clockOffset;
     }
@@ -431,7 +431,7 @@ int BTM_AclConnect(const BtAddr *addr)
         return BT_BAD_STATUS;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     MutexLock(g_aclListLock);
     if (ListGetSize(g_aclList) >= BTM_MAX_ACL) {
         MutexUnlock(g_aclListLock);
@@ -457,7 +457,7 @@ int BTM_AclConnect(const BtAddr *addr)
                 return BT_NO_MEMORY;
             }
             result = BtmAclCreateConnection(addr);
-            if (result != BT_NO_ERROR) {
+            if (result != BT_SUCCESS) {
                 ListRemoveNode(g_aclList, connection);
             }
 
@@ -609,7 +609,7 @@ static void BtmOnConnectionrequest(const HciConnectionRequestEventParam *eventPa
         .role = role,
     };
     int result = HCI_AcceptConnectionRequest(&acceptParam);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         ListRemoveNode(g_aclList, connection);
     }
 
@@ -623,7 +623,7 @@ static void BtmConvertAddressForConnection(BtAddr *addr)
     if (BTM_IsControllerSupportLlPrivacy()) {
         if (BTM_IsDeviceInResolvingList(addr)) {
             int result = BTM_GetRemoteIdentityAddress(addr, &address);
-            if (result == BT_NO_ERROR) {
+            if (result == BT_SUCCESS) {
                 *addr = address;
             }
         } else {
@@ -635,7 +635,7 @@ static void BtmConvertAddressForConnection(BtAddr *addr)
 
     if (localResolve) {
         int result = BTM_GetCurrentRemoteAddress(addr, &address);
-        if (result == BT_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             *addr = address;
         }
     }
@@ -736,7 +736,7 @@ int BtmStartAutoConnection()
     if (BtmGetDeviceCountInWhiteList() > 0) {
         result = BtmStartAutoConnectionInternal();
     } else {
-        result = BT_NO_ERROR;
+        result = BT_SUCCESS;
     }
     MutexUnlock(g_autoConnectLock);
     return result;
@@ -754,7 +754,7 @@ int BtmStopAutoConnection()
     if (BtmGetDeviceCountInWhiteList() > 0) {
         result = BtmStopAutoConnectionInternal();
     } else {
-        result = BT_NO_ERROR;
+        result = BT_SUCCESS;
     }
     MutexUnlock(g_autoConnectLock);
     return result;
@@ -808,7 +808,7 @@ int BTM_LeConnect(const BtAddr *addr)
         return BT_BAD_STATUS;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     BtAddr leAddr = *addr;
     BtmConvertAddressForConnection(&leAddr);
@@ -858,7 +858,7 @@ static void BtmConvertAddressForConnectionComplete(BtAddr *addr)
 {
     BtAddr pairedAddress;
     int result = BTM_ConvertToPairedAddress(addr, &pairedAddress);
-    if (result == BT_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         *addr = pairedAddress;
     }
 }
@@ -1335,7 +1335,7 @@ int BTM_AclDisconnect(uint16_t connectionHandle, uint8_t reason)
         return BT_BAD_STATUS;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     MutexLock(g_aclListLock);
     BtmAclConnection *connection = BtmAclFindConnectionByHandle(connectionHandle);
     if (connection != NULL) {
@@ -1681,7 +1681,7 @@ int BTM_RegisterAclCallbacks(const BtmAclCallbacks *callbacks, void *context)
     MutexLock(g_aclCallbackListLock);
     ListAddLast(g_aclCallbackList, block);
     MutexUnlock(g_aclCallbackListLock);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_DeregisterAclCallbacks(const BtmAclCallbacks *callbacks)
@@ -1706,12 +1706,12 @@ int BTM_DeregisterAclCallbacks(const BtmAclCallbacks *callbacks)
         node = ListGetNextNode(node);
     }
     MutexUnlock(g_aclCallbackListLock);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BtmGetAclHandleByAddress(const BtAddr *addr, uint16_t *handle)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     MutexLock(g_aclListLock);
     BtmAclConnection *connection = BtmAclFindConnectionByAddr(addr);
     if (connection != NULL) {
@@ -1725,7 +1725,7 @@ int BtmGetAclHandleByAddress(const BtAddr *addr, uint16_t *handle)
 
 int BtmGetLeAclHandleByAddress(const BtAddr *addr, uint16_t *handle)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     MutexLock(g_aclListLock);
     BtmAclConnection *connection = BtmAclFindLeConnectionByAddr(addr);
     if (connection != NULL) {
@@ -1739,7 +1739,7 @@ int BtmGetLeAclHandleByAddress(const BtAddr *addr, uint16_t *handle)
 
 int BtmGetAclAddressByHandle(const uint16_t handle, BtAddr *addr)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     MutexLock(g_aclListLock);
     BtmAclConnection *connection = BtmAclFindConnectionByHandle(handle);
     if (connection != NULL) {
@@ -1757,7 +1757,7 @@ int BTM_AclAddRef(uint16_t connectionHandle)
         return BT_OPERATION_FAILED;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     MutexLock(g_aclListLock);
     BtmAclConnection *connection = BtmAclFindConnectionByHandle(connectionHandle);
@@ -1852,7 +1852,7 @@ int BTM_GetLeConnectionAddress(uint16_t connectionHandle, BtAddr *localAddr, BtA
         return BT_BAD_STATUS;
     }
 
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     MutexLock(g_aclListLock);
     BtmAclConnection *connection = BtmAclFindConnectionByHandle(connectionHandle);
     if (connection != NULL) {
@@ -1986,7 +1986,7 @@ int BTM_LeCancelConnect(const BtAddr *addr)
         return BT_BAD_STATUS;
     }
 
-    int reuslt = BT_NO_ERROR;
+    int reuslt = BT_SUCCESS;
 
     MutexLock(g_aclListLock);
 
@@ -2193,7 +2193,7 @@ int BTM_SetLinkPolicySettings(const BtAddr *addr, uint16_t linkPolicySettings)
 {
     uint16_t connectionHandle = 0xffff;
     int result = BtmGetAclHandleByAddress(addr, &connectionHandle);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return result;
     }
 
@@ -2248,7 +2248,7 @@ int BTM_SwitchRole(const BtAddr *addr, uint8_t role)
 
     uint16_t connectionHandle = 0xffff;
     int result = BtmGetAclHandleByAddress(addr, &connectionHandle);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return result;
     }
 
@@ -2287,7 +2287,7 @@ int BTM_SetLeConnectionModeToFast()
 
     MutexUnlock(g_autoConnectLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int BTM_SetLeConnectionModeToSlow()
@@ -2309,7 +2309,7 @@ int BTM_SetLeConnectionModeToSlow()
 
     MutexUnlock(g_autoConnectLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static uint16_t BtmGenerateSupportedPacketTypes(const HciLmpFeatures *lmpFeature)

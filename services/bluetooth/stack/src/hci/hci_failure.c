@@ -48,7 +48,7 @@ int HCI_RegisterFailureCallback(const HciFailureCallbacks *callbacks)
     ListAddLast(g_hciFailureCallbackList, (void *)callbacks);
 
     MutexUnlock(g_hciFailureCallbackListLock);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HCI_DeregisterFailureCallback(const HciFailureCallbacks *callbacks)
@@ -59,7 +59,7 @@ int HCI_DeregisterFailureCallback(const HciFailureCallbacks *callbacks)
 
     MutexUnlock(g_hciFailureCallbackListLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void HciOnCmdTimeout()

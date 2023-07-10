@@ -43,6 +43,7 @@ private:
     ErrCode StopAdvertisingInner(MessageParcel &data, MessageParcel &reply);
     ErrCode CloseInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetAdvertiserHandleInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SetAdvertisingDataInner(MessageParcel &data, MessageParcel &reply);
 };
 }  // namespace Bluetooth
 }  // namespace OHOS

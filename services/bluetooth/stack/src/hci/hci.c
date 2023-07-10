@@ -72,7 +72,7 @@ static void HciFreePacket(void *packet)
 
 static int HciInitQueue()
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     do {
         g_hciTxQueue = QueueCreate(HCI_TX_QUEUE_SIZE);
@@ -100,7 +100,7 @@ static int HciInitQueue()
 
 NO_SANITIZE("cfi") static int HciInitHal()
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     g_waitHdiInit = SemaphoreCreate(0);
     int ret = g_hdiLib->hdiInit(&g_hdiCallacks);
@@ -168,14 +168,14 @@ int HCI_Initialize()
         }
 
         result = HciInitQueue();
-        if (result != BT_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             break;
         }
 
         result = HciInitHal();
     } while (0);
 
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         if (g_hdiLib != NULL) {
             UnloadHdiLib(g_hdiLib);
             g_hdiLib = NULL;
@@ -394,19 +394,19 @@ void HciPushToTxQueue(HciPacket *packet)
 int HCI_SetTransmissionCaptureCallback(void (*onTransmission)(uint8_t type, const uint8_t *data, uint16_t length))
 {
     g_transmissionCallback = onTransmission;
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HCI_EnableTransmissionCapture()
 {
     g_transmissionCapture = true;
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HCI_DisableTransmissionCapture()
 {
     g_transmissionCapture = false;
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static BtHciCallbacks g_hdiCallacks = {

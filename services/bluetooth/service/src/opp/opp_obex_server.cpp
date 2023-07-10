@@ -85,7 +85,7 @@ int OppReceiveFileBodyObject::Close()
     if (!fileReceiveSuccess_) {
         remove(file_.c_str());
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 OppObexServer::OppObexServer(const ObexServerConfig &config, utility::Dispatcher &dispatcher)
@@ -99,7 +99,7 @@ int OppObexServer::StartUp() const
 {
     HILOGI("[OPP OBEX SERVER] Enter");
     int ret = obexServer_->Startup();
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         HILOGE("[OPP OBEX SERVER]:Obex Startup Error ret = %{public}d", ret);
     }
     return ret;
@@ -109,7 +109,7 @@ int OppObexServer::ShutDown() const
 {
     HILOGI("[OPP OBEX SERVER] Enter");
     obexServer_->Shutdown();
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void OppObexServer::OppObexObserver::SendOppDisconnected(const std::string &btAddr) const
@@ -159,12 +159,12 @@ void OppObexServer::OppObexObserver::OnPut(ObexServerSession &session, const Obe
 {
     HILOGI("[OPP OBEX SERVER] Enter");
     bool isHeader = false;
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     if (session.GetReceivedObject() == nullptr) {
         ret = ReceiveFileHeader(session, req);
         isHeader = true;
     }
-    if (ret == RET_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         ReceiveFileBody(session, req, isHeader);
     }
 }
@@ -239,7 +239,7 @@ int OppObexServer::OppObexObserver::ReceiveFileHeader(ObexServerSession &session
     info.SetFileType(type);
     info.SetTotalBytes(static_cast<uint64_t>(length));
     OppService::GetService()->OnReceiveIncomingFile(info);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 // For PTS OPP/SR/OPH/BV-xxx.

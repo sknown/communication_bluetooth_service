@@ -1,0 +1,43 @@
+From 6dc32c557b74aaee13f2449b97a9e070e86cdde9 Mon Sep 17 00:00:00 2001
+From: lee <lilong32@huawei.com>
+Date: Thu, 6 Jul 2023 19:11:50 +0800
+Subject: [PATCH] =?UTF-8?q?=E8=93=9D=E7=89=99=E5=AD=B5=E5=8C=96=E4=BB=93?=
+ =?UTF-8?q?=E7=BC=96=E8=AF=91=E9=AA=8C=E8=AF=81?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Signed-off-by: lee <lilong32@huawei.com>
+---
+ tools/deps_guard/rules/ChipsetSDK/whitelist.json        | 3 ++-
+ tools/deps_guard/rules/NO-Depends-On-HDI/whitelist.json | 5 +++--
+ 2 files changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/tools/deps_guard/rules/ChipsetSDK/whitelist.json b/tools/deps_guard/rules/ChipsetSDK/whitelist.json
+index db3518b..d2f893e 100755
+--- a/tools/deps_guard/rules/ChipsetSDK/whitelist.json
++++ b/tools/deps_guard/rules/ChipsetSDK/whitelist.json
+@@ -84,5 +84,6 @@
+ 	"libipc_core.z.so",
+ 	"librtg_interface.z.so",
+ 	"libconcurrent_task_client.z.so",
+-	"libffrt.z.so"
++	"libffrt.z.so",
++	"libbtcommon.z.so"
+ ]
+diff --git a/tools/deps_guard/rules/NO-Depends-On-HDI/whitelist.json b/tools/deps_guard/rules/NO-Depends-On-HDI/whitelist.json
+index 365431a..154b2c8 100755
+--- a/tools/deps_guard/rules/NO-Depends-On-HDI/whitelist.json
++++ b/tools/deps_guard/rules/NO-Depends-On-HDI/whitelist.json
+@@ -3,5 +3,6 @@
+ 	"libhril_hdf_ext.z.so",
+ 	"libusb_pnp_manager.z.so",
+ 	"libcamera_daemon.so",
+-	"libril_driver.z.so"
+-]
++	"libril_driver.z.so",
++	"libhdi_audio_bluetooth.z.so"
++]
+-- 
+Gitee
+

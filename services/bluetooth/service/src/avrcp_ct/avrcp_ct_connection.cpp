@@ -123,7 +123,7 @@ int AvrcCtConnectManager::Add(const RawAddress &rawAddr, uint8_t connectId, uint
 
     std::lock_guard<std::recursive_mutex> lock(mutex_);
 
-    int result = RET_NO_ERROR;
+    int result = BT_SUCCESS;
 
     if (GetConnectInfo(rawAddr.GetAddress()) == nullptr) {
         infos_.insert(std::make_pair(rawAddr.GetAddress(),

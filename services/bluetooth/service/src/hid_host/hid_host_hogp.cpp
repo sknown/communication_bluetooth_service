@@ -51,7 +51,7 @@ int HidHostHogp::DeregisterGattClientApplication()
     int ret = RET_BAD_STATUS;
     if (gattClientService_ != nullptr) {
         ret = gattClientService_->DeregisterApplication(appId_);
-        if (ret == BT_NO_ERROR) {
+        if (ret == BT_SUCCESS) {
             appId_ = -1;
         }
         LOG_DEBUG("[HOGP] %{public}s: DeregisterApplication return %{public}d", __func__, ret);
@@ -79,7 +79,7 @@ int HidHostHogp::Connect()
         HidHostMessage event(HID_HOST_OPEN_CMPL_EVT);
         event.dev_ = address_;
         HidHostService::GetService()->PostEvent(event);
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
     if (state_ != HID_HOST_HOGP_STATE_UNUSED) {
         LOG_ERROR("[HOGP] %{public}s:state error state = %{public}d", __func__, state_);
@@ -87,7 +87,7 @@ int HidHostHogp::Connect()
     }
 
     int ret = gattClientService_->Connect(appId_, false);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[HOGP] %{public}s:gatt connect faild ret = %{public}d", __func__, ret);
         return ret;
     }
@@ -106,7 +106,7 @@ int HidHostHogp::Disconnect()
         HidHostMessage event(HID_HOST_INT_CLOSE_EVT);
         event.dev_ = address_;
         HidHostService::GetService()->PostEvent(event);
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
     IProfileGattClient *gattClientService_ = GetGattClientService();
     if (gattClientService_ == nullptr) {
@@ -114,7 +114,7 @@ int HidHostHogp::Disconnect()
         return RET_BAD_STATUS;
     }
     int ret = gattClientService_->Disconnect(appId_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[HOGP] %{public}s:gatt disconnect faild ret = %{public}d", __func__, ret);
         return ret;
     }
@@ -126,7 +126,7 @@ int HidHostHogp::SendData(const HidHostMessage &msg)
 {
     dispatcher_->Initialize();
     dispatcher_->PostTask(std::bind(&HidHostHogp::SendData_, this, msg));
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void HidHostHogp::SendData_(const HidHostMessage &msg)
@@ -218,7 +218,7 @@ int HidHostHogp::SendSetReport(Characteristic character, int length, uint8_t* pk
         (character.handle_ == characteristicTemp_->handle_)) {
         ReceiveHandShake(HID_HOST_SUCCESS);
         characteristicTemp_ = nullptr;
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
     LOG_ERROR("[HOGP] %{public}s:handle_ is error", __func__);
     ReceiveHandShake(HID_HOST_HANDSHAKE_ERROR);
@@ -247,7 +247,7 @@ int HidHostHogp::ReceiveControlData(Characteristic character, uint8_t reportId)
             return RET_BAD_STATUS;
         }
         HidHostService::GetService()->PostEvent(event);
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     } else {
         LOG_ERROR("[HOGP]%{public}s():data is null length_=%{public}zu", __FUNCTION__, character.length_);
         ReceiveHandShake(HID_HOST_HANDSHAKE_ERROR);
@@ -292,7 +292,7 @@ int HidHostHogp::DiscoverStart()
         return RET_BAD_STATUS;
     }
     result = gattClientService->DiscoveryServices(appId_);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[HOGP] %{public}s:DiscoveryServices faild result=%{public}d", __func__, result);
         Disconnect();
     } else {
@@ -336,7 +336,7 @@ void HidHostHogp::OnServicesDiscoveredTask_(int status)
             return;
         }
         std::vector<Service> services = gattClientService->GetServices(appId_);
-        int ret = BT_NO_ERROR;
+        int ret = BT_SUCCESS;
         for (auto &service : services) {
             if (service.uuid_ == Uuid::ConvertFrom16Bits(UUID_DEVICE_INFORMATION_SERVICE)) {
                 ret = GetPnpInformation(service);
@@ -346,7 +346,7 @@ void HidHostHogp::OnServicesDiscoveredTask_(int status)
                 LOG_INFO("[HOGP] %{public}s:for pts to get battery level.", __func__);
                 GetBatteryInformation(service);
             }
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 Disconnect();
                 return;
             }
@@ -396,7 +396,7 @@ int HidHostHogp::GetHidInformation(Service service)
         return RET_BAD_STATUS;
     }
     for (auto &character : service.characteristics_) {
-        int ret = BT_NO_ERROR;
+        int ret = BT_SUCCESS;
         if (character.uuid_ == Uuid::ConvertFrom16Bits(HID_HOST_UUID_GATT_HID_INFORMATION)) {
             std::unique_lock<std::mutex> lock(mutexWaitGattCallback_);
             gattClientService->ReadCharacteristic(appId_, character);
@@ -419,11 +419,11 @@ int HidHostHogp::GetHidInformation(Service service)
             GetHidReport(character);
             GetExternalCfgInfo(character);
         }
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             return ret;
         }
     }
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void HidHostHogp::GetBatteryInformation(Service service)
@@ -581,7 +581,7 @@ int HidHostHogp::SavePnpInformation(Characteristic character)
     LOG_DEBUG(
         "[HOGP]%{public}s():vendorId = 0x%{public}x,productId = 0x%{public}x,version = 0x%{public}x",
         __FUNCTION__, pnpInf_.vendorId, pnpInf_.productId, pnpInf_.version);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HidHostHogp::SaveHidInformation(Characteristic character)
@@ -593,7 +593,7 @@ int HidHostHogp::SaveHidInformation(Characteristic character)
     }
     hidInf_.ctryCode = *(character.value_.get() + HID_HOST_CTRY_CODE_OFFSET);
     LOG_DEBUG("[HOGP]%{public}s():ctryCode = 0x%{public}x", __FUNCTION__, hidInf_.ctryCode);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HidHostHogp::SaveReportMap(Characteristic character)
@@ -612,7 +612,7 @@ int HidHostHogp::SaveReportMap(Characteristic character)
     }
     hidInf_.descLength = character.length_;
     LOG_DEBUG("[HOGP]%{public}s():descLength = 0x%{public}x", __FUNCTION__, hidInf_.descLength);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void HidHostHogp::SaveReport(Characteristic character, Descriptor descriptor, Descriptor config)
@@ -821,6 +821,11 @@ void HidHostHogp::HogpGattClientCallback::OnServicesDiscovered(int status)
     HidHostMessage event(HID_HOST_HOGP_SERVICES_DISCOVERED_EVT, status);
     event.dev_ = hogp_->address_;
     HidHostService::GetService()->PostEvent(event);
+}
+
+void HidHostHogp::HogpGattClientCallback::OnReadRemoteRssiValue(const RawAddress &addr, int rssi, int status)
+{
+    return;
 }
 }  // namespace bluetooth
 }  // namespace OHOS

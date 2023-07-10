@@ -65,7 +65,7 @@ static void RfcommRecvChannelSecurityResultCallback(uint16_t result, GapServiceS
     (void)memcpy_s(&ctx->serviceInfo, sizeof(GapServiceSecurityInfo), &serviceInfo, sizeof(GapServiceSecurityInfo));
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommRecvChannelSecurityResultTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 }
@@ -106,7 +106,7 @@ static void RfcommRecvSessionSecurityResultCallback(uint16_t result, GapServiceS
     (void)memcpy_s(&ctx->serviceInfo, sizeof(GapServiceSecurityInfo), &serviceInfo, sizeof(GapServiceSecurityInfo));
 
     int ret = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_RFCOMM, RfcommRecvSessionSecurityResultTsk, ctx);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         free(ctx);
     }
 }
@@ -134,7 +134,7 @@ int RfcommCheckChannelSecurity(RfcommChannelInfo *channel, bool isServer)
     param.context = channel;
 
     int ret = GAPIF_RequestSecurityAsync(&(channel->session->btAddr), &param);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_DEBUG("%{public}s return error.", __func__);
     }
 
@@ -172,7 +172,7 @@ int RfcommCheckSessionSecurity(RfcommSessionInfo *session, uint8_t scn, bool isS
     }
 
     int ret = GAPIF_RequestSecurityAsync(&(session->btAddr), &param);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_DEBUG("%{public}s return error.", __func__);
     }
 
@@ -190,7 +190,7 @@ void RfcommRegisterSecurity()
     GapServiceSecurityInfo serviceInfo = {INCOMING, RFCOMM, SEC_PROTOCOL_L2CAP, {BT_PSM_RFCOMM}};
 
     int ret = GAPIF_RegisterServiceSecurityAsync(NULL, &serviceInfo, 0);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_DEBUG("%{public}s return error.", __func__);
     }
 }
@@ -206,7 +206,7 @@ void RfcommDeregisterSecurity()
     GapServiceSecurityInfo serviceInfo = {INCOMING, RFCOMM, SEC_PROTOCOL_L2CAP, {BT_PSM_RFCOMM}};
 
     int ret = GAPIF_DeregisterServiceSecurityAsync(NULL, &serviceInfo);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_DEBUG("%{public}s return error.", __func__);
     }
 }

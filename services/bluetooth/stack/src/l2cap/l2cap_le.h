@@ -47,7 +47,7 @@ void L2CAP_LeFinalize();
  *
  * @param lpsm protocol psm
  * @param svc callback for protocol psm
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeRegisterService(uint16_t lpsm, const L2capLeService *svc, void *context);
 
@@ -55,7 +55,7 @@ int L2CAP_LeRegisterService(uint16_t lpsm, const L2capLeService *svc, void *cont
  * @brief Deregister l2cap le_psm for LE Credit Based Connection
  *
  * @param lpsm protocol psm
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeDeregisterService(uint16_t lpsm);
 
@@ -65,7 +65,7 @@ int L2CAP_LeDeregisterService(uint16_t lpsm);
  * @param addr remote bluetooth address
  * @param cfg config parameter
  * @param lcid OUT parameter, local channel id
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeCreditBasedConnectionReq(
     const BtAddr *addr, uint16_t lpsm, uint16_t rpsm, const L2capLeConfigInfo *cfg, uint16_t *lcid);
@@ -77,7 +77,7 @@ int L2CAP_LeCreditBasedConnectionReq(
  * @param id identifier of l2cap command
  * @param cfg config parameter
  * @param result result of connection
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeCreditBasedConnectionRsp(uint16_t lcid, uint8_t id, const L2capLeConfigInfo *cfg, uint16_t result);
 
@@ -85,7 +85,7 @@ int L2CAP_LeCreditBasedConnectionRsp(uint16_t lcid, uint8_t id, const L2capLeCon
  * @brief Send Disconnection Request packet
  *
  * @param lcid local channel id
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeDisconnectionReq(uint16_t lcid);
 
@@ -94,7 +94,7 @@ int L2CAP_LeDisconnectionReq(uint16_t lcid);
  *
  * @param lcid local channel id
  * @param id identifier of l2cap command
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeDisconnectionRsp(uint16_t lcid, uint8_t id);
 
@@ -103,7 +103,7 @@ int L2CAP_LeDisconnectionRsp(uint16_t lcid, uint8_t id);
  *
  * @param lcid local channel id
  * @param pkt packet of data
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeSendData(uint16_t lcid, Packet *pkt);
 
@@ -112,7 +112,7 @@ int L2CAP_LeSendData(uint16_t lcid, Packet *pkt);
  *
  * @param cid fix channel id
  * @param chan callback of fix channel
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeRegisterFixChannel(uint16_t cid, const L2capLeFixChannel *chan);
 
@@ -120,7 +120,7 @@ int L2CAP_LeRegisterFixChannel(uint16_t cid, const L2capLeFixChannel *chan);
  * @brief Deregister LE Fix Channel data callback
  *
  * @param cid fix channel id
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeDeregisterFixChannel(uint16_t cid);
 
@@ -129,14 +129,14 @@ int L2CAP_LeDeregisterFixChannel(uint16_t cid);
  *
  * @param addr remote bluetooth address
  * @param param connection parameter
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeConnect(const BtAddr *addr, const L2capLeConnectionParameter *param);
 
 /**
  * @brief Cancel Le ACL connection
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeConnectCancel(const BtAddr *addr);
 
@@ -144,7 +144,7 @@ int L2CAP_LeConnectCancel(const BtAddr *addr);
  * @brief Destroy Le ACL connection
  *
  * @param aclHandle ACL handle
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeDisconnect(uint16_t aclHandle);
 
@@ -154,7 +154,7 @@ int L2CAP_LeDisconnect(uint16_t aclHandle);
  * @param aclHandle ACL handle
  * @param cid fix channel id
  * @param pkt packet of data
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeSendFixChannelData(uint16_t aclHandle, uint16_t cid, const Packet *pkt);
 
@@ -163,14 +163,14 @@ int L2CAP_LeSendFixChannelData(uint16_t aclHandle, uint16_t cid, const Packet *p
  *
  * @param cb callback for connection parameter update
  * @param context context of caller
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeRegisterConnectionParameterUpdate(const L2capLeConnectionParameterUpdate *cb, void *context);
 
 /**
  * @brief Deregister LE connection parameter update
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeDeregisterConnectionParameterUpdate();
 
@@ -180,7 +180,7 @@ int L2CAP_LeDeregisterConnectionParameterUpdate();
  *
  * @param aclHandle ACL handle
  * @param param connection parameter
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeConnectionParameterUpdateReq(uint16_t aclHandle, const L2capLeConnectionParameter *param);
 
@@ -190,7 +190,7 @@ int L2CAP_LeConnectionParameterUpdateReq(uint16_t aclHandle, const L2capLeConnec
  * @param aclHandle ACL handle
  * @param id cidentifier of l2cap command
  * @param result result of the request
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LeConnectionParameterUpdateRsp(uint16_t aclHandle, uint8_t id, uint16_t result);
 

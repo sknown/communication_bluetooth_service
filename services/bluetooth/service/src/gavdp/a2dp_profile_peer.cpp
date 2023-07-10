@@ -705,7 +705,7 @@ int A2dpProfilePeer::SetUserCodecConfigure(const A2dpSrcCodecInfo &info)
             Reconfigure(closeStream);
             NotifyAudioConfigChanged();
         }
-        ret = RET_NO_ERROR;
+        ret = BT_SUCCESS;
     } else {
         LOG_ERROR("[A2dpProfilePeer]%{public}s Failed to setCodecUserConfig\n", __func__);
         ret = RET_BAD_PARAM;

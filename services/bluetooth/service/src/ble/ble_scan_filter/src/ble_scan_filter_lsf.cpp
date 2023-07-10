@@ -99,8 +99,8 @@ void BleScanFilterLsf::HandleAddCommandResult(uint8_t tag, uint8_t status)
         case LSF_TAG_NAME:
         case LSF_TAG_MANUFACTURER_DATA:
         case LSF_TAG_SERVICE_DATA:
-            if (status == BT_NO_ERROR) {
-                if (ContinueBleScanFilter() != BT_NO_ERROR) {
+            if (status == BT_SUCCESS) {
+                if (ContinueBleScanFilter() != BT_SUCCESS) {
                     StopCommandTimer();
                     FinishAddBleScanFilter(BLE_SCAN_FILTER_FAILD);
                 }
@@ -135,7 +135,7 @@ void BleScanFilterLsf::HandleClearCommandResult(uint8_t tag, uint8_t status)
     switch (tag) {
         case LSF_TAG_SET_PARAMETERS:
             StopCommandTimer();
-            if ((BleScanFilterEnable(LSF_PARAM_DISABLE) != BT_NO_ERROR)) {
+            if ((BleScanFilterEnable(LSF_PARAM_DISABLE) != BT_SUCCESS)) {
                 StopCommandTimer();
                 FinishStopBleScanFilter(BLE_SCAN_FILTER_FAILD);
             }
@@ -148,7 +148,7 @@ void BleScanFilterLsf::HandleClearCommandResult(uint8_t tag, uint8_t status)
 
 bool BleScanFilterLsf::IsReady()
 {
-    if (!isReady_ && (HCIVIF_RegisterVendorEventCallback(&VENDOR_EVENT_CALLBACK, this) == BT_NO_ERROR)) {
+    if (!isReady_ && (HCIVIF_RegisterVendorEventCallback(&VENDOR_EVENT_CALLBACK, this) == BT_SUCCESS)) {
         isReady_ = true;
     }
 
@@ -174,7 +174,7 @@ uint8_t BleScanFilterLsf::GetMaxFilterNumber()
         return 0;
     }
     std::unique_lock<std::mutex> lock(mutexWaitCallback_);
-    if (BleScanFilterGetVendorCapabilities() != BT_NO_ERROR) {
+    if (BleScanFilterGetVendorCapabilities() != BT_SUCCESS) {
         HILOGI("send vendor capabilities cmd faild.");
         return 0;
     }
@@ -201,12 +201,12 @@ int BleScanFilterLsf::AddBleScanFilter(BleScanFilterParam filter, BleScanFilterC
         HILOGI("ble scan filter is ongoing.");
     } else if ((maxFilterNumber_ > 0) && (filtIndex_ >= maxFilterNumber_)) {
         HILOGI("filter index error.");
-    } else if (ContinueBleScanFilter() != BT_NO_ERROR) {
+    } else if (ContinueBleScanFilter() != BT_SUCCESS) {
         HILOGI("ContinueBleScanFilter error.");
         StopCommandTimer();
     } else {
         isBleScanFilterOngoing_ = true;
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     FinishAddBleScanFilter(BLE_SCAN_FILTER_FAILD);
@@ -223,12 +223,12 @@ int BleScanFilterLsf::DeleteBleScanFilter(BleScanFilterParam filter, BleScanFilt
         HILOGI("ble scan filter not ready.");
     } else if (isBleScanFilterOngoing_) {
         HILOGI("ble scan filter is ongoing.");
-    } else if (BleScanFilterSetParameters(0, LSF_OPCODE_DELETE) != BT_NO_ERROR) {
+    } else if (BleScanFilterSetParameters(0, LSF_OPCODE_DELETE) != BT_SUCCESS) {
         HILOGI("BleScanFilterSetParameters error.");
         StopCommandTimer();
     } else {
         isBleScanFilterOngoing_ = true;
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     FinishDeleteBleScanFilter(BLE_SCAN_FILTER_FAILD);
@@ -244,12 +244,12 @@ int BleScanFilterLsf::StartBleScanFilter(BleScanFilterCallback callback)
         HILOGI("ble scan filter not ready.");
     } else if (isBleScanFilterOngoing_) {
         HILOGI("ble scan filter is ongoing.");
-    } else if (BleScanFilterEnable(LSF_PARAM_ENABLE) != BT_NO_ERROR) {
+    } else if (BleScanFilterEnable(LSF_PARAM_ENABLE) != BT_SUCCESS) {
         HILOGI("BleScanFilterEnable error.");
         StopCommandTimer();
     } else {
         isBleScanFilterOngoing_ = true;
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     FinishStartBleScanFilter(BLE_SCAN_FILTER_FAILD);
@@ -265,12 +265,12 @@ int BleScanFilterLsf::StopBleScanFilter(BleScanFilterCallback callback)
         HILOGI("ble scan filter not ready.");
     } else if (isBleScanFilterOngoing_) {
         HILOGI("ble scan filter is ongoing.");
-    } else if (BleScanFilterSetParameters(0, LSF_OPCODE_CLEAR) != BT_NO_ERROR) {
+    } else if (BleScanFilterSetParameters(0, LSF_OPCODE_CLEAR) != BT_SUCCESS) {
         HILOGI("BleScanFilterSetParameters error.");
         StopCommandTimer();
     } else {
         isBleScanFilterOngoing_ = true;
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     FinishStopBleScanFilter(BLE_SCAN_FILTER_FAILD);
@@ -305,7 +305,7 @@ int BleScanFilterLsf::ContinueBleScanFilter()
         return BleScanFilterSetParameters(filterParam_.filterFlag, LSF_OPCODE_ADD);
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void BleScanFilterLsf::FinishAddBleScanFilter(int result)
@@ -636,7 +636,7 @@ void BleScanFilterLsf::BleScanFilterGetCapabilitiesComplete(const void *param, u
     }
     if (eventParam.featureTag != CAP_FEATURE_TAG_BLE_SCAN_FILTER) {
         HILOGI("featureTag is error featureTag=%{public}d.", eventParam.featureTag);
-    } else if (eventParam.status != BT_NO_ERROR) {
+    } else if (eventParam.status != BT_SUCCESS) {
         HILOGI("get capabilities failed status=%{public}d.", eventParam.status);
     } else if (eventParam.featureSize != CAP_LSF_FEATURE_VALUE_LENGTH) {
         HILOGI("featureSize is error size=%{public}d.", eventParam.featureSize);
@@ -659,7 +659,7 @@ void BleScanFilterLsf::BleScanFilterCommandComplete(const void *param, uint8_t p
             return;
         }
 
-        if (eventParam.status == BT_NO_ERROR) {
+        if (eventParam.status == BT_SUCCESS) {
             BleScanFilterCommandCompleteSuccess(eventParam);
         } else {
             BleScanFilterCommandCompleteFaild(eventParam);

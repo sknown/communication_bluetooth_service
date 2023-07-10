@@ -239,7 +239,7 @@ int GAP_GetRemoteName(const BtAddr *addr)
         (void)memcpy_s(hciCmdParam.addr.raw, BT_ADDRESS_SIZE, addr->addr, BT_ADDRESS_SIZE);
 
         ret = BtmQueryInquiryInfoByAddr(addr, &inquiryInfo);
-        if (ret == BT_NO_ERROR) {
+        if (ret == BT_SUCCESS) {
             hciCmdParam.clockOffset = inquiryInfo.clockOffset;
             hciCmdParam.pageScanRepetMode = inquiryInfo.pageScanRepetitionMode;
         }

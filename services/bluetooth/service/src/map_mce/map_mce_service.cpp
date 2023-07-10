@@ -46,7 +46,7 @@ namespace bluetooth {
 int MceAnalyseSupportedFeatrueAttribute(int &supportedFeatrue, const SdpService &servicePointer)
 {
     bool findInstanceFeature = false;
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     SdpAttribute *tempAttribute = servicePointer.attribute;
     for (int attSeqCount = 0; attSeqCount < servicePointer.attributeNumber; attSeqCount++, tempAttribute++) {
         if (tempAttribute->attributeId == MAP_MCE_SUPPORTED_FEATURES_ATTRIBUTE_ID) {
@@ -101,7 +101,7 @@ void MapMceGetSupportFeatureSdpSearchCb(
         }
         int ret = MceAnalyseSupportedFeatrueAttribute(supportedFeatrue, *tempServicePointer);
         // check sdp param value
-        if (ret != RET_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             mnsService->PostMessage(msg);
             LOG_ERROR("%{public}s mot found supportedFeatrue", __PRETTY_FUNCTION__);
             return;
@@ -257,7 +257,7 @@ int MapMceService::SetConnectionStrategy(const RawAddress &device, int strategy)
             LOG_ERROR("%{public}s dispatcher error", __PRETTY_FUNCTION__);
         }
         LOG_INFO("%{public}s success end", __PRETTY_FUNCTION__);
-        return RET_NO_ERROR;
+        return BT_SUCCESS;
     } else {
         LOG_ERROR("%{public}s error end", __PRETTY_FUNCTION__);
         return RET_BAD_STATUS;
@@ -314,7 +314,7 @@ int MapMceService::GetUnreadMessages(const RawAddress &device, MapMessageType ty
     std::unique_ptr<MapMceInstanceRequest> reqPtr = std::make_unique<MapMceRequestGetUreadMessages>(type, para);
     reqPtr->SetRequestConfig(cfg);
     int ret = SendRequestToConnectedDevice(device, outMsg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -324,7 +324,7 @@ int MapMceService::GetUnreadMessages(const RawAddress &device, MapMessageType ty
 int MapMceService::GetSupportedFeatures(const RawAddress &device)
 {
     LOG_INFO("%{public}s enter", __PRETTY_FUNCTION__);
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     if (serviceState_ != MAP_MCE_STATE_STARTUP) {
         LOG_ERROR("%{public}s error: startup error", __PRETTY_FUNCTION__);
         return RET_BAD_STATUS;
@@ -363,7 +363,7 @@ int MapMceService::SendMessage(const RawAddress &device, const IProfileSendMessa
     utility::Message outMsg(MSG_MCEDEVICE_REQ_SEND_REQUEST);
     std::unique_ptr<MapMceInstanceRequest> reqPtr = std::make_unique<MapMceRequestPushMessage>(msg);
     int ret = SendRequestToConnectedDevice(device, outMsg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -380,7 +380,7 @@ int MapMceService::SetNotificationFilter(const RawAddress &device, const int mas
     utility::Message msg(MSG_MCEDEVICE_REQ_SEND_REQUEST);
     std::unique_ptr<MapMceInstanceRequest> reqPtr = std::make_unique<MapMceRequestSetNotificationFilter>(mask);
     int ret = SendRequestToConnectedDevice(device, msg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -397,7 +397,7 @@ int MapMceService::SetNotificationRegistration(const RawAddress &device, const b
     utility::Message msg(MSG_MCEDEVICE_REQ_SEND_REQUEST);
     std::unique_ptr<MapMceInstanceRequest> reqPtr = std::make_unique<MapMceRequestSetNotificationRegistration>(on);
     int ret = SendRequestToConnectedDevice(device, msg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -410,7 +410,7 @@ int MapMceService::GetMessagesListing(const RawAddress &device, const IProfileGe
     utility::Message msg(MSG_MCEDEVICE_REQ_SEND_REQUEST);
     std::unique_ptr<MapMceInstanceRequest> reqPtr = std::make_unique<MapMceRequestGetMessagesListing>(para);
     int ret = SendRequestToConnectedDevice(device, msg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -425,7 +425,7 @@ int MapMceService::GetMessage(const RawAddress &device, MapMessageType type, con
     std::unique_ptr<MapMceInstanceRequest> reqPtr = std::make_unique<MapMceRequestGetMessage>(msgHandle, para);
     reqPtr->SetSupportMessageType(MapMessageTypeToIprofileMask(type));
     int ret = SendRequestToConnectedDevice(device, msg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -441,7 +441,7 @@ int MapMceService::GetMessageWithReqCfg(const RawAddress &device, MapMessageType
     reqPtr->SetSupportMessageType(MapMessageTypeToIprofileMask(type));
     reqPtr->SetRequestConfig(cfg);
     int ret = SendRequestToConnectedDevice(device, msg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -455,7 +455,7 @@ int MapMceService::UpdateInbox(const RawAddress &device, MapMessageType type)
     std::unique_ptr<MapMceInstanceRequest> reqPtr = std::make_unique<MapMceRequestUpdateInbox>();
     reqPtr->SetSupportMessageType(MapMessageTypeToIprofileMask(type));
     int ret = SendRequestToConnectedDevice(device, msg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -470,7 +470,7 @@ int MapMceService::GetConversationListing(
     std::unique_ptr<MapMceInstanceRequest> reqPtr = std::make_unique<MapMceRequestGetConversationListing>(para);
     reqPtr->SetSupportMessageType(MAP_MCE_SUPPORTED_MESSAGE_TYPE_IM);
     int ret = SendRequestToConnectedDevice(device, msg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -486,7 +486,7 @@ int MapMceService::SetMessageStatus(
         msgStatus.msgHandle, msgStatus.statusIndicator, msgStatus.statusValue, msgStatus.extendedData);
     reqPtr->SetSupportMessageType(MapMessageTypeToIprofileMask(type));
     int ret = SendRequestToConnectedDevice(device, msg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -500,7 +500,7 @@ int MapMceService::SetOwnerStatus(const RawAddress &device, const IProfileSetOwn
     std::unique_ptr<MapMceInstanceRequest> reqPtr = std::make_unique<MapMceRequestSetOwnerStatus>(para);
     reqPtr->SetSupportMessageType(MAP_MCE_SUPPORTED_MESSAGE_TYPE_IM);
     int ret = SendRequestToConnectedDevice(device, msg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -514,7 +514,7 @@ int MapMceService::GetOwnerStatus(const RawAddress &device, const std::string &c
     std::unique_ptr<MapMceInstanceRequest> reqPtr = std::make_unique<MapMceRequestGetOwnerStatus>(conversationId);
     reqPtr->SetSupportMessageType(MAP_MCE_SUPPORTED_MESSAGE_TYPE_IM);
     int ret = SendRequestToConnectedDevice(device, msg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -544,14 +544,14 @@ int MapMceService::Connect(const RawAddress &device)  // override
 
     // check device connected status
     int checkResult = CheckDeviceConnectStatus(rawDevice);
-    if (checkResult != RET_NO_ERROR) {
+    if (checkResult != BT_SUCCESS) {
         LOG_INFO("%{public}s device status error", __PRETTY_FUNCTION__);
         return RET_BAD_STATUS;
     }
     // service function execute
     dispatcher->PostTask(std::bind(&MapMceService::ConnectInternal, this, rawDevice, false, 0));
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMceService::ConnectInstance(const RawAddress &device, int instanceId)
@@ -575,14 +575,14 @@ int MapMceService::ConnectInstance(const RawAddress &device, int instanceId)
     }
     // check device connected status
     int checkResult = CheckDeviceConnectStatus(rawDevice);
-    if (checkResult != RET_NO_ERROR) {
+    if (checkResult != BT_SUCCESS) {
         LOG_INFO("%{public}s device status error", __PRETTY_FUNCTION__);
         return RET_BAD_STATUS;
     }
     // service function execute
     dispatcher->PostTask(std::bind(&MapMceService::ConnectInternal, this, rawDevice, true, instanceId));
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMceService::Disconnect(const RawAddress &device)  // override
@@ -602,14 +602,14 @@ int MapMceService::Disconnect(const RawAddress &device)  // override
     // check device connected status
     RawAddress rawDevice(device.GetAddress());
     int checkResult = CheckDeviceDisconnectStatus(rawDevice);
-    if (checkResult != RET_NO_ERROR) {
+    if (checkResult != BT_SUCCESS) {
         LOG_INFO("%{public}s device status error", __PRETTY_FUNCTION__);
         return RET_BAD_STATUS;
     }
     // service function execute
     dispatcher->PostTask(std::bind(&MapMceService::DisconnectInternal, this, rawDevice));
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMceService::CountSendingRequest(const RawAddress &device, MceRequestType requestType)
@@ -634,7 +634,7 @@ int MapMceService::CheckDeviceConnectStatus(const RawAddress &device)
     LOG_INFO("%{public}s enter", __PRETTY_FUNCTION__);
     std::lock_guard<std::recursive_mutex> lock(mceDeviceMapMutex_);
 
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     // find the device
     std::string tempDev = device.GetAddress();
     auto it = serviceBtDeviceInstMgrMap_.find(tempDev);
@@ -651,7 +651,7 @@ int MapMceService::CheckDeviceConnectStatus(const RawAddress &device)
         for (auto it2 = serviceBtDeviceInstMgrMap_.begin(); it2 != serviceBtDeviceInstMgrMap_.end(); ++it2) {
             // if it have disconnect devcie in the list
             if (it2->second->GetCurrentDeviceState() == MAP_MCE_DEV_STATE_DISCONNECTED) {
-                ret = RET_NO_ERROR;
+                ret = BT_SUCCESS;
             }
         }
     }
@@ -664,7 +664,7 @@ int MapMceService::CheckDeviceDisconnectStatus(const RawAddress &device)
     LOG_INFO("%{public}s enter", __PRETTY_FUNCTION__);
     std::lock_guard<std::recursive_mutex> lock(mceDeviceMapMutex_);
 
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     // find the device
     std::string tempDev = device.GetAddress();
     auto it = serviceBtDeviceInstMgrMap_.find(tempDev);
@@ -729,7 +729,7 @@ int MapMceService::ConnectInternal(const RawAddress &device, bool sInsMode, int 
     LOG_INFO("%{public}s singleInstMode=%{public}d,singleInstanceId=%{public}d ",
         __PRETTY_FUNCTION__, sInsMode, sInsId);
 
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     if (serviceState_ != MAP_MCE_STATE_STARTUP) {
         LOG_ERROR("%{public}s error return", __PRETTY_FUNCTION__);
         return RET_BAD_STATUS;
@@ -771,7 +771,7 @@ int MapMceService::DisconnectInternal(const RawAddress &device)
     LOG_INFO("%{public}s enter", __PRETTY_FUNCTION__);
     std::lock_guard<std::recursive_mutex> lock(mceDeviceMapMutex_);
 
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     if (serviceState_ != MAP_MCE_STATE_STARTUP) {
         LOG_ERROR("%{public}s DisconnectInternal startup error", __PRETTY_FUNCTION__);
         return RET_BAD_STATUS;
@@ -909,7 +909,7 @@ int MapMceService::GetFolderListing(const RawAddress &device, uint16_t maxOfList
     std::unique_ptr<MapMceInstanceRequest> reqPtr =
         std::make_unique<MapMceRequestGetFolderListing>(maxOfListCount, startOffset);
     ret = SendRequestToConnectedDevice(device, outMsg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -925,7 +925,7 @@ int MapMceService::SetPath(const RawAddress &device, const uint8_t flags,
     std::unique_ptr<MapMceInstanceRequest> reqPtr =
         std::make_unique<MapMceRequestSetPath>(flags, folder, folderList);
     ret = SendRequestToConnectedDevice(device, outMsg, reqPtr);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         reqPtr = nullptr;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -982,7 +982,7 @@ int MapMceService::StartUpInternal()
     mnsServer_ = std::make_unique<MapMceMnsServer>(*this, insDefaultConfig_);
     // start up mns server
     int ret = mnsServer_->StartUp();
-    if (ret == RET_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         notificationRegistration_ = true;
     } else {
         notificationRegistration_ = false;
@@ -992,7 +992,7 @@ int MapMceService::StartUpInternal()
     ObexMpClient::RegisterL2capLPsm(MAP_MCE_GOEP_L2CAP_PSM_VALUE);
 #endif
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMceService::GetMaxConnectNum()
@@ -1060,7 +1060,7 @@ int MapMceService::ShutDownInternalCommon()
         // send response to adapt manager when callback all come
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void MapMceService::PostMessage(utility::Message msg)
@@ -1228,7 +1228,7 @@ int MapMceService::CheckSdpForGetSupportedFeatures(const RawAddress &device)
     // search sdp
     retStackVal =
         SDP_ServiceSearchAttribute(&btAddr, &sdpUuid, attributeIdList, nullptr, MapMceGetSupportFeatureSdpSearchCb);
-    if (retStackVal != BT_NO_ERROR) {
+    if (retStackVal != BT_SUCCESS) {
         LOG_ERROR("%{public}s error:SDP_ServiceSearchAttribute", __PRETTY_FUNCTION__);
         retServiceVal = RET_NO_SUPPORT;
         // action complete fail
@@ -1236,7 +1236,7 @@ int MapMceService::CheckSdpForGetSupportedFeatures(const RawAddress &device)
         retAction.action_ = MapActionType::GET_SUPPORTED_FEATURES;
         serviceRpcCallbackMgr_.ExcuteObserverOnMapActionCompleted(device.GetAddress(), retAction, resCode);
     } else {
-        retServiceVal = RET_NO_ERROR;
+        retServiceVal = BT_SUCCESS;
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
     return retServiceVal;

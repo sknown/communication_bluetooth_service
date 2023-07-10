@@ -128,12 +128,12 @@ int MapMseBmsg::Init(std::string body, const uint8_t charset)
         Split(body, "\n", bodyList);
     }
     size_t pos = 0;
-    if (ParseCheck(bodyList, pos, charset) != RET_NO_ERROR) {
+    if (ParseCheck(bodyList, pos, charset) != BT_SUCCESS) {
         return RET_BAD_STATUS;
     }
     ParseOrgEnve(bodyList, pos);
     ParseBody(bodyList, pos);
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMseBmsg::ParseCheck(const std::vector<std::string> &src, size_t &pos, const uint8_t charset)
@@ -160,7 +160,7 @@ int MapMseBmsg::ParseCheck(const std::vector<std::string> &src, size_t &pos, con
         MSE_LOG_ERROR("Missing value for 'STATUS'.");
         return RET_BAD_STATUS;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 bool MapMseBmsg::ParseProperty(const std::vector<std::string> &src, size_t &pos)
