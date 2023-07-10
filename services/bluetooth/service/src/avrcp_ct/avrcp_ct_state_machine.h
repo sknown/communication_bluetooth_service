@@ -151,7 +151,7 @@ public:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR  Execute success.
+     * @retval BT_SUCCESS  Execute success.
      * @retval RET_BAD_PARAM Execute failure.
      */
     int AddControlStateMachine(const RawAddress &rawAddr);
@@ -161,7 +161,7 @@ public:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @return The result of the method execution.
-     * @retval RET_NO_ERROR  Execute success.
+     * @retval BT_SUCCESS  Execute success.
      * @retval RET_BAD_PARAM Execute failure.
      */
     int AddBrowseStateMachine(const RawAddress &rawAddr);

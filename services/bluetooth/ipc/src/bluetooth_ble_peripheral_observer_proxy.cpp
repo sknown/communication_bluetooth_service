@@ -93,6 +93,12 @@ void BluetoothBlePeripheralObserverProxy::OnPairStatusChanged(
     }
 }
 
+void BluetoothBlePeripheralObserverProxy::OnAclStateChanged(const BluetoothRawAddress &device,
+    int state, unsigned int reason)
+{
+    return;
+}
+
 ErrCode BluetoothBlePeripheralObserverProxy::InnerTransact(
     uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply)
 {

@@ -1,0 +1,28 @@
+From 7c0916f3c89b4c3b86bf28c263cfff843585ad5a Mon Sep 17 00:00:00 2001
+From: lverpeng <lverpeng118@163.com>
+Date: Tue, 4 Jul 2023 09:56:04 +0800
+Subject: [PATCH] 123
+
+Signed-off-by: lverpeng <lverpeng118@163.com>
+---
+ inherit/rich.json | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/inherit/rich.json b/inherit/rich.json
+index 5013860..dc35ba0 100644
+--- a/inherit/rich.json
++++ b/inherit/rich.json
+@@ -319,6 +319,10 @@
+           "component": "bluetooth",
+           "features": []
+         },
++        {
++          "component": "bluetooth_service",
++          "features": []
++        },
+         {
+           "component": "ipc",
+           "features": []
+-- 
+Gitee
+

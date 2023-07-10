@@ -60,12 +60,12 @@ int MapMceMnsServer::StartUp(void)
 {
     LOG_INFO("%{public}s execute", __PRETTY_FUNCTION__);
     int ret = CreateMasSdpRecord();
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s CreateMasSdpRecord error!", __PRETTY_FUNCTION__);
         return RET_NO_SUPPORT;
     }
     ret = RegisterServiceSecurity();
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         DestroyMasSdpRecord();
         LOG_ERROR("%{public}s RegisterServiceSecurity error!", __PRETTY_FUNCTION__);
         return RET_NO_SUPPORT;
@@ -90,7 +90,7 @@ int MapMceMnsServer::StartUp(void)
         MCE_MNS_SERVICE_NAME, obexSrvConfig, *mceMnsObexObserver_, *mceService_.GetDispatcher());
     ret = obexServer_->Startup();
     mnsStatus_ = MapMceServiceStateType::MAP_MCE_STATE_STARTUP;
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         ret = RET_BAD_STATUS;
         mnsStatus_ = MapMceServiceStateType::MAP_MCE_STATE_SHUTDOWN;
         DestroyMasSdpRecord();
@@ -123,11 +123,11 @@ int MapMceMnsServer::AddServiceClassIdList(void)
     btUuid.type = BT_UUID_16;
     btUuid.uuid16 = MCE_MNS_SERVICE_CLASS_UUID;
     int ret = SDP_AddServiceClassIdList(sdpHandle_, &btUuid, MCE_MNS_SERVICE_CLASS_ID_NUMBER);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("mce mns Call SDP_AddServiceClassIdList Error");
         return RET_NO_SUPPORT;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMceMnsServer::AddProtocolDescriptorList(void)
@@ -150,12 +150,12 @@ int MapMceMnsServer::AddProtocolDescriptorList(void)
     descriptor[index].parameterNumber = 0;
 
     int ret = SDP_AddProtocolDescriptorList(sdpHandle_, descriptor, MCE_MNS_PROTOCOL_DESCRIPTOR_NUMBER);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("mce mns Call SDP_AddProtocolDescriptorList Error");
         return RET_NO_SUPPORT;
     }
     LOG_INFO("%{public}s execute,rfcomm = %{public}d", __PRETTY_FUNCTION__, int(rfcommNo_));
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMceMnsServer::AddServiceName(void)
@@ -163,11 +163,11 @@ int MapMceMnsServer::AddServiceName(void)
     LOG_INFO("%{public}s Enter", __PRETTY_FUNCTION__);
     int ret = SDP_AddServiceName(
         sdpHandle_, SDP_ATTRIBUTE_PRIMARY_LANGUAGE_BASE, MCE_MNS_SERVICE_NAME.c_str(), MCE_MNS_SERVICE_NAME.size());
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("mce mns Call SDP_AddServiceName Error");
         return RET_NO_SUPPORT;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMceMnsServer::AddBluetoothProfileDescriptorList(void)
@@ -180,11 +180,11 @@ int MapMceMnsServer::AddBluetoothProfileDescriptorList(void)
     profileDescriptor.versionNumber = MCE_MNS_PROFILE_VERSION;
 
     int ret = SDP_AddBluetoothProfileDescriptorList(sdpHandle_, &profileDescriptor, MCE_MNS_PROFILE_DESCRIPTOR_NUMBER);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("mce mns Call SDP_AddBluetoothProfileDescriptorList Error");
         return RET_NO_SUPPORT;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMceMnsServer::AddAttribute(void)
@@ -196,7 +196,7 @@ int MapMceMnsServer::AddAttribute(void)
         SdpDataType::SDP_TYPE_UINT_16,
         (uint8_t *)&goepL2capPsm_,
         sizeof(uint16_t));
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("map mce mns Call SDP_AddAttribute Error");
         return RET_NO_SUPPORT;
     }
@@ -205,11 +205,11 @@ int MapMceMnsServer::AddAttribute(void)
         SdpDataType::SDP_TYPE_UINT_32,
         (uint8_t *)&MCE_MNS_SUPPORTED_FEATURES_V14,
         sizeof(uint32_t));
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("map mce mns Call SDP_AddAttribute Error");
         return RET_NO_SUPPORT;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMceMnsServer::RegisterServiceRecord(void)
@@ -217,25 +217,25 @@ int MapMceMnsServer::RegisterServiceRecord(void)
     LOG_INFO("%{public}s Enter", __PRETTY_FUNCTION__);
 
     int ret = SDP_RegisterServiceRecord(sdpHandle_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("mce mns Call SDP_RegisterServiceRecord Error");
         return RET_NO_SUPPORT;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int MapMceMnsServer::CreateMasSdpRecord(void)
 {
     LOG_INFO("%{public}s Enter", __PRETTY_FUNCTION__);
 
-    int retVal = RET_NO_ERROR;
+    int retVal = BT_SUCCESS;
     sdpHandle_ = SDP_CreateServiceRecord();
     retVal |= AddServiceClassIdList();
     retVal |= AddProtocolDescriptorList();
     retVal |= AddServiceName();
     retVal |= AddBluetoothProfileDescriptorList();
     retVal |= AddAttribute();
-    if (retVal == RET_NO_ERROR) {
+    if (retVal == BT_SUCCESS) {
         retVal = RegisterServiceRecord();
     } else {
         retVal = RET_NO_SUPPORT;
@@ -274,7 +274,7 @@ int MapMceMnsServer::RegisterServiceSecurity(void) const
     int ret = GAPIF_RegisterServiceSecurity(nullptr,
         &serviceInfo,
         GAP_SEC_IN_AUTHENTICATION | GAP_SEC_IN_ENCRYPTION | GAP_SEC_OUT_AUTHENTICATION | GAP_SEC_OUT_ENCRYPTION);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("map mce mns Call GAP_RegisterServiceSecurity l2cap Error");
         return RET_NO_SUPPORT;
     }
@@ -286,11 +286,11 @@ int MapMceMnsServer::RegisterServiceSecurity(void) const
     ret = GAPIF_RegisterServiceSecurity(nullptr,
         &serviceInfo,
         GAP_SEC_IN_AUTHENTICATION | GAP_SEC_IN_ENCRYPTION | GAP_SEC_OUT_AUTHENTICATION | GAP_SEC_OUT_ENCRYPTION);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("map mce mns Call GAP_RegisterServiceSecurity Error rfcomm");
         return RET_NO_SUPPORT;
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void MapMceMnsServer::DeregisterServiceSecurity(void) const
@@ -308,7 +308,7 @@ void MapMceMnsServer::DeregisterServiceSecurity(void) const
     serviceInfo.channelId = secChannel;
 
     int ret = GAPIF_DeregisterServiceSecurity(nullptr, &serviceInfo);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("MAP mce mns Call GAP_UnregisterServiceSecurity l2cap Error");
     }
     // deregister for rfcomm
@@ -316,7 +316,7 @@ void MapMceMnsServer::DeregisterServiceSecurity(void) const
     serviceInfo.channelId = secChannel;
     serviceInfo.protocolId = GAP_SecMultiplexingProtocol::SEC_PROTOCOL_RFCOMM;
     ret = GAPIF_DeregisterServiceSecurity(nullptr, &serviceInfo);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("MAP mce mns Call GAPIF_UnregisterServiceSecurity rfcomm Error");
     }
 }

@@ -24,54 +24,54 @@ namespace bluetooth {
 int OppSdpServer::Register(uint8_t rfcommScn, uint16_t l2capPsm)
 {
     HILOGI("[OPP SDP SERVER]:enter");
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     sdpHandle_ = SDP_CreateServiceRecord();
 
     result = AddServiceClassIdList();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("[OPP SDP SERVER] Sdp AddServiceClassIdList result = %{public}d", result);
         return result;
     }
 
     result = AddProtocolDescriptorList(rfcommScn);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("[OPP SDP SERVER] Sdp AddProtocolDescriptorList result = %{public}d", result);
         return result;
     }
 
     result = AddBrowseGroupList();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("[OPP SDP SERVER] Sdp AddBrowseGroupList result = %{public}d", result);
         return result;
     }
 
     result = AddBluetoothProfileDescriptorList();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("[OPP SDP SERVER] Sdp AddBluetoothProfileDescriptorList result = %{public}d", result);
         return result;
     }
 
     result = AddServiceName();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("[OPP SDP SERVER] Sdp AddServiceName result = %{public}d", result);
         return result;
     }
 
     result = AddL2capPsm(l2capPsm);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("[OPP SDP SERVER] Sdp AddL2capPsm result = %{public}d", result);
         return result;
     }
 
     result = AddSupportedFormatsList();
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("[OPP SDP SERVER] Sdp AddSupportedFormatsList result = %{public}d", result);
         return result;
     }
 
     result = SDP_RegisterServiceRecord(sdpHandle_);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("[OPP SDP SERVER] RegisterServiceRecord result = %{public}d", result);
         return result;
     }
@@ -82,16 +82,16 @@ int OppSdpServer::Register(uint8_t rfcommScn, uint16_t l2capPsm)
 void OppSdpServer::Deregister()
 {
     HILOGI("[OPP SDP SERVER] Call");
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     result = SDP_DeregisterServiceRecord(sdpHandle_);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("[PAN SDP] SDP_DeregisterServiceRecord result = %{public}d", result);
         return;
     }
 
     result = SDP_DestroyServiceRecord(sdpHandle_);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         HILOGE("[OPP SDP SERVER] SDP_DestroyServiceRecord result = %{public}d", result);
     }
     sdpHandle_ = 0;

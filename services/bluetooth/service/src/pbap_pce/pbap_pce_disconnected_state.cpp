@@ -32,7 +32,7 @@ void PceDisconnectedState::Entry()
     PBAP_PCE_LOG_INFO("%{public}s start", __PRETTY_FUNCTION__);
     if (stm_.GetGap() != nullptr) {  // when sdpsearch failure, stm_.GetGap() is nullptr
         int retVal = stm_.GetGap()->Deregister();
-        if (retVal != BT_NO_ERROR) {
+        if (retVal != BT_SUCCESS) {
             PBAP_PCE_LOG_ERROR("ProcessDisconnected GAP_Deregister() error");
         }
     }

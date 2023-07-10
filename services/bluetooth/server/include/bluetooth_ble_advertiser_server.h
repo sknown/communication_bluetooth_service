@@ -36,7 +36,9 @@ public:
         int32_t advHandle, bool isRawData) override;
     virtual int StopAdvertising(int32_t advHandle) override;
     virtual void Close(int32_t advHandle) override;
-    virtual int32_t GetAdvertiserHandle() override;
+    virtual int32_t GetAdvertiserHandle(int32_t &advHandle) override;
+    void SetAdvertisingData(const BluetoothBleAdvertiserData &advData,
+        const BluetoothBleAdvertiserData &scanResponse, int32_t advHandle) override;
 
 private:
     std::recursive_mutex mutex_ {};

@@ -243,7 +243,7 @@ void OppStateMachine::ProcessSdpCompleteEvent(const OppMessage &msg)
             gapSecChannel.rfcommChannel = obexConfig_.scn_;
         }
         gapClient_ = std::make_unique<OppGapClient>(address_, gapSecChannel, obexConfig_.isGoepL2capPSM_);
-        if ((gapClient_->Register() != BT_NO_ERROR) || (gapClient_->RequestSecurity() != BT_NO_ERROR)) {
+        if ((gapClient_->Register() != BT_SUCCESS) || (gapClient_->RequestSecurity() != BT_SUCCESS)) {
             OppMessage event(OPP_DISCONNECTED_EVT);
             event.dev_ = address_;
             OppService::GetService()->PostEvent(event);

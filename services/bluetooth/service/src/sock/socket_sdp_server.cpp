@@ -26,38 +26,38 @@ int SocketSdpServer::RegisterSdpService(const std::string &name, const Uuid &uui
     sdpHandle_ = SDP_CreateServiceRecord();
 
     int ret = AddServiceClassId(uuid);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s AddServiceClassId error", __FUNCTION__);
         return ret;
     }
 
     LOG_INFO("[sock]%{public}s AddProtocol scn:%hhu", __func__, scn);
     ret = AddProtocol(scn);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s AddProtocol error", __FUNCTION__);
         return ret;
     }
 
     ret = AddProfile();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s AddProfile error", __FUNCTION__);
         return ret;
     }
 
     ret = AddServiceName(name);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s AddServiceName error", __FUNCTION__);
         return ret;
     }
 
     ret = AddBrowseGroupList();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s AddBrowseGroupList error", __FUNCTION__);
         return ret;
     }
 
     ret = SDP_RegisterServiceRecord(sdpHandle_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s SDP_RegisterServiceRecord error", __FUNCTION__);
         return ret;
     }
@@ -70,13 +70,13 @@ int SocketSdpServer::UnregisterSdpService()
     LOG_INFO("[sock]%{public}s", __func__);
 
     int ret = SDP_DeregisterServiceRecord(sdpHandle_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s SDP_DeregisterServiceRecord error", __FUNCTION__);
         return ret;
     }
 
     ret = SDP_DestroyServiceRecord(sdpHandle_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s SDP_DestroyServiceRecord error", __FUNCTION__);
         return ret;
     }

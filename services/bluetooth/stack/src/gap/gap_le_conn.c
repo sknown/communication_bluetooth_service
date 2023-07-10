@@ -378,7 +378,7 @@ int GAP_LeSetSecurityMode(GAP_LeSecMode1Level mode1Level, GAP_LeSecMode2Level mo
     if (mode1Level == LE_MODE_1_LEVEL_4) {
         BtmLocalVersionInformation version;
         ret = BTM_GetLocalVersionInformation(&version);
-        if ((ret == BT_NO_ERROR) && (version.hciVersion >= BLUETOOTH_CORE_SPECIFICATION_4_2)) {
+        if ((ret == BT_SUCCESS) && (version.hciVersion >= BLUETOOTH_CORE_SPECIFICATION_4_2)) {
             ret = SMP_SetSecureConnOnlyMode(true);
         } else {
             ret = GAP_ERR_NOT_SUPPORT;
@@ -443,7 +443,7 @@ void GapWaitExAdvTerminatedTimeout(void *dev)
     ctx->pointer = dev;
 
     int ret = GapRunTaskUnBlockProcess(GapWaitExAdvTerminatedTimeoutTask, ctx, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }

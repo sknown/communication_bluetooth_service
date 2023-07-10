@@ -411,7 +411,7 @@ int MapMseService::Disconnect(const RawAddress &device)
     std::unique_ptr<RawAddress> rawAddr = std::make_unique<RawAddress>(device.GetAddress());
     msg.arg2_ = (void *)rawAddr.release();
     GetDispatcher()->PostTask(std::bind(&MapMseService::ProcessMessage, this, msg));
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void MapMseService::DisConnectInternal(const utility::Message &msg) const

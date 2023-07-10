@@ -44,7 +44,7 @@ int PanBnep::Startup()
         LOG_ERROR("[PAN BNEP] %{public}s:L2CIF_RegisterService PAN_PSM failed.", __func__);
         return RET_BAD_STATUS;
     }
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void PanBnep::Shutdown()
@@ -88,7 +88,7 @@ int PanBnep::Connect()
         PanMessage event(PAN_INT_OPEN_EVT);
         event.dev_ = address_;
         PanService::GetService()->PostEvent(event);
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     if (state_ != BNEP_CONN_STATE_UNUSED) {
@@ -131,11 +131,11 @@ void PanBnep::BnepSecurityCheckTask(uint16_t result)
 
     connFlags_ = BNEP_CONN_FLAGS_IS_ORIG;
 
-    if (result == BT_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         LOG_INFO("[PAN BNEP]%{public}s start connect", __func__);
         int ret = L2CIF_ConnectReq(&btAddr, BT_BNEP_PSM, BT_BNEP_PSM,
             this, BnepL2cConnectReqCallback);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_ERROR("[PAN BNEP]%{public}s L2CIF_ConnectReq return value is error.", __func__);
             state_ = BNEP_CONN_STATE_UNUSED;
 
@@ -185,7 +185,7 @@ void PanBnep::BnepSecurityCheckDeviceConnectTask(uint16_t result)
     RawAddress(address_).ConvertToUint8(btAddr.addr);
     btAddr.type = BT_PUBLIC_DEVICE_ADDRESS;
 
-    if ((result == BT_NO_ERROR) && (state_ == BNEP_CONN_STATE_SECURITY)) {
+    if ((result == BT_SUCCESS) && (state_ == BNEP_CONN_STATE_SECURITY)) {
         LOG_INFO("[PAN BNEP]%{public}s start send connect response", __func__);
         state_ = BNEP_CONN_STATE_CONNECTING;
         L2CIF_ConnectRsp(lcid_, id_, L2CAP_CONNECTION_SUCCESSFUL, L2CAP_NO_FURTHER_INFORMATION_AVAILABLE, nullptr);
@@ -197,7 +197,7 @@ void PanBnep::BnepSecurityCheckDeviceConnectTask(uint16_t result)
         if (L2CIF_ConfigReq(lcid_, &l2capConfigInfo, nullptr)) {
             LOG_ERROR("[PAN BNEP] %{public}s:L2CIF_ConfigReq failed.", __func__);
         }
-    } else if (result != BT_NO_ERROR) {
+    } else if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN BNEP]%{public}s Request Security faild!", __func__);
         state_ = BNEP_CONN_STATE_UNUSED;
 
@@ -215,7 +215,7 @@ int PanBnep::Disconnect()
         PanMessage event(PAN_INT_CLOSE_EVT);
         event.dev_ = address_;
         PanService::GetService()->PostEvent(event);
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
     if (lcid_ != 0) {
@@ -226,16 +226,16 @@ int PanBnep::Disconnect()
         PanMessage event(PAN_INT_CLOSE_EVT);
         event.dev_ = address_;
         PanService::GetService()->PostEvent(event);
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PanBnep::SendData(EthernetHeader ethernetHeader, uint8_t* pkt, int length)
 {
     if (!CheckBnepEthernetDataFilter(ethernetHeader, pkt, length)) {
-        return BT_NO_ERROR;
+        return BT_SUCCESS;
     }
     uint8_t bluetoothDestAddr[BT_ADDRESS_LENGTH];
     uint8_t bluetoothSrcAddr[BT_ADDRESS_LENGTH];
@@ -285,7 +285,7 @@ int PanBnep::SendData(EthernetHeader ethernetHeader, uint8_t* pkt, int length)
         }
     }
     AddPacketToWaitingSendDataList(packet);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void PanBnep::AddPacketToWaitingSendDataList(Packet *addPacket)
@@ -374,7 +374,7 @@ void PanBnep::BnepL2cConnectReqCallback(
 {
     LOG_INFO("[PAN BNEP]%{public}s lcid:%{public}hu", __func__, lcid);
     PanBnep* l2capConnect = (PanBnep *)context;
-    if ((l2capConnect != nullptr) && (result == BT_NO_ERROR)) {
+    if ((l2capConnect != nullptr) && (result == BT_SUCCESS)) {
         l2capConnect->lcid_ = lcid;
     } else {
         LOG_ERROR("[PAN BNEP]%{public}s PanService is null!", __func__);
@@ -683,7 +683,7 @@ int PanBnep::SendGapRequestSecurity(bool isIncoming, uint16_t lcid, uint8_t id)
             return RET_BAD_STATUS;
         }
     }
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void PanBnep::BnepRecvConnectionRspCallbackTask(
@@ -695,7 +695,7 @@ void PanBnep::BnepRecvConnectionRspCallbackTask(
         LOG_INFO("[PAN BNEP]%{public}s: Connect RSP result is pending, do nothing!", __func__);
         return;
     }
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         LOG_ERROR("[PAN BNEP]%{public}s result[%{public}d]", __func__, result);
         if (lcid == lcid_) {
             lcid_ = 0;

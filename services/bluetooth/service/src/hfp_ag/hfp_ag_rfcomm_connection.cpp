@@ -25,7 +25,7 @@ std::map<uint16_t, std::string> HfpAgRfcommConnection::g_devMap;
 int HfpAgRfcommConnection::Init()
 {
     g_devMap.clear();
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void HfpAgRfcommConnection::CleanUp()
@@ -45,7 +45,7 @@ int HfpAgRfcommConnection::Create()
     ret = RFCOMM_ConnectChannel(&info, &connHandle_);
     HFP_AG_RETURN_IF_FAIL(ret);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HfpAgRfcommConnection::Connect()
@@ -56,7 +56,7 @@ int HfpAgRfcommConnection::Connect()
     std::string addr = RawAddress::ConvertToString(remoteAddr_.addr).GetAddress();
     HfpAgRfcommConnection::AddConnectionDevice(connHandle_, addr);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HfpAgRfcommConnection::Disconnect() const
@@ -66,7 +66,7 @@ int HfpAgRfcommConnection::Disconnect() const
 
     ret = gap_->DeregisterServiceSecurity(remoteAddr_);
     HFP_AG_RETURN_IF_FAIL(ret);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HfpAgRfcommConnection::ReadData(Packet **pkt) const
@@ -82,7 +82,7 @@ int HfpAgRfcommConnection::WriteData(Packet &pkt) const
 {
     int ret = RFCOMM_Write(connHandle_, &pkt);
     HFP_AG_RETURN_IF_FAIL(ret);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void HfpAgRfcommConnection::SetConnectionHandle(uint16_t handle)

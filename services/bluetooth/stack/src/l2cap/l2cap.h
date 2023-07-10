@@ -48,7 +48,7 @@ void L2CAP_Finalize();
  * @param psm protocol psm
  * @param svc callback for protocol psm
  * @param context context for protocol psm
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_RegisterService(uint16_t lpsm, const L2capService *svc, void *context);
 
@@ -56,7 +56,7 @@ int L2CAP_RegisterService(uint16_t lpsm, const L2capService *svc, void *context)
  * @brief Deregister l2cap psm
  *
  * @param psm protocol psm
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_DeregisterService(uint16_t lpsm);
 
@@ -67,7 +67,7 @@ int L2CAP_DeregisterService(uint16_t lpsm);
  * @param lpsm local protocol psm
  * @param rpsm remote protocol psm
  * @param lcid OUT parameter, local channel id
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_ConnectReq(const BtAddr *addr, uint16_t lpsm, uint16_t rpsm, uint16_t *lcid);
 
@@ -78,7 +78,7 @@ int L2CAP_ConnectReq(const BtAddr *addr, uint16_t lpsm, uint16_t rpsm, uint16_t 
  * @param id identifier of l2cap command
  * @param result indicates the outcome of the connection request
  * @param status indicates the status of the connection
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_ConnectRsp(uint16_t lcid, uint8_t id, uint16_t result, uint16_t status);
 
@@ -87,7 +87,7 @@ int L2CAP_ConnectRsp(uint16_t lcid, uint8_t id, uint16_t result, uint16_t status
  *
  * @param lcid local channel id
  * @param cfg config parameter
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_ConfigReq(uint16_t lcid, const L2capConfigInfo *cfg);
 
@@ -98,7 +98,7 @@ int L2CAP_ConfigReq(uint16_t lcid, const L2capConfigInfo *cfg);
  * @param id identifier of l2cap command
  * @param cfg config parameter
  * @param result config result
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_ConfigRsp(uint16_t lcid, uint8_t id, const L2capConfigInfo *cfg, uint16_t result);
 
@@ -106,7 +106,7 @@ int L2CAP_ConfigRsp(uint16_t lcid, uint8_t id, const L2capConfigInfo *cfg, uint1
  * @brief Send Disconnection Request packet
  *
  * @param lcid local channel id
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_DisconnectionReq(uint16_t lcid);
 
@@ -115,7 +115,7 @@ int L2CAP_DisconnectionReq(uint16_t lcid);
  *
  * @param lcid local channel id
  * @param id identifier of l2cap command
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_DisconnectionRsp(uint16_t lcid, uint8_t id);
 
@@ -124,7 +124,7 @@ int L2CAP_DisconnectionRsp(uint16_t lcid, uint8_t id);
  *
  * @param lcid local channel id
  * @param isBusy flag to indicate busy state, 0 -- non busy, 1 -- busy
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_LocalBusy(uint16_t lcid, uint8_t isBusy);
 
@@ -133,7 +133,7 @@ int L2CAP_LocalBusy(uint16_t lcid, uint8_t isBusy);
  *
  * @param lcid local channel id
  * @param pkt packet of data
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_SendData(uint16_t lcid, Packet *pkt);
 
@@ -142,7 +142,7 @@ int L2CAP_SendData(uint16_t lcid, Packet *pkt);
  *
  * @param echoCallback callback of echo
  * @param context context of caller
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_RegisterEcho(const L2capEcho *echoCallback, void *context);
 
@@ -158,7 +158,7 @@ int L2CAP_DeregisterEcho();
  * @param aclHandle ACL Handle
  * @param data data of echo
  * @param dataLen length of data
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_EchoReq(uint16_t aclHandle, const uint8_t *data, uint16_t dataLen);
 
@@ -169,7 +169,7 @@ int L2CAP_EchoReq(uint16_t aclHandle, const uint8_t *data, uint16_t dataLen);
  * @param id identifier of l2cap command
  * @param data data of echo
  * @param dataLen length of data
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int L2CAP_EchoRsp(uint16_t aclHandle, uint8_t id, const uint8_t *data, uint16_t dataLen);
 

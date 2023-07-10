@@ -33,17 +33,25 @@ public:
     BluetoothBleCentralManagerServer();
     ~BluetoothBleCentralManagerServer() override;
 
-    virtual void RegisterBleCentralManagerCallback(const sptr<IBluetoothBleCentralManagerCallback> &callback) override;
-    virtual void DeregisterBleCentralManagerCallback(
+    void RegisterBleCentralManagerCallback(const sptr<IBluetoothBleCentralManagerCallback> &callback) override;
+    void DeregisterBleCentralManagerCallback(
         const sptr<IBluetoothBleCentralManagerCallback> &callback) override;
-    virtual int StartScan() override;
-    virtual int StartScan(const BluetoothBleScanSettings &settings) override;
-    virtual int StopScan() override;
-    virtual int ConfigScanFilter(const int clientId, const std::vector<BluetoothBleScanFilter> &filters) override;
-    virtual void RemoveScanFilter(const int clientId) override;
-    virtual bool ProxyUid(int32_t uid, bool isProxy) override;
-    virtual bool ResetAllProxy() override;
+    int StartScan() override;
+    int StartScan(const BluetoothBleScanSettings &settings) override;
+    int StopScan() override;
+    int ConfigScanFilter(int &clientId, const std::vector<BluetoothBleScanFilter> &filters) override;
+    void RemoveScanFilter(const int clientId) override;
+    bool ProxyUid(int32_t uid, bool isProxy) override;
+    bool ResetAllProxy() override;
     static bool IsProxyUid(int32_t uid);
+    int SetBurstParam(int duration, int maxExtAdvEvents, int burstWindow, int burstInterval, int advHandle) override;
+    int SetScanReportChannelToSensorHub(const int clientId, const int isToAp)override;
+    int StartScanInShSync() override;
+    int StopScanInShSync() override;
+    int SendParamsToSensorhub(const std::vector<uint8_t> &dataValue, int32_t type) override;
+    bool IsSupportSensorAdvertiseFilter() override;
+    int SetAdvFilterParam(const BluetoothBleFilterParamSet &paramSet) override;
+    int RemoveAdvFilter(const bluetooth::Uuid &uuid) override;
 
 private:
     BLUETOOTH_DECLARE_IMPL();

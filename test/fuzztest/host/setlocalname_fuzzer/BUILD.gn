@@ -15,7 +15,6 @@
 import("//build/config/features.gni")
 import("//build/test.gni")
 module_output_path = "bluetooth/host"
-SUBSYSTEM_DIR = "//foundation/communication"
 
 ##############################fuzztest##########################################
 ohos_fuzztest("SetLocalNameFuzzTest") {
@@ -34,9 +33,12 @@ ohos_fuzztest("SetLocalNameFuzzTest") {
 
   sources = [ "setlocalname_fuzzer.cpp" ]
 
-  deps = [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework" ]
+  deps = [ ]
 
-  external_deps = [ "hilog:libhilog" ]
+  external_deps = [
+    "bluetooth:btframework",
+    "hilog:libhilog"
+  ]
 }
 
 ###############################################################################

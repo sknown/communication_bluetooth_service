@@ -14,7 +14,6 @@
 import("//build/test.gni")
 
 module_output_path = "bluetooth/framework_test/gatt_c/"
-SUBSYSTEM_DIR = "//foundation/communication"
 
 config("module_private_config") {
   visibility = [ ":*" ]
@@ -40,14 +39,14 @@ ohos_unittest("btfw_gatt_c_unit_test") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework",
-    "//base/global/resource_management/frameworks/resmgr:global_resmgr",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
+    "bluetooth:btframework",
     "c_utils:utils",
     "hilog:libhilog",
+    "resource_management:global_resmgr"
   ]
 }
 
@@ -59,14 +58,14 @@ ohos_unittest("btfw_gatt_client_c_unit_test") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner:btframework",
-    "//base/global/resource_management/frameworks/resmgr:global_resmgr",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
+    "bluetooth:btframework",
     "c_utils:utils",
     "hilog:libhilog",
+    "resource_management:global_resmgr"
   ]
 }
 

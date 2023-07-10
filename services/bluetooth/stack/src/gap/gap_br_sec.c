@@ -175,7 +175,7 @@ static void GapDoSecurityAction(RequestSecInfo *reqInfo, DeviceInfo *devInfo)
             devInfo->authenticationStatus = GAP_AUTH_STATUS_ACTION;
         }
         ret = GapAuthenticationRequested(devInfo->handle);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             reqInfo->status = GAP_SEC_REQ_STATUS_FAILED;
             devInfo->status = GAP_DEV_SEC_STATUS_IDLE;
             devInfo->authenticationStatus = GAP_AUTH_STATUS_IDLE;
@@ -187,7 +187,7 @@ static void GapDoSecurityAction(RequestSecInfo *reqInfo, DeviceInfo *devInfo)
             devInfo->encryptionStatus = GAP_ENC_STATUS_ACTION;
         }
         ret = GapSetConnectionEncryption(devInfo->handle, LINK_LEVEL_ENCRYPTION_ON);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             reqInfo->status = GAP_SEC_REQ_STATUS_FAILED;
             devInfo->status = GAP_DEV_SEC_STATUS_IDLE;
             devInfo->encryptionStatus = GAP_ENC_STATUS_IDLE;
@@ -236,7 +236,7 @@ static void GapDiscACLTimerTimeout(void *dev)
     ctx->pointer = dev;
 
     int ret = GapRunTaskUnBlockProcess(GapDiscACLTimerTimeoutTask, ctx, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -354,7 +354,7 @@ static void GapWaitEncryptTimeout(void *dev)
     ctx->pointer = dev;
 
     int ret = GapRunTaskUnBlockProcess(GapWaitEncryptTimeoutTask, ctx, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -424,9 +424,9 @@ int GAP_RequestSecurity(const BtAddr *addr, const GapRequestSecurityParam *param
         }
     } while (0);
 
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         param->callback(GAP_STATUS_FAILED, param->info, param->context);
-        ret = BT_NO_ERROR;
+        ret = BT_SUCCESS;
     }
 
     return ret;
@@ -502,7 +502,7 @@ int GAP_SetSecurityMode(GAP_SecurityMode mode)
     int ret;
     if (mode == SEC_MODE_4) {
         ret = GapWriteSimplePairingMode(SIMPLE_PAIRING_ENABLED);
-        if (ret == BT_NO_ERROR) {
+        if (ret == BT_SUCCESS) {
             ret = GapWriteSecureConnectionsHostSupport(SUPPORT_SECURE_CONNECTIONS);
         }
     } else {
@@ -510,7 +510,7 @@ int GAP_SetSecurityMode(GAP_SecurityMode mode)
         ret |= GapWriteSecureConnectionsHostSupport(UNSUPPORT_SECURE_CONNECTIONS);
     }
 
-    if (ret == BT_NO_ERROR) {
+    if (ret == BT_SUCCESS) {
         GAP_SecurityMode *secMode = GapGetSecurityMode();
         *secMode = mode;
     }
@@ -806,7 +806,7 @@ static void GapAuthenticationWaitRetryTimeout(void *parameter)
     ctx->pointer = parameter;
 
     int ret = GapRunTaskUnBlockProcess(GapAuthenticationWaitRetryTimeoutTask, ctx, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }

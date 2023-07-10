@@ -28,7 +28,7 @@ AvrcpCtService::AvrcpCtService() : utility::Context(PROFILE_NAME_AVRCP_CT, "1.6.
     InitFeatures();
     using namespace std::placeholders;
     AvrcCtProfile::Observer observer = {
-        std::bind(&AvrcpCtService::OnProfileDisabled, this, RET_NO_ERROR),
+        std::bind(&AvrcpCtService::OnProfileDisabled, this, BT_SUCCESS),
         std::bind(&AvrcpCtService::OnConnectionStateChanged, this, _1, _2),
         std::bind(&AvrcpCtService::OnButtonPressed, this, _1, _2, _3),
         std::bind(&AvrcpCtService::OnButtonReleased, this, _1, _2, _3),
@@ -166,20 +166,20 @@ void AvrcpCtService::EnableNative(void)
 
     do {
         result = RegisterSecurity();
-        if (result != RET_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             break;
         }
         result = RegisterService();
-        if (result != RET_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             break;
         }
         result = EnableProfile();
-        if (result != RET_NO_ERROR) {
+        if (result != BT_SUCCESS) {
             break;
         }
     } while (false);
 
-    if (result == RET_NO_ERROR) {
+    if (result == BT_SUCCESS) {
         SetServiceState(AVRC_CT_SERVICE_STATE_ENABLED);
     } else {
         SetServiceState(AVRC_CT_SERVICE_STATE_DISABLED);
@@ -192,7 +192,7 @@ void AvrcpCtService::DisableNative(void)
 {
     HILOGI("enter");
 
-    if (DisableProfile() != RET_NO_ERROR) {
+    if (DisableProfile() != BT_SUCCESS) {
         OnProfileDisabled(RET_BAD_STATUS);
     }
 }
@@ -243,7 +243,7 @@ void AvrcpCtService::OnProfileDisabled(int result)
     result |= UnregisterService();
     result |= UnregisterSecurity();
 
-    GetContext()->OnDisable(PROFILE_NAME_AVRCP_CT, result == RET_NO_ERROR);
+    GetContext()->OnDisable(PROFILE_NAME_AVRCP_CT, result == BT_SUCCESS);
 }
 
 int AvrcpCtService::RegisterSecurity(void)
@@ -384,7 +384,7 @@ int AvrcpCtService::Connect(const RawAddress &rawAddr)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::ConnectNative, this, peerAddr));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -414,7 +414,7 @@ int AvrcpCtService::Disconnect(const RawAddress &rawAddr)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::DisconnectNative, this, peerAddr));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -433,7 +433,7 @@ void AvrcpCtService::DisconnectNative(RawAddress rawAddr)
             break;
         }
 
-        if (profile_->Disconnect(rawAddr) != RET_NO_ERROR) {
+        if (profile_->Disconnect(rawAddr) != BT_SUCCESS) {
             HILOGI("Disconnect Failed! Addr: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
         }
     } while (false);
@@ -476,7 +476,7 @@ void AvrcpCtService::AcceptActiveConnect(const RawAddress &rawAddr)
             break;
         }
 
-        if (profile_->Connect(rawAddr) != RET_NO_ERROR) {
+        if (profile_->Connect(rawAddr) != BT_SUCCESS) {
             HILOGI("Connect Failed! Addr: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
         }
     } while (false);
@@ -536,7 +536,7 @@ int AvrcpCtService::PressButton(const RawAddress &rawAddr, uint8_t button)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::PressButtonNative, this, peerAddr, button));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -592,7 +592,7 @@ int AvrcpCtService::ReleaseButton(const RawAddress &rawAddr, uint8_t button)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::ReleaseButtonNative, this, peerAddr, button));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -652,7 +652,7 @@ int AvrcpCtService::GetUnitInfo(const RawAddress &rawAddr)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::UnitInfoNative, this, peerAddr));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -696,7 +696,7 @@ int AvrcpCtService::GetSubUnitInfo(const RawAddress &rawAddr)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::SubUnitInfoNative, this, peerAddr));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -744,7 +744,7 @@ int AvrcpCtService::SetAddressedPlayer(const RawAddress &rawAddr, uint16_t playe
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::SetAddressedPlayerNative, this, peerAddr, playerId));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -805,7 +805,7 @@ int AvrcpCtService::SetBrowsedPlayer(const RawAddress &rawAddr, uint16_t playerI
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::SetBrowsedPlayerNative, this, peerAddr, playerId));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -869,7 +869,7 @@ int AvrcpCtService::GetSupportedCompanies(const RawAddress &rawAddr)
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::GetCapabilitiesNative, this, peerAddr, AVRC_CAPABILITY_COMPANYID));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -897,7 +897,7 @@ int AvrcpCtService::GetSupportedEvents(const RawAddress &rawAddr)
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::GetCapabilitiesNative, this, peerAddr, AVRC_CAPABILITY_EVENTID));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -956,7 +956,7 @@ int AvrcpCtService::GetPlayerAppSettingAttributes(const RawAddress &rawAddr)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::GetPlayerAppSettingAttributesNative, this, peerAddr));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1015,7 +1015,7 @@ int AvrcpCtService::GetPlayerAppSettingValues(const RawAddress &rawAddr, uint8_t
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::GetPlayerAppSettingValuesNative, this, peerAddr, attribute));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1074,7 +1074,7 @@ int AvrcpCtService::GetPlayerAppSettingCurrentValue(const RawAddress &rawAddr, c
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::GetPlayerAppSettingCurrentValueNative, this, peerAddr, attributes));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1134,7 +1134,7 @@ int AvrcpCtService::SetPlayerAppSettingCurrentValue(
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::SetPlayerAppSettingCurrentValueNative, this, peerAddr, attributes, values));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1192,7 +1192,7 @@ int AvrcpCtService::GetPlayerAppSettingAttributeText(const RawAddress &rawAddr, 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::GetPlayerAppSettingAttributeTextNative, this, peerAddr, attributes));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1250,7 +1250,7 @@ int AvrcpCtService::GetPlayerAppSettingValueText(
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::GetPlayerAppSettingValueTextNative, this, peerAddr, attributeId, values));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1313,7 +1313,7 @@ int AvrcpCtService::GetElementAttributes(
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::GetElementAttributesNative, this, peerAddr, identifier, attributes));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1374,7 +1374,7 @@ int AvrcpCtService::GetPlayStatus(const RawAddress &rawAddr)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::GetPlayStatusNative, this, peerAddr));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1432,7 +1432,7 @@ int AvrcpCtService::PlayItem(const RawAddress &rawAddr, uint8_t scope, uint64_t 
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::PlayItemNative, this, peerAddr, scope, uid, uidCounter));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1489,7 +1489,7 @@ int AvrcpCtService::AddToNowPlaying(const RawAddress &rawAddr, uint8_t scope, ui
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::AddToNowPlayingNative, this, peerAddr, scope, uid, uidCounter));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1548,7 +1548,7 @@ int AvrcpCtService::RequestContinuingResponse(const RawAddress &rawAddr, uint8_t
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::RequestContinuingResponseNative, this, peerAddr, pduId));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1592,7 +1592,7 @@ int AvrcpCtService::AbortContinuingResponse(const RawAddress &rawAddr, uint8_t p
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::AbortContinuingResponseNative, this, peerAddr, pduId));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1644,7 +1644,7 @@ int AvrcpCtService::ChangePath(const RawAddress &rawAddr, uint16_t uidCounter, u
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::ChangePathNative, this, peerAddr, uidCounter, direction, folderUid));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1706,7 +1706,7 @@ int AvrcpCtService::GetFolderItems(const RawAddress &rawAddr, uint8_t scope, uin
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::GetFolderItemsNative, this, peerAddr, scope, startItem, endItem, attributes));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1774,7 +1774,7 @@ int AvrcpCtService::GetItemAttributes(const RawAddress &rawAddr, uint8_t scope, 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::GetItemAttributesNative, this, peerAddr, scope, uid, uidCounter, attributes));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1835,7 +1835,7 @@ int AvrcpCtService::GetTotalNumberOfItems(const RawAddress &rawAddr, uint8_t sco
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::GetTotalNumberOfItemsNative, this, peerAddr, scope));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1901,7 +1901,7 @@ int AvrcpCtService::SetAbsoluteVolume(const RawAddress &rawAddr, uint8_t volume)
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::SetAbsoluteVolumeNative, this, peerAddr, volume));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1961,7 +1961,7 @@ int AvrcpCtService::EnableNotification(const RawAddress &rawAddr, const std::vec
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(
             std::bind(&AvrcpCtService::EnableNotificationNative, this, peerAddr, events, interval));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -1988,7 +1988,7 @@ int AvrcpCtService::DisableNotification(const RawAddress &rawAddr, const std::ve
 
         RawAddress peerAddr(rawAddr.GetAddress());
         GetDispatcher()->PostTask(std::bind(&AvrcpCtService::DisableNotificationNative, this, peerAddr, events));
-        result = RET_NO_ERROR;
+        result = BT_SUCCESS;
     } while (false);
 
     return result;
@@ -2190,7 +2190,7 @@ void AvrcpCtService::ChannelEventCallback(
         switch (event) {
             case AVCT_CONNECT_IND_EVT:
             case AVCT_CONNECT_CFM_EVT:
-                if (result != RET_NO_ERROR) {
+                if (result != BT_SUCCESS) {
                     service->DecConnectionNum();
                 }
                 break;

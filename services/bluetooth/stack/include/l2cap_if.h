@@ -48,7 +48,7 @@ void BTSTACK_API L2CIF_Finalize();
  * @param psm protocol psm
  * @param svc callback for protocol psm
  * @param context context for protocol psm
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_RegisterService(
     uint16_t lpsm, const L2capService *svc, void *context, void (*cb)(uint16_t lpsm, int result));
@@ -67,7 +67,7 @@ void BTSTACK_API L2CIF_DeregisterService(uint16_t lpsm, void (*cb)(uint16_t lpsm
  * @param lpsm local protocol psm
  * @param rpsm remote protocol psm
  * @param lcid OUT parameter, local channel id
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_ConnectReq(const BtAddr *addr, uint16_t lpsm, uint16_t rpsm, void *context,
     void (*cb)(const BtAddr *addr, uint16_t lcid, int result, void *context));
@@ -88,7 +88,7 @@ void BTSTACK_API L2CIF_ConnectRsp(
  *
  * @param lcid local channel id
  * @param cfg config parameter
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_ConfigReq(uint16_t lcid, const L2capConfigInfo *cfg, void (*cb)(uint16_t lcid, int result));
 
@@ -99,7 +99,7 @@ int BTSTACK_API L2CIF_ConfigReq(uint16_t lcid, const L2capConfigInfo *cfg, void 
  * @param id identifier of l2cap command
  * @param cfg config parameter
  * @param result config result
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_ConfigRsp(
     uint16_t lcid, uint8_t id, const L2capConfigInfo *cfg, uint16_t result, void (*cb)(uint16_t lcid, int result));
@@ -132,7 +132,7 @@ void BTSTACK_API L2CIF_LocalBusy(uint16_t lcid, uint8_t isBusy, void (*cb)(uint1
  *
  * @param lcid local channel id
  * @param pkt packet of data
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_SendData(uint16_t lcid, const Packet *pkt, void (*cb)(uint16_t lcid, int result));
 
@@ -141,7 +141,7 @@ int BTSTACK_API L2CIF_SendData(uint16_t lcid, const Packet *pkt, void (*cb)(uint
  *
  * @param echoCallback callback of echo
  * @param context context of caller
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_RegisterEcho(const L2capEcho *echoCallback, void *context);
 

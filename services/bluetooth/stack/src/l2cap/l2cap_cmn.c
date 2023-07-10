@@ -436,7 +436,7 @@ int L2capAsynchronousProcess(void (*task)(const void *context), void (*destroy)(
     int result;
 
     result = BTM_RunTaskInProcessingQueue(PROCESSING_QUEUE_ID_LA2CAP, (void (*)(void *))task, context);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         if (destroy != NULL) {
             destroy(context);
         }
@@ -684,7 +684,7 @@ int L2capDisconnect(uint16_t handle, uint8_t reason)
 {
     LOG_DEBUG("L2cap Call BTM_AclRelease, handle = 0x%04X", handle);
     BTM_AclRelease(handle);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static BtmAclCallbacks g_btmAclCallback = {
@@ -701,13 +701,13 @@ static HciAclCallbacks g_hciAclCallback = {
 int L2capRegisterBdr(const L2capBdrCallback *cb)
 {
     (void)memcpy_s(&g_l2capBdr, sizeof(L2capBdrCallback), cb, sizeof(L2capBdrCallback));
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int L2capRegisterLe(const L2capLeCallback *cb)
 {
     (void)memcpy_s(&g_l2capLe, sizeof(L2capLeCallback), cb, sizeof(L2capLeCallback));
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void L2capCommonStartup()

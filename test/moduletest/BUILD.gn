@@ -46,7 +46,6 @@ ohos_moduletest("btsvr_module_test") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "//base/global/resource_management/frameworks/resmgr:global_resmgr",
     "//foundation/communication/bluetooth_service/services/bluetooth/server:bluetooth_server",
     "//foundation/communication/bluetooth_service/services/bluetooth/service:btservice",
     "//third_party/bounds_checking_function:libsec_shared",
@@ -58,6 +57,7 @@ ohos_moduletest("btsvr_module_test") {
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "resource_management:global_resmgr"
   ]
 }
 

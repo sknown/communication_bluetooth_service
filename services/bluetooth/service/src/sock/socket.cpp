@@ -381,7 +381,7 @@ int Socket::Connect(const std::string &addr, const Uuid &uuid, int securityFlag,
 
     sdpClient_ = std::make_unique<SocketSdpClient>();
     int ret = sdpClient_->StartDiscovery(addr, uuid, this);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s: Discovery SPP Service Fail!", __FUNCTION__);
     }
 
@@ -422,7 +422,7 @@ int Socket::Listen(const std::string &name, const Uuid &uuid, int securityFlag, 
 
     sdpServer_ = std::make_unique<SocketSdpServer>();
     int ret = sdpServer_->RegisterSdpService(name, uuid, scn_);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("[sock]%{public}s: Discovery SPP Service Fail!", __FUNCTION__);
     }
 

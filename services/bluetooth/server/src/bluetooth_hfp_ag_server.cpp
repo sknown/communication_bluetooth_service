@@ -43,7 +43,7 @@ public:
         HILOGI("device:%{public}s, state:%{public}d", GET_ENCRYPT_ADDR(device), state);
         if (state == static_cast<int>(BTConnectState::CONNECTED) ||
             state == static_cast<int>(BTConnectState::DISCONNECTED)) {
-            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "HFP_CONNECTED_STATE",
+            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "HFP_CONNECTED_STATE",
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "STATE", state);
         }
         observers_->ForEach([device, state](IBluetoothHfpAgObserver* observer) {
@@ -170,7 +170,7 @@ int32_t BluetoothHfpAgServer::GetConnectDevices(std::vector<BluetoothRawAddress>
     for (RawAddress device : deviceList) {
         devices.push_back(BluetoothRawAddress(device));
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int BluetoothHfpAgServer::GetDevicesByStates(const std::vector<int> &states, std::vector<BluetoothRawAddress> &devices)
@@ -184,12 +184,12 @@ int BluetoothHfpAgServer::GetDevicesByStates(const std::vector<int> &states, std
     if (pimpl->HfpAgService_ != nullptr) {
         rawDevices = pimpl->HfpAgService_->GetDevicesByStates(tmpStates);
     } else {
-        return BT_FAILURE;
+        return BT_ERR_INTERNAL_ERROR;
     }
     for (RawAddress device : rawDevices) {
         devices.push_back(BluetoothRawAddress(device));
     }
-    return BT_SUCC;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHfpAgServer::GetDeviceState(const BluetoothRawAddress &device, int32_t &state)
@@ -205,7 +205,7 @@ int32_t BluetoothHfpAgServer::GetDeviceState(const BluetoothRawAddress &device, 
     } else {
         return BT_ERR_INTERNAL_ERROR;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHfpAgServer::Connect(const BluetoothRawAddress &device)

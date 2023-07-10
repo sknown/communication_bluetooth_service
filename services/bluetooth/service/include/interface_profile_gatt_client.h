@@ -132,6 +132,7 @@ public:
     {}
 
     virtual void OnConnectionParameterChanged(int interval, int latency, int timeout, int status) = 0;
+    virtual void OnReadRemoteRssiValue(const RawAddress &addr, int rssi, int status) = 0;
 };
 
 /**

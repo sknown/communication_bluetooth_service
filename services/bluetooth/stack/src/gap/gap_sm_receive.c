@@ -139,7 +139,7 @@ static void GapRecvLeAuthenticationRequest(uint16_t handle, uint8_t pairMethod, 
     }
 
     int ret = GapRunTaskUnBlockProcess(GapLeAuthenticationRequestTask, smParam, GapFreeLeAuthenticationRequest);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -176,7 +176,7 @@ static void GapRecvLePairResult(uint16_t handle, uint8_t status, const SMP_PairR
     smParam->result = *result;
 
     int ret = GapRunTaskUnBlockProcess(GapLePairResultTask, smParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -206,7 +206,7 @@ static void GapRecvLeRemotePairRequest(uint16_t handle, const SMP_PairParam *par
     smParam->param = *param;
 
     int ret = GapRunTaskUnBlockProcess(GapLeRemotePairRequestTask, smParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -236,7 +236,7 @@ static void GapRecvLeRemotePairResponse(uint16_t handle, const SMP_PairParam *pa
     smParam->param = *param;
 
     int ret = GapRunTaskUnBlockProcess(GapLeRemotePairResponseTask, smParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -260,7 +260,7 @@ static void GapRecvLeRemoteSecurityRequest(uint16_t handle, uint8_t authReq)
     smParam->authReq = authReq;
 
     int ret = GapRunTaskUnBlockProcess(GapLeRemoteSecurityRequestTask, smParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -285,7 +285,7 @@ static void GapRecvLeLongTermKeyRequest(uint16_t handle, const uint8_t *random, 
     smParam->ediv = ediv;
 
     int ret = GapRunTaskUnBlockProcess(GapLeLongTermKeyRequestTask, smParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -327,7 +327,7 @@ static void GapRecvLeGenerateSignatureResult(uint8_t status, const uint8_t *sign
     }
 
     int ret = GapRunTaskUnBlockProcess(GapLeGenerateSignatureResultTask, smParam, GapFreeLeGenerateSignatureResult);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -369,7 +369,7 @@ static void GapRecvGenerateRPAResult(uint8_t status, const uint8_t *addr)
     }
 
     int ret = GapRunTaskUnBlockProcess(GapGenerateRPAResultTask, smParam, GapFreeGenerateRPAResult);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }
@@ -395,7 +395,7 @@ static void GapRecvResolveRPAResult(uint8_t status, bool result, const uint8_t *
     (void)memcpy_s(smParam->irk, GAP_IRK_SIZE, irk, GAP_IRK_SIZE);
 
     int ret = GapRunTaskUnBlockProcess(GapResolveRPAResultTask, smParam, NULL);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s: Task error:%{public}d.", __FUNCTION__, ret);
     }
 }

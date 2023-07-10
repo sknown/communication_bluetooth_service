@@ -124,6 +124,8 @@ public:
      */
     virtual ~IClassicRemoteDeviceObserver() = default;
 
+    virtual void OnAclStateChanged(const RawAddress &device, int state, unsigned int reason) = 0;
+
     /**
      * @brief Pair status changed observer.
      *

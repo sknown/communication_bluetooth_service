@@ -141,7 +141,7 @@ public:
         int32_t uid = IPCSkeleton::GetCallingUid();
         if (state == static_cast<int>(BTConnectState::CONNECTED) ||
             state == static_cast<int>(BTConnectState::DISCONNECTED)) {
-            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "GATT_SERVER_CONN_STATE",
+            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "GATT_SERVER_CONN_STATE",
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "PID", pid, "UID", uid, "STATE", state);
         }
         if (callback_ == nullptr) {
@@ -289,7 +289,7 @@ int BluetoothGattServerServer::AddService(int32_t appId, BluetoothGattService *s
     bluetooth::Service svc = (bluetooth::Service)*services;
 
     int ret = pimpl->serverService_->AddService(appId, svc);
-    return (ret == GattStatus::GATT_SUCCESS ? BT_SUCCESS : BT_ERR_INTERNAL_ERROR);
+    return (ret == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
 }
 
 void BluetoothGattServerServer::ClearServices(int appId)
@@ -333,7 +333,7 @@ int BluetoothGattServerServer::NotifyClient(
     characteristic->length_ = 0;
 
     int ret = pimpl->serverService_->NotifyClient((bluetooth::GattDevice)device, character, needConfirm);
-    return (ret == GattStatus::GATT_SUCCESS ? BT_SUCCESS : BT_ERR_INTERNAL_ERROR);
+    return (ret == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
 }
 
 int BluetoothGattServerServer::RemoveService(int32_t appId, const BluetoothGattService &services)
@@ -350,7 +350,7 @@ int BluetoothGattServerServer::RemoveService(int32_t appId, const BluetoothGattS
     }
 
     int ret = pimpl->serverService_->RemoveService(appId, (bluetooth::Service)services);
-    return (ret == GattStatus::GATT_SUCCESS ? BT_SUCCESS : BT_ERR_INTERNAL_ERROR);
+    return (ret == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
 }
 
 int BluetoothGattServerServer::RespondCharacteristicRead(
@@ -372,7 +372,7 @@ int BluetoothGattServerServer::RespondCharacteristicRead(
     characteristic->length_ = 0;
 
     int result = pimpl->serverService_->RespondCharacteristicRead((bluetooth::GattDevice)device, character, ret);
-    return (result == GattStatus::GATT_SUCCESS ? BT_SUCCESS : BT_ERR_INTERNAL_ERROR);
+    return (result == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
 }
 
 int BluetoothGattServerServer::RespondCharacteristicWrite(
@@ -391,7 +391,7 @@ int BluetoothGattServerServer::RespondCharacteristicWrite(
 
     int result = pimpl->serverService_->RespondCharacteristicWrite(
         (bluetooth::GattDevice)device, (bluetooth::Characteristic)characteristic, ret);
-    return (result == GattStatus::GATT_SUCCESS ? BT_SUCCESS : BT_ERR_INTERNAL_ERROR);
+    return (result == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
 }
 
 int BluetoothGattServerServer::RespondDescriptorRead(
@@ -413,7 +413,7 @@ int BluetoothGattServerServer::RespondDescriptorRead(
     descriptor->length_ = 0;
 
     int result = pimpl->serverService_->RespondDescriptorRead((bluetooth::GattDevice)device, desc, ret);
-    return (result == GattStatus::GATT_SUCCESS ? BT_SUCCESS : BT_ERR_INTERNAL_ERROR);
+    return (result == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
 }
 
 int BluetoothGattServerServer::RespondDescriptorWrite(
@@ -432,7 +432,7 @@ int BluetoothGattServerServer::RespondDescriptorWrite(
 
     int result = pimpl->serverService_->RespondDescriptorWrite(
         (bluetooth::GattDevice)device, (bluetooth::Descriptor)descriptor, ret);
-    return (result == GattStatus::GATT_SUCCESS ? BT_SUCCESS : BT_ERR_INTERNAL_ERROR);
+    return (result == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
 }
 
 int BluetoothGattServerServer::RegisterApplication(const sptr<IBluetoothGattServerCallback> &callback)
@@ -451,7 +451,7 @@ int BluetoothGattServerServer::RegisterApplication(const sptr<IBluetoothGattServ
     if (ret >= 0) {
         HILOGI("appId, %{public}d", ret);
         (*it)->SetAppId(ret);
-        HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "GATT_APP_REGISTER",
+        HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "GATT_APP_REGISTER",
             OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC,  "ACTION", "register",
             "SIDE", "server", "ADDRESS", "empty", "PID", OHOS::IPCSkeleton::GetCallingPid(),
             "UID", OHOS::IPCSkeleton::GetCallingUid(), "APPID", ret);
@@ -483,11 +483,11 @@ int BluetoothGattServerServer::DeregisterApplication(int32_t appId)
             break;
         }
     }
-    HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "GATT_APP_REGISTER",
+    HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "GATT_APP_REGISTER",
         OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC,  "ACTION", "deregister",
         "SIDE", "server", "ADDRESS", "empty", "PID", OHOS::IPCSkeleton::GetCallingPid(),
         "UID", OHOS::IPCSkeleton::GetCallingUid(), "APPID", appId);
-    return (ret == GattStatus::GATT_SUCCESS ? BT_SUCCESS : BT_ERR_INTERNAL_ERROR);
+    return (ret == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
 }
 BluetoothGattServerServer::BluetoothGattServerServer() : pimpl(new impl())
 {

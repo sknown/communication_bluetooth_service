@@ -325,19 +325,19 @@ int GattConnectionManager::StartUp(utility::Dispatcher &dispatcher)
     GapServiceSecurityInfo serverServiceInfo = {INCOMING, GATT_SERVER, SEC_PROTOCOL_L2CAP, {BT_PSM_GATT}};
 
     if (GAPIF_RegisterServiceSecurity(nullptr, &clientServiceInfo, GAP_SEC_OUT_AUTHENTICATION | GAP_SEC_OUT_ENCRYPTION)
-        != BT_NO_ERROR) {
+        != BT_SUCCESS) {
         LOG_WARN("%{public}s:%{public}d:%{public}s GAPIF_RegisterServiceSecurity  client failed!",
             __FILE__, __LINE__, __FUNCTION__);
     }
 
     if (GAPIF_RegisterServiceSecurity(nullptr, &serverServiceInfo, GAP_SEC_IN_AUTHENTICATION | GAP_SEC_IN_ENCRYPTION)
-        != BT_NO_ERROR) {
+        != BT_SUCCESS) {
         LOG_WARN("%{public}s:%{public}d:%{public}s GAPIF_RegisterServiceSecurity  server failed!",
             __FILE__, __LINE__, __FUNCTION__);
     }
 
     GapLeConnCallback callback = {impl::LEConnectionParamterReq, impl::LEConnectionUpdateComplete, nullptr, nullptr};
-    if (GAPIF_RegisterLeConnCallback(&callback, nullptr) != BT_NO_ERROR) {
+    if (GAPIF_RegisterLeConnCallback(&callback, nullptr) != BT_SUCCESS) {
         LOG_WARN("%{public}s:%{public}d:%{public}s GAPIF_RegisterLeConnCallback failed!",
             __FILE__, __LINE__, __FUNCTION__);
     }
@@ -526,7 +526,7 @@ void GattConnectionManager::impl::NotifyObserver(
     const GattDevice &device, uint8_t event, uint16_t connectionHandle, int ret)
 {
     std::lock_guard<std::mutex> lck(registerMutex_);
-    HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BLUETOOTH, "GATT_CONNECT_STATE",
+    HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "GATT_CONNECT_STATE",
         OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "ADDRESS", device.addr_.GetAddress(), "STATE",
         event, "ROLE", device.role_);
     for (auto &item : observers_) {
@@ -857,7 +857,7 @@ int GattConnectionManager::impl::DoRequestConnectionPriority(GattConnectionManag
         0,
         0
     };
-    if (GAPIF_LeConnParamUpdate(&addr, &connParam) != BT_NO_ERROR) {
+    if (GAPIF_LeConnParamUpdate(&addr, &connParam) != BT_SUCCESS) {
         return GattStatus::GATT_FAILURE;
     }
 
@@ -1168,7 +1168,7 @@ void GattConnectionManager::Device::CheckEncryption()
         (void)memcpy_s(addr.addr, RawAddress::BT_ADDRESS_BYTE_LEN, addr_, RawAddress::BT_ADDRESS_BYTE_LEN);
         addr.type = Info().addressType_;
         if (GAPIF_LeGetSecurityStatus(&addr, &status, &encKeySize) ==
-            BT_NO_ERROR && encKeySize != GAP_LE_NO_ENCRYPTION) {
+            BT_SUCCESS && encKeySize != GAP_LE_NO_ENCRYPTION) {
             Info().isEncryption_ = true;
         } else {
             Info().isEncryption_ = false;

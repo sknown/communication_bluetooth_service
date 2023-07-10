@@ -182,7 +182,7 @@ void MapMseMnscli::DisConnect(const RawAddress &remoteAddr, int masId)
     }
     if (auto iter = obexClientMap_.find(address); iter != obexClientMap_.end()) {
         mnsStateMap_[address] = BTConnectState::DISCONNECTING;
-        if (RET_NO_ERROR != iter->second->Disconnect()) {
+        if (BT_SUCCESS != iter->second->Disconnect()) {
             mnsStateMap_[address] = BTConnectState::DISCONNECTED;
         }
     }

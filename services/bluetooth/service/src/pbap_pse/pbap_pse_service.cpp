@@ -90,7 +90,7 @@ void PbapPseService::EnableService()
     pimpl->rfcommScn_ = RFCOMM_AssignServerNum();
     pimpl->pbapPseSdp_ = std::make_unique<PbapPseSdp>(pimpl->rfcommScn_, PBAP_PSE_GOEP_L2CAP_PSM);
     int retVal = pimpl->pbapPseSdp_->Register();
-    if (retVal != RET_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         GetContext()->OnEnable(PROFILE_NAME_PBAP_PSE, false);
         PBAP_PSE_LOG_ERROR("Enable PbapPse Service failure!");
         return;
@@ -100,7 +100,7 @@ void PbapPseService::EnableService()
 
     pimpl->pbapPseGap_ = std::make_unique<PbapPseGap>(pimpl->rfcommScn_, PBAP_PSE_GOEP_L2CAP_PSM);
     retVal = pimpl->pbapPseGap_->Register();
-    if (retVal != RET_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         GetContext()->OnEnable(PROFILE_NAME_PBAP_PSE, false);
         PBAP_PSE_LOG_ERROR("Enable PbapPse Service failure!");
         return;
@@ -191,7 +191,7 @@ int PbapPseService::Disconnect(const RawAddress &device)
         return RET_BAD_STATUS;
     }
     GetDispatcher()->PostTask(std::bind(&PbapPseService::DisConnectInternal, this, device));
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void PbapPseService::DisConnectInternal(RawAddress device)
@@ -270,7 +270,7 @@ int PbapPseService::SetConnectionStrategy(const RawAddress &device, int strategy
     if (strategy == static_cast<int>(BTStrategyType::CONNECTION_FORBIDDEN)) {
         GetDispatcher()->PostTask(std::bind(&PbapPseService::DisConnectInternal, this, device));
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPseService::GetConnectionStrategy(const RawAddress &device) const
@@ -314,7 +314,7 @@ int PbapPseService::SetDevicePassword(const RawAddress &device, const std::strin
         return RET_BAD_STATUS;
     }
     GetDispatcher()->PostTask(std::bind(&PbapPseService::ProcessSetDevicePassword, this, device, password, userId));
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int PbapPseService::GetDeviceState(const RawAddress &device) const
@@ -539,7 +539,7 @@ void PbapPseService::ProcessShutDownComplete(const utility::Message &msg)
         pimpl->pbapPseGap_->Deregister();
     }
     int retVal = RFCOMM_FreeServerNum(pimpl->rfcommScn_);
-    if (retVal != RET_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         PBAP_PSE_LOG_ERROR("Pbap free server num 0x%02X error, retVal=%{public}d", pimpl->rfcommScn_, retVal);
     }
     GetContext()->OnDisable(PROFILE_NAME_PBAP_PSE, true);

@@ -44,14 +44,14 @@ int PbapPceSdp::Register()
     classId->uuid16 = PBAP_PCE_UUID16;
     /// create ServiceClass
     int retVal = SDP_AddServiceClassIdList(sdpHandle_, classId.get(), 1);
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("Call SDP_AddServiceClassIdList Error");
     }
 
     /// create Service Name
     retVal = SDP_AddServiceName(
         sdpHandle_, SDP_ATTRIBUTE_PRIMARY_LANGUAGE_BASE, PCE_SERVICE_NAME.c_str(), PCE_SERVICE_NAME.length());
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("Call SDP_AddServiceName Error");
     }
 
@@ -61,7 +61,7 @@ int PbapPceSdp::Register()
     profileDescriptor->versionNumber = PBAP_PCE_VERSION_NUMBER;
     /// create Bluetooth Profile Descriptor List
     retVal = SDP_AddBluetoothProfileDescriptorList(sdpHandle_, profileDescriptor.get(), 1);
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("Call SDP_AddBluetoothProfileDescriptorList Error");
     }
 
@@ -73,7 +73,7 @@ int PbapPceSdp::Register()
 int PbapPceSdp::Deregister() const
 {
     PBAP_PCE_LOG_INFO("%{public}s start", __PRETTY_FUNCTION__);
-    uint32_t retVal = BT_NO_ERROR;
+    uint32_t retVal = BT_SUCCESS;
     retVal |= SDP_DeregisterServiceRecord(sdpHandle_);
     retVal |= SDP_DestroyServiceRecord(sdpHandle_);
     PBAP_PCE_LOG_INFO("%{public}s end, retVal = %u", __PRETTY_FUNCTION__, retVal);
@@ -115,7 +115,7 @@ int PbapPceSdp::SdpSearch(const RawAddress &device)
     attrIDs.attributeIdList.attributeId[SDP_ATTRIBUTE_ID4] = PBAP_SUPPORTED_REPOSITORIES_ATTRIBUTE_ID;
     attrIDs.attributeIdList.attributeId[SDP_ATTRIBUTE_ID5] = PBAP_SUPPORTED_FEATURES_ATTRIBUTE_ID;
     retVal = SDP_ServiceSearchAttribute(&address, &sdpUuid, attrIDs, this, PbapPceSdp::SdpSearchCallback);
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         PBAP_PCE_LOG_ERROR("pce client Call SDP_ServiceSearchAttribute Error");
     }
 

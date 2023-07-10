@@ -90,12 +90,12 @@ void PanService::StartUp()
 
     maxConnectionsNum_ = GetMaxConnectionsDeviceNum();
 
-    int resultSdp = BT_NO_ERROR;
-    int resultBnep = BT_NO_ERROR;
+    int resultSdp = BT_SUCCESS;
+    int resultBnep = BT_SUCCESS;
     panSdp_ = std::make_unique<PanSdp>();
     resultSdp = panSdp_->Register();
     resultBnep = PanBnep::Startup();
-    if (resultSdp == BT_NO_ERROR && resultBnep == BT_NO_ERROR) {
+    if (resultSdp == BT_SUCCESS && resultBnep == BT_SUCCESS) {
         GetContext()->OnEnable(PROFILE_NAME_PAN, true);
         isStarted_ = true;
         LOG_DEBUG("[PAN Service]%{public}s():PanService started", __FUNCTION__);

@@ -81,7 +81,7 @@ int32_t BluetoothHidHostStub::ConnectInner(MessageParcel &data, MessageParcel &r
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHidHostStub::DisconnectInner(MessageParcel &data, MessageParcel &reply)
@@ -94,7 +94,7 @@ int32_t BluetoothHidHostStub::DisconnectInner(MessageParcel &data, MessageParcel
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHidHostStub::GetDeviceStateInner(MessageParcel &data, MessageParcel &reply)
@@ -108,7 +108,7 @@ int32_t BluetoothHidHostStub::GetDeviceStateInner(MessageParcel &data, MessagePa
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    if (errCode != BT_SUCCESS) {
+    if (errCode != NO_ERROR) {
         HILOGE("internal error.");
         return BT_ERR_INTERNAL_ERROR;
     }
@@ -117,7 +117,7 @@ int32_t BluetoothHidHostStub::GetDeviceStateInner(MessageParcel &data, MessagePa
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHidHostStub::GetDevicesByStatesInner(MessageParcel &data, MessageParcel &reply)
@@ -139,7 +139,7 @@ int32_t BluetoothHidHostStub::GetDevicesByStatesInner(MessageParcel &data, Messa
         HILOGE("reply write failed.");
         return BT_ERR_IPC_TRANS_FAILED;
     }
-    if (errCode != BT_SUCCESS) {
+    if (errCode != NO_ERROR) {
         HILOGE("internal error.");
         return BT_ERR_INTERNAL_ERROR;
     }
@@ -154,7 +154,7 @@ int32_t BluetoothHidHostStub::GetDevicesByStatesInner(MessageParcel &data, Messa
             return BT_ERR_IPC_TRANS_FAILED;
         }
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHidHostStub::RegisterObserverInner(MessageParcel &data, MessageParcel &reply)

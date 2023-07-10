@@ -63,23 +63,42 @@
     "rom": "4.5MB",
     "ram": "7.5MB",
     "hisysevent_config": [
-      "//foundation/communication/bluetooth/hisysevent.yaml"
+      "//foundation/communication/bluetooth_service/hisysevent.yaml"
     ],
     "deps": {
       "components": [
+        "ability_base",
         "ability_runtime",
+        "audio_framework",
+        "av_session",
         "base",
         "hilog",
-        "hisysevent_native",
+        "hisysevent",
+        "hitrace",
         "ipc",
         "samgr_proxy",
-        "samgr"
+        "samgr",
+        "access_token",
+        "bluetooth",
+        "drivers_interface_bluetooth",
+        "eventhandler",
+        "ability_base",
+        "call_manager",
+        "core_service",
+        "hdf_core",
+        "init",
+        "input",
+        "safwk",
+        "common_event_service",
+        "state_registry",
+        "c_utils"
       ],
       "third_party": [
         "googletest",
         "libuv",
         "libxml2",
-        "openssl"
+        "openssl",
+        "bounds_checking_function"
       ]
     },
     "build": {
@@ -92,7 +111,8 @@
           "//foundation/communication/bluetooth_service/services/bluetooth/service:btsbc"
         ]
       },
-      "inner_api": [],
+      "inner_api": [
+      ],
       "test": [
         "//foundation/communication/bluetooth_service/test/unittest/spp:unittest",
         "//foundation/communication/bluetooth_service/test/unittest/host:unittest",

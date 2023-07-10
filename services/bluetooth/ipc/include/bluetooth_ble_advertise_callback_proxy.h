@@ -29,7 +29,7 @@ public:
 
     void OnAutoStopAdvEvent(int32_t advHandle) override;
     void OnStartResultEvent(int32_t result, int32_t advHandle, int32_t opcode) override;
-
+    void OnSetAdvDataEvent(int32_t result, int32_t advHandle) override;
 private:
     ErrCode InnerTransact(uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply);
     static inline BrokerDelegator<BluetoothBleAdvertiseCallbackProxy> delegator_;

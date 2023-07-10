@@ -170,7 +170,7 @@ static void ATT_StartUp()
     int result;
 
     result = BTM_CreateProcessingQueue(PROCESSING_QUEUE_ID_ATT, BTM_PROCESSING_QUEUE_SIZE_DEFAULT);
-    if (result != BT_NO_ERROR) {
+    if (result != BT_SUCCESS) {
         return;
     }
 

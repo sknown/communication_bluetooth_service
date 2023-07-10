@@ -27,7 +27,7 @@ int HfpHfRfcommConnectionServer::RegisterServer(RFCOMM_EventCallback fn) const
 
     ret = RFCOMM_RegisterServer(localScn_, HFP_HF_COMMAND_MTU, HFP_RFCOMM_CONNECTION_SERVER_EVENTS, fn, nullptr);
     HFP_HF_RETURN_IF_FAIL(ret);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HfpHfRfcommConnectionServer::RemoveServer()
@@ -42,21 +42,21 @@ int HfpHfRfcommConnectionServer::RemoveServer()
     HFP_HF_RETURN_IF_FAIL(ret);
 
     localScn_ = 0;
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HfpHfRfcommConnectionServer::AcceptConnection(uint16_t handle)
 {
     int ret = RFCOMM_AcceptConnection(handle);
     HFP_HF_RETURN_IF_FAIL(ret);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HfpHfRfcommConnectionServer::RejectConnection(uint16_t handle)
 {
     int ret = RFCOMM_RejectConnection(handle);
     HFP_HF_RETURN_IF_FAIL(ret);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 uint8_t HfpHfRfcommConnectionServer::AssignLocalScn()

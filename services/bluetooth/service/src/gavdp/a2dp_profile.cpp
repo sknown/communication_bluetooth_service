@@ -605,7 +605,7 @@ int A2dpProfile::Connect(const BtAddr &device)
         a2dpInstance = A2dpSnkProfile::GetInstance();
     }
     FindOrCreatePeer(device, role);
-    if (GetSDPInstance().FindSnkService(device, a2dpInstance, A2dpProfilePeer::SDPServiceCallback) != RET_NO_ERROR) {
+    if (GetSDPInstance().FindSnkService(device, a2dpInstance, A2dpProfilePeer::SDPServiceCallback) != BT_SUCCESS) {
         LOG_WARN("[A2dpProfile]%{public}s SDP_ServiceSearch Error\n", __func__);
     }
     return A2DP_SUCCESS;
@@ -671,7 +671,7 @@ int A2dpProfile::Disconnect(const BtAddr &device)
 int A2dpProfile::Stop(const uint16_t handle, const bool suspend)
 {
     LOG_INFO("[A2dpProfile]%{public}s handle(%u) suspend(%{public}d)\n", __func__, handle, suspend);
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     A2dpProfilePeer *peer = nullptr;
     A2dpAvdtMsg data = {};
     utility::Message msg(EVT_SUSPEND_REQ, 0, &data);
@@ -704,7 +704,7 @@ int A2dpProfile::Start(const uint16_t handle)
 {
     LOG_INFO("[A2dpProfile]%{public}s handle(%hu)\n", __func__, handle);
 
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     uint8_t role = GetRole();
     A2dpProfilePeer *peer = nullptr;
     A2dpAvdtMsg data = {};
@@ -727,7 +727,7 @@ int A2dpProfile::Start(const uint16_t handle)
         } else {
             LOG_ERROR("[A2dpProfile]%{public}s Audio data is not ready\n", __func__);
         }
-        return RET_NO_ERROR;
+        return BT_SUCCESS;
     }
     if (!JudgeAllowedStreaming()) {
         return AVDT_NO_RESOURCES;
@@ -759,7 +759,7 @@ bool A2dpProfile::JudgeAllowedStreaming() const
 
 int A2dpProfile::Close(const uint16_t handle) const
 {
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     A2dpProfilePeer *peer = nullptr;
     A2dpAvdtMsg data = {};
     utility::Message msg(EVT_CLOSE_REQ, 0, &data);
@@ -884,7 +884,7 @@ int A2dpProfile::Reconfigure(const uint16_t handle, uint8_t *codecInfo) const
 {
     LOG_INFO("[A2dpProfile]%{public}s handle(%u)\n", __func__, handle);
 
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     A2dpProfilePeer *peer = nullptr;
     A2dpAvdtMsg data = {};
     utility::Message msg(EVT_RECONFIG_REQ, 0, &data);

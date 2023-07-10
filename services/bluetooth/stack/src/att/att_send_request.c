@@ -1289,7 +1289,7 @@ static void AttSignedWriteCommandAsync(const void *context)
     AttSingedWriteCommandContextAssign(sigedWriteCommandGenerContextPtr, connect, data, packet, bufferSize);
     ret = GAPIF_LeDataSignatureGenerationAsync(
         &(connect->addr), gapSignatureDataObj, AttGapSignatureGenerationResult, sigedWriteBuffPtr);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         if (g_attClientSendDataCB.attSendDataCB != NULL) {
             AttSignedWriteCommandErrorFree(connect, ret, sigedWriteBuffPtr, packet);
         }

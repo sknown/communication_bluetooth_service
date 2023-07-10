@@ -221,7 +221,7 @@ static int AttJudgeInfoLen(uint16_t inforLen, size_t dataLen, uint16_t *inforNum
         goto ATTJUDGEINFOLEN_END;
     }
 
-    ret = BT_NO_ERROR;
+    ret = BT_SUCCESS;
 
 ATTJUDGEINFOLEN_END:
     return ret;
@@ -1492,7 +1492,7 @@ void AttSignedWriteCommand(AttConnectInfo *connect, const Buffer *buffer)
     uint8_t *arrayPtr = signature;
     ret = GAPIF_LeDataSignatureConfirmationAsync(
         &(connect->addr), gapSignatureDataObj, arrayPtr, AttGapSignatureConfirmationResult, sigedWriteBuffPtr);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         AttSignedWriteCommandGapRetErrorAssign(&attWriteObj, data);
         attWriteObj.signedWriteCommand.result = GAP_REJECT;
         (void)memcpy_s(attWriteObj.signedWriteCommand.authSignature,

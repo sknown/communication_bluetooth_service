@@ -92,7 +92,7 @@ void HciCloseCmd()
 
 static int HciCmdPushToTxQueue(HciCmd *cmd)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     HciPacket *hciPacket = MEM_MALLOC.alloc(sizeof(HciPacket));
     if (hciPacket != NULL) {
         hciPacket->type = H2C_CMD;
@@ -153,7 +153,7 @@ void HciSetNumberOfHciCmd(uint8_t numberOfHciCmd)
         cmd = QueueTryDequeue(g_cmdCache);
         if (cmd != NULL) {
             int result = HciCmdPushToTxQueue(cmd);
-            if (result == BT_NO_ERROR) {
+            if (result == BT_SUCCESS) {
                 g_numberOfHciCmd--;
 
                 MutexLock(g_lockProcessingCmds);
@@ -239,13 +239,13 @@ static void HciFreeCmd(void *cmd)
 
 int HciSendCmd(HciCmd *cmd)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     MutexLock(g_lockNumberOfHciCmd);
 
     if (g_numberOfHciCmd > 0) {
         result = HciCmdPushToTxQueue(cmd);
-        if (result == BT_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             g_numberOfHciCmd--;
 
             MutexLock(g_lockProcessingCmds);

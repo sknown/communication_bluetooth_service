@@ -36,7 +36,7 @@ public:
     void DeregisterObserver(const sptr<IBluetoothA2dpSourceObserver> &observer) override;
     int Connect(const RawAddress &device) override;
     int Disconnect(const RawAddress &device) override;
-    int GetDeviceState(const RawAddress &device) override;
+    int GetDeviceState(const RawAddress &device, int &state) override;
     int GetDevicesByStates(const std::vector<int32_t> &states, std::vector<RawAddress> &rawAddrs) override;
     int GetPlayingState(const RawAddress &device, int &state) override;
     int SetConnectStrategy(const RawAddress &device, int strategy) override;

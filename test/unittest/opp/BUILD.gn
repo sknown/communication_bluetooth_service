@@ -46,17 +46,17 @@ ohos_unittest("btfw_opp_unit_test") {
   configs = [ ":module_private_config" ]
 
   deps = [
-    "//base/global/resource_management/frameworks/resmgr:global_resmgr",
-    "//foundation/communication/bluetooth/frameworks/inner:btframework",
     "//third_party/bounds_checking_function:libsec_shared",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
+    "bluetooth:btframework",
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
+    "resource_management:global_resmgr"
   ]
 }
 

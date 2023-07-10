@@ -33,14 +33,14 @@ int HfpAgGapServer::RegisterServiceSecurity(uint8_t scn)
         &g_securityInfo,
         GAP_SEC_IN_ENCRYPTION | GAP_SEC_IN_AUTHENTICATION | GAP_SEC_OUT_ENCRYPTION | GAP_SEC_OUT_AUTHENTICATION);
     HFP_AG_RETURN_IF_FAIL(ret);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HfpAgGapServer::DeregisterServiceSecurity()
 {
     int ret = GAPIF_DeregisterServiceSecurity(nullptr, &g_securityInfo);
     HFP_AG_RETURN_IF_FAIL(ret);
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 }  // namespace bluetooth
 }  // namespace OHOS

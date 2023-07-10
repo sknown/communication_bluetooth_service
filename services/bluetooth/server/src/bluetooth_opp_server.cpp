@@ -228,7 +228,7 @@ ErrCode BluetoothOppServer::SendFile(std::string &device, std::vector<std::strin
         HILOGE("oppService_ is null");
         return ERR_NO_INIT;
     }
-    result = pimpl->oppService_->SendFile(device, filePaths, mimeTypes);
+    result = pimpl->oppService_->SendFile(RawAddress(device), filePaths, mimeTypes);
     HILOGI("end, result:%{public}d", result);
     return ERR_OK;
 }

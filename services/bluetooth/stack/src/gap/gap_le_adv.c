@@ -461,7 +461,7 @@ int GAP_LeAdvSetParam(uint8_t advType, GapLeAdvParam advParam)
         hciCmdParam.advertisingFilterPolicy = advParam.advFilterPolicy;
 
         ret = HCI_LeSetAdvertisingParameters(&hciCmdParam);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_ERROR("HCI Command Error ret = %{public}d.", ret);
         }
     }

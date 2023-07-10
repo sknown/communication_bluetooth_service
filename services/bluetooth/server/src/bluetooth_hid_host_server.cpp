@@ -191,7 +191,7 @@ int32_t BluetoothHidHostServer::GetDevicesByStates(
         result.push_back(bluetoothDevice);
         HILOGI("%{public}s", GET_ENCRYPT_ADDR(bluetoothDevice));
     }
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHidHostServer::GetDeviceState(const BluetoothRawAddress &device, int32_t &state)
@@ -207,7 +207,7 @@ int32_t BluetoothHidHostServer::GetDeviceState(const BluetoothRawAddress &device
     }
     state = pimpl->hidHostService_->GetDeviceState(device);
     HILOGI("end, result:%{public}d", state);
-    return BT_SUCCESS;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHidHostServer::Connect(const BluetoothRawAddress &device)

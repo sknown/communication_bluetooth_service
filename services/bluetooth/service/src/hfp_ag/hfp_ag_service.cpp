@@ -697,7 +697,7 @@ void HfpAgService::ClearActiveDevice()
     }
     DisconnectSingleSco(preActiveDevice);
     HfpAgProfile::SetActiveDevice(NULL_ADDRESS);
-    NotifyCurrentActiveDevice(NULL_ADDRESS);
+    NotifyCurrentActiveDevice(RawAddress(NULL_ADDRESS));
 }
 
 bool HfpAgService::IsInbandRinging()
@@ -1145,7 +1145,7 @@ void HfpAgService::ModifyActiveDevice(const std::string &newAddress)
         SendCloseVoiceEvent(preActiveDevice);
     }
 
-    NotifyCurrentActiveDevice(newAddress);
+    NotifyCurrentActiveDevice(RawAddress(newAddress));
 }
 
 REGISTER_CLASS_CREATOR(HfpAgService);

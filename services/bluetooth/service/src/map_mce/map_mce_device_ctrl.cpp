@@ -50,7 +50,7 @@ int MceAnalyseSdpAttribute(
     bool findMessageType = false;
     bool findInstanceFeature = false;
     bool findInstance = false;
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
 
     SdpAttribute *tempAttribute = servicePointer.attribute;
     for (int attSeqCount = 0; attSeqCount < servicePointer.attributeNumber; attSeqCount++, tempAttribute++) {
@@ -106,7 +106,7 @@ int MceAnalyseSdpProtocolDescriptor(
 {
     bool findRfcommId = false;
     bool findRfcommValue = false;
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
 
     // sdp protocol descriptor analyse
     SdpProtocolDescriptor *tempDescriptor = servicePointer.descriptor;
@@ -141,11 +141,11 @@ int MceAnalyseSdpParam(MasSdpParam &saveParam, const SdpService &servicePointer)
     saveParam.isGoepL2capPSM = false;
 
     ret = MceAnalyseSdpAttribute(saveParam, servicePointer, l2capServerNum, findL2capId);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         return ret;
     }
     ret = MceAnalyseSdpProtocolDescriptor(saveParam, servicePointer, rfcommServerNum, findL2capId);
-    if (ret != RET_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         return ret;
     }
     // get rfcomm
@@ -212,7 +212,7 @@ void MapMceSdpSearchCb(
         sdpSaveParam.gapNumber = gapCounter;
         int ret = MceAnalyseSdpParam(sdpSaveParam, *servPtr);
         // check sdp param value
-        if (ret != RET_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             // param error
             mceService->PostMessage(msg);
             return;
@@ -319,7 +319,7 @@ int MapMceDeviceCtrl::PostMessageWithRequest(utility::Message msg, std::unique_p
         ctrlSendFlag_ = true;
         ctrlRequestPtr_ = std::move(req);
         devService_.GetDispatcher()->PostTask(std::bind(&MapMceDeviceCtrl::ProcessMessage, this, msg));
-        ret = RET_NO_ERROR;
+        ret = BT_SUCCESS;
         LOG_INFO("%{public}s ctrlSendFlag_ set", __PRETTY_FUNCTION__);
     } else {
         LOG_ERROR("%{public}s ctrlSendFlag_ is true", __PRETTY_FUNCTION__);
@@ -501,7 +501,7 @@ int MapMceDeviceCtrl::GetSupportedMasInstances(const RawAddress &device)
 
     // sdp Search
     int retVal = SDP_ServiceSearchAttribute(&btAddr, &sdpUuid, attributeIdList, nullptr, MapMceServiceSdpSearchCb);
-    if (retVal != BT_NO_ERROR) {
+    if (retVal != BT_SUCCESS) {
         LOG_ERROR("%{public}s error:SDP_ServiceSearchAttribute", __PRETTY_FUNCTION__);
     }
     LOG_INFO("%{public}s end", __PRETTY_FUNCTION__);
@@ -631,7 +631,7 @@ void MapMceDeviceCtrl::ClientConnectedProcMsg(utility::Message msg)
 void MapMceDeviceCtrl::ClientConnectingProcMsg(utility::Message msg)
 {
     LOG_INFO("%{public}s enter", __PRETTY_FUNCTION__);
-    int ret = RET_NO_ERROR;
+    int ret = BT_SUCCESS;
     utility::Message outMsg(MSG_MCESERVICE_DEVICE_DISCONNECTED);
     switch (msg.what_) {
         case MSG_MCEDEVICE_REQ_DEVICE_DISCONNECT:
@@ -640,7 +640,7 @@ void MapMceDeviceCtrl::ClientConnectingProcMsg(utility::Message msg)
             break;
         case MSG_MCEDEVICE_SDP_GET_INSTANCE_FINISH:
             ret = ProcessGetInstance(msg);
-            if (ret == RET_NO_ERROR) {
+            if (ret == BT_SUCCESS) {
                 AllInstancesStartConnecting();
             } else {
                 // trans to disconnect
@@ -695,7 +695,7 @@ void MapMceDeviceCtrl::ClientDisconnectedProcMsg(utility::Message msg)
             // device connecting start
             ret = StartConnecting();
             TransClientState(MAP_MCE_DEV_STATE_CONNECTING);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 LOG_INFO("%{public}s sdp error", __PRETTY_FUNCTION__);
             }
             break;
@@ -765,7 +765,7 @@ int MapMceDeviceCtrl::ProcessGetInstance(const utility::Message &msg)
         sdpParam = *it;
         if (insDefaultConfig_.singleInstMode) {
             if (insDefaultConfig_.singleInstanceId == sdpParam.instanceId) {
-                ret = RET_NO_ERROR;
+                ret = BT_SUCCESS;
                 auto stateMachine1 = std::make_unique<MapMceInstanceStm>(
                     *this, *(devService_.GetDispatcher()), sdpParam.instanceId, insDefaultConfig_);
                 stateMachine1->CreateStm();
@@ -777,7 +777,7 @@ int MapMceDeviceCtrl::ProcessGetInstance(const utility::Message &msg)
                 break;
             }
         } else {
-            ret = RET_NO_ERROR;
+            ret = BT_SUCCESS;
             auto stateMachine = std::make_unique<MapMceInstanceStm>(
                 *this, *(devService_.GetDispatcher()), sdpParam.instanceId, insDefaultConfig_);
             stateMachine->CreateStm();
@@ -972,12 +972,12 @@ void MapMceDeviceCtrl::SendRequest(utility::Message msg)
 void MapMceDeviceCtrl::MnsConnectedProcMsg(utility::Message msg)
 {
     LOG_INFO("%{public}s enter,input msg=0x%x", __PRETTY_FUNCTION__, msg.what_);
-    int ret = BT_NO_ERROR;
+    int ret = BT_SUCCESS;
     switch (msg.what_) {
         case MSG_MCEDEVICE_MNS_INFO_DISCONNECT:
             TransMnsState(MAP_MCE_DEV_STATE_DISCONNECTING);
             ret = MnsProcDisconnectAccept(msg);
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 TransMnsState(MAP_MCE_DEV_STATE_DISCONNECTED);
                 MnsProcDisconnected();
                 LOG_ERROR("%{public}s Disconnect error", __PRETTY_FUNCTION__);
@@ -1103,7 +1103,7 @@ void MapMceDeviceCtrl::MnsProcObexPut(utility::Message msg)
     std::unique_ptr<bluetooth::ObexHeader> resp = ObexHeader::CreateResponse(ObexRspCode::SUCCESS);
     if (mnsObexSession_ != nullptr) {
         int ret = mnsObexSession_->SendResponse(*resp);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_ERROR("%{public}s SendResponse execute error", __PRETTY_FUNCTION__);
         }
     }
@@ -1131,7 +1131,7 @@ int MapMceDeviceCtrl::MnsProcConnectAcceptCheckTargetId()
             return RET_BAD_PARAM;
         }
     }
-    return RET_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 void MapMceDeviceCtrl::CheckPowerBusyStateChange()
@@ -1208,7 +1208,7 @@ void MapMceDeviceCtrl::MnsProcConnectAccept(utility::Message msg)
     MapMceDeviceStateType state = GetCurrentDeviceState();
     if (((state == MAP_MCE_DEV_STATE_CONNECTED) || (state == MAP_MCE_DEV_STATE_CONNECTING)) &&
         (btDeviceTargetState_ == MAP_MCE_DEV_STATE_CONNECTED)) {
-        if (MnsProcConnectAcceptCheckTargetId() != RET_NO_ERROR) {
+        if (MnsProcConnectAcceptCheckTargetId() != BT_SUCCESS) {
             LOG_ERROR("%{public}s ObexRspCode::NOT_ACCEPTABLE", __PRETTY_FUNCTION__);
             return;
         }
@@ -1217,12 +1217,12 @@ void MapMceDeviceCtrl::MnsProcConnectAccept(utility::Message msg)
         resp->AppendItemConnectionId(connectId_);
         resp->AppendItemWho(mnsTargetUuidTbl_, MAX_OF_MASCLIENT_OBEX_UUID_TBL);
         ret = mnsObexSession_->SendResponse(*resp);
-        if (ret == BT_NO_ERROR) {
+        if (ret == BT_SUCCESS) {
             TransMnsState(MAP_MCE_DEV_STATE_CONNECTED);
         } else {
             LOG_ERROR("%{public}s SendResponse execute error", __PRETTY_FUNCTION__);
             ret = mnsObexSession_->Disconnect();
-            if (ret != BT_NO_ERROR) {
+            if (ret != BT_SUCCESS) {
                 TransMnsState(MAP_MCE_DEV_STATE_DISCONNECTED);
                 LOG_ERROR("%{public}s Disconnect error", __PRETTY_FUNCTION__);
             } else {
@@ -1232,11 +1232,11 @@ void MapMceDeviceCtrl::MnsProcConnectAccept(utility::Message msg)
     } else {  // refuse
         resp = ObexHeader::CreateResponse(ObexRspCode::FORBIDDEN, true);
         ret = mnsObexSession_->SendResponse(*resp);
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_ERROR("%{public}s SendResponse execute error", __PRETTY_FUNCTION__);
         }
         ret = mnsObexSession_->Disconnect();
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             TransMnsState(MAP_MCE_DEV_STATE_DISCONNECTED);
             LOG_ERROR("%{public}s Disconnect error", __PRETTY_FUNCTION__);
         } else {
@@ -1283,11 +1283,11 @@ int MapMceDeviceCtrl::MnsProcDisconnectAccept(utility::Message msg)
     }
     resp = ObexHeader::CreateResponse(ObexRspCode::SUCCESS, true);
     ret = mnsObexSession_->SendResponse(*resp);
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s SendResponse error", __PRETTY_FUNCTION__);
     }
     ret = mnsObexSession_->Disconnect();
-    if (ret != BT_NO_ERROR) {
+    if (ret != BT_SUCCESS) {
         LOG_ERROR("%{public}s Disconnect error", __PRETTY_FUNCTION__);
     }
     return ret;
@@ -1302,7 +1302,7 @@ void MapMceDeviceCtrl::MnsProcRequestDisconnect()
         // disconnect the mns
         int ret = mnsObexSession_->Disconnect();
 
-        if (ret != BT_NO_ERROR) {
+        if (ret != BT_SUCCESS) {
             LOG_ERROR("%{public}s Disconnect error", __PRETTY_FUNCTION__);
             TransMnsState(MAP_MCE_DEV_STATE_DISCONNECTED);
             MnsProcDisconnected();

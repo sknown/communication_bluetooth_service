@@ -25,8 +25,8 @@ public:
     BluetoothSocketServer() {}
     ~BluetoothSocketServer() {}
 
-    int Connect(ConnectSokectParam &param, int &fd) override;
-    int Listen(ListenSokectParam &param, int &fd) override;
+    int Connect(ConnectSocketParam &param, int &fd) override;
+    int Listen(ListenSocketParam &param, int &fd) override;
 };
 }  // namespace Bluetooth
 }  // namespace OHOS

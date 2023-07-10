@@ -34,7 +34,7 @@ extern "C" {
  *
  * @param lpsm protocol psm
  * @param svc callback for protocol psm
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_LeRegisterService(
     uint16_t lpsm, const L2capLeService *svc, void *context, void (*cb)(uint16_t lpsm, int result));
@@ -43,7 +43,7 @@ int BTSTACK_API L2CIF_LeRegisterService(
  * @brief Deregister l2cap le_psm for LE Credit Based Connection
  *
  * @param lpsm protocol psm
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 void BTSTACK_API L2CIF_LeDeregisterService(uint16_t lpsm, void (*cb)(uint16_t lpsm, int result));
 
@@ -53,7 +53,7 @@ void BTSTACK_API L2CIF_LeDeregisterService(uint16_t lpsm, void (*cb)(uint16_t lp
  * @param addr remote bluetooth address
  * @param cfg config parameter
  * @param lcid OUT parameter, local channel id
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_LeCreditBasedConnectionReq(const BtAddr *addr, uint16_t lpsm, uint16_t rpsm,
     const L2capLeConfigInfo *cfg, void (*cb)(const BtAddr *addr, uint16_t lcid, int result));
@@ -65,7 +65,7 @@ int BTSTACK_API L2CIF_LeCreditBasedConnectionReq(const BtAddr *addr, uint16_t lp
  * @param id identifier of l2cap command
  * @param cfg config parameter
  * @param result result of connection
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_LeCreditBasedConnectionRsp(
     uint16_t lcid, uint8_t id, const L2capLeConfigInfo *cfg, uint16_t result, void (*cb)(uint16_t lcid, int result));
@@ -74,7 +74,7 @@ int BTSTACK_API L2CIF_LeCreditBasedConnectionRsp(
  * @brief Send Disconnection Request packet
  *
  * @param lcid local channel id
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 void BTSTACK_API L2CIF_LeDisconnectionReq(uint16_t lcid, void (*cb)(uint16_t lcid, int result));
 
@@ -83,7 +83,7 @@ void BTSTACK_API L2CIF_LeDisconnectionReq(uint16_t lcid, void (*cb)(uint16_t lci
  *
  * @param lcid local channel id
  * @param id identifier of l2cap command
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 void BTSTACK_API L2CIF_LeDisconnectionRsp(uint16_t lcid, uint8_t id, void (*cb)(uint16_t lcid, int result));
 
@@ -92,7 +92,7 @@ void BTSTACK_API L2CIF_LeDisconnectionRsp(uint16_t lcid, uint8_t id, void (*cb)(
  *
  * @param lcid local channel id
  * @param pkt packet of data
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_LeSendData(uint16_t lcid, const Packet *pkt, void (*cb)(uint16_t lcid, int result));
 
@@ -101,7 +101,7 @@ int BTSTACK_API L2CIF_LeSendData(uint16_t lcid, const Packet *pkt, void (*cb)(ui
  *
  * @param cid fix channel id
  * @param chan callback of fix channel
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_LeRegisterFixChannel(
     uint16_t cid, const L2capLeFixChannel *chan, void (*cb)(uint16_t cid, int result));
@@ -110,7 +110,7 @@ int BTSTACK_API L2CIF_LeRegisterFixChannel(
  * @brief Deregister LE Fix Channel data callback
  *
  * @param cid fix channel id
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 void BTSTACK_API L2CIF_LeDeregisterFixChannel(uint16_t cid, void (*cb)(uint16_t cid, int result));
 
@@ -119,7 +119,7 @@ void BTSTACK_API L2CIF_LeDeregisterFixChannel(uint16_t cid, void (*cb)(uint16_t 
  *
  * @param addr remote bluetooth address
  * @param param connection parameter
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_LeConnect(
     const BtAddr *addr, const L2capLeConnectionParameter *param, void (*cb)(const BtAddr *addr, int result));
@@ -127,7 +127,7 @@ int BTSTACK_API L2CIF_LeConnect(
 /**
  * @brief Cancel Le ACL connection
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_LeConnectCancel(const BtAddr *addr);
 
@@ -135,7 +135,7 @@ int BTSTACK_API L2CIF_LeConnectCancel(const BtAddr *addr);
  * @brief Destroy Le ACL connection
  *
  * @param aclHandle ACL handle
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 void BTSTACK_API L2CIF_LeDisconnect(uint16_t aclHandle, void (*cb)(uint16_t aclHandle, int result));
 
@@ -145,7 +145,7 @@ void BTSTACK_API L2CIF_LeDisconnect(uint16_t aclHandle, void (*cb)(uint16_t aclH
  * @param aclHandle ACL handle
  * @param cid fix channel id
  * @param pkt packet of data
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_LeSendFixChannelData(
     uint16_t aclHandle, uint16_t cid, Packet *pkt, void (*cb)(uint16_t aclHandle, int result));
@@ -155,14 +155,14 @@ int BTSTACK_API L2CIF_LeSendFixChannelData(
  *
  * @param cb callback for connection parameter update
  * @param context context of caller
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_LeRegisterConnectionParameterUpdate(const L2capLeConnectionParameterUpdate *cb, void *context);
 
 /**
  * @brief Deregister LE connection parameter update
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 void BTSTACK_API L2CIF_LeDeregisterConnectionParameterUpdate();
 
@@ -172,7 +172,7 @@ void BTSTACK_API L2CIF_LeDeregisterConnectionParameterUpdate();
  *
  * @param aclHandle ACL handle
  * @param param connection parameter
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 int BTSTACK_API L2CIF_LeConnectionParameterUpdateReq(
     uint16_t aclHandle, const L2capLeConnectionParameter *param, void (*cb)(uint16_t aclHandle, int result));
@@ -183,7 +183,7 @@ int BTSTACK_API L2CIF_LeConnectionParameterUpdateReq(
  * @param aclHandle ACL handle
  * @param id cidentifier of l2cap command
  * @param result result of the request
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful, otherwise the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful, otherwise the operation fails.
  */
 void BTSTACK_API L2CIF_LeConnectionParameterUpdateRsp(
     uint16_t aclHandle, uint8_t id, uint16_t result, void (*cb)(uint16_t aclHandle, int result));

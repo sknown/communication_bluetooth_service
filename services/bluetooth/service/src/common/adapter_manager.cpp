@@ -208,7 +208,7 @@ bool AdapterManager::Start()
         return false;
     }
 
-    if (BTM_Initialize() != BT_NO_ERROR) {
+    if (BTM_Initialize() != BT_SUCCESS) {
         LOG_ERROR("Bluetooth Stack Initialize Failed!!");
         return false;
     }
@@ -245,17 +245,17 @@ bool AdapterManager::OutputSetting() const
         std::string outputPath = "./snoop.log";
         AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_BTSNOOP_OUTPUT_PATH, outputPath);
 
-        if (BTM_SetSnoopFilePath(outputPath.c_str(), outputPath.length()) != BT_NO_ERROR) {
+        if (BTM_SetSnoopFilePath(outputPath.c_str(), outputPath.length()) != BT_SUCCESS) {
             LOG_ERROR("Set snoop file path Failed!!");
             return false;
         }
 
-        if (BTM_EnableSnoopFileOutput(desensitization) != BT_NO_ERROR) {
+        if (BTM_EnableSnoopFileOutput(desensitization) != BT_SUCCESS) {
             LOG_ERROR("Enable snoop file output Failed!!");
             return false;
         }
     } else {
-        if (BTM_DisableSnoopFileOutput() != BT_NO_ERROR) {
+        if (BTM_DisableSnoopFileOutput() != BT_SUCCESS) {
             LOG_ERROR("Disable snoop file output Failed!!");
             return false;
         }
@@ -264,12 +264,12 @@ bool AdapterManager::OutputSetting() const
     outputValue = false;
     if (AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_HCILOG_OUTPUT, outputValue) &&
         outputValue) {
-        if (BTM_EnableHciLogOutput(desensitization) != BT_NO_ERROR) {
+        if (BTM_EnableHciLogOutput(desensitization) != BT_SUCCESS) {
             LOG_ERROR("Enable HciLog output Failed!!");
             return false;
         }
     } else {
-        if (BTM_DisableHciLogOutput() != BT_NO_ERROR) {
+        if (BTM_DisableHciLogOutput() != BT_SUCCESS) {
             LOG_ERROR("Disable HciLog output Failed!!");
             return false;
         }

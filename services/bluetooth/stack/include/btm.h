@@ -35,14 +35,14 @@ extern "C" {
 /**
  * @brief Initialize function for bluetooth stack.
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_Initialize();
 
 /**
  * @brief Close function for bluetooth stack.
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_Close();
 
@@ -53,7 +53,7 @@ int BTSTACK_API BTM_Close();
  * @brief Enable BR/EDR controller or LE controller
  *
  * @param controller <b>BREDR_CONTROLLER</b> or <b>LE_CONTROLLER</b>.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_Enable(int controller);
 
@@ -61,7 +61,7 @@ int BTSTACK_API BTM_Enable(int controller);
  * @brief Disable BR/EDR controller or LE controller
  *
  * @param controller <b>BREDR_CONTROLLER</b> or <b>LE_CONTROLLER</b>.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_Disable(int controller);
 
@@ -83,7 +83,7 @@ typedef struct {
  * @param callbacks Point to <b>BtmCallbacks</b> struct, the struct must be available before calling to
  *                  <b>BTM_DeregisterCallbacks</b>.
  * @param context The context for callback functions.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_RegisterCallbacks(const BtmCallbacks *callbacks, void *context);
 
@@ -91,7 +91,7 @@ int BTSTACK_API BTM_RegisterCallbacks(const BtmCallbacks *callbacks, void *conte
  * @brief Deregister callback functions.
  *
  * @param callbacks Point to <b>BtmCallbacks</b> struct.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_DeregisterCallbacks(const BtmCallbacks *callbacks);
 
@@ -103,7 +103,7 @@ int BTSTACK_API BTM_DeregisterCallbacks(const BtmCallbacks *callbacks);
  * @brief Create ACL connection to BR/EDR device.
  *
  * @param addr The address of BR/EDR device.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_AclConnect(const BtAddr *addr);
 
@@ -111,7 +111,7 @@ int BTSTACK_API BTM_AclConnect(const BtAddr *addr);
  * @brief Cancel the connect operation to BR/EDR device.
  *
  * @param addr The address of BR/EDR device.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_AclCancelConnect(const BtAddr *addr);
 
@@ -119,7 +119,7 @@ int BTSTACK_API BTM_AclCancelConnect(const BtAddr *addr);
  * @brief Create ACL connection to LE device.
  *
  * @param addr The address of LE device.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_LeConnect(const BtAddr *addr);
 
@@ -127,21 +127,21 @@ int BTSTACK_API BTM_LeConnect(const BtAddr *addr);
  * @brief Cancel the connect operation to LE device.
  *
  * @param addr The address of LE device.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_LeCancelConnect(const BtAddr *addr);
 
 /**
  * @brief Set LE connection mode to fast.
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_SetLeConnectionModeToFast();
 
 /**
  * @brief Set LE connection mode to slow.
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_SetLeConnectionModeToSlow();
 
@@ -150,7 +150,7 @@ int BTSTACK_API BTM_SetLeConnectionModeToSlow();
  *
  * @param connectionHandle The connection handle.
  * @param reason The reason for peer device.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_AclDisconnect(uint16_t connectionHandle, uint8_t reason);
 
@@ -158,7 +158,7 @@ int BTSTACK_API BTM_AclDisconnect(uint16_t connectionHandle, uint8_t reason);
  * @brief Add a reference to the ACL connection.
  *
  * @param connectionHandle The connection handle.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_AclAddRef(uint16_t connectionHandle);
 
@@ -193,7 +193,7 @@ int BTSTACK_API BTM_ReadRssi(const BtAddr *addr);
  *
  * @param addr The address device.
  * @param role <b>BTM_ROLE_MASTER</b> or <b>BTM_ROLE_SLAVE</b>.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_SwitchRole(const BtAddr *addr, uint8_t role);
 
@@ -246,7 +246,7 @@ typedef struct {
  * @param callbacks Point to <b>BtmAclCallbacks</b> struct, the struct must be available before calling to
  *                  <b>BTM_DeregisterAclCallbacks</b>.
  * @param context The context for callback functions.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_RegisterAclCallbacks(const BtmAclCallbacks *callbacks, void *context);
 
@@ -254,7 +254,7 @@ int BTSTACK_API BTM_RegisterAclCallbacks(const BtmAclCallbacks *callbacks, void 
  * @brief Deregister callback functions for ACL features.
  *
  * @param callbacks Point to <b>BtmAclCallbacks</b> struct.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_DeregisterAclCallbacks(const BtmAclCallbacks *callbacks);
 
@@ -264,7 +264,7 @@ int BTSTACK_API BTM_DeregisterAclCallbacks(const BtmAclCallbacks *callbacks);
  * @param connectionHandle The connection handle.
  * @param localAddr Point to the local address struct.
  * @param peerAddr Point to the peer address struct.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_GetLeConnectionAddress(uint16_t connectionHandle, BtAddr *localAddr, BtAddr *peerAddr);
 
@@ -277,7 +277,7 @@ int BTSTACK_API BTM_GetLeConnectionAddress(uint16_t connectionHandle, BtAddr *lo
  * @brief Set default Link Policy Settings.
  *
  * @param linkPolicySettings The default Link Policy Settings.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_SetDefaultLinkPolicySettings(uint16_t linkPolicySettings);
 
@@ -286,7 +286,7 @@ int BTSTACK_API BTM_SetDefaultLinkPolicySettings(uint16_t linkPolicySettings);
  *
  * @param addr Point to the remote address struct.
  * @param linkPolicySettings The default Link Policy Settings.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_SetLinkPolicySettings(const BtAddr *addr, uint16_t linkPolicySettings);
 
@@ -312,7 +312,7 @@ int BTSTACK_API BTM_SetLinkPolicySettings(const BtAddr *addr, uint16_t linkPolic
  *
  * @param addr Point to the remote address struct.
  * @param packetType The packet types.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_ChangeConnectionPacketType(const BtAddr *addr, uint16_t packetType);
 
@@ -464,7 +464,7 @@ bool BTSTACK_API BTM_IsControllerSupportChannelSelectionAlgorithm2();
  * @brief Get local address.
  *
  * @param addr Point to <b>BtAddr</b> struct.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_GetLocalAddr(BtAddr *addr);
 
@@ -472,7 +472,7 @@ int BTSTACK_API BTM_GetLocalAddr(BtAddr *addr);
  * @brief Get local supported features.
  *
  * @param features Point to 8 bytes buffer to obtain the supported features.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_GetLocalSupportedFeatures(uint8_t features[8]);
 
@@ -488,7 +488,7 @@ typedef struct {
  * @brief Get local version information.
  *
  * @param localVersion Point to a <b>BtmLocalVersionInformation</b> struct.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_GetLocalVersionInformation(BtmLocalVersionInformation *localVersion);
 
@@ -508,7 +508,7 @@ typedef struct {
  * @brief Get local supported codecs.
  *
  * @param localSupportedCodes Point to a <b>BtmLocalSupportedCodecs</b> pointer. Do not free this pointer.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_GetLocalSupportedCodecs(BtmLocalSupportedCodecs **localSupportedCodes);
 
@@ -516,7 +516,7 @@ int BTSTACK_API BTM_GetLocalSupportedCodecs(BtmLocalSupportedCodecs **localSuppo
  * @brief Get BR/EDR ACL data length.
  *
  * @param aclDataPacketLength Obtain the ACL data length.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_GetAclDataPacketLength(uint16_t *aclDataPacketLength);
 
@@ -524,7 +524,7 @@ int BTSTACK_API BTM_GetAclDataPacketLength(uint16_t *aclDataPacketLength);
  * @brief Get LE ACL data length.
  *
  * @param length Obtain the ACL data length.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_GetLeAclDataPacketLength(uint16_t *length);
 
@@ -600,7 +600,7 @@ uint8_t BTM_GetOwnAddressType();
  * @brief Set LE random address.
  *
  * @param addr The random address.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_SetLeRandomAddress(const BtAddr *addr);
 
@@ -608,7 +608,7 @@ int BTSTACK_API BTM_SetLeRandomAddress(const BtAddr *addr);
  * @brief Get LE random address.
  *
  * @param addr The random address.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_GetLeRandomAddress(BtAddr *addr);
 
@@ -627,7 +627,7 @@ typedef struct {
  *
  * @param addr The remote device address.
  * @param param The Sniff parameters.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_EnterSniffMode(const BtAddr *addr, const BtmSniffParam *param);
 
@@ -635,7 +635,7 @@ int BTSTACK_API BTM_EnterSniffMode(const BtAddr *addr, const BtmSniffParam *para
  * @brief Exit Sniff mode.
  *
  * @param addr The remote device address.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_ExitSniffMode(const BtAddr *addr);
 
@@ -650,7 +650,7 @@ typedef struct {
  *
  * @param addr The remote device address.
  * @param subRating The Sniff Subrating parameters.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_SetSniffSubrating(const BtAddr *addr, const BtmSniffSubrating *subRating);
 
@@ -669,7 +669,7 @@ typedef struct {
  * @param callbacks Point to <b>BtmPmCallbacks</b> struct, the struct must be available before calling to
  *                  <b>BTM_DeregisterPmCallbacks</b>.
  * @param context The context for callback functions.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_RegisterPmCallbacks(const BtmPmCallbacks *callbacks, void *context);
 
@@ -677,7 +677,7 @@ int BTSTACK_API BTM_RegisterPmCallbacks(const BtmPmCallbacks *callbacks, void *c
  * @brief Deregister callback functions for Power Management features.
  *
  * @param callbacks Point to <b>BtmPmCallbacks</b> struct.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_DeregisterPmCallbacks(const BtmPmCallbacks *callbacks);
 
@@ -698,7 +698,7 @@ typedef struct {
  * @brief Create SCO connection.
  *
  * @param param The parameters of creating a SCO connection.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_CreateScoConnection(const BtmCreateScoConnectionParam *param);
 
@@ -716,7 +716,7 @@ typedef struct {
  * @brief Modify SCO connection.
  *
  * @param param The parameters of modifying SCO connection.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_ModifyScoConnection(const BtmModifyScoConnectionParam *param);
 
@@ -726,7 +726,7 @@ typedef BtmCreateScoConnectionParam BtmAcceptScoConnectionRequestParam;
  * @brief Accept a SCO connection request.
  *
  * @param param The parameters of accepting a SCO connection request.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_AcceptScoConnectionRequest(const BtmAcceptScoConnectionRequestParam *param);
 
@@ -739,7 +739,7 @@ typedef struct {
  * @brief Reject a SCO connection request.
  *
  * @param param The parameters of rejecting a SCO connection request.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_RejectScoConnectionRequest(const BtmRejectScoConnectionRequestParam *param);
 
@@ -748,7 +748,7 @@ int BTSTACK_API BTM_RejectScoConnectionRequest(const BtmRejectScoConnectionReque
  *
  * @param connectionHandle The connection handle.
  * @param reason The disconnect reason for remote device.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_DisconnectScoConnection(uint16_t connectionHandle, uint8_t reason);
 
@@ -770,7 +770,7 @@ typedef struct {
  * @brief Create eSCO connection.
  *
  * @param param The parameters of creating a eSCO connection.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_CreateEscoConnection(const BtmCreateEscoConnectionParam *param);
 
@@ -788,7 +788,7 @@ typedef struct {
  * @brief Modify eSCO connection.
  *
  * @param param The parameters of modifying eSCO connection.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_ModifyEscoConnection(const BtmModifyEscoConnectionParam *param);
 
@@ -798,7 +798,7 @@ typedef BtmCreateEscoConnectionParam BtmAcceptEscoConnectionRequestParam;
  * @brief Accept a eSCO connection request.
  *
  * @param param The parameters of accepting a eSCO connection request.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_AcceptEscoConnectionRequest(const BtmAcceptEscoConnectionRequestParam *param);
 
@@ -848,7 +848,7 @@ typedef struct {
  * @param callbacks Point to <b>BtmScoCallbacks</b> struct, the struct must be available before calling to
  *                  <b>BTM_DeregisterScoCallbacks</b>.
  * @param context The context for callback functions.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_RegisterScoCallbacks(const BtmScoCallbacks *callbacks, void *context);
 
@@ -856,7 +856,7 @@ int BTSTACK_API BTM_RegisterScoCallbacks(const BtmScoCallbacks *callbacks, void 
  * @brief Deregister callback functions for SCO/eSCO features.
  *
  * @param callbacks Point to <b>BtmScoCallbacks</b> struct.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_DeregisterScoCallbacks(const BtmScoCallbacks *callbacks);
 
@@ -864,7 +864,7 @@ int BTSTACK_API BTM_DeregisterScoCallbacks(const BtmScoCallbacks *callbacks);
  * @brief Write voice setting.
  *
  * @param voiceSetting The value of voice setting.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_WriteVoiceSetting(uint16_t voiceSetting);
 
@@ -877,21 +877,21 @@ int BTSTACK_API BTM_WriteVoiceSetting(uint16_t voiceSetting);
  *
  * @param path Point to the path string.
  * @param length The length of path.
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_SetSnoopFilePath(const char *path, uint16_t length);
 
 /**
  * @brief Enable snoop file output.
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_EnableSnoopFileOutput(bool filter);
 
 /**
  * @brief Disable snoop file output.
  *
- * @return Returns <b>BT_NO_ERROR</b> if the operation is successful; returns others if the operation fails.
+ * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
 int BTSTACK_API BTM_DisableSnoopFileOutput();
 

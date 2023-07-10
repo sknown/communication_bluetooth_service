@@ -1607,7 +1607,7 @@ bool GattServerProfile::impl::CharacteristicPropertyIsWritable(uint16_t attHandl
 {
     if ((db_.GetCharacteristic(attHandle) != nullptr) &&
         (db_.GetCharacteristic(attHandle)->properties_ & CHARACTERISTIC_PROPERTIE_WRITE) &&
-        (db_.GetValueByHandle(attHandle).value().get().permissions_ & static_cast<int>(GattPermission::WRITABLE))) {
+        (db_.GetValueByHandle(attHandle).value().get().permissions_ & static_cast<int>(GattPermission::WRITEABLE))) {
         return true;
     } else {
         return false;
@@ -1623,7 +1623,7 @@ bool GattServerProfile::impl::CharacteristicPropertyIsWritable(uint16_t attHandl
 bool GattServerProfile::impl::DescriptorPropertyIsWritable(uint16_t attHandle)
 {
     if ((db_.GetDescriptor(attHandle) != nullptr) &&
-        (db_.GetDescriptor(attHandle)->permissions_ & static_cast<int>(GattPermission::WRITABLE))) {
+        (db_.GetDescriptor(attHandle)->permissions_ & static_cast<int>(GattPermission::WRITEABLE))) {
         return true;
     } else {
         return false;

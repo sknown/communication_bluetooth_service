@@ -369,7 +369,7 @@ int HCI_RegisterAclCallbacks(const HciAclCallbacks *callbacks)
     ListAddLast(g_hciAclCallbackList, (void *)callbacks);
     MutexUnlock(g_hciAclCallbackListLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 int HCI_DeregisterAclCallbacks(const HciAclCallbacks *callbacks)
@@ -381,12 +381,12 @@ int HCI_DeregisterAclCallbacks(const HciAclCallbacks *callbacks)
     ListRemoveNode(g_hciAclCallbackList, (void *)callbacks);
     MutexUnlock(g_hciAclCallbackListLock);
 
-    return BT_NO_ERROR;
+    return BT_SUCCESS;
 }
 
 static int HciAclPushToTxQueue(Packet *packet)
 {
-    int reuslt = BT_NO_ERROR;
+    int reuslt = BT_SUCCESS;
     HciPacket *hciPacket = MEM_MALLOC.alloc(sizeof(HciPacket));
     if (hciPacket != NULL) {
         hciPacket->type = H2C_ACLDATA;
@@ -443,10 +443,10 @@ static Packet **HciFargment(uint16_t handle, uint8_t flushable, Packet *packet, 
 
 static int HciSendSinglePacket(uint16_t connectionHandle, Packet *packet)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     if (g_numOfAclDataPackets > 0) {
         result = HciAclPushToTxQueue(packet);
-        if (result == BT_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             g_numOfAclDataPackets--;
             HciAddTxAclPacket(connectionHandle);
         }
@@ -460,7 +460,7 @@ static int HciSendSinglePacket(uint16_t connectionHandle, Packet *packet)
 
 static int HciFargmentAndSendData(uint16_t handle, uint8_t flushable, Packet *packet)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     size_t totalLength = PacketSize(packet);
     if (totalLength > g_aclDataPacketLength) {
@@ -498,10 +498,10 @@ static int HciFargmentAndSendData(uint16_t handle, uint8_t flushable, Packet *pa
 
 static int HciSendLeSinglePacket(uint16_t connectionHandle, Packet *packet)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
     if (g_numOfLeDataPackets > 0) {
         result = HciAclPushToTxQueue(packet);
-        if (result == BT_NO_ERROR) {
+        if (result == BT_SUCCESS) {
             g_numOfLeDataPackets--;
             HciAddTxLePacket(connectionHandle);
         }
@@ -515,7 +515,7 @@ static int HciSendLeSinglePacket(uint16_t connectionHandle, Packet *packet)
 
 static int HciFargmentAndSendLeData(uint16_t handle, uint8_t flushable, Packet *packet)
 {
-    int result = BT_NO_ERROR;
+    int result = BT_SUCCESS;
 
     size_t totalLength = PacketSize(packet);
     if (totalLength > g_leAclDataPacketLength) {
@@ -627,7 +627,7 @@ static void HciSendCachedAclPackets()
         if (packet != NULL) {
             uint16_t handle = HciGetAclHandleFromPacket(packet);
             int result = HciAclPushToTxQueue(packet);
-            if (result == BT_NO_ERROR) {
+            if (result == BT_SUCCESS) {
                 g_numOfAclDataPackets--;
                 HciAddTxAclPacket(handle);
             } else {
@@ -668,7 +668,7 @@ static void HciSendCachedLePackets()
         if (packet != NULL) {
             uint16_t handle = HciGetAclHandleFromPacket(packet);
             int result = HciAclPushToTxQueue(packet);
-            if (result == BT_NO_ERROR) {
+            if (result == BT_SUCCESS) {
                 g_numOfLeDataPackets--;
                 HciAddTxLePacket(handle);
             } else {
