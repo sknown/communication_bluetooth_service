@@ -46,17 +46,17 @@ struct BleAdapter::impl {
         {}
         void OnConnectionStateChanged(int state, int newState) override
         {
-            LOG_DEBUG("%{public}s:%{public}d:%{public}s state:%{public}d", __FILE__, __LINE__, __FUNCTION__, newState);
+            HILOGI("state: %{public}d", newState);
         }
 
         void OnServicesChanged(const std::vector<Service> &services) override
         {
-            LOG_DEBUG("%{public}s:%{public}d:%{public}s", __FILE__, __LINE__, __FUNCTION__);
+            HILOGI("enter");
         }
 
         void OnCharacteristicRead(int ret, const Characteristic &characteristic) override
         {
-            LOG_DEBUG("%{public}s:%{public}d:%{public}s ret : %{public}d", __FILE__, __LINE__, __FUNCTION__, ret);
+            HILOGD("ret: %{public}d", ret);
             std::lock_guard<std::mutex> lock(bleAdapter_.pimpl->mutexRemoteName_);
             if (GattStatus::GATT_SUCCESS == ret) {
                 std::string name(characteristic.value_.get(), characteristic.value_.get() + characteristic.length_);
