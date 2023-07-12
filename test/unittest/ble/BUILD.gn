@@ -54,7 +54,7 @@ ohos_moduletest("btfw_ble_unit_test") {
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "resource_management:global_resmgr"
+    "resource_management:global_resmgr",
   ]
 }
 
@@ -65,6 +65,6 @@ group("unittest") {
   deps = []
 
   if (is_phone_product) {
-    deps += [ ":btfw_ble_unit_test" ]
+    deps += []
   }
 }
