@@ -30,7 +30,7 @@ public:
     ~SocketTest()
     {}
 
-    SppClientSocket *sppClientSocket_ = nullptr;
+    std::shared_ptr<ClientSocket> sppClientSocket_ = nullptr;
     static void SetUpTestCase(void);
     static void TearDownTestCase(void);
     void SetUp();
@@ -40,7 +40,7 @@ public:
     UUID randomUuid_;
     UUID insecureUuid_;
 
-    SppServerSocket *server_;
+    std::shared_ptr<ServerSocket> sppServerSocket_ = nullptr;
     UUID uuid_;
 };
 
@@ -52,22 +52,19 @@ void SocketTest::SetUp()
 {
     pbluetoothRomote_ = new BluetoothRemoteDevice();
     randomUuid_ = UUID::RandomUUID();
-    sppClientSocket_ = new SppClientSocket(*pbluetoothRomote_, randomUuid_, TYPE_RFCOMM, false);
+    sppClientSocket_ = std::make_shared<ClientSocket>(*pbluetoothRomote_, randomUuid_, TYPE_RFCOMM, false);
     insecureUuid_ = UUID::FromString("00001101-0000-1000-8000-00805F9B34FB");
 
-    server_ = nullptr;
     uuid_ = UUID::FromString("11111111-0000-1000-8000-00805F9B34FB");
-    if (!server_)
+    if (!sppServerSocket_)
         GTEST_LOG_(INFO) << "SocketFactory::DataListenRfcommByServiceRecord starts";
-    server_ = SocketFactory::DataListenRfcommByServiceRecord("server", uuid_);
+    sppServerSocket_ = SocketFactory::DataListenRfcommByServiceRecord("server", uuid_);
 }
 
 void SocketTest::TearDown()
 {
     delete pbluetoothRomote_;
     pbluetoothRomote_ = nullptr;
-    delete sppClientSocket_;
-    sppClientSocket_ = nullptr;
 }
 
 /**
@@ -78,7 +75,7 @@ void SocketTest::TearDown()
 HWTEST_F(SocketTest, Spp_UnitTest_Connect, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "SppClientSocket::Connect starts";
-    sppClientSocket_->Connect();
+    sppClientSocket_->Connect(-1);
     GTEST_LOG_(INFO) << "SppClientSocket::Connect ends";
 }
 
@@ -103,9 +100,9 @@ HWTEST_F(SocketTest, Spp_UnitTest_GetInputStream, TestSize.Level1)
 {
     int fd = 37;
     BluetoothRemoteDevice device_;
-    SppClientSocket *pfd_SppClientSocket = new SppClientSocket(fd, device_.GetDeviceAddr());
+    ClientSocket *pfd_SppClientSocket = new ClientSocket(fd, device_.GetDeviceAddr(), TYPE_RFCOMM);
 
-    char receive[512];
+    uint8_t receive[512];
     int DATASIZE = 1024;
     ssize_t returnInput = 0;
     GTEST_LOG_(INFO) << "SppClientSocket::GetInputStream starts";
@@ -122,10 +119,10 @@ HWTEST_F(SocketTest, Spp_UnitTest_GetInputStream, TestSize.Level1)
 HWTEST_F(SocketTest, Spp_UnitTest_GetOutputStream, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "SppClientSocket::GetOutputStream starts";
-    char multiChar[10] = {'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'};
+    uint8_t multiChar[10] = {'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n'};
     int fd = 37;
     BluetoothRemoteDevice device_;
-    SppClientSocket *pfd_SppClientSocket = new SppClientSocket(fd, device_.GetDeviceAddr());
+    ClientSocket *pfd_SppClientSocket = new ClientSocket(fd, device_.GetDeviceAddr(), TYPE_RFCOMM);
     OutputStream output = pfd_SppClientSocket->GetOutputStream();
     size_t returnOutput = 0;
     returnOutput = output.Write(multiChar, 10);
@@ -142,7 +139,7 @@ HWTEST_F(SocketTest, Spp_UnitTest_GetRemoteDevice, TestSize.Level1)
     GTEST_LOG_(INFO) << "SppClientSocket::GetRemoteDevice starts";
     int fd = 37;
     BluetoothRemoteDevice device_;
-    SppClientSocket *pfd_SppClientSocket = new SppClientSocket(fd, device_.GetDeviceAddr());
+    ClientSocket *pfd_SppClientSocket = new ClientSocket(fd, device_.GetDeviceAddr(), TYPE_RFCOMM);
     BluetoothRemoteDevice tempRemoteDevice = pfd_SppClientSocket->GetRemoteDevice();
     GTEST_LOG_(INFO) << "SppClientSocket::GetRemoteDevice ends";
 }
@@ -157,7 +154,7 @@ HWTEST_F(SocketTest, Spp_UnitTest_IsConnected, TestSize.Level1)
     GTEST_LOG_(INFO) << "SppClientSocket::IsConnected starts";
     int fd = 37;
     BluetoothRemoteDevice device_;
-    SppClientSocket *pfd_SppClientSocket = new SppClientSocket(fd, device_.GetDeviceAddr());
+    ClientSocket *pfd_SppClientSocket = new ClientSocket(fd, device_.GetDeviceAddr(), TYPE_RFCOMM);
     bool IsConnected = false;
     IsConnected = pfd_SppClientSocket->IsConnected();
     EXPECT_EQ(IsConnected, true);
@@ -173,7 +170,7 @@ HWTEST_F(SocketTest, Spp_UnitTest_GetStringTag, TestSize.Level1)
 {
     GTEST_LOG_(INFO) << "SppServerSocket::GetStringTag starts";
     std::string returnStr{""};
-    returnStr = server_->GetStringTag();
+    returnStr = sppServerSocket_->GetStringTag();
     GTEST_LOG_(INFO) << "SppServerSocket::GetStringTag ends";
 }
 
@@ -187,7 +184,7 @@ HWTEST_F(SocketTest, Spp_UnitTest_Accept, TestSize.Level1)
     GTEST_LOG_(INFO) << "SppServerSocket::Accept starts";
     
     int SERTIMEOUT = 10;
-    std::unique_ptr<SppClientSocket> preturn_SppClientSocket = server_->Accept(SERTIMEOUT);
+    std::shared_ptr<ClientSocket> preturn_SppClientSocket = sppServerSocket_->Accept(SERTIMEOUT);
     GTEST_LOG_(INFO) << "SppServerSocket::Accept ends";
 }
 

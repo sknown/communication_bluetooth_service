@@ -141,13 +141,13 @@ ohos_static_library("btipc_service") {
 
   cflags_cc = [ "-fvisibility=hidden" ]
 
-  deps = [ ]
+  deps = []
 
   external_deps = [
+    "bluetooth:btcommon",
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "bluetooth:btcommon",
   ]
 
   subsystem_name = "communication"
@@ -171,14 +171,11 @@ config("btipc_static_public_config") {
   ]
 }
 
-
 ohos_static_library("btipc_static") {
   stack_protector_ret = true
   public_configs = [ ":btipc_static_public_config" ]
 
-  include_dirs = [
-    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/include",
-  ]
+  include_dirs = [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/include" ]
 
   sources = [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/ipc/src/bluetooth_host_proxy.cpp" ]
 
@@ -186,15 +183,15 @@ ohos_static_library("btipc_static") {
     sources += [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/ipc/src/bluetooth_a2dp_src_proxy.cpp" ]
   }
 
-  deps = [ ]
+  deps = []
 
   external_deps = [
+    "bluetooth:btcommon",
     "c_utils:utils",
-    "hisysevent:libhisysevent",
     "hilog:libhilog",
+    "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
-    "bluetooth:btcommon",
   ]
 
   subsystem_name = "communication"
