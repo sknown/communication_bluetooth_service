@@ -33,14 +33,15 @@ public:
     BluetoothBleCentralManagerServer();
     ~BluetoothBleCentralManagerServer() override;
 
-    void RegisterBleCentralManagerCallback(const sptr<IBluetoothBleCentralManagerCallback> &callback) override;
-    void DeregisterBleCentralManagerCallback(
+    void RegisterBleCentralManagerCallback(int32_t &scannerId,
         const sptr<IBluetoothBleCentralManagerCallback> &callback) override;
-    int StartScan() override;
-    int StartScan(const BluetoothBleScanSettings &settings) override;
-    int StopScan() override;
-    int ConfigScanFilter(int &clientId, const std::vector<BluetoothBleScanFilter> &filters) override;
-    void RemoveScanFilter(const int clientId) override;
+    void DeregisterBleCentralManagerCallback(int32_t scannerId,
+        const sptr<IBluetoothBleCentralManagerCallback> &callback) override;
+    int StartScan(int32_t scannerId) override;
+    int StartScan(int32_t scannerId, const BluetoothBleScanSettings &settings) override;
+    int StopScan(int32_t scannerId) override;
+    int ConfigScanFilter(int32_t scannerId, const std::vector<BluetoothBleScanFilter> &filters) override;
+    void RemoveScanFilter(int32_t scannerId) override;
     bool ProxyUid(int32_t uid, bool isProxy) override;
     bool ResetAllProxy() override;
     static bool IsProxyUid(int32_t uid);
