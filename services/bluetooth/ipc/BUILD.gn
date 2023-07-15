@@ -22,10 +22,10 @@ config("btipc_public_config") {
 }
 
 ohos_static_library("btipc_service") {
-  sanitize = {
-    cfi = true
-    blocklist = "./ipc_blocklist.txt"
-  }
+  # sanitize = {
+  #   cfi = true
+  #   blocklist = "./ipc_blocklist.txt"
+  # }
   stack_protector_ret = true
   public_configs = [ ":btipc_public_config" ]
   include_dirs = [

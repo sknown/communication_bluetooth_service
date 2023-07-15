@@ -78,7 +78,8 @@ public:
 
 private:
     static inline BrokerDelegator<BluetoothAvrcpCtObserverProxy> delegator_;
-    ErrCode InnerTransact(uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply);
+    ErrCode InnerTransact(BluetoothAvrcpCtObserverInterfaceCode interfaceCode,
+        MessageOption &flags, MessageParcel &data, MessageParcel &reply);
     /**
      * @brief Write the serializable data
      * @param parcelableVector The communication data of IPC

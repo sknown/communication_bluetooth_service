@@ -21,27 +21,27 @@ namespace Bluetooth {
 BluetoothMapMseStub::BluetoothMapMseStub()
 {
     HILOGD("%{public}s start.", __func__);
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_REGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_REGISTER_OBSERVER)] =
         &BluetoothMapMseStub::RegisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_DE_REGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_DE_REGISTER_OBSERVER)] =
         &BluetoothMapMseStub::DeregisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_GET_STATE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_GET_STATE)] =
         &BluetoothMapMseStub::GetStateInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_DISCONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_DISCONNECT)] =
         &BluetoothMapMseStub::DisconnectInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_ISCONNECTED)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_ISCONNECTED)] =
         &BluetoothMapMseStub::IsConnectedInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_GET_CONNECTED_DEVICES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_GET_CONNECTED_DEVICES)] =
         &BluetoothMapMseStub::GetConnectedDevicesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_GET_DEVICES_BY_STATES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_GET_DEVICES_BY_STATES)] =
         &BluetoothMapMseStub::GetDevicesByStatesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_GET_CONNECTION_STATE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_GET_CONNECTION_STATE)] =
         &BluetoothMapMseStub::GetConnectionStateInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_SET_CONNECTION_STRATEGY)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_SET_CONNECTION_STRATEGY)] =
         &BluetoothMapMseStub::SetConnectionStrategyInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_GET_CONNECTION_STRATEGY)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_GET_CONNECTION_STRATEGY)] =
         &BluetoothMapMseStub::GetConnectionStrategyInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMse::Code::MSE_GRANT_PERMISSION)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMseInterfaceCode::MSE_GRANT_PERMISSION)] =
         nullptr;
 }
 

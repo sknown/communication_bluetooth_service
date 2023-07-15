@@ -37,7 +37,7 @@ void BluetoothHfpHfObserverProxy::OnConnectionStateChanged(const BluetoothRawAdd
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpHfObserver::Code::BT_HFP_HF_OBSERVER_CONNECTION_STATE_CHANGED, data, reply, option);
+        BluetoothHfpHfObserverInterfaceCode::BT_HFP_HF_OBSERVER_CONNECTION_STATE_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpHfObserverProxy::OnConnectionStateChanged done fail, error: %{public}d", error);
         return;
@@ -63,7 +63,7 @@ void BluetoothHfpHfObserverProxy::OnScoStateChanged(const BluetoothRawAddress &d
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpHfObserver::Code::BT_HFP_HF_OBSERVER_SCO_STATE_CHANGED, data, reply, option);
+        BluetoothHfpHfObserverInterfaceCode::BT_HFP_HF_OBSERVER_SCO_STATE_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpHfObserverProxy::OnScoStateChanged done fail, error: %{public}d", error);
         return;
@@ -89,7 +89,7 @@ void BluetoothHfpHfObserverProxy::OnCallChanged(const BluetoothRawAddress &devic
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpHfObserver::Code::BT_HFP_HF_OBSERVER_CALL_CHANGED, data, reply, option);
+        BluetoothHfpHfObserverInterfaceCode::BT_HFP_HF_OBSERVER_CALL_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpHfObserverProxy::OnCallChanged done fail, error: %{public}d", error);
         return;
@@ -115,7 +115,7 @@ void BluetoothHfpHfObserverProxy::OnSignalStrengthChanged(const BluetoothRawAddr
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpHfObserver::Code::BT_HFP_HF_OBSERVER_SIGNAL_STRENGTH_CHANGED, data, reply, option);
+        BluetoothHfpHfObserverInterfaceCode::BT_HFP_HF_OBSERVER_SIGNAL_STRENGTH_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpHfObserverProxy::OnSignalStrengthChanged done fail, error: %{public}d", error);
         return;
@@ -141,7 +141,7 @@ void BluetoothHfpHfObserverProxy::OnRegistrationStatusChanged(const BluetoothRaw
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpHfObserver::Code::BT_HFP_HF_OBSERVER_REGISTRATION_STATUS_CHANGED, data, reply, option);
+        BluetoothHfpHfObserverInterfaceCode::BT_HFP_HF_OBSERVER_REGISTRATION_STATUS_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpHfObserverProxy::OnRegistrationStatusChanged done fail, error: %{public}d", error);
         return;
@@ -167,7 +167,7 @@ void BluetoothHfpHfObserverProxy::OnRoamingStatusChanged(const BluetoothRawAddre
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpHfObserver::Code::BT_HFP_HF_OBSERVER_ROAMING_STATUS_CHANGED, data, reply, option);
+        BluetoothHfpHfObserverInterfaceCode::BT_HFP_HF_OBSERVER_ROAMING_STATUS_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpHfObserverProxy::OnRoamingStatusChanged done fail, error: %{public}d", error);
         return;
@@ -194,7 +194,7 @@ void BluetoothHfpHfObserverProxy::OnOperatorSelectionChanged(const BluetoothRawA
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpHfObserver::Code::BT_HFP_HF_OBSERVER_OPERATOR_SELECTION_CHANGED, data, reply, option);
+        BluetoothHfpHfObserverInterfaceCode::BT_HFP_HF_OBSERVER_OPERATOR_SELECTION_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpHfObserverProxy::OnOperatorSelectionChanged done fail, error: %{public}d", error);
         return;
@@ -221,7 +221,7 @@ void BluetoothHfpHfObserverProxy::OnSubscriberNumberChanged(const BluetoothRawAd
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpHfObserver::Code::BT_HFP_HF_OBSERVER_SUBSCRIBER_NUMBER_CHANGED, data, reply, option);
+        BluetoothHfpHfObserverInterfaceCode::BT_HFP_HF_OBSERVER_SUBSCRIBER_NUMBER_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpHfObserverProxy::OnSubscriberNumberChanged done fail, error: %{public}d", error);
         return;
@@ -247,7 +247,7 @@ void BluetoothHfpHfObserverProxy::OnVoiceRecognitionStatusChanged(const Bluetoot
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpHfObserver::Code::BT_HFP_HF_OBSERVER_VOICE_RECOGNITION_STATUS_CHANGED, data, reply, option);
+        BluetoothHfpHfObserverInterfaceCode::BT_HFP_HF_OBSERVER_VOICE_RECOGNITION_STATUS_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpHfObserverProxy::OnVoiceRecognitionStatusChanged done fail, error: %{public}d", error);
         return;
@@ -273,7 +273,7 @@ void BluetoothHfpHfObserverProxy::OnInBandRingToneChanged(const BluetoothRawAddr
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpHfObserver::Code::BT_HFP_HF_OBSERVER_IN_BAND_RING_TONE_CHANGED, data, reply, option);
+        BluetoothHfpHfObserverInterfaceCode::BT_HFP_HF_OBSERVER_IN_BAND_RING_TONE_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpHfObserverProxy::OnInBandRingToneChanged done fail, error: %{public}d", error);
         return;

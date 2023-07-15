@@ -203,7 +203,8 @@ public:
         });
     }
 
-    void OnNotifyMsgReportFromSh(FilterIdxInfo &info, int msgType, const std::vector<uint8_t> &notifyValue) override
+    void OnNotifyMsgReportFromLpDevice(FilterIdxInfo &info, int msgType,
+        const std::vector<uint8_t> &notifyValue) override
     {
         return;
     }
@@ -713,50 +714,50 @@ bool BluetoothBleCentralManagerServer::IsAllStop()
     return true;
 }
 
-int BluetoothBleCentralManagerServer::SetBurstParam(int duration, int maxExtAdvEvents,
-    int burstWindow, int burstInterval, int advHandle)
+int BluetoothBleCentralManagerServer::SetLpDeviceAdvParam(int duration, int maxExtAdvEvents,
+    int window, int interval, int advHandle)
 {
     HILOGI("NOT SUPPORT NOW");
     return NO_ERROR;
 }
 
-int BluetoothBleCentralManagerServer::SetScanReportChannelToSensorHub(const int clientId, const int isToAp)
+int BluetoothBleCentralManagerServer::SetScanReportChannelToLpDevice(int32_t scannerId, bool enable)
 {
     HILOGI("NOT SUPPORT NOW");
     return NO_ERROR;
 }
 
-int BluetoothBleCentralManagerServer::StartScanInShSync()
+int BluetoothBleCentralManagerServer::EnableSyncDataToLpDevice()
 {
     HILOGI("NOT SUPPORT NOW");
     return NO_ERROR;
 }
 
-int BluetoothBleCentralManagerServer::StopScanInShSync()
+int BluetoothBleCentralManagerServer::DisableSyncDataToLpDevice()
 {
     HILOGI("NOT SUPPORT NOW");
     return NO_ERROR;
 }
 
-int BluetoothBleCentralManagerServer::SendParamsToSensorhub(const std::vector<uint8_t> &dataValue, int32_t type)
+int BluetoothBleCentralManagerServer::SendParamsToLpDevice(const std::vector<uint8_t> &dataValue, int32_t type)
 {
     HILOGI("NOT SUPPORT NOW");
     return NO_ERROR;
 }
 
-bool BluetoothBleCentralManagerServer::IsSupportSensorAdvertiseFilter()
+bool BluetoothBleCentralManagerServer::IsLpDeviceAvailable()
 {
     HILOGI("NOT SUPPORT NOW");
     return false;
 }
 
-int BluetoothBleCentralManagerServer::SetAdvFilterParam(const BluetoothBleFilterParamSet &paramSet)
+int BluetoothBleCentralManagerServer::SetLpDeviceParam(const BluetoothLpDeviceParamSet &paramSet)
 {
     HILOGI("NOT SUPPORT NOW");
     return NO_ERROR;
 }
 
-int BluetoothBleCentralManagerServer::RemoveAdvFilter(const bluetooth::Uuid &uuid)
+int BluetoothBleCentralManagerServer::RemoveLpDeviceParam(const bluetooth::Uuid &uuid)
 {
     HILOGI("NOT SUPPORT NOW");
     return NO_ERROR;

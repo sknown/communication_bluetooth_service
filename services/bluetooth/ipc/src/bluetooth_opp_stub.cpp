@@ -23,21 +23,21 @@ const uint32_t OPP_DEVICE_BY_STATES_SIZE_MAX = 0XFF;
 BluetoothOppStub::BluetoothOppStub()
 {
     HILOGD("%{public}s start.", __func__);
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_SEND_FILE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothOppInterfaceCode::COMMAND_SEND_FILE)] =
         &BluetoothOppStub::SendFileInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_SET_INCOMING_FILE_CONFIRMATION)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothOppInterfaceCode::COMMAND_SET_INCOMING_FILE_CONFIRMATION)] =
         &BluetoothOppStub::SetIncomingFileConfirmationInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_GET_CURRENT_TRANSFER_INFORMATION)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothOppInterfaceCode::COMMAND_GET_CURRENT_TRANSFER_INFORMATION)] =
         &BluetoothOppStub::GetCurrentTransferInformationInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_CANCEL_TRANSFER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothOppInterfaceCode::COMMAND_CANCEL_TRANSFER)] =
         &BluetoothOppStub::CancelTransferInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_REGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothOppInterfaceCode::COMMAND_REGISTER_OBSERVER)] =
         &BluetoothOppStub::RegisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_DEREGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothOppInterfaceCode::COMMAND_DEREGISTER_OBSERVER)] =
         &BluetoothOppStub::DeregisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_GET_DEVICE_STATE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothOppInterfaceCode::COMMAND_GET_DEVICE_STATE)] =
         &BluetoothOppStub::GetDeviceStateInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_GET_DEVICES_BY_STATES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothOppInterfaceCode::COMMAND_GET_DEVICES_BY_STATES)] =
         &BluetoothOppStub::GetDevicesByStatesInner;
     HILOGI("ends.");
 }

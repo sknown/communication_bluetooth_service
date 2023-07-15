@@ -449,9 +449,9 @@ ohos_shared_library("btservice") {
 
 SBC_CODEC_DIR = "$BT_SERVICE_DIR/src/gavdp/a2dp_codec/sbclib"
 ohos_shared_library("btsbc") {
-  sanitize = {
-    cfi = true
-  }
+  # sanitize = {
+  #   cfi = true
+  # }
   stack_protector_ret = true
   sources = [
     "$SBC_CODEC_DIR/src/sbc_decoder.cpp",

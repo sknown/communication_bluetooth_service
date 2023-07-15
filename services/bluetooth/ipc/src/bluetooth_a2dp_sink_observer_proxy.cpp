@@ -40,7 +40,7 @@ void BluetoothA2dpSinkObserverProxy::OnConnectionStateChanged(const RawAddress &
     };
 
     int ret = Remote()->SendRequest(
-        IBluetoothA2dpSinkObserver::Code::BT_A2DP_SINK_OBSERVER_CONNECTION_STATE_CHANGED, data, reply, option);
+        BluetoothA2dpSinkObserverInterfaceCode::BT_A2DP_SINK_OBSERVER_CONNECTION_STATE_CHANGED, data, reply, option);
     if (ret != NO_ERROR) {
         HILOGE("BluetoothA2dpSinkProxy::OnPlayingStateChanged done fail");
         return;

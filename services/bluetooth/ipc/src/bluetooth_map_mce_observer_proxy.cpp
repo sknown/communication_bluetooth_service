@@ -44,7 +44,7 @@ void BluetoothMapMceObserverProxy::OnMapActionCompleted(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothMapMceObserver::Code::MCE_ON_ACTION_COMPLETED, data, reply, option);
+        BluetoothMapMceObserverInterfaceCode::MCE_ON_ACTION_COMPLETED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothMapMceObserverProxy::OnMapActionCompleted done fail, error: %{public}d", error);
         return;
@@ -73,7 +73,7 @@ void BluetoothMapMceObserverProxy::OnConnectionStateChanged(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothMapMceObserver::Code::MCE_ON_CONNECTION_STATE_CHANGED, data, reply, option);
+        BluetoothMapMceObserverInterfaceCode::MCE_ON_CONNECTION_STATE_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothMapMceObserverProxy::OnConnectionStateChanged done fail, error: %{public}d", error);
         return;
@@ -102,7 +102,7 @@ void BluetoothMapMceObserverProxy::OnMapEventReported(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothMapMceObserver::Code::MCE_ON_EVENT_REPORTED, data, reply, option);
+        BluetoothMapMceObserverInterfaceCode::MCE_ON_EVENT_REPORTED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothMapMceObserverProxy::OnMapEventReported done fail, error: %{public}d", error);
         return;
@@ -135,7 +135,7 @@ void BluetoothMapMceObserverProxy::OnBmessageCompleted(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothMapMceObserver::Code::MCE_ON_BMESSAGE_COMPLETED, data, reply, option);
+        BluetoothMapMceObserverInterfaceCode::MCE_ON_BMESSAGE_COMPLETED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothMapMceObserverProxy::OnBmessageCompleted done fail, error: %{public}d", error);
         return;
@@ -168,7 +168,7 @@ void BluetoothMapMceObserverProxy::OnMessagesListingCompleted(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothMapMceObserver::Code::MCE_ON_MESSAGE_LIST_COMPLETED, data, reply, option);
+        BluetoothMapMceObserverInterfaceCode::MCE_ON_MESSAGE_LIST_COMPLETED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothMapMceObserverProxy::OnMessagesListingCompleted done fail, error: %{public}d", error);
         return;
@@ -201,7 +201,7 @@ void BluetoothMapMceObserverProxy::OnConversationListingCompleted(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothMapMceObserver::Code::MCE_ON_CONVERSATION_LIST_COMPLETED, data, reply, option);
+        BluetoothMapMceObserverInterfaceCode::MCE_ON_CONVERSATION_LIST_COMPLETED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothMapMceObserverProxy::OnConversationListingCompleted done fail, error: %{public}d", error);
         return;
