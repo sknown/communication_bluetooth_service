@@ -81,6 +81,8 @@ public:
         uint16_t &size,
         uint8_t &type,
         int& result) override;
+    int32_t SetConnectStrategy(const BluetoothRawAddress &device, int strategy) override;
+    int32_t GetConnectStrategy(const BluetoothRawAddress &device, int &strategy) override;
 private:
     BLUETOOTH_DISALLOW_COPY_AND_ASSIGN(BluetoothHidHostServer);
     BLUETOOTH_DECLARE_IMPL();

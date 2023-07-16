@@ -91,6 +91,8 @@ private:
     ErrCode ReadRemoteRssiValueInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetLocalSupportedUuidsInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetDeviceUuidsInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode GetLocalProfileUuidsInner(MessageParcel &data, MessageParcel &reply);
+    int32_t SetFastScanInner(MessageParcel &data, MessageParcel &reply);
     ErrCode RegisterBleAdapterObserverInner(MessageParcel &data, MessageParcel &reply);
     ErrCode DeregisterBleAdapterObserverInner(MessageParcel &data, MessageParcel &reply);
     ErrCode RegisterBlePeripheralCallbackInner(MessageParcel &data, MessageParcel &reply);

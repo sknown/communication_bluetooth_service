@@ -22,35 +22,35 @@ namespace Bluetooth {
 BluetoothPbapPceStub::BluetoothPbapPceStub()
 {
     HILOGD("%{public}s start.", __func__);
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_GET_DEVICE_STATE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_GET_DEVICE_STATE)] =
         &BluetoothPbapPceStub::GetDeviceStateInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_CONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_CONNECT)] =
         nullptr;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_PULL_PHONEBOOK)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_PULL_PHONEBOOK)] =
         &BluetoothPbapPceStub::PullPhoneBookInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_SET_PHONEBOOK)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_SET_PHONEBOOK)] =
         &BluetoothPbapPceStub::SetPhoneBookInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_PULL_VCARD_LISTING)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_PULL_VCARD_LISTING)] =
         &BluetoothPbapPceStub::PullvCardListingInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_PULL_VCARD_ENTRY)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_PULL_VCARD_ENTRY)] =
         &BluetoothPbapPceStub::PullvCardEntryInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_PULL_ISDOWNLOAGING)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_PULL_ISDOWNLOAGING)] =
         &BluetoothPbapPceStub::IsDownloadingInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_ABORT_DOWNLOADING)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_ABORT_DOWNLOADING)] =
         &BluetoothPbapPceStub::AbortDownloadingInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_SET_DEVICE_PASSWORD)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_SET_DEVICE_PASSWORD)] =
         &BluetoothPbapPceStub::SetDevicePasswordInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_DISCONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_DISCONNECT)] =
         &BluetoothPbapPceStub::DisconnectInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_SET_CONNECT_STRATEGY)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_SET_CONNECT_STRATEGY)] =
         &BluetoothPbapPceStub::SetConnectionStrategyInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_GET_CONNECT_STRATEGY)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_GET_CONNECT_STRATEGY)] =
         &BluetoothPbapPceStub::GetConnectionStrategyInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_GET_DEVICES_BY_STATE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_GET_DEVICES_BY_STATE)] =
         &BluetoothPbapPceStub::GetDevicesByStatesInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_REGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_REGISTER_OBSERVER)] =
         &BluetoothPbapPceStub::RegisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceStub::Code::PBAP_PCE_DEREGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothPbapPceInterfaceCode::PBAP_PCE_DEREGISTER_OBSERVER)] =
         &BluetoothPbapPceStub::DeregisterObserverInner;
 }
 

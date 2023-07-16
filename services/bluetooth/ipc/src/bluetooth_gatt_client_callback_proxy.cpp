@@ -39,7 +39,7 @@ void BluetoothGattClientCallbackProxy::OnConnectionStateChanged(int32_t state, i
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothGattClientCallback::Code::BT_GATT_CLIENT_CALLBACK_CONNECT_STATE_CHANGE, data, reply, option);
+        BluetoothGattClientCallbackInterfaceCode::BT_GATT_CLIENT_CALLBACK_CONNECT_STATE_CHANGE, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothGattClientCallbackProxy::OnConnectionStateChanged done fail, error: %{public}d", error);
         return;
@@ -63,7 +63,7 @@ void BluetoothGattClientCallbackProxy::OnCharacteristicChanged(const BluetoothGa
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothGattClientCallback::Code::BT_GATT_CLIENT_CALLBACK_CHARACTER_CHANGE, data, reply, option);
+        BluetoothGattClientCallbackInterfaceCode::BT_GATT_CLIENT_CALLBACK_CHARACTER_CHANGE, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothGattClientCallbackProxy::OnCharacteristicChanged done fail, error: %{public}d", error);
         return;
@@ -92,7 +92,7 @@ void BluetoothGattClientCallbackProxy::OnCharacteristicRead(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothGattClientCallback::Code::BT_GATT_CLIENT_CALLBACK_CHARACTER_READ, data, reply, option);
+        BluetoothGattClientCallbackInterfaceCode::BT_GATT_CLIENT_CALLBACK_CHARACTER_READ, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothGattClientCallbackProxy::OnCharacteristicRead done fail, error: %{public}d", error);
         return;
@@ -121,7 +121,7 @@ void BluetoothGattClientCallbackProxy::OnCharacteristicWrite(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothGattClientCallback::Code::BT_GATT_CLIENT_CALLBACK_CHARACTER_WRITE, data, reply, option);
+        BluetoothGattClientCallbackInterfaceCode::BT_GATT_CLIENT_CALLBACK_CHARACTER_WRITE, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothGattClientCallbackProxy::OnCharacteristicWrite done fail, error: %{public}d", error);
         return;
@@ -149,7 +149,7 @@ void BluetoothGattClientCallbackProxy::OnDescriptorRead(int32_t ret, const Bluet
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothGattClientCallback::Code::BT_GATT_CLIENT_CALLBACK_DESCRIPTOR_READ, data, reply, option);
+        BluetoothGattClientCallbackInterfaceCode::BT_GATT_CLIENT_CALLBACK_DESCRIPTOR_READ, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothGattClientCallbackProxy::OnDescriptorRead done fail, error: %{public}d", error);
         return;
@@ -177,7 +177,7 @@ void BluetoothGattClientCallbackProxy::OnDescriptorWrite(int32_t ret, const Blue
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothGattClientCallback::Code::BT_GATT_CLIENT_CALLBACK_DESCRIPTOR_WRITE, data, reply, option);
+        BluetoothGattClientCallbackInterfaceCode::BT_GATT_CLIENT_CALLBACK_DESCRIPTOR_WRITE, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothGattClientCallbackProxy::OnDescriptorWrite done fail, error: %{public}d", error);
         return;
@@ -205,7 +205,7 @@ void BluetoothGattClientCallbackProxy::OnMtuChanged(int32_t state, int32_t mtu)
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothGattClientCallback::Code::BT_GATT_CLIENT_CALLBACK_MTU_UPDATE, data, reply, option);
+        BluetoothGattClientCallbackInterfaceCode::BT_GATT_CLIENT_CALLBACK_MTU_UPDATE, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothGattClientCallbackProxy::OnMtuChanged done fail, error: %{public}d", error);
         return;
@@ -229,7 +229,7 @@ void BluetoothGattClientCallbackProxy::OnServicesDiscovered(int32_t status)
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothGattClientCallback::Code::BT_GATT_CLIENT_CALLBACK_SERVICES_DISCOVER, data, reply, option);
+        BluetoothGattClientCallbackInterfaceCode::BT_GATT_CLIENT_CALLBACK_SERVICES_DISCOVER, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothGattClientCallbackProxy::OnServicesDiscovered done fail, error: %{public}d", error);
         return;
@@ -266,7 +266,7 @@ void BluetoothGattClientCallbackProxy::OnConnectionParameterChanged(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothGattClientCallback::Code::BT_GATT_CLIENT_CALLBACK_CONNECTION_PARA_CHANGE, data, reply, option);
+        BluetoothGattClientCallbackInterfaceCode::BT_GATT_CLIENT_CALLBACK_CONNECTION_PARA_CHANGE, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothGattClientCallbackProxy::OnConnectionParameterChanged done fail, error: %{public}d", error);
         return;
@@ -297,7 +297,7 @@ void BluetoothGattClientCallbackProxy::OnServicesChanged(std::vector<BluetoothGa
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothGattClientCallback::Code::BT_GATT_CLIENT_CALLBACK_SERVICES_CHANGED, data, reply, option);
+        BluetoothGattClientCallbackInterfaceCode::BT_GATT_CLIENT_CALLBACK_SERVICES_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothGattClientCallbackProxy::OnServicesChanged done fail, error: %{public}d", error);
         return;

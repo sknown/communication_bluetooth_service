@@ -45,7 +45,7 @@ void BluetoothPbapPseObserverProxy::OnServiceConnectionStateChanged(const Blueto
     };
 
     int error = Remote()->SendRequest(
-        IBluetoothPbapPseObserver::Code::PBAP_PSE_ON_SERVICE_CONNECTION_STATE_CHANGE, data, reply, option);
+        BluetoothPbapPseObserverInterfaceCode::PBAP_PSE_ON_SERVICE_CONNECTION_STATE_CHANGE, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothPbapPseObserverProxy::OnServiceConnectionStateChanged done fail, error: %d", error);
         return;
@@ -72,7 +72,7 @@ void BluetoothPbapPseObserverProxy::OnServicePermission(const BluetoothRawAddres
     };
 
     int error = Remote()->SendRequest(
-        IBluetoothPbapPseObserver::Code::PBAP_PSE_ON_SERVICE_PERMISSION, data, reply, option);
+        BluetoothPbapPseObserverInterfaceCode::PBAP_PSE_ON_SERVICE_PERMISSION, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothPbapPseObserverProxy::OnServiceConnectionStateChanged done fail, error: %d", error);
         return;
@@ -116,7 +116,7 @@ void BluetoothPbapPseObserverProxy::OnServicePasswordRequired(
     };
 
     int error = Remote()->SendRequest(
-        IBluetoothPbapPseObserver::Code::PBAP_PSE_ON_SERVICE_PASSWORD_REQUIRED, data, reply, option);
+        BluetoothPbapPseObserverInterfaceCode::PBAP_PSE_ON_SERVICE_PASSWORD_REQUIRED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothPbapPseObserverProxy::OnServicePasswordRequired done fail, error: %d", error);
         return;

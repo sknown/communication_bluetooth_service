@@ -21,76 +21,76 @@ namespace Bluetooth {
 BluetoothHfpHfStub::BluetoothHfpHfStub() {
     HILOGD("%{public}s start.", __func__);
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_CONNECT_SCO)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_CONNECT_SCO)] =
         &BluetoothHfpHfStub::ConnectScoInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_DISCONNECT_SCO)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_DISCONNECT_SCO)] =
         &BluetoothHfpHfStub::DisconnectScoInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_GET_DEVICES_BY_STATES)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_GET_DEVICES_BY_STATES)] =
         &BluetoothHfpHfStub::GetDevicesByStatesInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_GET_DEVICE_STATE)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_GET_DEVICE_STATE)] =
         &BluetoothHfpHfStub::GetDeviceStateInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_GET_SCO_STATE)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_GET_SCO_STATE)] =
         &BluetoothHfpHfStub::GetScoStateInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_SEND_DTMF_TONE)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_SEND_DTMF_TONE)] =
         &BluetoothHfpHfStub::SendDTMFToneInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_CONNECT)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_CONNECT)] =
         nullptr;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_DISCONNECT)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_DISCONNECT)] =
         &BluetoothHfpHfStub::DisconnectInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_OPEN_VOICE_RECOGNITION)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_OPEN_VOICE_RECOGNITION)] =
         &BluetoothHfpHfStub::OpenVoiceRecognitionInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_CLOSE_VOICE_RECOGNITION)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_CLOSE_VOICE_RECOGNITION)] =
         &BluetoothHfpHfStub::CloseVoiceRecognitionInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_GET_CURRENT_CALL_LIST)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_GET_CURRENT_CALL_LIST)] =
         &BluetoothHfpHfStub::GetCurrentCallListInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_ACCEPT_INCOMING_CALL)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_ACCEPT_INCOMING_CALL)] =
         &BluetoothHfpHfStub::AcceptIncomingCallInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_HOLD_ACTIVE_CALL)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_HOLD_ACTIVE_CALL)] =
         &BluetoothHfpHfStub::HoldActiveCallInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_REJECT_INCOMING_CALL)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_REJECT_INCOMING_CALL)] =
         &BluetoothHfpHfStub::RejectIncomingCallInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_SEND_KEY_PRESSED)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_SEND_KEY_PRESSED)] =
         &BluetoothHfpHfStub::SendKeyPressedInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_HANDLE_INCOMING_CALL)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_HANDLE_INCOMING_CALL)] =
         &BluetoothHfpHfStub::HandleIncomingCallInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_HANDLE_MULLTI_CALL)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_HANDLE_MULLTI_CALL)] =
         &BluetoothHfpHfStub::HandleMultiCallInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_DIAL_LAST_NUMBER)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_DIAL_LAST_NUMBER)] =
         &BluetoothHfpHfStub::DialLastNumberInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_DIAL_MEMORY)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_DIAL_MEMORY)] =
         &BluetoothHfpHfStub::DialMemoryInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_SEND_VOICE_TAG)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_SEND_VOICE_TAG)] =
         &BluetoothHfpHfStub::SendVoiceTagInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_FINISH_ATIVE_CALL)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_FINISH_ATIVE_CALL)] =
         &BluetoothHfpHfStub::FinishActiveCallInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_START_DIAL)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_START_DIAL)] =
         &BluetoothHfpHfStub::StartDialInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_REGISTER_OBSERVER)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_REGISTER_OBSERVER)] =
         &BluetoothHfpHfStub::RegisterObserverInner;
     memberFuncMap_[static_cast<uint32_t>(
-        BluetoothHfpHfStub::Code::BT_HFP_HF_DEREGISTER_OBSERVER)] =
+        BluetoothHfpHfInterfaceCode::BT_HFP_HF_DEREGISTER_OBSERVER)] =
         &BluetoothHfpHfStub::DeregisterObserverInner;
 
     HILOGD("%{public}s ends.", __func__);

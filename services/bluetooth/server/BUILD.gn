@@ -19,10 +19,10 @@ SUBSYSTEM_DIR = "//foundation/communication"
 BT_ROOT = "//foundation/communication/bluetooth_service/services/bluetooth"
 
 ohos_shared_library("bluetooth_server") {
-  sanitize = {
-    cfi = true
-    blocklist = "./bluetooth_server_blocklist.txt"
-  }
+  # sanitize = {
+  #   cfi = true
+  #   blocklist = "./bluetooth_server_blocklist.txt"
+  # }
   stack_protector_ret = true
   include_dirs = [
     "include",
@@ -134,15 +134,15 @@ ohos_shared_library("bluetooth_server") {
 
   external_deps = [
     "access_token:libaccesstoken_sdk",
+    "bluetooth:btcommon",
     "c_utils:utils",
     "eventhandler:libeventhandler",
+    "hilog:libhilog",
     "hisysevent:libhisysevent",
     "hitrace:hitrace_meter",
-    "hilog:libhilog",
     "ipc:ipc_core",
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
-    "bluetooth:btcommon"
   ]
 
   part_name = "bluetooth_service"

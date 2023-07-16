@@ -28,7 +28,8 @@ ErrCode BluetoothOppObserverProxy::OnReceiveIncomingFileChanged(const BluetoothI
         return IPC_PROXY_TRANSACTION_ERR;
     }
     data.WriteParcelable(&oppInformation);
-    int32_t st = Remote()->SendRequest(COMMAND_ON_RECEIVE_INCOMING_FILE_CHANGED, data, reply, option);
+    int32_t st = Remote()->SendRequest(static_cast<uint32_t>(
+        BluetoothOppObserverInterfaceCode::COMMAND_ON_RECEIVE_INCOMING_FILE_CHANGED), data, reply, option);
     if (st != ERR_NONE) {
         HILOGE("OnReceiveIncomingFileChanged failed, error code is %{public}d", st);
         return st;
@@ -53,7 +54,8 @@ ErrCode BluetoothOppObserverProxy::OnTransferStateChanged(const BluetoothIOppTra
         return IPC_PROXY_TRANSACTION_ERR;
     }
     data.WriteParcelable(&oppInformation);
-    int32_t st = Remote()->SendRequest(COMMAND_ON_TRANSFER_STATE_CHANGED, data, reply, option);
+    int32_t st = Remote()->SendRequest(static_cast<uint32_t>(
+        BluetoothOppObserverInterfaceCode::COMMAND_ON_TRANSFER_STATE_CHANGED), data, reply, option);
     if (st != ERR_NONE) {
         HILOGE("OnConnectionStateChanged failed, error code is %{public}d", st);
         return st;

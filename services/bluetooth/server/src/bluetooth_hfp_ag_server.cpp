@@ -363,5 +363,15 @@ void BluetoothHfpAgServer::DeregisterObserver(const sptr<IBluetoothHfpAgObserver
     HILOGD("Enter!");
     pimpl->observers_.Deregister(observer);
 }
+
+int BluetoothHfpAgServer::SetConnectStrategy(const BluetoothRawAddress &device, int strategy)
+{
+    return NO_ERROR;
+}
+
+int BluetoothHfpAgServer::GetConnectStrategy(const BluetoothRawAddress &device, int &strategy)
+{
+    return NO_ERROR;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

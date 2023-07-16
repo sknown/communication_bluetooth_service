@@ -40,7 +40,7 @@ public:
     int GetDevicesByStates(const std::vector<int32_t> &states, std::vector<RawAddress> &rawAddrs) override;
     int GetPlayingState(const RawAddress &device, int &state) override;
     int SetConnectStrategy(const RawAddress &device, int strategy) override;
-    int GetConnectStrategy(const RawAddress &device) override;
+    int GetConnectStrategy(const RawAddress &device, int &strategy) override;
     int SetActiveSinkDevice(const RawAddress &device) override;
     RawAddress GetActiveSinkDevice() override;
     BluetoothA2dpCodecStatus GetCodecStatus(const RawAddress &device) override;

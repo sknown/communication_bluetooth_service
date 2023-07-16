@@ -23,39 +23,41 @@ namespace Bluetooth {
 BluetoothGattClientStub::BluetoothGattClientStub()
 {
     HILOGD("%{public}s start.", __func__);
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_REGISTER_APP)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_REGISTER_APP)] =
         &BluetoothGattClientStub::RegisterApplicationInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_DEREGISTER_APP)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_DEREGISTER_APP)] =
         &BluetoothGattClientStub::DeregisterApplicationInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_CONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_CONNECT)] =
         &BluetoothGattClientStub::ConnectInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_DIS_CONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_DIS_CONNECT)] =
         &BluetoothGattClientStub::DisconnectInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_DISCOVERY_SERVICES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_DISCOVERY_SERVICES)] =
         &BluetoothGattClientStub::DiscoveryServicesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_READ_CHARACTERISTIC)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_READ_CHARACTERISTIC)] =
         &BluetoothGattClientStub::ReadCharacteristicInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_WRITE_CHARACTERISTIC)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_WRITE_CHARACTERISTIC)] =
         &BluetoothGattClientStub::WriteCharacteristicInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_SIGNED_WRITE_CHARACTERISTIC)] =
+    memberFuncMap_[static_cast<uint32_t>(
+        BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_SIGNED_WRITE_CHARACTERISTIC)] =
         &BluetoothGattClientStub::SignedWriteCharacteristicInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_READ_DESCRIPTOR)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_READ_DESCRIPTOR)] =
         &BluetoothGattClientStub::ReadDescriptorInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_WRITE_DESCRIPTOR)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_WRITE_DESCRIPTOR)] =
         &BluetoothGattClientStub::WriteDescriptorInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_REQUEST_EXCHANGE_MTU)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_REQUEST_EXCHANGE_MTU)] =
         &BluetoothGattClientStub::RequestExchangeMtuInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_GET_ALL_DEVICE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_GET_ALL_DEVICE)] =
         &BluetoothGattClientStub::GetAllDeviceInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_REQUEST_CONNECTION_PRIORITY)] =
+    memberFuncMap_[static_cast<uint32_t>(
+        BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_REQUEST_CONNECTION_PRIORITY)] =
         &BluetoothGattClientStub::RequestConnectionPriorityInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_GET_SERVICES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_GET_SERVICES)] =
         &BluetoothGattClientStub::GetServicesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_REQUEST_FASTEST_CONNECTION)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_REQUEST_FASTEST_CONNECTION)] =
         &BluetoothGattClientStub::RequestFastestConnInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_READ_REMOTE_RSSI_VALUE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_READ_REMOTE_RSSI_VALUE)] =
         &BluetoothGattClientStub::ReadRemoteRssiValueInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothGattClient::Code::BT_GATT_CLIENT_REQUEST_NOTIFICATION)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattClientInterfaceCode::BT_GATT_CLIENT_REQUEST_NOTIFICATION)] =
         &BluetoothGattClientStub::RequestNotificationInner;
 }
 

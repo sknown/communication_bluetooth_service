@@ -920,7 +920,8 @@ HWTEST_F(HostTest, Host_ModuleTest_GetDeviceUuids_00100, TestSize.Level1)
     GTEST_LOG_(INFO) << "Host_ModuleTest_GetDeviceUuids_00100 start";
 
     BluetoothRemoteDevice device_("00:00:00:00:00:00", BT_TRANSPORT_BREDR);
-    std::vector<ParcelUuid> uuids = device_.GetDeviceUuids();
+    std::vector<std::string> uuids {};
+    device_.GetDeviceUuids(uuids);
     EXPECT_EQ((int)uuids.size(), 0);
 
     GTEST_LOG_(INFO) << "Host_ModuleTest_GetDeviceUuids_00100 end";

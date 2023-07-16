@@ -26,25 +26,25 @@ const int32_t A2DP_MAX_SNK_CONNECTION_NUMS = 0x07;
 BluetoothA2dpSinkStub::BluetoothA2dpSinkStub()
 {
     HILOGD("%{public}s start.", __func__);
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothA2dpSink::Code::BT_A2DP_SINK_CONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSinkInterfaceCode::BT_A2DP_SINK_CONNECT)] =
         nullptr;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothA2dpSink::Code::BT_A2DP_SINK_DISCONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSinkInterfaceCode::BT_A2DP_SINK_DISCONNECT)] =
         &BluetoothA2dpSinkStub::DisconnectInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothA2dpSink::Code::BT_A2DP_SINK_REGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSinkInterfaceCode::BT_A2DP_SINK_REGISTER_OBSERVER)] =
         &BluetoothA2dpSinkStub::RegisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothA2dpSink::Code::BT_A2DP_SINK_DEREGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSinkInterfaceCode::BT_A2DP_SINK_DEREGISTER_OBSERVER)] =
         &BluetoothA2dpSinkStub::DeregisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothA2dpSink::Code::BT_A2DP_SINK_GET_DEVICE_BY_STATES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSinkInterfaceCode::BT_A2DP_SINK_GET_DEVICE_BY_STATES)] =
         &BluetoothA2dpSinkStub::GetDevicesByStatesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothA2dpSink::Code::BT_A2DP_SINK_GET_DEVICE_STATE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSinkInterfaceCode::BT_A2DP_SINK_GET_DEVICE_STATE)] =
         &BluetoothA2dpSinkStub::GetDeviceStateInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothA2dpSink::Code::BT_A2DP_SINK_GET_PLAYING_STATE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSinkInterfaceCode::BT_A2DP_SINK_GET_PLAYING_STATE)] =
         &BluetoothA2dpSinkStub::GetPlayingStateInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothA2dpSink::Code::BT_A2DP_SINK_SET_CONNECT_STRATEGY)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSinkInterfaceCode::BT_A2DP_SINK_SET_CONNECT_STRATEGY)] =
         &BluetoothA2dpSinkStub::SetConnectStrategyInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothA2dpSink::Code::BT_A2DP_SINK_GET_CONNECT_STRATEGY)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSinkInterfaceCode::BT_A2DP_SINK_GET_CONNECT_STRATEGY)] =
         &BluetoothA2dpSinkStub::GetConnectStrategyInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothA2dpSink::Code::BT_A2DP_SINK_SEND_DELAY)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSinkInterfaceCode::BT_A2DP_SINK_SEND_DELAY)] =
         &BluetoothA2dpSinkStub::SendDelayInner;
 }
 

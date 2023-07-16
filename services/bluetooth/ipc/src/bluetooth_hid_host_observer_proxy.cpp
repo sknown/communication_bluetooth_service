@@ -28,7 +28,8 @@ ErrCode BluetoothHidHostObserverProxy::OnConnectionStateChanged(const BluetoothR
     }
     data.WriteParcelable(&device);
     data.WriteInt16(state);
-    int32_t st = Remote()->SendRequest(COMMAND_ON_CONNECTION_STATE_CHANGED, data, reply, option);
+    int32_t st = Remote()->SendRequest(static_cast<uint32_t>(
+        BluetoothHidHostObserverInterfaceCode::COMMAND_ON_CONNECTION_STATE_CHANGED), data, reply, option);
     if (st != ERR_NONE) {
         HILOGW("OnConnectionStateChanged failed, error code is %{public}d", st);
         return st;

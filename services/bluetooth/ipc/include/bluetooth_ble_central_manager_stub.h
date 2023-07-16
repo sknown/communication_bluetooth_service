@@ -46,14 +46,14 @@ private:
     ErrCode RemoveScanFilterInner(MessageParcel &data, MessageParcel &reply);
     ErrCode ProxyUidInner(MessageParcel &data, MessageParcel &reply);
     ErrCode ResetAllProxyInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode SetBurstParamInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode SetScanReportChannelToSensorHubInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode StartScanInShSuncInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode StopScanInShSuncInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode SendParamsToSensorHubInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode IsSupportSensorAdvertiseFilterInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode SetAdvFilterParamInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode RemoveAdvFilterInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SetLpDeviceAdvParamInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SetScanReportChannelToLpDeviceInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode EnableSyncDataToLpDeviceInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode DisableSyncDataToLpDeviceInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SendParamsToLpDeviceInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode IsLpDeviceAvailableInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SetLpDeviceParamInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode RemoveLpDeviceParamInner(MessageParcel &data, MessageParcel &reply);
 };
 }  // namespace Bluetooth
 }  // namespace OHOS

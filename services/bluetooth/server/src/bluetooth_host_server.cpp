@@ -1466,19 +1466,25 @@ int32_t BluetoothHostServer::GetDeviceClass(const std::string &address, int32_t 
     return NO_ERROR;
 }
 
-std::vector<bluetooth::Uuid> BluetoothHostServer::GetDeviceUuids(int32_t transport, const std::string &address)
+int32_t BluetoothHostServer::GetDeviceUuids(const std::string &address, std::vector<std::string> &uuids)
 {
-    HILOGI("transport: %{public}d, address: %{public}s", transport, GetEncryptAddr(address).c_str());
     std::vector<bluetooth::Uuid> parcelUuids;
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        parcelUuids = pimpl->classicService_->GetDeviceUuids(addr);
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        parcelUuids = pimpl->bleService_->GetDeviceUuids(addr);
-    } else {
-        HILOGE("BT current state is not enabled!");
+    if (!IsBtEnabled()) {
+        HILOGE("BT current state is not enabled");
+        return BT_ERR_INVALID_STATE;
     }
-    return parcelUuids;
+
+    parcelUuids = pimpl->classicService_->GetDeviceUuids(addr);
+    for (auto Uuid : parcelUuids) {
+        uuids.push_back(Uuid.ToString());
+    }
+    return NO_ERROR;
+}
+
+int32_t BluetoothHostServer::GetLocalProfileUuids(std::vector<std::string> &uuids)
+{
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostServer::SetDevicePin(const std::string &address, const std::string &pin)
@@ -1721,6 +1727,11 @@ int32_t BluetoothHostServer::Dump(int32_t fd, const std::vector<std::u16string> 
         return ERR_INVALID_OPERATION;
     }
     return ERR_OK;
+}
+
+int32_t BluetoothHostServer::SetFastScan(bool isEnable)
+{
+    return NO_ERROR;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

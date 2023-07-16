@@ -23,8 +23,10 @@ namespace Bluetooth {
 BluetoothSocketStub::BluetoothSocketStub()
 {
     HILOGD("%{public}s start.", __func__);
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothSocket::Code::SOCKET_CONNECT)] = &BluetoothSocketStub::ConnectInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothSocket::Code::SOCKET_LISTEN)] = &BluetoothSocketStub::ListenInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::SOCKET_CONNECT)] =
+        &BluetoothSocketStub::ConnectInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::SOCKET_LISTEN)] =
+        &BluetoothSocketStub::ListenInner;
 }
 
 BluetoothSocketStub::~BluetoothSocketStub()
@@ -82,10 +84,10 @@ ErrCode BluetoothSocketStub::ConnectInner(MessageParcel &data, MessageParcel &re
     }
 
     if (ret == NO_ERROR) {
-      if (!reply.WriteFileDescriptor(fd)) {
-         HILOGE("reply writing failed");
-         return ERR_INVALID_VALUE;
-      }
+        if (!reply.WriteFileDescriptor(fd)) {
+            HILOGE("reply writing failed");
+            return ERR_INVALID_VALUE;
+        }
     }
     return NO_ERROR;
 }
@@ -113,10 +115,10 @@ ErrCode BluetoothSocketStub::ListenInner(MessageParcel &data, MessageParcel &rep
         return ERR_INVALID_VALUE;
     }
     if (ret == NO_ERROR) {
-      if (!reply.WriteFileDescriptor(fd)) {
-         HILOGE("reply writing failed");
-         return ERR_INVALID_VALUE;
-      }
+        if (!reply.WriteFileDescriptor(fd)) {
+            HILOGE("reply writing failed");
+            return ERR_INVALID_VALUE;
+        }
     }
     return NO_ERROR;
 }

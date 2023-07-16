@@ -23,27 +23,27 @@ namespace Bluetooth {
 BluetoothGattServerStub::BluetoothGattServerStub()
 {
     HILOGD("%{public}s start.", __func__);
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_ADD_SERVICE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_ADD_SERVICE)] =
         &BluetoothGattServerStub::AddServiceInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_CLEAR_SERVICES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_CLEAR_SERVICES)] =
         &BluetoothGattServerStub::ClearServicesInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_CANCEL_CONNECTION)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_CANCEL_CONNECTION)] =
         &BluetoothGattServerStub::CancelConnectionInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_REGISTER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_REGISTER)] =
         &BluetoothGattServerStub::RegisterApplicationInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_DEREGISTER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_DEREGISTER)] =
         &BluetoothGattServerStub::DeregisterApplicationInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_NOTIFY_CLIENT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_NOTIFY_CLIENT)] =
         &BluetoothGattServerStub::NotifyClientInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_REMOVE_SERVICE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_REMOVE_SERVICE)] =
         &BluetoothGattServerStub::RemoveServiceInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_RESPOND_CHARACTERISTIC_READ)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_RESPOND_CHARACTERISTIC_READ)] =
         &BluetoothGattServerStub::RespondCharacteristicReadInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_RESPOND_CHARACTERISTIC_WRITE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_RESPOND_CHARACTERISTIC_WRITE)] =
         &BluetoothGattServerStub::RespondCharacteristicWriteInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_RESPOND_DESCRIPTOR_READ)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_RESPOND_DESCRIPTOR_READ)] =
         &BluetoothGattServerStub::RespondDescriptorReadInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerStub::Code::GATT_SERVER_RESPOND_DESCRIPTOR_WRITE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_RESPOND_DESCRIPTOR_WRITE)] =
         &BluetoothGattServerStub::RespondDescriptorWriteInner;
 }
 

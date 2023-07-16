@@ -23,43 +23,45 @@ namespace Bluetooth {
 BluetoothAvrcpTgStub::BluetoothAvrcpTgStub()
 {
     HILOGD("%{public}s start.", __func__);
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_REGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_REGISTER_OBSERVER)] =
         &BluetoothAvrcpTgStub::RegisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_UNREGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_UNREGISTER_OBSERVER)] =
         &BluetoothAvrcpTgStub::UnregisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_SET_ACTIVE_DEVICE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_SET_ACTIVE_DEVICE)] =
         &BluetoothAvrcpTgStub::SetActiveDeviceInner; 
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_CONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_CONNECT)] =
         &BluetoothAvrcpTgStub::ConnectInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_DISCONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_DISCONNECT)] =
         &BluetoothAvrcpTgStub::DisconnectInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_GET_CONNECTED_DEVICES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_GET_CONNECTED_DEVICES)] =
         &BluetoothAvrcpTgStub::GetConnectedDevicesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_GET_DEVICES_BY_STATES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_GET_DEVICES_BY_STATES)] =
         &BluetoothAvrcpTgStub::GetDevicesByStatesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_GET_DEVICE_STATE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_GET_DEVICE_STATE)] =
         &BluetoothAvrcpTgStub::GetDeviceStateInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_PLAYBACK_STATUS_CHANGED)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_PLAYBACK_STATUS_CHANGED)] =
         &BluetoothAvrcpTgStub::NotifyPlaybackStatusChangedInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_TRACK_CHANGED)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_TRACK_CHANGED)] =
         &BluetoothAvrcpTgStub::NotifyTrackChangedInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_TRACK_REACHED_END)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_TRACK_REACHED_END)] =
         &BluetoothAvrcpTgStub::NotifyTrackReachedEndInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_TRACK_REACHED_START)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_TRACK_REACHED_START)] =
         &BluetoothAvrcpTgStub::NotifyTrackReachedStartInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_PLAYBACK_POS_CHANGED)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_PLAYBACK_POS_CHANGED)] =
         &BluetoothAvrcpTgStub::NotifyPlaybackPosChangedInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_PLAYER_APP_SETTING_CHANGED)] =
+    memberFuncMap_[static_cast<uint32_t>(
+        BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_PLAYER_APP_SETTING_CHANGED)] =
         &BluetoothAvrcpTgStub::NotifyPlayerAppSettingChangedInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_NOWPLAYING_CONTENT_CHANGED)] =
+    memberFuncMap_[static_cast<uint32_t>(
+        BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_NOWPLAYING_CONTENT_CHANGED)] =
         &BluetoothAvrcpTgStub::NotifyNowPlayingContentChangedInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_AVAILABLE_PLAYERS_CHANGED)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_AVAILABLE_PLAYERS_CHANGED)] =
         &BluetoothAvrcpTgStub::NotifyAvailablePlayersChangedInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_ADDRESSED_PLAYER_CHANGED)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_ADDRESSED_PLAYER_CHANGED)] =
         &BluetoothAvrcpTgStub::NotifyAddressedPlayerChangedInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_UID_CHANGED)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_UID_CHANGED)] =
         &BluetoothAvrcpTgStub::NotifyUidChangedInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothAvrcpTg::Code::BT_AVRCP_TG_NOTIFY_VOLUME_CHANGED)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_VOLUME_CHANGED)] =
         &BluetoothAvrcpTgStub::NotifyVolumeChangedInner;
 }
 

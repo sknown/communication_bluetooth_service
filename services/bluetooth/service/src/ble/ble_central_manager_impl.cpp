@@ -29,7 +29,6 @@
 namespace OHOS {
 namespace bluetooth {
 constexpr char BLE_SCAN_FILTER_LIB_NAME[] = "libble_scan_filter.z.so";
-constexpr int32_t BLE_SCAN_MAX_NUM = 1000;
 
 struct BleCentralManagerImpl::impl {
     /**
@@ -1229,7 +1228,7 @@ void BleCentralManagerImpl::PushFilterToWaitList(BleScanFilterImpl filter, int s
 {
     filter.SetFilterAction(action);
     if (action == FILTER_ACTION_ADD) {
-        filter.SetScannerId(scannerId);
+        filter.SetClientId(scannerId);
         if (pimpl->releaseFiltIndex_.empty()) {
             filter.SetFiltIndex(pimpl->currentFiltIndex_++);
         } else {
@@ -1315,7 +1314,7 @@ void BleCentralManagerImpl::RemoveScanFilter(int32_t scannerId)
     }
 
     for (auto it = pimpl->filters_.begin(); it != pimpl->filters_.end();) {
-        if (it->second.GetScannerId() == scannerId) {
+        if (it->second.GetClientId() == scannerId) {
             PushFilterToWaitList(it->second, scannerId, FILTER_ACTION_DELETE);
             pimpl->releaseFiltIndex_.push_back(it->first);
             pimpl->filters_.erase(it++);

@@ -45,14 +45,14 @@ public:
     bool ProxyUid(int32_t uid, bool isProxy) override;
     bool ResetAllProxy() override;
     static bool IsProxyUid(int32_t uid);
-    int SetBurstParam(int duration, int maxExtAdvEvents, int burstWindow, int burstInterval, int advHandle) override;
-    int SetScanReportChannelToSensorHub(const int clientId, const int isToAp)override;
-    int StartScanInShSync() override;
-    int StopScanInShSync() override;
-    int SendParamsToSensorhub(const std::vector<uint8_t> &dataValue, int32_t type) override;
-    bool IsSupportSensorAdvertiseFilter() override;
-    int SetAdvFilterParam(const BluetoothBleFilterParamSet &paramSet) override;
-    int RemoveAdvFilter(const bluetooth::Uuid &uuid) override;
+    int SetLpDeviceAdvParam(int duration, int maxExtAdvEvents, int window, int interval, int advHandle) override;
+    int SetScanReportChannelToLpDevice(int32_t scannerId, bool enable) override;
+    int EnableSyncDataToLpDevice() override;
+    int DisableSyncDataToLpDevice() override;
+    int SendParamsToLpDevice(const std::vector<uint8_t> &dataValue, int32_t type) override;
+    bool IsLpDeviceAvailable() override;
+    int SetLpDeviceParam(const BluetoothLpDeviceParamSet &paramSet) override;
+    int RemoveLpDeviceParam(const bluetooth::Uuid &uuid) override;
 
 private:
     BLUETOOTH_DECLARE_IMPL();

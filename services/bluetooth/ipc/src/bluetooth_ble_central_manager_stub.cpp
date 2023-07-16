@@ -27,56 +27,56 @@ namespace Bluetooth {
 const int32_t BLE_CENTRAL_MANAGER_STUB_READ_DATA_SIZE_MAX_LEN = 0x100;
 const std::map<uint32_t, std::function<ErrCode(BluetoothBleCentralManagerStub *, MessageParcel &, MessageParcel &)>>
     BluetoothBleCentralManagerStub::interfaces_ = {
-        {IBluetoothBleCentralManager::Code::BLE_REGISTER_BLE_CENTRAL_MANAGER_CALLBACK,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_REGISTER_BLE_CENTRAL_MANAGER_CALLBACK,
             std::bind(&BluetoothBleCentralManagerStub::RegisterBleCentralManagerCallbackInner, std::placeholders::_1,
                 std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_DE_REGISTER_BLE_CENTRAL_MANAGER_CALLBACK,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_DE_REGISTER_BLE_CENTRAL_MANAGER_CALLBACK,
             std::bind(&BluetoothBleCentralManagerStub::DeregisterBleCentralManagerCallbackInner, std::placeholders::_1,
                 std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_START_SCAN,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_START_SCAN,
             std::bind(&BluetoothBleCentralManagerStub::StartScanInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_START_SCAN_WITH_SETTINGS,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_START_SCAN_WITH_SETTINGS,
             std::bind(&BluetoothBleCentralManagerStub::StartScanWithSettingsInner, std::placeholders::_1,
                 std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_CONFIG_SCAN_FILTER,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_CONFIG_SCAN_FILTER,
             std::bind(&BluetoothBleCentralManagerStub::ConfigScanFilterInner, std::placeholders::_1,
                 std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_REMOVE_SCAN_FILTER,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_REMOVE_SCAN_FILTER,
             std::bind(&BluetoothBleCentralManagerStub::RemoveScanFilterInner, std::placeholders::_1,
                 std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_STOP_SCAN,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_STOP_SCAN,
             std::bind(&BluetoothBleCentralManagerStub::StopScanInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_PROXY_UID,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_PROXY_UID,
             std::bind(&BluetoothBleCentralManagerStub::ProxyUidInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_RESET_ALL_PROXY,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_RESET_ALL_PROXY,
             std::bind(&BluetoothBleCentralManagerStub::ResetAllProxyInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_SET_BURST_PARAM,
-            std::bind(&BluetoothBleCentralManagerStub::SetBurstParamInner, std::placeholders::_1, std::placeholders::_2,
-                std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_SET_SCAN_REPORT_CHANNEL_TO_SH,
-            std::bind(&BluetoothBleCentralManagerStub::SetScanReportChannelToSensorHubInner, std::placeholders::_1,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_SET_LPDEVICE_ADV_PARAM,
+            std::bind(&BluetoothBleCentralManagerStub::SetLpDeviceAdvParamInner, std::placeholders::_1,
             std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_START_SCAN_IN_SH_SYNC,
-            std::bind(&BluetoothBleCentralManagerStub::StartScanInShSuncInner, std::placeholders::_1,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_SET_SCAN_REPORT_CHANNEL_TO_LPDEVICE,
+            std::bind(&BluetoothBleCentralManagerStub::SetScanReportChannelToLpDeviceInner, std::placeholders::_1,
             std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_STOP_SCAN_IN_SH_SYNC,
-            std::bind(&BluetoothBleCentralManagerStub::StopScanInShSuncInner, std::placeholders::_1,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_ENABLE_SYNC_DATA_TO_LPDEVICE,
+            std::bind(&BluetoothBleCentralManagerStub::EnableSyncDataToLpDeviceInner, std::placeholders::_1,
             std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_SEND_PARAMS_TO_SH,
-            std::bind(&BluetoothBleCentralManagerStub::SendParamsToSensorHubInner, std::placeholders::_1,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_DISABLE_SYNC_DATA_TO_LPDEVICE,
+            std::bind(&BluetoothBleCentralManagerStub::DisableSyncDataToLpDeviceInner, std::placeholders::_1,
             std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_IS_SUPPORT_SENSOR_ADVERTISER_FILTER,
-            std::bind(&BluetoothBleCentralManagerStub::IsSupportSensorAdvertiseFilterInner, std::placeholders::_1,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_SEND_PARAMS_TO_LPDEVICE,
+            std::bind(&BluetoothBleCentralManagerStub::SendParamsToLpDeviceInner, std::placeholders::_1,
             std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_SET_SH_ADV_FILTER_PARAM,
-            std::bind(&BluetoothBleCentralManagerStub::SetAdvFilterParamInner, std::placeholders::_1,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_IS_LPDEVICE_AVAILABLE,
+            std::bind(&BluetoothBleCentralManagerStub::IsLpDeviceAvailableInner, std::placeholders::_1,
             std::placeholders::_2, std::placeholders::_3)},
-        {IBluetoothBleCentralManager::Code::BLE_REMOVE_SH_ADV_FILTER,
-            std::bind(&BluetoothBleCentralManagerStub::RemoveAdvFilterInner, std::placeholders::_1,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_SET_LPDEVICE_PARAM,
+            std::bind(&BluetoothBleCentralManagerStub::SetLpDeviceParamInner, std::placeholders::_1,
+            std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothBleCentralManagerInterfaceCode::BLE_REMOVE_LPDEVICE_PARAM,
+            std::bind(&BluetoothBleCentralManagerStub::RemoveLpDeviceParamInner, std::placeholders::_1,
             std::placeholders::_2, std::placeholders::_3)},
 };
 
@@ -237,42 +237,42 @@ ErrCode BluetoothBleCentralManagerStub::ResetAllProxyInner(MessageParcel &data, 
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::SetBurstParamInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::SetLpDeviceAdvParamInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::SetScanReportChannelToSensorHubInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::SetScanReportChannelToLpDeviceInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::StartScanInShSuncInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::EnableSyncDataToLpDeviceInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::StopScanInShSuncInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::DisableSyncDataToLpDeviceInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::SendParamsToSensorHubInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::SendParamsToLpDeviceInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::IsSupportSensorAdvertiseFilterInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::IsLpDeviceAvailableInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::SetAdvFilterParamInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::SetLpDeviceParamInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::RemoveAdvFilterInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::RemoveLpDeviceParamInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }

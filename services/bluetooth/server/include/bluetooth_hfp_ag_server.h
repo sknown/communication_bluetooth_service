@@ -49,6 +49,8 @@ public:
     bool SendNoCarrier(const BluetoothRawAddress &device) override;
     void RegisterObserver(const sptr<IBluetoothHfpAgObserver> &observer) override;
     void DeregisterObserver(const sptr<IBluetoothHfpAgObserver> &observer) override;
+    int SetConnectStrategy(const BluetoothRawAddress &device, int strategy) override;
+    int GetConnectStrategy(const BluetoothRawAddress &device, int &strategy) override;
 
 private:
     BLUETOOTH_DECLARE_IMPL();

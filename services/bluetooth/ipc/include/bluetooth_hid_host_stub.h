@@ -44,6 +44,8 @@ private:
     ErrCode HidHostSendDataInner(MessageParcel &data, MessageParcel &reply);
     ErrCode HidHostSetReportInner(MessageParcel &data, MessageParcel &reply);
     ErrCode HidHostGetReportInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode HidHostSetConnectStrategyInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode HidHostGetConnectStrategyInner(MessageParcel &data, MessageParcel &reply);
 
     using BluetoothHidHostFunc = ErrCode (BluetoothHidHostStub::*)(MessageParcel &data, MessageParcel &reply);
     std::map<uint32_t, BluetoothHidHostFunc> memberFuncMap_;
