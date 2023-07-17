@@ -38,7 +38,7 @@ void BluetoothAvrcpTgObserverProxy::OnConnectionStateChanged(const BluetoothRawA
     MessageParcel reply;
     MessageOption option = { MessageOption::TF_ASYNC };
     int error = Remote()->SendRequest(
-        IBluetoothAvrcpTgObserver::Code::BT_AVRCP_TG_OBSERVER_CONNECTION_STATE_CHANGED, data, reply, option);
+        BluetoothAvrcpTgObserverInterfaceCode::BT_AVRCP_TG_OBSERVER_CONNECTION_STATE_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothAvrcpTgObserverProxy::OnConnectionStateChanged done fail, error: %{public}d", error);
         return;

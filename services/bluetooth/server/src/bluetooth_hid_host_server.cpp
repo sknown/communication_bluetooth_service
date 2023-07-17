@@ -313,5 +313,15 @@ ErrCode BluetoothHidHostServer::HidHostGetReport(std::string &device,
     HILOGI("end, result:%{public}d", result);
     return ERR_OK;
 }
+
+int32_t BluetoothHidHostServer::SetConnectStrategy(const BluetoothRawAddress &device, int strategy)
+{
+    return NO_ERROR;
+}
+
+int32_t BluetoothHidHostServer::GetConnectStrategy(const BluetoothRawAddress &device, int &strategy)
+{
+    return NO_ERROR;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

@@ -40,7 +40,7 @@ void BluetoothMapMseObserverProxy::OnConnectionStateChanged(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothMapMseObserver::Code::MSE_ON_CONNECTION_STATE_CHANGED, data, reply, option);
+        BluetoothMapMseObserverInterfaceCode::MSE_ON_CONNECTION_STATE_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothMapMseObserverProxy::OnConnectionStateChanged done fail, error: %{public}d", error);
         return;
@@ -65,7 +65,7 @@ void BluetoothMapMseObserverProxy::OnPermission(
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothMapMseObserver::Code::MSE_ON_PERMISSION, data, reply, option);
+        BluetoothMapMseObserverInterfaceCode::MSE_ON_PERMISSION, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothMapMseObserverProxy::OnMapEventReported done fail, error: %{public}d", error);
         return;

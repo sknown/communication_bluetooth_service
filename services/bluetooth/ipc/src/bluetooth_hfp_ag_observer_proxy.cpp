@@ -38,7 +38,7 @@ void BluetoothHfpAgObserverProxy::OnConnectionStateChanged(const BluetoothRawAdd
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpAgObserver::Code::BT_HFP_AG_OBSERVER_CONNECTION_STATE_CHANGED, data, reply, option);
+        BluetoothHfpAgObserverInterfaceCode::BT_HFP_AG_OBSERVER_CONNECTION_STATE_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged done fail, error: %{public}d", error);
         return;
@@ -64,7 +64,7 @@ void BluetoothHfpAgObserverProxy::OnScoStateChanged(const BluetoothRawAddress &d
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpAgObserver::Code::BT_HFP_AG_OBSERVER_SCO_STATE_CHANGED, data, reply, option);
+        BluetoothHfpAgObserverInterfaceCode::BT_HFP_AG_OBSERVER_SCO_STATE_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpAgObserverProxy::OnScoStateChanged done fail, error: %{public}d", error);
         return;
@@ -85,7 +85,7 @@ void BluetoothHfpAgObserverProxy::OnActiveDeviceChanged(const BluetoothRawAddres
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpAgObserver::Code::BT_HFP_AG_OBSERVER_ACTIVE_DEVICE_CHANGED, data, reply, option);
+        BluetoothHfpAgObserverInterfaceCode::BT_HFP_AG_OBSERVER_ACTIVE_DEVICE_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpAgObserverProxy::OnActiveDeviceChanged done fail, error: %{public}d", error);
         return;
@@ -111,7 +111,7 @@ void BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged(const Bluetoot
         MessageOption::TF_ASYNC
     };
     int error = Remote()->SendRequest(
-        IBluetoothHfpAgObserver::Code::BT_HFP_AG_OBSERVER_HF_ENHANCED_DRIVER_SAFETY_CHANGED, data, reply, option);
+        BluetoothHfpAgObserverInterfaceCode::BT_HFP_AG_OBSERVER_HF_ENHANCED_DRIVER_SAFETY_CHANGED, data, reply, option);
     if (error != NO_ERROR) {
         HILOGE("BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged done fail, error: %{public}d", error);
         return;

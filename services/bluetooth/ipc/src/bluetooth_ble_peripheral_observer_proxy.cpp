@@ -54,7 +54,7 @@ void BluetoothBlePeripheralObserverProxy::OnReadRemoteRssiEvent(const BluetoothR
     MessageParcel reply;
     MessageOption option = {MessageOption::TF_ASYNC};
     int error =
-        InnerTransact(IBluetoothBlePeripheralObserver::Code::BLE_ON_READ_REMOTE_RSSI_EVENT, option, data, reply);
+        InnerTransact(BluetoothBlePeripheralObserverInterfaceCode::BLE_ON_READ_REMOTE_RSSI_EVENT, option, data, reply);
     if (error != NO_ERROR) {
         HILOGE("BleCentralManagerCallBackProxy::OnScanCallback done fail, error: %{public}d", error);
         return;
@@ -86,7 +86,8 @@ void BluetoothBlePeripheralObserverProxy::OnPairStatusChanged(
 
     MessageParcel reply;
     MessageOption option = {MessageOption::TF_ASYNC};
-    int error = InnerTransact(IBluetoothBlePeripheralObserver::Code::BLE_PAIR_STATUS_CHANGED, option, data, reply);
+    int error = InnerTransact(BluetoothBlePeripheralObserverInterfaceCode::BLE_PAIR_STATUS_CHANGED,
+        option, data, reply);
     if (error != NO_ERROR) {
         HILOGE("BleCentralManagerCallBackProxy::OnScanCallback done fail, error: %{public}d", error);
         return;

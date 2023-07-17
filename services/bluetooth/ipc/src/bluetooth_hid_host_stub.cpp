@@ -23,26 +23,30 @@ const uint32_t HID_DEVICE_BY_STATES_NUM_MAX = 0XFF;
 BluetoothHidHostStub::BluetoothHidHostStub()
 {
     HILOGD("%{public}s start.", __func__);
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_CONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_CONNECT)] =
         &BluetoothHidHostStub::ConnectInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_DISCONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_DISCONNECT)] =
         &BluetoothHidHostStub::DisconnectInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_GET_DEVICE_STATE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_GET_DEVICE_STATE)] =
         &BluetoothHidHostStub::GetDeviceStateInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_GET_DEVICES_BY_STATES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_GET_DEVICES_BY_STATES)] =
         &BluetoothHidHostStub::GetDevicesByStatesInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_REGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_REGISTER_OBSERVER)] =
         &BluetoothHidHostStub::RegisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_DEREGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_DEREGISTER_OBSERVER)] =
         &BluetoothHidHostStub::DeregisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_VCUN_PLUG)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_VCUN_PLUG)] =
         &BluetoothHidHostStub::HidHostVCUnplugInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_SEND_DATA)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_SEND_DATA)] =
         &BluetoothHidHostStub::HidHostSendDataInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_SET_REPORT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_SET_REPORT)] =
         &BluetoothHidHostStub::HidHostSetReportInner;
-    memberFuncMap_[static_cast<uint32_t>(COMMAND_GET_REPORT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_GET_REPORT)] =
         &BluetoothHidHostStub::HidHostGetReportInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_SET_CONNECT_STRATEGY)] =
+        &BluetoothHidHostStub::HidHostSetConnectStrategyInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHidHostInterfaceCode::COMMAND_GET_CONNECT_STRATEGY)] =
+        &BluetoothHidHostStub::HidHostGetConnectStrategyInner;
     HILOGD("%{public}s ends.", __func__);
 }
 
@@ -232,6 +236,16 @@ ErrCode BluetoothHidHostStub::HidHostGetReportInner(MessageParcel &data, Message
     if (SUCCEEDED(ec)) {
         reply.WriteInt32(result);
     }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHidHostStub::HidHostSetConnectStrategyInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHidHostStub::HidHostGetConnectStrategyInner(MessageParcel &data, MessageParcel &reply)
+{
     return NO_ERROR;
 }
 } // Bluetooth

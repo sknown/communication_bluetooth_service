@@ -51,7 +51,7 @@ void BluetoothBleAdvertiseCallbackProxy::OnStartResultEvent(int32_t result, int3
     MessageParcel reply;
     MessageOption option = {MessageOption::TF_ASYNC};
     int error = InnerTransact(
-        IBluetoothBleAdvertiseCallback::Code::BT_BLE_ADVERTISE_CALLBACK_RESULT_EVENT, option, data, reply);
+        BluetoothBleAdvertiseCallbackInterfaceCode::BT_BLE_ADVERTISE_CALLBACK_RESULT_EVENT, option, data, reply);
     if (error != NO_ERROR) {
         HILOGE("BleCentralManagerCallBackProxy::OnScanCallback done fail, error: %{public}d", error);
         return;
@@ -74,7 +74,7 @@ void BluetoothBleAdvertiseCallbackProxy::OnAutoStopAdvEvent(int32_t advHandle)
     MessageParcel reply;
     MessageOption option = {MessageOption::TF_ASYNC};
     int error = InnerTransact(
-        IBluetoothBleAdvertiseCallback::Code::BT_BLE_ADVERTISE_CALLBACK_AUTO_STOP_EVENT, option, data, reply);
+        BluetoothBleAdvertiseCallbackInterfaceCode::BT_BLE_ADVERTISE_CALLBACK_AUTO_STOP_EVENT, option, data, reply);
     if (error != NO_ERROR) {
         HILOGE("BleCentralManagerCallBackProxy::OnScanCallback done fail, error: %{public}d", error);
         return;

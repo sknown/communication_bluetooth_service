@@ -21,49 +21,49 @@ namespace Bluetooth {
 BluetoothMapMceStub::BluetoothMapMceStub()
 {
     HILOGD("%{public}s start.", __func__);
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_REGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_REGISTER_OBSERVER)] =
         &BluetoothMapMceStub::RegisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_DE_REGISTER_OBSERVER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_DE_REGISTER_OBSERVER)] =
         &BluetoothMapMceStub::DeregisterObserverInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_CONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_CONNECT)] =
         nullptr;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_DISCONNECT)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_DISCONNECT)] =
         &BluetoothMapMceStub::DisconnectInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_ISCONNECTED)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_ISCONNECTED)] =
         &BluetoothMapMceStub::IsConnectedInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_CONNECT_DEVICES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_CONNECT_DEVICES)] =
         &BluetoothMapMceStub::GetConnectDevicesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_DEVICES_BY_STATES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_DEVICES_BY_STATES)] =
         &BluetoothMapMceStub::GetDevicesByStatesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_CONNECTION_STATE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_CONNECTION_STATE)] =
         &BluetoothMapMceStub::GetConnectionStateInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_SET_CONNECTION_STRATEGY)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_SET_CONNECTION_STRATEGY)] =
         &BluetoothMapMceStub::SetConnectionStrategyInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_CONNECTION_STRATEGY)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_CONNECTION_STRATEGY)] =
         &BluetoothMapMceStub::GetConnectionStrategyInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_UNREAD_MESSAGES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_UNREAD_MESSAGES)] =
         &BluetoothMapMceStub::GetUnreadMessagesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_SUPPORTED_FEATURES)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_SUPPORTED_FEATURES)] =
         &BluetoothMapMceStub::GetSupportedFeaturesInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_SEND_MESSAGE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_SEND_MESSAGE)] =
         &BluetoothMapMceStub::SendMessageInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_SET_NOTIFICATION_FILTER)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_SET_NOTIFICATION_FILTER)] =
         &BluetoothMapMceStub::SetNotificationFilterInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_MESSAGES_LISTING)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_MESSAGES_LISTING)] =
         &BluetoothMapMceStub::GetMessagesListingInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_MESSAGE)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_MESSAGE)] =
         &BluetoothMapMceStub::GetMessageInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_UPDATE_INBOX)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_UPDATE_INBOX)] =
         &BluetoothMapMceStub::UpdateInboxInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_CONVERSATION_LISTING)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_CONVERSATION_LISTING)] =
         &BluetoothMapMceStub::GetConversationListingInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_SET_MESSAGE_STATUS)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_SET_MESSAGE_STATUS)] =
         &BluetoothMapMceStub::SetMessageStatusInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_SET_OWNER_STATUS)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_SET_OWNER_STATUS)] =
         &BluetoothMapMceStub::SetOwnerStatusInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_OWNER_STATUS)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_OWNER_STATUS)] =
         &BluetoothMapMceStub::GetOwnerStatusInner;
-    memberFuncMap_[static_cast<uint32_t>(IBluetoothMapMce::Code::MCE_GET_MAS_INSTANCE_INFO)] =
+    memberFuncMap_[static_cast<uint32_t>(BluetoothMapMceInterfaceCode::MCE_GET_MAS_INSTANCE_INFO)] =
         &BluetoothMapMceStub::GetMasInstanceInfoInner;
 }
 

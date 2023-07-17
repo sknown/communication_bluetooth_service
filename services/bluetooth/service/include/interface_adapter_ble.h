@@ -89,7 +89,8 @@ public:
      */
     virtual void OnStartOrStopScanEvent(int resultCode, bool isStartScan) = 0;
 
-    virtual void OnNotifyMsgReportFromSh(FilterIdxInfo &info, int msgType, const std::vector<uint8_t> &notifyValue) = 0;
+    virtual void OnNotifyMsgReportFromLpDevice(FilterIdxInfo &info, int msgType,
+        const std::vector<uint8_t> &notifyValue) = 0;
 };
 
 /**

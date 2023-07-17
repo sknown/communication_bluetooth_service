@@ -272,10 +272,11 @@ int BluetoothA2dpSourceServer::SetConnectStrategy(const RawAddress &device, int 
     return pimpl->a2dpSrcService_->SetConnectStrategy(device, strategy);
 }
 
-int BluetoothA2dpSourceServer::GetConnectStrategy(const RawAddress &device)
+int BluetoothA2dpSourceServer::GetConnectStrategy(const RawAddress &device, int &strategy)
 {
     HILOGI("addr: %{public}s", GET_ENCRYPT_ADDR(device));
-    return pimpl->a2dpSrcService_->GetConnectStrategy(device);
+    strategy = pimpl->a2dpSrcService_->GetConnectStrategy(device);
+    return NO_ERROR;
 }
 
 int BluetoothA2dpSourceServer::SetActiveSinkDevice(const RawAddress &device)

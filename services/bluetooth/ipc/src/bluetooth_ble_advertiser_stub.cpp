@@ -28,19 +28,19 @@ namespace OHOS {
 namespace Bluetooth {
 const std::map<uint32_t, std::function<ErrCode(BluetoothBleAdvertiserStub *, MessageParcel &, MessageParcel &)>>
     BluetoothBleAdvertiserStub::interfaces_ = {
-        {IBluetoothBleAdvertiser::Code::BLE_REGISTER_BLE_ADVERTISER_CALLBACK,
+        {BluetoothBleAdvertiserInterfaceCode::BLE_REGISTER_BLE_ADVERTISER_CALLBACK,
             std::bind(&BluetoothBleAdvertiserStub::RegisterBleAdvertiserCallbackInner, _1, _2, _3)},
-        {IBluetoothBleAdvertiser::Code::BLE_DE_REGISTER_BLE_ADVERTISER_CALLBACK,
+        {BluetoothBleAdvertiserInterfaceCode::BLE_DE_REGISTER_BLE_ADVERTISER_CALLBACK,
             std::bind(&BluetoothBleAdvertiserStub::DeregisterBleAdvertiserCallbackInner, _1, _2, _3)},
-        {IBluetoothBleAdvertiser::Code::BLE_START_ADVERTISING,
+        {BluetoothBleAdvertiserInterfaceCode::BLE_START_ADVERTISING,
             std::bind(&BluetoothBleAdvertiserStub::StartAdvertisingInner, _1, _2, _3)},
-        {IBluetoothBleAdvertiser::Code::BLE_STOP_ADVERTISING,
+        {BluetoothBleAdvertiserInterfaceCode::BLE_STOP_ADVERTISING,
             std::bind(&BluetoothBleAdvertiserStub::StopAdvertisingInner, _1, _2, _3)},
-        {IBluetoothBleAdvertiser::Code::BLE_CLOSE,
+        {BluetoothBleAdvertiserInterfaceCode::BLE_CLOSE,
             std::bind(&BluetoothBleAdvertiserStub::CloseInner, _1, _2, _3)},
-        {IBluetoothBleAdvertiser::Code::BLE_GET_ADVERTISER_HANDLE,
+        {BluetoothBleAdvertiserInterfaceCode::BLE_GET_ADVERTISER_HANDLE,
             std::bind(&BluetoothBleAdvertiserStub::GetAdvertiserHandleInner, _1, _2, _3)},
-        {IBluetoothBleAdvertiser::Code::BLE_SET_ADVERTISING_DATA,
+        {BluetoothBleAdvertiserInterfaceCode::BLE_SET_ADVERTISING_DATA,
             std::bind(&BluetoothBleAdvertiserStub::SetAdvertisingDataInner, _1, _2, _3)},
 };
 

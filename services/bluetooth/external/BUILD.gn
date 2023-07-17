@@ -28,17 +28,17 @@ config("btdummy_public_config") {
 }
 
 ohos_shared_library("btdummy") {
-  sanitize = {
-    cfi = true
-  }
+  # sanitize = {
+  #   cfi = true
+  # }
   stack_protector_ret = true
   configs = [ ":btdummy_config" ]
   public_configs = [ ":btdummy_public_config" ]
   sources = [ "dummy/src/stub.cpp" ]
-  deps = [ ]
+  deps = []
   external_deps = [
-    "hilog:libhilog",
     "bluetooth:btcommon",
+    "hilog:libhilog",
   ]
   subsystem_name = "communication"
   part_name = "bluetooth_service"
