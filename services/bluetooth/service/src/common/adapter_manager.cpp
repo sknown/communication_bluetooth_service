@@ -17,6 +17,7 @@
 
 #include <array>
 #include <functional>
+#include <unistd.h>
 
 #include "btm.h"
 #include "btstack.h"
@@ -31,6 +32,7 @@
 #include "base_observer_list.h"
 #include "bluetooth_common_event_helper.h"
 #include "class_creator.h"
+#include "interface_adapter_classic.h"
 #include "permission_utils.h"
 #include "power_manager.h"
 #include "profile_config.h"
@@ -231,6 +233,8 @@ bool AdapterManager::Start()
     utility::Message msg(SysStateMachine::MSG_SYS_START_CMP);
     pimpl->dispatcher_->PostTask(std::bind(&utility::StateMachine::ProcessMessage, &(pimpl->sysStateMachine_), msg));
 
+    RestoreTurnOnState();
+
     return true;
 }
 
@@ -329,6 +333,7 @@ bool AdapterManager::Enable(const BTTransport transport) const
 {
     LOG_DEBUG("%{public}s start transport is %{public}d", __PRETTY_FUNCTION__, transport);
     std::lock_guard<std::recursive_mutex> lock(pimpl->syncMutex_);
+    std::string propertynames[] = {PROPERTY_BREDR_TURNON, PROPERTY_BLE_TURNON};
 
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
         LOG_ERROR("Enable() false, check permission failed");
@@ -348,6 +353,10 @@ bool AdapterManager::Enable(const BTTransport transport) const
     if (GetState(transport) == BTStateID::STATE_TURN_OFF) {
         utility::Message msg(AdapterStateMachine::MSG_USER_ENABLE_REQ);
         pimpl->dispatcher_->PostTask(std::bind(&AdapterManager::impl::ProcessMessage, pimpl.get(), transport, msg));
+        
+        AdapterDeviceConfig::GetInstance()->SetValue(SECTION_HOST, propertynames[transport], (int)true);
+        AdapterDeviceConfig::GetInstance()->Save();
+
         return true;
     } else if (GetState(transport) == BTStateID::STATE_TURN_ON) {
         LOG_INFO("%{public}s is turn on", __PRETTY_FUNCTION__);
@@ -362,6 +371,7 @@ bool AdapterManager::Disable(const BTTransport transport) const
 {
     LOG_DEBUG("%{public}s start transport is %{public}d", __PRETTY_FUNCTION__, transport);
     std::lock_guard<std::recursive_mutex> lock(pimpl->syncMutex_);
+    std::string propertynames[] = {PROPERTY_BREDR_TURNON, PROPERTY_BLE_TURNON};
 
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
         LOG_ERROR("Disable() false, check permission failed");
@@ -376,6 +386,10 @@ bool AdapterManager::Disable(const BTTransport transport) const
     if (GetState(transport) == BTStateID::STATE_TURN_ON) {
         utility::Message msg(AdapterStateMachine::MSG_USER_DISABLE_REQ);
         pimpl->dispatcher_->PostTask(std::bind(&AdapterManager::impl::ProcessMessage, pimpl.get(), transport, msg));
+
+        AdapterDeviceConfig::GetInstance()->SetValue(SECTION_HOST, propertynames[transport], (int)false);
+        AdapterDeviceConfig::GetInstance()->Save();
+        
         return true;
     } else if (GetState(transport) == BTStateID::STATE_TURN_OFF) {
         LOG_INFO("%{public}s is turn off", __PRETTY_FUNCTION__);
@@ -768,6 +782,49 @@ int AdapterManager::GetPowerMode(const std::string &address) const
 
     RawAddress addr = RawAddress(address);
     return static_cast<int>(IPowerManager::GetInstance().GetPowerMode(addr));
+}
+
+void AdapterManager::RestoreTurnOnState()
+{
+    std::thread([this] {
+        static const std::array<std::pair<std::string, BTTransport>, TRANSPORT_MAX> adapterConfigTbl = {
+            std::make_pair(PROPERTY_BLE_TURNON, BTTransport::ADAPTER_BLE),
+            std::make_pair(PROPERTY_BREDR_TURNON, BTTransport::ADAPTER_BREDR),
+        };
+
+        while (true) {
+            sleep(1);
+            
+            int processed = 0;
+            for (int i =  0; i < TRANSPORT_MAX; i++) {
+                int turnOn = 0;
+                AdapterDeviceConfig::GetInstance()->GetValue(SECTION_HOST, adapterConfigTbl[i].first, turnOn);
+                LOG_INFO("restore turnon, %{public}s, %{public}d", adapterConfigTbl[i].first.c_str(), turnOn);
+
+                if (!turnOn) {
+                    processed++;
+                    continue;
+                }
+                if (GetState(adapterConfigTbl[i].second) != BTStateID::STATE_TURN_ON) {
+                    Enable(adapterConfigTbl[i].second);
+                    continue;
+                }
+                
+                processed++;
+                if (adapterConfigTbl[i].second == BTTransport::ADAPTER_BREDR) {
+                    IAdapterClassic* adapter = static_cast<IAdapterClassic*>
+                        (IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BREDR));
+                    adapter->SetBtScanMode(SCAN_MODE_CONNECTABLE_GENERAL_DISCOVERABLE, 0);
+                    adapter->SetBondableMode(BONDABLE_MODE_ON);
+                }
+            }
+
+            if (processed == TRANSPORT_MAX) {
+                LOG_INFO("restore turnon thread END");
+                return;
+            }
+        }
+    }).detach();
 }
 }  // namespace bluetooth
 }  // namespace OHOS
