@@ -17,7 +17,7 @@
 
 #include <array>
 #include <functional>
-#include <unistd.h> 
+#include <unistd.h>
 
 #include "btm.h"
 #include "btstack.h"
@@ -792,7 +792,7 @@ void AdapterManager::RestoreTurnOnState()
             std::make_pair(PROPERTY_BREDR_TURNON, BTTransport::ADAPTER_BREDR),
         };
 
-        while(true) {
+        while (true) {
             sleep(1);
             
             int processed = 0;
@@ -803,16 +803,19 @@ void AdapterManager::RestoreTurnOnState()
 
                 if (!turnOn) {
                     processed++;
-                } else if (GetState(adapterConfigTbl[i].second) != BTStateID::STATE_TURN_ON) {
+                    continue;
+                }
+                if (GetState(adapterConfigTbl[i].second) != BTStateID::STATE_TURN_ON) {
                     Enable(adapterConfigTbl[i].second);
-                } else {
-                    processed++;
-
-                    if (adapterConfigTbl[i].second == BTTransport::ADAPTER_BREDR) {
-                        IAdapterClassic* adapter = static_cast<IAdapterClassic*>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BREDR));
-                        adapter->SetBtScanMode(SCAN_MODE_CONNECTABLE_GENERAL_DISCOVERABLE, 0);
-                        adapter->SetBondableMode(BONDABLE_MODE_ON);
-                    }
+                    continue;
+                }
+                
+                processed++;
+                if (adapterConfigTbl[i].second == BTTransport::ADAPTER_BREDR) {
+                    IAdapterClassic* adapter = static_cast<IAdapterClassic*>
+                        (IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BREDR));
+                    adapter->SetBtScanMode(SCAN_MODE_CONNECTABLE_GENERAL_DISCOVERABLE, 0);
+                    adapter->SetBondableMode(BONDABLE_MODE_ON);
                 }
             }
 
