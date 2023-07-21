@@ -45,6 +45,8 @@ const std::string PROPERTY_PAIR_FLAG = "PairFlag";
 const std::string PROPERTY_BOND_FROM_LOCAL = "BondFromLocal";
 const std::string PROPERTY_URI = "uri";
 const std::string PROPERTY_REMOTE_UUIDS = "RemoteUuids";
+const std::string PROPERTY_BREDR_TURNON = "BrEdrTurnOn";
+const std::string PROPERTY_BLE_TURNON = "BleTurnOn";
 
 const std::string PROPERTY_BLE_ROLES = "BleRoles";
 const std::string PROPERTY_BLE_MODE_1_LEVEL = "BleModel1Level";
