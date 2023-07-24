@@ -121,8 +121,9 @@ ErrCode BluetoothBleCentralManagerStub::RegisterBleCentralManagerCallbackInner(
     sptr<IRemoteObject> remote = data.ReadRemoteObject();
     const sptr<IBluetoothBleCentralManagerCallback> callBack =
         OHOS::iface_cast<IBluetoothBleCentralManagerCallback>(remote);
+    bool enableRandomAddrMode = data.ReadBool();
     int32_t scannerId = 0;
-    RegisterBleCentralManagerCallback(scannerId, callBack);
+    RegisterBleCentralManagerCallback(scannerId, enableRandomAddrMode, callBack);
     if (!reply.WriteInt32(scannerId)) {
         HILOGE("reply writing failed");
         return ERR_INVALID_VALUE;

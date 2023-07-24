@@ -527,7 +527,7 @@ void BluetoothBleCentralManagerServer::RemoveScanFilter(int32_t scannerId)
     }
 }
 
-void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t &scannerId,
+void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t &scannerId, bool enableRandomAddrMode,
     const sptr<IBluetoothBleCentralManagerCallback> &callback)
 {
     int32_t pid = IPCSkeleton::GetCallingPid();
