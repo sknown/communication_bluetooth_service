@@ -97,6 +97,7 @@ private:
     ErrCode DeregisterBleAdapterObserverInner(MessageParcel &data, MessageParcel &reply);
     ErrCode RegisterBlePeripheralCallbackInner(MessageParcel &data, MessageParcel &reply);
     ErrCode DeregisterBlePeripheralCallbackInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode GetRandomAddressInner(MessageParcel &data, MessageParcel &reply);
 
     static const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParcel &, MessageParcel &)>>
         memberFuncMap_;

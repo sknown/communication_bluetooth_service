@@ -217,6 +217,8 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::BT_SET_FAST_SCAN,
             std::bind(&BluetoothHostStub::SetFastScanInner, std::placeholders::_1,
                 std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::GET_RANDOM_ADDRESS, std::bind(&BluetoothHostStub::GetRandomAddressInner,
+            std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
 
 };
 
@@ -1233,6 +1235,11 @@ ErrCode BluetoothHostStub::DeregisterBlePeripheralCallbackInner(MessageParcel &d
 }
 
 int32_t BluetoothHostStub::SetFastScanInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHostStub::GetRandomAddressInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
