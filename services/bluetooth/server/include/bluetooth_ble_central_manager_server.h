@@ -33,7 +33,7 @@ public:
     BluetoothBleCentralManagerServer();
     ~BluetoothBleCentralManagerServer() override;
 
-    void RegisterBleCentralManagerCallback(int32_t &scannerId,
+    void RegisterBleCentralManagerCallback(int32_t &scannerId, bool enableRandomAddrMode,
         const sptr<IBluetoothBleCentralManagerCallback> &callback) override;
     void DeregisterBleCentralManagerCallback(int32_t scannerId,
         const sptr<IBluetoothBleCentralManagerCallback> &callback) override;
