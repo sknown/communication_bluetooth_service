@@ -289,7 +289,7 @@ ErrCode BluetoothHostStub::GetProfileInner(MessageParcel &data, MessageParcel &r
     HILOGI("BluetoothHostStub::GetProfileInner starts");
     std::string name = data.ReadString();
     sptr<IRemoteObject> result = GetProfile(name);
-    bool ret = reply.WriteStrongParcelable(result);
+    bool ret = reply.WriteRemoteObject(result);
     if (!ret) {
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
