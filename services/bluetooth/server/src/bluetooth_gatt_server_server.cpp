@@ -32,8 +32,8 @@
 namespace OHOS {
 namespace Bluetooth {
 using namespace OHOS::bluetooth;
-const int PermissionReadable = 0x01;
-const int PermissionWriteable = 0x10;
+constexpr uint8_t PermissionReadable = 0x01;
+constexpr uint8_t PermissionWriteable = 0x10;
 struct BluetoothGattServerServer::impl {
     class GattServerCallbackImpl;
     class SystemStateObserver;
@@ -281,13 +281,13 @@ void ConvertCharacterPermission(const BluetoothGattService &service)
 {
     for (auto &ccc : service.characteristics_) {
         int permission = 0;
-        if (ccc.permission_ & PermissionReadable) {
+        if (ccc.permissions_ & PermissionReadable) {
             permission|= static_cast<int>(GattPermission::READABLE);
         }
-        if (ccc.permission_ & PermissionWriteable) {
+        if (ccc.permissions_ & PermissionWriteable) {
             permission|= static_cast<int>(GattPermission::WRITEABLE);
         }
-        ccc.permission_ = permission;
+        ccc.permissions_ = permission;
     }
 }
 

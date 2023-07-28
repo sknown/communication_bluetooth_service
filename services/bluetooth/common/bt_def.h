@@ -222,7 +222,6 @@ constexpr uint8_t GATT_ROLE_MASTER = 0x00;
 constexpr uint8_t GATT_ROLE_SLAVE = 0x01;
 constexpr uint8_t GATT_ROLE_INVALID = 0xFF;
 
-
 /** A GATT Attribute Permission.
  *  Define GATT Attribute permissions.
  */
