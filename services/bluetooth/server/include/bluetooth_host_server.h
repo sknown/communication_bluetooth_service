@@ -117,6 +117,7 @@ public:
     int32_t Dump(int32_t fd, const std::vector<std::u16string>& args) override;
     int32_t SetFastScan(bool isEnable) override;
     int32_t GetRandomAddress(const std::string &realAddr, std::string &randomAddr) override;
+    int32_t SyncRandomAddress(const std::string &realAddr, const std::string &randomAddr) override;
 
 private:
     static sptr<BluetoothHostServer> instance;
