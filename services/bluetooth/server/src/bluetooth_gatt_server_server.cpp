@@ -274,6 +274,21 @@ BluetoothGattServerServer::impl::~impl()
     bluetooth::IAdapterManager::GetInstance()->DeregisterSystemStateObserver(*systemStateObserver_);
 }
 
+
+void ConvertCharacterPermission(const BluetoothGattDevice &device)
+{
+    for (auto &ccc : service.characteristics_) {
+        int permission = 0;
+        if (ccc.permission_ & PERMISSION_READABLE) {
+            permission|= static_cast<int>(GattPermission::READABLE);
+        }
+        if (ccc.permission_ & PERMISSION_WRITEABLE) {
+            permission|= static_cast<int>(GattPermission::WRITEABLE);
+        }
+        ccc.permission_ = permission;
+    }
+}
+
 int BluetoothGattServerServer::AddService(int32_t appId, BluetoothGattService *services)
 {
     HILOGI("enter, appId: %{public}d", appId);
@@ -287,6 +302,7 @@ int BluetoothGattServerServer::AddService(int32_t appId, BluetoothGattService *s
         return BT_ERR_INTERNAL_ERROR;
     }
     bluetooth::Service svc = (bluetooth::Service)*services;
+    ConvertCharacterPermission(*services);
 
     int ret = pimpl->serverService_->AddService(appId, svc);
     return (ret == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
