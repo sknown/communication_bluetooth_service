@@ -28,11 +28,12 @@
 #include "interface_profile_manager.h"
 #include "ipc_skeleton.h"
 #include "permission_utils.h"
-#include "bt_def.h"
 
 namespace OHOS {
 namespace Bluetooth {
 using namespace OHOS::bluetooth;
+const int PermissionReadable = 0x01;
+const int PermissionWriteable = 0x10;
 struct BluetoothGattServerServer::impl {
     class GattServerCallbackImpl;
     class SystemStateObserver;
@@ -276,14 +277,14 @@ BluetoothGattServerServer::impl::~impl()
 }
 
 
-void ConvertCharacterPermission(const BluetoothGattService *service)
+void ConvertCharacterPermission(const BluetoothGattService &service)
 {
     for (auto &ccc : service.characteristics_) {
         int permission = 0;
-        if (ccc.permission_ & PERMISSION_READABLE) {
+        if (ccc.permission_ & PermissionReadable) {
             permission|= static_cast<int>(GattPermission::READABLE);
         }
-        if (ccc.permission_ & PERMISSION_WRITEABLE) {
+        if (ccc.permission_ & PermissionWriteable) {
             permission|= static_cast<int>(GattPermission::WRITEABLE);
         }
         ccc.permission_ = permission;
