@@ -28,6 +28,7 @@
 #include "interface_profile_manager.h"
 #include "ipc_skeleton.h"
 #include "permission_utils.h"
+#include "bt_def.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -275,7 +276,7 @@ BluetoothGattServerServer::impl::~impl()
 }
 
 
-void ConvertCharacterPermission(const BluetoothGattDevice &device)
+void ConvertCharacterPermission(const BluetoothGattService *service)
 {
     for (auto &ccc : service.characteristics_) {
         int permission = 0;
