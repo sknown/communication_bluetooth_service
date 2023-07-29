@@ -32,6 +32,8 @@
 namespace OHOS {
 namespace Bluetooth {
 using namespace OHOS::bluetooth;
+constexpr uint8_t PermissionReadable = 0x01;
+constexpr uint8_t PermissionWriteable = 0x10;
 struct BluetoothGattServerServer::impl {
     class GattServerCallbackImpl;
     class SystemStateObserver;
@@ -274,6 +276,21 @@ BluetoothGattServerServer::impl::~impl()
     bluetooth::IAdapterManager::GetInstance()->DeregisterSystemStateObserver(*systemStateObserver_);
 }
 
+
+void ConvertCharacterPermission(BluetoothGattService *service)
+{
+    for (auto &ccc : service->characteristics_) {
+        int permission = 0;
+        if (ccc.permissions_ & PermissionReadable) {
+            permission|= static_cast<int>(GattPermission::READABLE);
+        }
+        if (ccc.permissions_ & PermissionWriteable) {
+            permission|= static_cast<int>(GattPermission::WRITEABLE);
+        }
+        ccc.permissions_ = permission;
+    }
+}
+
 int BluetoothGattServerServer::AddService(int32_t appId, BluetoothGattService *services)
 {
     HILOGI("enter, appId: %{public}d", appId);
@@ -286,6 +303,7 @@ int BluetoothGattServerServer::AddService(int32_t appId, BluetoothGattService *s
         HILOGE("serverService_ is null");
         return BT_ERR_INTERNAL_ERROR;
     }
+    ConvertCharacterPermission(services);
     bluetooth::Service svc = (bluetooth::Service)*services;
 
     int ret = pimpl->serverService_->AddService(appId, svc);
