@@ -88,6 +88,10 @@ void ObserverProfile::ProcessA2dpHdfLoad(const int state) const
     LOG_INFO("[ObserverProfile] %{public}s state:%{public}d \n", __func__, state);
     A2dpService *service = GetServiceInstance(role_);
     std::vector<int> states = {static_cast<int>(BTConnectState::CONNECTED)};
+    if (service == nullptr) {
+        LOG_ERROR("[ObserverProfile] %{public}s Can't get the instance of service\n", __func__);
+        return;
+    }
     std::vector<RawAddress> devices = service->GetDevicesByStates(states);
 
     if (state == static_cast<int>(BTConnectState::CONNECTED) && devices.size() == 1) {
