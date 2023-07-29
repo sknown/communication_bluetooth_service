@@ -376,6 +376,7 @@ int GattDatabase::CheckCharacteristicsLegality(const bluetooth::Service &service
             return GattStatus::INVALID_CHARACTERISTIC_DATA;
         }
 
+        HILOGI("CheckCharacteristicsLegality permission: %{public}d", ccc.permissions_);
         if (ccc.properties_ > 0xFF || ccc.properties_ < 0 || ccc.permissions_ < 0 || ccc.permissions_ > 0x10) {
             return GattStatus::INVALID_CHARACTERISTIC;
         }
