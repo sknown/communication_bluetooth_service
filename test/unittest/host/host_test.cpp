@@ -299,7 +299,7 @@ HWTEST_F(HostTest, Host_ModuleTest_GetLocalDeviceClass_00100, TestSize.Level1)
     BluetoothDeviceClass remotCod(0x2A0104);
     EXPECT_FALSE(host_->SetLocalDeviceClass(remotCod));
     BluetoothDeviceClass getLocalcod = host_->GetLocalDeviceClass();
-    EXPECT_EQ(remotCod.GetMajorClass(), getLocalcod.GetMajorClass());
+    EXPECT_NE(remotCod.GetMajorClass(), getLocalcod.GetMajorClass());
 
     GTEST_LOG_(INFO) << "Host_ModuleTest_GetLocalDeviceClass_00100 end";
 }
@@ -317,7 +317,7 @@ HWTEST_F(HostTest, Host_ModuleTest_SetLocalDeviceClass_00100, TestSize.Level1)
     BluetoothDeviceClass remotCod(0x10100);
     EXPECT_FALSE(host_->SetLocalDeviceClass(remotCod));
     BluetoothDeviceClass getLocalcod = host_->GetLocalDeviceClass();
-    EXPECT_EQ(remotCod.GetMajorClass(), getLocalcod.GetMajorClass());
+    EXPECT_NE(remotCod.GetMajorClass(), getLocalcod.GetMajorClass());
 
     GTEST_LOG_(INFO) << "Host_ModuleTest_SetLocalDeviceClass_00100 end";
 }
