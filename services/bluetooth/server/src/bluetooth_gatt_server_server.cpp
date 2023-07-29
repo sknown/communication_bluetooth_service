@@ -303,8 +303,8 @@ int BluetoothGattServerServer::AddService(int32_t appId, BluetoothGattService *s
         HILOGE("serverService_ is null");
         return BT_ERR_INTERNAL_ERROR;
     }
-    bluetooth::Service svc = (bluetooth::Service)*services;
     ConvertCharacterPermission(services);
+    bluetooth::Service svc = (bluetooth::Service)*services;
 
     int ret = pimpl->serverService_->AddService(appId, svc);
     return (ret == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
