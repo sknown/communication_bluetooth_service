@@ -285,14 +285,15 @@ void ConvertCharacterPermission(bluetooth::Service &service)
         HILOGI("ConvertCharacterPermission ccc.permissions_: %{public}d", ccc.permissions_);
         if (ccc.permissions_ & PermissionReadable) {
             permission |= static_cast<int>(GattPermission::READABLE);
-            HILOGI("READABLE ccc.permissions_: %{public}d", ccc.permissions_);
+            HILOGI("READABLE permission: %{public}d", permission);
         }
         if (ccc.permissions_ & PermissionWriteable) {
             permission |= static_cast<int>(GattPermission::WRITEABLE);
-            HILOGI("WRITEABLE ccc.permissions_: %{public}d", ccc.permissions_);
+            HILOGI("WRITEABLE permission: %{public}d", permission);
         }
+        HILOGI("ConvertCharacterPermission 294 permissions: %{public}d", permission);
         ccc.permissions_ = permission;
-        HILOGI("ConvertCharacterPermission 295 ccc.permissions_: %{public}d", ccc.permissions_);
+        HILOGI("ConvertCharacterPermission 296 ccc.permissions_: %{public}d", ccc.permissions_);
     }
 }
 
