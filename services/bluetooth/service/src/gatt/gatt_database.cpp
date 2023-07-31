@@ -378,14 +378,14 @@ int GattDatabase::CheckCharacteristicsLegality(const bluetooth::Service &service
             return GattStatus::INVALID_CHARACTERISTIC_DATA;
         }
 
-        HILOGI("CheckCharacteristicsLegality ccc.permissions_: %{public}d", ccc.permissions_);
-        HILOGI("CheckCharacteristicsLegality ccc.properties_: %{public}d", ccc.properties_);
+        LOG_INFO("%{public}s: permissions_: %{public}d", __FUNCTION__, ccc.permissions_);
+        LOG_INFO("%{public}s: properties_: %{public}d", __FUNCTION__, ccc.properties_);
         if (ccc.properties_ > 0xFF || ccc.properties_ < 0 || ccc.permissions_ < 0 || ccc.permissions_ > 0x10) {
             return GattStatus::INVALID_CHARACTERISTIC;
         }
 
-        HILOGI("CheckCharacteristicsLegality GattPermission::READABLE : %{public}d", GattPermission::READABLE);
-        HILOGI("CheckCharacteristicsLegality GattPermission::WRITEABLE : %{public}d", GattPermission::WRITEABLE);
+        LOG_INFO("%{public}s: READABLE: %{public}d", __FUNCTION__, GattPermission::READABLE);
+        LOG_INFO("%{public}s: WRITEABLE: %{public}d", __FUNCTION__, GattPermission::WRITEABLE);
 
         if (((ccc.properties_ & CHARACTERISTIC_PROPERTIE_READ) &&
             !(ccc.permissions_ & GetPermissionReadable1)) ||
