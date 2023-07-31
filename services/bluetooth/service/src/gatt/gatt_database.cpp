@@ -21,7 +21,7 @@
 #include "bt_def.h"
 #include "gatt_defines.h"
 #include "openssl/md4.h"
-#include "bluetooth_log.h"
+#include "log.h"
 
 namespace OHOS {
 namespace bluetooth {
