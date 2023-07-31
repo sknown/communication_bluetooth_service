@@ -34,6 +34,8 @@ namespace Bluetooth {
 using namespace OHOS::bluetooth;
 constexpr uint8_t PermissionReadable = 0x01;
 constexpr uint8_t PermissionWriteable = 0x10;
+int32_t  GetPermissionReadable = 0x01;
+int32_t  GetPermissionWriteable = 0x02;
 struct BluetoothGattServerServer::impl {
     class GattServerCallbackImpl;
     class SystemStateObserver;
@@ -277,19 +279,41 @@ BluetoothGattServerServer::impl::~impl()
 }
 
 
-void ConvertCharacterPermission(BluetoothGattService *service)
+void ConvertCharacterPermission(bluetooth::Service &service)
 {
-    for (auto &ccc : service->characteristics_) {
+    HILOGI("enter");
+    for (auto &ccc : service.characteristics_) {
         int permission = 0;
-        HILOGI("ConvertCharacterPermission permission: %{public}d", permission);
+        HILOGI("ConvertCharacterPermission ccc.permissions_: %{public}d", ccc.permissions_);
         if (ccc.permissions_ & PermissionReadable) {
-            permission|= static_cast<int>(GattPermission::READABLE);
+            permission |= GetPermissionReadable;
+            HILOGI("READABLE permission: %{public}d", permission);
         }
         if (ccc.permissions_ & PermissionWriteable) {
-            permission|= static_cast<int>(GattPermission::WRITEABLE);
+            permission |= GetPermissionWriteable;
+            HILOGI("WRITEABLE permission: %{public}d", permission);
         }
+        HILOGI("ConvertCharacterPermission 296 permissions: %{public}d", permission);
         ccc.permissions_ = permission;
+        HILOGI("ConvertCharacterPermission 298 ccc.permissions_: %{public}d", ccc.permissions_);
+
+        for (auto &desc : ccc.descriptors_) {
+            int desPermission = 0;
+            HILOGI("ConvertCharacterPermission desc.permissions: %{public}d", desc.permissions_);
+            if (desc.permissions_ & PermissionReadable) {
+                desPermission |= GetPermissionReadable;
+                HILOGI("READABLE permission: %{public}d", desPermission);
+            }
+            if (desc.permissions_ & PermissionWriteable) {
+                desPermission |= GetPermissionWriteable;
+                HILOGI("WRITEABLE permission: %{public}d", desPermission);
+            }
+            desc.permissions_ = desPermission;
+            HILOGI("312 ccc.permissions_: %{public}d", desc.permissions_);
+
+        }
     }
+    
 }
 
 int BluetoothGattServerServer::AddService(int32_t appId, BluetoothGattService *services)
@@ -304,8 +328,8 @@ int BluetoothGattServerServer::AddService(int32_t appId, BluetoothGattService *s
         HILOGE("serverService_ is null");
         return BT_ERR_INTERNAL_ERROR;
     }
-    ConvertCharacterPermission(services);
     bluetooth::Service svc = (bluetooth::Service)*services;
+    ConvertCharacterPermission(svc);
 
     int ret = pimpl->serverService_->AddService(appId, svc);
     return (ret == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);

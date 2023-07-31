@@ -21,11 +21,13 @@
 #include "bt_def.h"
 #include "gatt_defines.h"
 #include "openssl/md4.h"
+#include "log.h"
 
 namespace OHOS {
 namespace bluetooth {
 using GattAttributeEntity = std::optional<std::reference_wrapper<GattDatabase::AttributeEntity>>;
-
+int32_t  GetPermissionReadable1 = 0x01;
+int32_t  GetPermissionWriteable2 = 0x02;
 GattDatabase::GattDatabase()
 {
     availableHandles_.emplace_front(MIN_ATTRIBUTE_HANDLE, MAX_ATTRIBUTE_HANDLE);
@@ -331,6 +333,7 @@ int GattDatabase::CheckDescriptorsLegality(const bluetooth::Characteristic &char
             return GattStatus::INVALID_CHARACTERISTIC_DESCRIPTOR_DATA;
         }
 
+        LOG_INFO("%{public}s: desc.permissions_: %{public}d", __FUNCTION__, desc.permissions_);
         if (desc.permissions_ < 0 || desc.permissions_ > 0x10) {
             return GattStatus::INVALID_CHARACTERISTIC_DESCRIPTOR;
         }
@@ -376,14 +379,16 @@ int GattDatabase::CheckCharacteristicsLegality(const bluetooth::Service &service
             return GattStatus::INVALID_CHARACTERISTIC_DATA;
         }
 
+        LOG_INFO("%{public}s: permissions_: %{public}d", __FUNCTION__, ccc.permissions_);
+        LOG_INFO("%{public}s: properties_: %{public}d", __FUNCTION__, ccc.properties_);
         if (ccc.properties_ > 0xFF || ccc.properties_ < 0 || ccc.permissions_ < 0 || ccc.permissions_ > 0x10) {
             return GattStatus::INVALID_CHARACTERISTIC;
         }
 
         if (((ccc.properties_ & CHARACTERISTIC_PROPERTIE_READ) &&
-            !(ccc.permissions_ & static_cast<int>(GattPermission::READABLE))) ||
+            !(ccc.permissions_ & static_cast<int>(GattPermissionService::READABLE))) ||
             ((ccc.properties_ & CHARACTERISTIC_PROPERTIE_WRITE) &&
-            !(ccc.permissions_ & static_cast<int>(GattPermission::WRITEABLE)))) {
+            !(ccc.permissions_ & static_cast<int>(GattPermissionService::WRITEABLE)))) {
             return GattStatus::INVALID_CHARACTERISTIC;
         }
 
