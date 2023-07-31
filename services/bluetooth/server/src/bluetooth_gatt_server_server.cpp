@@ -293,10 +293,27 @@ void ConvertCharacterPermission(bluetooth::Service &service)
             permission |= GetPermissionWriteable;
             HILOGI("WRITEABLE permission: %{public}d", permission);
         }
-        HILOGI("ConvertCharacterPermission 294 permissions: %{public}d", permission);
+        HILOGI("ConvertCharacterPermission 296 permissions: %{public}d", permission);
         ccc.permissions_ = permission;
-        HILOGI("ConvertCharacterPermission 296 ccc.permissions_: %{public}d", ccc.permissions_);
+        HILOGI("ConvertCharacterPermission 298 ccc.permissions_: %{public}d", ccc.permissions_);
+
+        for (auto &desc : ccc.descriptors_) {
+            int desPermission = 0;
+            HILOGI("ConvertCharacterPermission desc.permissions: %{public}d", desc.permissions);
+            if (desc.permissions_ & PermissionReadable) {
+                desPermission |= GetPermissionReadable;
+                HILOGI("READABLE permission: %{public}d", desPermission);
+            }
+            if (desc.permissions_ & PermissionWriteable) {
+                desPermission |= GetPermissionWriteable;
+                HILOGI("WRITEABLE permission: %{public}d", desPermission);
+            }
+            desc.permissions_ = desPermission;
+            HILOGI("312 ccc.permissions_: %{public}d", desc.permissions_);
+
+        }
     }
+    
 }
 
 int BluetoothGattServerServer::AddService(int32_t appId, BluetoothGattService *services)
