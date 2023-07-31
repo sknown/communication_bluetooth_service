@@ -222,17 +222,6 @@ constexpr uint8_t GATT_ROLE_MASTER = 0x00;
 constexpr uint8_t GATT_ROLE_SLAVE = 0x01;
 constexpr uint8_t GATT_ROLE_INVALID = 0xFF;
 
-/** A GATT Attribute Permission.
- *  Define GATT Attribute permissions.
- */
-enum class GattPermission : uint8_t {
-    READABLE = 1 << 0, /**< readable */
-    WRITEABLE = 1 << 1,
-    ENCRYPTION = 1 << 2,
-    AUTHENTICATION = 1 << 3,
-    AUTHORIZATION = 1 << 4
-};
-
 enum class GattConnectionPriority : int { BALANCED, HIGH, LOW_POWER };
 
 enum GattStatus {
