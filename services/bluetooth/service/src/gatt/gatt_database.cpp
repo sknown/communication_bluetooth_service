@@ -333,6 +333,7 @@ int GattDatabase::CheckDescriptorsLegality(const bluetooth::Characteristic &char
             return GattStatus::INVALID_CHARACTERISTIC_DESCRIPTOR_DATA;
         }
 
+        LOG_INFO("%{public}s: desc.permissions_: %{public}d", __FUNCTION__, desc.permissions_);
         if (desc.permissions_ < 0 || desc.permissions_ > 0x10) {
             return GattStatus::INVALID_CHARACTERISTIC_DESCRIPTOR;
         }
