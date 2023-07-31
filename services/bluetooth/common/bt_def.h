@@ -233,6 +233,14 @@ enum class GattPermission : uint8_t {
     AUTHORIZATION = 1 << 4
 };
 
+enum class GattPermissionService : uint8_t {
+    READABLE = 1 << 0, /**< readable */
+    WRITEABLE = 1 << 1,
+    ENCRYPTION = 1 << 2,
+    AUTHENTICATION = 1 << 3,
+    AUTHORIZATION = 1 << 4
+};
+
 enum class GattConnectionPriority : int { BALANCED, HIGH, LOW_POWER };
 
 enum GattStatus {
