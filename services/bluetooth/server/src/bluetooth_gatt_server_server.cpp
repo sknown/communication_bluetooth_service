@@ -280,7 +280,7 @@ BluetoothGattServerServer::impl::~impl()
 void ConvertCharacterPermission(bluetooth::Service &service)
 {
     HILOGI("enter");
-    for (auto &ccc : service->characteristics_) {
+    for (auto &ccc : service.characteristics_) {
         int permission = 0;
         HILOGI("ConvertCharacterPermission permission: %{public}d", permission);
         if (ccc.permissions_ & PermissionReadable) {
