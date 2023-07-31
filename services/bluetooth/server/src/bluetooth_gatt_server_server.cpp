@@ -277,8 +277,9 @@ BluetoothGattServerServer::impl::~impl()
 }
 
 
-void ConvertCharacterPermission(BluetoothGattService *service)
+void ConvertCharacterPermission(bluetooth::Service &service)
 {
+    HILOGI("enter");
     for (auto &ccc : service->characteristics_) {
         int permission = 0;
         HILOGI("ConvertCharacterPermission permission: %{public}d", permission);
@@ -304,8 +305,8 @@ int BluetoothGattServerServer::AddService(int32_t appId, BluetoothGattService *s
         HILOGE("serverService_ is null");
         return BT_ERR_INTERNAL_ERROR;
     }
-    ConvertCharacterPermission(services);
     bluetooth::Service svc = (bluetooth::Service)*services;
+    ConvertCharacterPermission(svc);
 
     int ret = pimpl->serverService_->AddService(appId, svc);
     return (ret == GattStatus::GATT_SUCCESS ? NO_ERROR : BT_ERR_INTERNAL_ERROR);
