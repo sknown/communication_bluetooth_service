@@ -299,7 +299,7 @@ void ConvertCharacterPermission(bluetooth::Service &service)
 
         for (auto &desc : ccc.descriptors_) {
             int desPermission = 0;
-            HILOGI("ConvertCharacterPermission desc.permissions: %{public}d", desc.permissions);
+            HILOGI("ConvertCharacterPermission desc.permissions: %{public}d", desc.permissions_);
             if (desc.permissions_ & PermissionReadable) {
                 desPermission |= GetPermissionReadable;
                 HILOGI("READABLE permission: %{public}d", desPermission);
