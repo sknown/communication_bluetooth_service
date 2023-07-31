@@ -23,6 +23,17 @@ namespace OHOS {
 namespace bluetooth {
 using GattValue = std::shared_ptr<std::unique_ptr<uint8_t[]>>;
 
+/** A GATT Attribute Permission.
+ *  Define GATT Attribute permissions.
+ */
+enum class GattPermissionService : uint8_t {
+    READABLE = 1 << 0, /**< readable */
+    WRITEABLE = 1 << 1,
+    ENCRYPTION = 1 << 2,
+    AUTHENTICATION = 1 << 3,
+    AUTHORIZATION = 1 << 4
+};
+
 constexpr uint16_t MAX_ATTRIBUTE_HANDLE = 0xFFFF;
 constexpr uint16_t MIN_ATTRIBUTE_HANDLE = 0x0001;
 constexpr uint16_t INVALID_ATTRIBUTE_HANDLE = 0x0000;
