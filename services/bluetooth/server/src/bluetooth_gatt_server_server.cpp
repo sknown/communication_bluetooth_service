@@ -34,6 +34,8 @@ namespace Bluetooth {
 using namespace OHOS::bluetooth;
 constexpr uint8_t PermissionReadable = 0x01;
 constexpr uint8_t PermissionWriteable = 0x10;
+int32_t  GetPermissionReadable = 0x01;
+int32_t  PermissionWriteable = 0x02;
 struct BluetoothGattServerServer::impl {
     class GattServerCallbackImpl;
     class SystemStateObserver;
@@ -284,11 +286,11 @@ void ConvertCharacterPermission(bluetooth::Service &service)
         int permission = 0;
         HILOGI("ConvertCharacterPermission ccc.permissions_: %{public}d", ccc.permissions_);
         if (ccc.permissions_ & PermissionReadable) {
-            permission |= static_cast<int>(GattPermission::READABLE);
+            permission |= GetPermissionReadable;
             HILOGI("READABLE permission: %{public}d", permission);
         }
         if (ccc.permissions_ & PermissionWriteable) {
-            permission |= static_cast<int>(GattPermission::WRITEABLE);
+            permission |= PermissionWriteable;
             HILOGI("WRITEABLE permission: %{public}d", permission);
         }
         HILOGI("ConvertCharacterPermission 294 permissions: %{public}d", permission);
