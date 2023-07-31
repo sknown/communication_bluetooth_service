@@ -21,6 +21,7 @@
 #include "bt_def.h"
 #include "gatt_defines.h"
 #include "openssl/md4.h"
+#include "bluetooth_log.h"
 
 namespace OHOS {
 namespace bluetooth {
@@ -376,10 +377,15 @@ int GattDatabase::CheckCharacteristicsLegality(const bluetooth::Service &service
             return GattStatus::INVALID_CHARACTERISTIC_DATA;
         }
 
+        HILOGI("CheckCharacteristicsLegality ccc.permissions_: %{public}d", ccc.permissions_);
+        HILOGI("CheckCharacteristicsLegality ccc.properties_: %{public}d", ccc.properties_);
         if (ccc.properties_ > 0xFF || ccc.properties_ < 0 || ccc.permissions_ < 0 || ccc.permissions_ > 0x10) {
             return GattStatus::INVALID_CHARACTERISTIC;
         }
 
+        HILOGI("CheckCharacteristicsLegality GattPermission::READABLE : %{public}d", GattPermission::READABLE);
+        HILOGI("CheckCharacteristicsLegality GattPermission::WRITEABLE : %{public}d", GattPermission::WRITEABLE);
+        
         if (((ccc.properties_ & CHARACTERISTIC_PROPERTIE_READ) &&
             !(ccc.permissions_ & static_cast<int>(GattPermission::READABLE))) ||
             ((ccc.properties_ & CHARACTERISTIC_PROPERTIE_WRITE) &&
