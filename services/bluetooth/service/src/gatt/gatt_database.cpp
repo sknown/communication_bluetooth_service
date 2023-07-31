@@ -26,7 +26,8 @@
 namespace OHOS {
 namespace bluetooth {
 using GattAttributeEntity = std::optional<std::reference_wrapper<GattDatabase::AttributeEntity>>;
-
+int32_t  GetPermissionReadable1 = 0x01;
+int32_t  GetPermissionWriteable2 = 0x02;
 GattDatabase::GattDatabase()
 {
     availableHandles_.emplace_front(MIN_ATTRIBUTE_HANDLE, MAX_ATTRIBUTE_HANDLE);
@@ -385,11 +386,11 @@ int GattDatabase::CheckCharacteristicsLegality(const bluetooth::Service &service
 
         HILOGI("CheckCharacteristicsLegality GattPermission::READABLE : %{public}d", GattPermission::READABLE);
         HILOGI("CheckCharacteristicsLegality GattPermission::WRITEABLE : %{public}d", GattPermission::WRITEABLE);
-        
+
         if (((ccc.properties_ & CHARACTERISTIC_PROPERTIE_READ) &&
-            !(ccc.permissions_ & static_cast<int>(GattPermission::READABLE))) ||
+            !(ccc.permissions_ & GetPermissionReadable1)) ||
             ((ccc.properties_ & CHARACTERISTIC_PROPERTIE_WRITE) &&
-            !(ccc.permissions_ & static_cast<int>(GattPermission::WRITEABLE)))) {
+            !(ccc.permissions_ & GetPermissionWriteable2))) {
             return GattStatus::INVALID_CHARACTERISTIC;
         }
 
