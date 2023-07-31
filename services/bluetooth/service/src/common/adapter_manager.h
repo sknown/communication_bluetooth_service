@@ -293,6 +293,7 @@ public:
      */
     void OnPairDevicesRemoved(const BTTransport transport, const std::vector<RawAddress> &devices) const;
 
+    void RestoreTurnOnState();
 private:
     AdapterManager();
     ~AdapterManager();
