@@ -559,6 +559,10 @@ void HfpAgSystemInterface::SetResponseHoldState(std::string address, int btrh)
 void HfpAgSystemInterface::HandlePhoneStateMock(std::string number, int state, int type)
 {
     HfpAgService *service = HfpAgService::GetService();
+    if (service == nullptr) {
+        LOG_ERROR("[HFP AG]%{public}s():no service",  __FUNCTION__);
+        return;
+    }
     callList_ = service->GetCallList();
     int activenum = 0;
     int holdnum = 0;

@@ -231,6 +231,10 @@ void HfpAgSystemEventProcesser::ProcessHoldCallEvent(int chld) const
 {
     bool result = systemInterface_.HoldCall(chld);
     HfpAgService *service = HfpAgService::GetService();
+    if (service == nullptr) {
+        LOG_ERROR("[HFP AG]%{public}s():no service",  __FUNCTION__);
+        return;
+    }
     int mock = service->GetMockState();
     if (mock != HfpAgMockState::HFP_AG_MOCK) {
         if (result) {
