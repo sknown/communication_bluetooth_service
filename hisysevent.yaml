@@ -65,7 +65,7 @@ BLE_SCAN_STOP:
 BLE_SCAN_DUTY_CYCLE:
   __BASE: {type: STATISTIC, level: MINOR, tag: PowerStats, desc: bluetooth scan duly cycle message}
   WINDOW: {type: INT32, desc: scan duration time}
-  INTERVAL: {type: INT32, desc: Total time, scan time + rest time}
+  INTERVAL: {type: INT32, desc: 'Total time, scan time + rest time'}
   TYPE: {type: INT32, desc: scan type}
 
 GATT_CONNECT_STATE:
