@@ -381,9 +381,9 @@ int GattDatabase::CheckCharacteristicsLegality(const bluetooth::Service &service
         }
 
         if (((ccc.properties_ & CHARACTERISTIC_PROPERTIE_READ) &&
-            !(ccc.permissions_ & static_cast<int>(GattPermission::READABLE))) ||
+            !(ccc.permissions_ & static_cast<int>(GattPermissionService::READABLE))) ||
             ((ccc.properties_ & CHARACTERISTIC_PROPERTIE_WRITE) &&
-            !(ccc.permissions_ & static_cast<int>(GattPermission::WRITEABLE)))) {
+            !(ccc.permissions_ & static_cast<int>(GattPermissionService::WRITEABLE)))) {
             return GattStatus::INVALID_CHARACTERISTIC;
         }
 
