@@ -223,21 +223,21 @@ std::unique_ptr<Service> GenericAccessService::BuildService()
     svc->characteristics_.push_back(Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_GAP_DEVICE_NAME),
         0,
         (bleDiscoverable_ || classicDiscoverable_) ? CHARACTERISTIC_PROPERTIE_READ : 0,
-        (bleDiscoverable_ || classicDiscoverable_) ? (int)GattPermission::READABLE : 0,
+        (bleDiscoverable_ || classicDiscoverable_) ? (int)GattPermissionService::READABLE : 0,
         (uint8_t *)value.c_str(),
         value.size()));
 
     svc->characteristics_.push_back(Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_GAP_APPEARANCE),
         0,
         CHARACTERISTIC_PROPERTIE_READ,
-        (int)GattPermission::READABLE,
+        (int)GattPermissionService::READABLE,
         GetAppearance().get(),
         APPEARANCE_DATE_LENGTH));
 
     svc->characteristics_.push_back(Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_GAP_CENTRAL_ADDR_RESOLUTION),
         0,
         CHARACTERISTIC_PROPERTIE_READ,
-        (int)GattPermission::READABLE,
+        (int)GattPermissionService::READABLE,
         &central_addr_resolution_,
         CENTRAL_ADDR_RESOLUTION_DATE_LENGTH));
     return svc;
@@ -298,13 +298,13 @@ void GenericAccessService::OnAdvertisingStateChanged(int state)
             if (!(ccc.properties_ & CHARACTERISTIC_PROPERTIE_READ)) {
                 serverService_.SetCharacteristicPermission(ccc,
                     ccc.properties_ | CHARACTERISTIC_PROPERTIE_READ,
-                    ccc.permissions_ | (int)GattPermission::READABLE);
+                    ccc.permissions_ | (int)GattPermissionService::READABLE);
             }
         } else {
             if (ccc.properties_ & CHARACTERISTIC_PROPERTIE_READ) {
                 serverService_.SetCharacteristicPermission(ccc,
                     ccc.properties_ & ~CHARACTERISTIC_PROPERTIE_READ,
-                    ccc.permissions_ & ~(int)GattPermission::READABLE);
+                    ccc.permissions_ & ~(int)GattPermissionService::READABLE);
             }
         }
         return;
@@ -329,13 +329,13 @@ void GenericAccessService::OnScanModeChanged(int mode)
             if (!(ccc.properties_ & CHARACTERISTIC_PROPERTIE_READ)) {
                 serverService_.SetCharacteristicPermission(ccc,
                     ccc.properties_ | CHARACTERISTIC_PROPERTIE_READ,
-                    ccc.permissions_ | (int)GattPermission::READABLE);
+                    ccc.permissions_ | (int)GattPermissionService::READABLE);
             }
         } else {
             if (ccc.properties_ & CHARACTERISTIC_PROPERTIE_READ) {
                 serverService_.SetCharacteristicPermission(ccc,
                     ccc.properties_ & ~CHARACTERISTIC_PROPERTIE_READ,
-                    ccc.permissions_ & ~(int)GattPermission::READABLE);
+                    ccc.permissions_ & ~(int)GattPermissionService::READABLE);
             }
         }
         return;
