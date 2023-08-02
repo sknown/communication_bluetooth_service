@@ -335,13 +335,7 @@ void BluetoothGattServerServer::ClearServices(int appId)
 
 void BluetoothGattServerServer::CancelConnection(const BluetoothGattDevice &device)
 {
-    HILOGI("addr: %{public}s", GET_ENCRYPT_GATT_ADDR(device));
-    std::lock_guard<std::mutex> lck(pimpl->registerMutex_);
-    if (!pimpl->serverService_) {
-        HILOGE("serverService_ is null");
-        return;
-    }
-    pimpl->serverService_->CancelConnection((bluetooth::GattDevice)device);
+    HILOGE("Unsupport GattServer CancelConnection");
 }
 
 int BluetoothGattServerServer::NotifyClient(
