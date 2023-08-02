@@ -1204,7 +1204,12 @@ void ClassicAdapter::PinCodeReq(const BtAddr &addr)
     if ((remoteDevice->GetPairedStatus() != PAIR_PAIRING) && (remoteDevice->GetPairedStatus() != PAIR_CANCELING)) {
         remoteDevice->SetPairedStatus(PAIR_PAIRING);
     }
-    
+
+    bool bondFromLocal = false;
+    bool ret = (GAPIF_PairIsFromLocal(&addr, &bondFromLocal) == BT_SUCCESS);
+    ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_PairIsFromLocal", ret);
+    remoteDevice->SetBondedFromLocal(bondFromLocal);
+
     SendPairConfirmed(device, PAIR_CONFIRM_TYPE_PIN_CODE, 0);
 }
 
