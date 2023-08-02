@@ -1574,7 +1574,8 @@ bool GattServerProfile::impl::CharacteristicPropertyIsReadable(uint16_t attHandl
 {
     if ((db_.GetCharacteristic(attHandle) != nullptr) &&
         (db_.GetCharacteristic(attHandle)->properties_ & CHARACTERISTIC_PROPERTIE_READ) &&
-        (db_.GetValueByHandle(attHandle).value().get().permissions_ & static_cast<int>(GattPermission::READABLE))) {
+        (db_.GetValueByHandle(attHandle).value().get().permissions_ &
+            static_cast<int>(GattPermissionService::READABLE))) {
         return true;
     } else {
         return false;
@@ -1590,7 +1591,7 @@ bool GattServerProfile::impl::CharacteristicPropertyIsReadable(uint16_t attHandl
 bool GattServerProfile::impl::DescriptorPropertyIsReadable(uint16_t attHandle)
 {
     if ((db_.GetDescriptor(attHandle) != nullptr) &&
-        (db_.GetDescriptor(attHandle)->permissions_ & static_cast<int>(GattPermission::READABLE))) {
+        (db_.GetDescriptor(attHandle)->permissions_ & static_cast<int>(GattPermissionService::READABLE))) {
         return true;
     } else {
         return false;
@@ -1607,7 +1608,8 @@ bool GattServerProfile::impl::CharacteristicPropertyIsWritable(uint16_t attHandl
 {
     if ((db_.GetCharacteristic(attHandle) != nullptr) &&
         (db_.GetCharacteristic(attHandle)->properties_ & CHARACTERISTIC_PROPERTIE_WRITE) &&
-        (db_.GetValueByHandle(attHandle).value().get().permissions_ & static_cast<int>(GattPermission::WRITEABLE))) {
+        (db_.GetValueByHandle(attHandle).value().get().permissions_ &
+            static_cast<int>(GattPermissionService::WRITEABLE))) {
         return true;
     } else {
         return false;
@@ -1623,7 +1625,7 @@ bool GattServerProfile::impl::CharacteristicPropertyIsWritable(uint16_t attHandl
 bool GattServerProfile::impl::DescriptorPropertyIsWritable(uint16_t attHandle)
 {
     if ((db_.GetDescriptor(attHandle) != nullptr) &&
-        (db_.GetDescriptor(attHandle)->permissions_ & static_cast<int>(GattPermission::WRITEABLE))) {
+        (db_.GetDescriptor(attHandle)->permissions_ & static_cast<int>(GattPermissionService::WRITEABLE))) {
         return true;
     } else {
         return false;

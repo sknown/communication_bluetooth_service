@@ -156,7 +156,7 @@ std::unique_ptr<Service> DeviceInformationService::BuildService()
         Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_MANUFACTURER_NAME_STRING_CHAR),
             0,
             CHARACTERISTIC_PROPERTIE_READ,
-            (int)GattPermission::READABLE,
+            (int)GattPermissionService::READABLE,
             (uint8_t *)value.c_str(),
             value.size()));
 
@@ -165,7 +165,7 @@ std::unique_ptr<Service> DeviceInformationService::BuildService()
         Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_MODEL_NUMBER_STRING_CHAR),
             0,
             CHARACTERISTIC_PROPERTIE_READ,
-            (int)GattPermission::READABLE,
+            (int)GattPermissionService::READABLE,
             (uint8_t *)value.c_str(),
             value.size()));
 
@@ -173,7 +173,7 @@ std::unique_ptr<Service> DeviceInformationService::BuildService()
     svc->characteristics_.push_back(Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_PNP_ID_CHAR),
         0,
         CHARACTERISTIC_PROPERTIE_READ,
-        (int)GattPermission::READABLE,
+        (int)GattPermissionService::READABLE,
         (uint8_t *)value.c_str(),
         value.size()));
 
@@ -182,7 +182,7 @@ std::unique_ptr<Service> DeviceInformationService::BuildService()
         Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_IEEE_REGULATORY_CERTIFICATION_DATA_LIST_CHAR),
             0,
             CHARACTERISTIC_PROPERTIE_READ,
-            (int)GattPermission::READABLE,
+            (int)GattPermissionService::READABLE,
             (uint8_t *)value.c_str(),
             value.size()));
 
@@ -191,7 +191,7 @@ std::unique_ptr<Service> DeviceInformationService::BuildService()
         Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_SERIAL_NUMBER_STRING_CHAR),
             0,
             CHARACTERISTIC_PROPERTIE_READ,
-            (int)GattPermission::READABLE,
+            (int)GattPermissionService::READABLE,
             (uint8_t *)value.c_str(),
             value.size()));
 
@@ -200,7 +200,7 @@ std::unique_ptr<Service> DeviceInformationService::BuildService()
         Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_SOFTWARE_REVISION_STRING_CHAR),
             0,
             CHARACTERISTIC_PROPERTIE_READ,
-            (int)GattPermission::READABLE,
+            (int)GattPermissionService::READABLE,
             (uint8_t *)value.c_str(),
             value.size()));
 
@@ -208,7 +208,7 @@ std::unique_ptr<Service> DeviceInformationService::BuildService()
     svc->characteristics_.push_back(Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_SYSTEM_ID_CHAR),
         0,
         CHARACTERISTIC_PROPERTIE_READ,
-        (int)GattPermission::READABLE,
+        (int)GattPermissionService::READABLE,
         (uint8_t *)value.c_str(),
         value.size()));
 
@@ -217,7 +217,7 @@ std::unique_ptr<Service> DeviceInformationService::BuildService()
         Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_HARDWARE_REVISION_STRING_CHAR),
             0,
             CHARACTERISTIC_PROPERTIE_READ,
-            (int)GattPermission::READABLE,
+            (int)GattPermissionService::READABLE,
             (uint8_t *)value.c_str(),
             value.size()));
 
@@ -226,7 +226,7 @@ std::unique_ptr<Service> DeviceInformationService::BuildService()
         Characteristic(Uuid::ConvertFrom16Bits(GATT_UUID_FIRMWARE_REVISION_STRING_CHAR),
             0,
             CHARACTERISTIC_PROPERTIE_READ,
-            (int)GattPermission::READABLE,
+            (int)GattPermissionService::READABLE,
             (uint8_t *)value.c_str(),
             value.size()));
 
