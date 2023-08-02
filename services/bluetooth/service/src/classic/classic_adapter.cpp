@@ -1204,30 +1204,7 @@ void ClassicAdapter::PinCodeReq(const BtAddr &addr)
     if ((remoteDevice->GetPairedStatus() != PAIR_PAIRING) && (remoteDevice->GetPairedStatus() != PAIR_CANCELING)) {
         remoteDevice->SetPairedStatus(PAIR_PAIRING);
     }
-    bool bondFromLocal = false;
-    bool ret = (GAPIF_PairIsFromLocal(&addr, &bondFromLocal) == BT_SUCCESS);
-    ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_PairIsFromLocal", ret);
-    remoteDevice->SetBondedFromLocal(bondFromLocal);
-    if (bondFromLocal) {
-        if (remoteDevice->CheckCod(CLASS_OF_DEVICE_AV_HEADSETS) ||
-            remoteDevice->CheckCod(CLASS_OF_DEVICE_AV_HEADPHONES) ||
-            remoteDevice->CheckCod(CLASS_OF_DEVICE_AV_PORTABLE_AUDIO) ||
-            remoteDevice->CheckCod(CLASS_OF_DEVICE_AV_HIFI_AUDIO) ||
-            remoteDevice->CheckCod(CLASS_OF_DEVICE_HID_POINTING)) {
-            if ((!Compat::CompatCheck(CompatType::COMPAT_REJECT_AUTO_PAIRING, remoteDevice->GetAddress())) &&
-                (!Compat::CompatCheck(CompatType::COMPAT_REJECT_AUTO_PAIRING, remoteDevice->GetRemoteName()))) {
-                UserConfirmAutoReply(device, PAIR_CONFIRM_TYPE_PIN_CODE, true);
-                return;
-            }
-        }
-        if (remoteDevice->CheckCod(CLASS_OF_DEVICE_HID_KEYBOARD) || remoteDevice->CheckCod(CLASS_OF_DEVICE_HID_COMBO)) {
-            if (Compat::CompatCheck(CompatType::COMPAT_KEYBOARD_REQUIRES_FIXED_PIN, remoteDevice->GetAddress())) {
-                UserConfirmAutoReply(device, PAIR_CONFIRM_TYPE_PIN_CODE, true);
-                return;
-            }
-        }
-    }
-
+    
     SendPairConfirmed(device, PAIR_CONFIRM_TYPE_PIN_CODE, 0);
 }
 
