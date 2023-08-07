@@ -598,7 +598,7 @@ int A2dpService::SetActiveSinkDevice(const RawAddress &device)
     auto curDevice = a2dpDevices_.find(activeDevice_.GetAddress().c_str());
     if (strcmp(device.GetAddress().c_str(), activeDevice_.GetAddress().c_str()) == 0) {
         LOG_ERROR("[A2dpService]The device is already active");
-        if (curDevice == a2dpDevices_.end() || curDevice->second == nullptr) {
+        if (curDevice != a2dpDevices_.end() && curDevice->second != nullptr) {
             pflA2dp->Start(curDevice->second->GetHandle());
         }
     } else {
