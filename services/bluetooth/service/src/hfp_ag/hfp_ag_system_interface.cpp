@@ -127,6 +127,10 @@ void HfpAgSystemInterface::HangupCall(const std::string &address) const
 {
     LOG_INFO("[HFP AG]%{public}s():enter",  __FUNCTION__);
     HfpAgService *service = HfpAgService::GetService();
+    if (service == nullptr) {
+        LOG_ERROR("[HFP AG]%{public}s():no service",  __FUNCTION__);
+        return;
+    }
     if (service->GetMockState() == HFP_AG_MOCK) {
         HfpAgMessage evt(HFP_AG_SEND_CALL_STATE_EVT, HFP_AG_CALL_INACTIVE);
         SendMockEvent(evt);
@@ -494,6 +498,7 @@ void HfpAgSystemInterface::GetVoiceNumber()
     HfpAgService *service = HfpAgService::GetService();
     if (service == nullptr) {
         LOG_ERROR("[HFP AG]%{public}s():service is nullptr", __FUNCTION__);
+        return;
     }
     std::string number = "1234567";
     // NEED TO GET VOICE TAG NUMBER, 1234567 JUST FOR TEST, INTERFACE NOT AVAIABLE NOW!
@@ -507,6 +512,7 @@ void HfpAgSystemInterface::GetResponseHoldState(std::string address)
     HfpAgService *service = HfpAgService::GetService();
     if (service == nullptr) {
         LOG_ERROR("[HFP AG]%{public}s():no service",  __FUNCTION__);
+        return;
     }
     int slotId = INVALID_SLOT_ID;
     CoreServiceClient::GetInstance().GetPrimarySlotId(slotId);
@@ -537,6 +543,7 @@ void HfpAgSystemInterface::SetResponseHoldState(std::string address, int btrh)
     HfpAgService *service = HfpAgService::GetService();
     if (service == nullptr) {
         LOG_ERROR("[HFP AG]%{public}s():no service",  __FUNCTION__);
+        return;
     }
     int slotId = INVALID_SLOT_ID;
     CoreServiceClient::GetInstance().GetPrimarySlotId(slotId);
@@ -670,6 +677,10 @@ bool HfpAgSystemInterface::HandleChldMock(int chld) const
 bool HfpAgSystemInterface::HandleClccMock(std::string address) const
 {
     HfpAgService *service = HfpAgService::GetService();
+    if (service == nullptr) {
+        LOG_ERROR("[HFP AG]%{public}s():no service",  __FUNCTION__);
+        return false;
+    }
     int callindex = 0;
     for (auto mockcall : callList_) {
         callindex++;
@@ -693,6 +704,7 @@ void HfpAgSystemInterface::SendHfIndicator(const std::string &address, int indId
     HfpAgService *service = HfpAgService::GetService();
     if (service == nullptr) {
         LOG_ERROR("[HFP AG]%{public}s():service is nullptr", __FUNCTION__);
+        return;
     }
     if (indId == HFP_AG_HF_INDICATOR_ENHANCED_DRIVER_SAFETY_ID) {
         service->NotifyHfEnhancedDriverSafety(device, indValue);
@@ -916,6 +928,10 @@ bool HfpAgSystemInterface::IsRinging() const
 bool HfpAgSystemInterface::HandleChld(int chld) const
 {
     HfpAgService *service = HfpAgService::GetService();
+    if (service == nullptr) {
+        LOG_ERROR("[HFP AG]%{public}s():service is nullptr", __FUNCTION__);
+        return false;
+    }
     if (service->GetMockState() == HFP_AG_MOCK) {
         return HandleChldMock(chld);
     }
