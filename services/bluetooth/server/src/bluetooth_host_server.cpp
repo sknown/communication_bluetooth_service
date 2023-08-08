@@ -1744,7 +1744,7 @@ int32_t BluetoothHostServer::SyncRandomAddress(const std::string &realAddr, cons
     return NO_ERROR;
 }
 
-int32_t BluetoothHostServer::StartCrediblePair(const std::string &realAddr, const std::string &randomAddr)
+int32_t BluetoothHostServer::StartCrediblePair(int32_t transport, const std::string &address)
 {
     return NO_ERROR;
 }

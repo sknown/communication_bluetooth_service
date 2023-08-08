@@ -1253,7 +1253,7 @@ ErrCode BluetoothHostStub::SyncRandomAddressInner(MessageParcel &data, MessagePa
     return NO_ERROR;
 }
 
-ErrCode BluetoothHostStub::StartCrediblePairInner()
+ErrCode BluetoothHostStub::StartCrediblePairInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
