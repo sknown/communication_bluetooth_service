@@ -1743,5 +1743,10 @@ int32_t BluetoothHostServer::SyncRandomAddress(const std::string &realAddr, cons
 {
     return NO_ERROR;
 }
+
+int32_t BluetoothHostServer::StartCrediblePair(const std::string &realAddr, const std::string &randomAddr)
+{
+    return NO_ERROR;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
