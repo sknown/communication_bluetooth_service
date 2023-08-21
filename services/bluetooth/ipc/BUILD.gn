@@ -97,45 +97,10 @@ ohos_static_library("btipc_service") {
     ]
   }
 
-  if (bluetooth_service_map_client_feature) {
-    sources += [
-      "src/bluetooth_map_mce_observer_proxy.cpp",
-      "src/bluetooth_map_mce_stub.cpp",
-    ]
-  }
-
-  if (bluetooth_service_map_server_feature) {
-    sources += [
-      "src/bluetooth_map_mse_observer_proxy.cpp",
-      "src/bluetooth_map_mse_stub.cpp",
-    ]
-  }
-
-  if (bluetooth_service_opp_feature) {
-    sources += [
-      "src/bluetooth_opp_observer_proxy.cpp",
-      "src/bluetooth_opp_stub.cpp",
-    ]
-  }
-
   if (bluetooth_service_pan_feature) {
     sources += [
       "src/bluetooth_pan_observer_proxy.cpp",
       "src/bluetooth_pan_stub.cpp",
-    ]
-  }
-
-  if (bluetooth_service_pbap_client_feature) {
-    sources += [
-      "src/bluetooth_pbap_pce_observer_proxy.cpp",
-      "src/bluetooth_pbap_pce_stub.cpp",
-    ]
-  }
-
-  if (bluetooth_service_pbap_server_feature) {
-    sources += [
-      "src/bluetooth_pbap_pse_observer_proxy.cpp",
-      "src/bluetooth_pbap_pse_stub.cpp",
     ]
   }
 

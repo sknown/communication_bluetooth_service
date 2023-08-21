@@ -132,11 +132,6 @@ ServiceTransportSrc = [
   "src/transport/transport_rfcomm.cpp",
 ]
 
-ServiceDISrc = [
-  "src/di/di_config.cpp",
-  "src/di/di_service.cpp",
-]
-
 ServiceUtilSrc = [
   "src/util/bluetooth_common_event_helper.cpp",
   "src/util/dispatcher.cpp",
@@ -226,7 +221,6 @@ ohos_shared_library("btservice") {
   sources += ServiceObexSrc
   sources += ServiceSockSrc
   sources += ServiceTransportSrc
-  sources += ServiceDISrc
   sources += ServicePermissionSrc
 
   if (bluetooth_service_a2dp_sink_feature) {
@@ -316,63 +310,6 @@ ohos_shared_library("btservice") {
     ]
   }
 
-  if (bluetooth_service_map_client_feature) {
-    sources += [
-      "src/map_mce/map_mce_data_analyse.cpp",
-      "src/map_mce/map_mce_device_ctrl.cpp",
-      "src/map_mce/map_mce_instance_client.cpp",
-      "src/map_mce/map_mce_instance_request.cpp",
-      "src/map_mce/map_mce_instance_stm.cpp",
-      "src/map_mce/map_mce_mns_server.cpp",
-      "src/map_mce/map_mce_observer_manager.cpp",
-      "src/map_mce/map_mce_service.cpp",
-      "src/map_mce/map_mce_xml.cpp",
-    ]
-  }
-
-  if (bluetooth_service_map_server_feature) {
-    sources += [
-      "src/map_mse/map_mse_bmsg.cpp",
-      "src/map_mse/map_mse_event.cpp",
-      "src/map_mse/map_mse_folder.cpp",
-      "src/map_mse/map_mse_instance.cpp",
-      "src/map_mse/map_mse_mnscli.cpp",
-      "src/map_mse/map_mse_params.cpp",
-      "src/map_mse/map_mse_resource.cpp",
-      "src/map_mse/map_mse_server.cpp",
-      "src/map_mse/map_mse_service.cpp",
-      "src/map_mse/map_mse_vcard.cpp",
-    ]
-  }
-
-  if (bluetooth_service_pbap_client_feature) {
-    sources += [
-      "src/pbap_pce/pbap_pce_app_params.cpp",
-      "src/pbap_pce/pbap_pce_base_state.cpp",
-      "src/pbap_pce/pbap_pce_connected_state.cpp",
-      "src/pbap_pce/pbap_pce_connecting_state.cpp",
-      "src/pbap_pce/pbap_pce_disconnected_state.cpp",
-      "src/pbap_pce/pbap_pce_disconnecting_state.cpp",
-      "src/pbap_pce/pbap_pce_gap.cpp",
-      "src/pbap_pce/pbap_pce_obex_client.cpp",
-      "src/pbap_pce/pbap_pce_sdp.cpp",
-      "src/pbap_pce/pbap_pce_service.cpp",
-      "src/pbap_pce/pbap_pce_state_machine.cpp",
-    ]
-  }
-
-  if (bluetooth_service_pbap_server_feature) {
-    sources += [
-      "src/pbap_pse/pbap_pse_app_params.cpp",
-      "src/pbap_pse/pbap_pse_gap.cpp",
-      "src/pbap_pse/pbap_pse_obex_server.cpp",
-      "src/pbap_pse/pbap_pse_sdp.cpp",
-      "src/pbap_pse/pbap_pse_service.cpp",
-      "src/pbap_pse/pbap_pse_state_machine.cpp",
-      "src/pbap_pse/pbap_pse_vcard_manager.cpp",
-    ]
-  }
-
   if (bluetooth_service_hid_host_feature) {
     sources += [
       "src/hid_host/hid_host_hogp.cpp",
@@ -391,20 +328,6 @@ ohos_shared_library("btservice") {
       "src/pan/pan_sdp.cpp",
       "src/pan/pan_service.cpp",
       "src/pan/pan_statemachine.cpp",
-    ]
-  }
-
-  if (bluetooth_service_opp_feature) {
-    sources += [
-      "src/opp/opp_gap_client.cpp",
-      "src/opp/opp_gap_server.cpp",
-      "src/opp/opp_obex_client.cpp",
-      "src/opp/opp_obex_server.cpp",
-      "src/opp/opp_sdp_client.cpp",
-      "src/opp/opp_sdp_server.cpp",
-      "src/opp/opp_service.cpp",
-      "src/opp/opp_statemachine.cpp",
-      "src/opp/opp_transfer.cpp",
     ]
   }
 
