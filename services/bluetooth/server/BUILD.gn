@@ -90,40 +90,10 @@ ohos_shared_library("bluetooth_server") {
     sources += [ "src/bluetooth_hid_host_server.cpp" ]
   }
 
-  if (bluetooth_service_map_client_feature) {
-    defines += [ "BLUETOOTH_MAP_CLIENT_FEATURE" ]
-
-    sources += [ "src/bluetooth_map_mce_server.cpp" ]
-  }
-
-  if (bluetooth_service_map_server_feature) {
-    defines += [ "BLUETOOTH_MAP_SERVER_FEATURE" ]
-
-    sources += [ "src/bluetooth_map_mse_server.cpp" ]
-  }
-
-  if (bluetooth_service_opp_feature) {
-    defines += [ "BLUETOOTH_OPP_FEATURE" ]
-
-    sources += [ "src/bluetooth_opp_server.cpp" ]
-  }
-
   if (bluetooth_service_pan_feature) {
     defines += [ "BLUETOOTH_PAN_FEATURE" ]
 
     sources += [ "src/bluetooth_pan_server.cpp" ]
-  }
-
-  if (bluetooth_service_pbap_client_feature) {
-    defines += [ "BLUETOOTH_PBAP_CLIENT_FEATURE" ]
-
-    sources += [ "src/bluetooth_pbap_pce_server.cpp" ]
-  }
-
-  if (bluetooth_service_pbap_server_feature) {
-    defines += [ "BLUETOOTH_PBAP_SERVER_FEATURE" ]
-
-    sources += [ "src/bluetooth_pbap_pse_server.cpp" ]
   }
 
   deps = [
