@@ -28,20 +28,15 @@
 #include "bluetooth_hfp_hf_server.h"
 #include "bluetooth_hid_host_server.h"
 #include "bluetooth_host_dumper.h"
-#include "bluetooth_host_server.h"
 #include "bluetooth_log.h"
-#include "bluetooth_map_mce_server.h"
-#include "bluetooth_map_mse_server.h"
 #include "bluetooth_pan_server.h"
-#include "bluetooth_opp_server.h"
-#include "bluetooth_pbap_pce_server.h"
-#include "bluetooth_pbap_pse_server.h"
 #include "bluetooth_socket_server.h"
 #include "bluetooth_utils_server.h"
 #include "file_ex.h"
 #include "hisysevent.h"
 #include "interface_adapter_manager.h"
 #include "permission_utils.h"
+#include "bluetooth_host_server.h"
 
 
 #include "interface_adapter_ble.h"
@@ -652,16 +647,6 @@ void BluetoothHostServer::impl::createServers()
     sptr<BluetoothBleCentralManagerServer> bleCentralManger = new BluetoothBleCentralManagerServer();
     bleServers_[BLE_CENTRAL_MANAGER_SERVER] = bleCentralManger->AsObject();
 
-#ifdef BLUETOOTH_PBAP_CLIENT_FEATURE
-    sptr<BluetoothPbapPceServer> pbapPce = new BluetoothPbapPceServer();
-    servers_[PROFILE_PBAP_PCE] = pbapPce->AsObject();
-#endif
-
-#ifdef BLUETOOTH_PBAP_SERVER_FEATURE
-    sptr<BluetoothPbapPseServer> pbapPse = new BluetoothPbapPseServer();
-    servers_[PROFILE_PBAP_PSE] = pbapPse->AsObject();
-#endif
-
 #ifdef BLUETOOTH_MAP_SERVER_FEATURE
     sptr<BluetoothMapMceServer> mapMce = new BluetoothMapMceServer();
     servers_[PROFILE_MAP_MCE] = mapMce->AsObject();
@@ -690,11 +675,6 @@ void BluetoothHostServer::impl::createServers()
 #ifdef BLUETOOTH_PAN_FEATURE
     sptr<BluetoothPanServer> panServer = new BluetoothPanServer();
     servers_[PROFILE_PAN_SERVER] = panServer->AsObject();
-#endif
-
-#ifdef BLUETOOTH_OPP_FEATURE
-    sptr<BluetoothOppServer> oppServer = new BluetoothOppServer();
-    servers_[PROFILE_OPP_SERVER] = oppServer->AsObject();
 #endif
 
     HILOGI("servers_ constructed, size is %{public}zu", servers_.size());
