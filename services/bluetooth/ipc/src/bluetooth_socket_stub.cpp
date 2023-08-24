@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (C) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -14,6 +14,7 @@
  */
 
 #include "bluetooth_socket_stub.h"
+#include "bluetooth_socket_observer_proxy.h"
 #include "bluetooth_bt_uuid.h"
 #include "bluetooth_log.h"
 #include "ipc_types.h"
@@ -27,6 +28,8 @@ BluetoothSocketStub::BluetoothSocketStub()
         &BluetoothSocketStub::ConnectInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::SOCKET_LISTEN)] =
         &BluetoothSocketStub::ListenInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::REMOVE_OBSERVER)] =
+        &BluetoothSocketStub::RemoveObserverInner;
 }
 
 BluetoothSocketStub::~BluetoothSocketStub()
@@ -73,8 +76,8 @@ ErrCode BluetoothSocketStub::ConnectInner(MessageParcel &data, MessageParcel &re
         .uuid = *uuid,
         .securityFlag = data.ReadInt32(),
         .type = data.ReadInt32(),
-        .psm = data.ReadInt32()
-
+        .psm = data.ReadInt32(),
+        .observer = OHOS::iface_cast<IBluetoothSocketObserver>(data.ReadRemoteObject())
     };
     int fd = -1;
     int ret = Connect(param, fd);
@@ -102,10 +105,11 @@ ErrCode BluetoothSocketStub::ListenInner(MessageParcel &data, MessageParcel &rep
         return ERR_INVALID_VALUE;
     }
     ListenSocketParam param {
-        name,
-        *uuid,
-        data.ReadInt32(),
-        data.ReadInt32()
+        .name = name,
+        .uuid = *uuid,
+        .securityFlag = data.ReadInt32(),
+        .type = data.ReadInt32(),
+        .observer = OHOS::iface_cast<IBluetoothSocketObserver>(data.ReadRemoteObject())
     };
 
     int fd = -1;
@@ -120,6 +124,15 @@ ErrCode BluetoothSocketStub::ListenInner(MessageParcel &data, MessageParcel &rep
             return ERR_INVALID_VALUE;
         }
     }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothSocketStub::RemoveObserverInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("RemoveObserverInner starts");
+    sptr<IBluetoothSocketObserver> observer = OHOS::iface_cast<IBluetoothSocketObserver>(data.ReadRemoteObject());
+    RemoveObserver(observer);
+
     return NO_ERROR;
 }
 }  // namespace Bluetooth
