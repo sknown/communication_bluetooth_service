@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Huawei Device Co., Ltd.
+ * Copyright (C) 2021-2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -34,6 +34,7 @@ public:
 private:
     ErrCode ConnectInner(MessageParcel &data, MessageParcel &reply);
     ErrCode ListenInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode RemoveObserverInner(MessageParcel &data, MessageParcel &reply);
 
     using BluetoothSocketFunc = ErrCode (BluetoothSocketStub::*)(MessageParcel &data, MessageParcel &reply);
     std::map<uint32_t, BluetoothSocketFunc> memberFuncMap_;
