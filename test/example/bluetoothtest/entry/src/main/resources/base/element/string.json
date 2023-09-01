@@ -101,6 +101,10 @@
       "value": "接口"
     },
     {
+      "name": "reason",
+      "value": "用户授权"
+    },
+    {
       "name": "result",
       "value": "结果"
     },
@@ -170,6 +174,10 @@
     {
       "name": "pan_network_profile_test_title",
       "value": "PAN NetWork Profile"
+    },
+    {
+      "name": "opp_profile_test_title",
+      "value": "Opp Profile"
     },
     {
       "name": "p_bap_clinet_profile_test_title",
