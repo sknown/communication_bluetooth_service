@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Shenzhen Kaihong Digital Industry Development Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -118,7 +118,13 @@ import {
   testProfileDisConnect ,
   testProfileGetPlayingState ,
   testProfileGetConnectionDevices ,
-  testProfileGetDeviceState
+  testProfileGetDeviceState,
+  testOnTransferStateChange,
+  testOnReceiveIncomingFile,
+  testSendFile,
+  testSetIncomingFileConfirmation,
+  testGetCurrentTransferInformation,
+  testCancelTransfer
 } from './a2dpSinkProfileInterface'
 
 import bluetooth from '@ohos.bluetooth';
@@ -137,6 +143,14 @@ const BRTestCase: [] = [
     'detail' : '去使能蓝牙' ,
     'method' : 'disableBluetooth' ,
     'api' : testDisableBluetooth ,
+    'result' : 'None' ,
+    'category' : CaseCategory.BR
+  },
+  {
+    'name' : '注册状态变化' ,
+    'detail' : '注册状态变化' ,
+    'method' : 'on.stateChange' ,
+    'api' : testOnStateChange ,
     'result' : 'None' ,
     'category' : CaseCategory.BR
   },
@@ -185,6 +199,22 @@ const BRTestCase: [] = [
     'detail' : '获取蓝牙扫描模式' ,
     'method' : 'getBluetoothScanMode' ,
     'api' : testGetBluetoothScanMode ,
+    'result' : 'None' ,
+    'category' : CaseCategory.BR
+  },
+  {
+    'name' : '注册pin码变化' ,
+    'detail' : '注册pin码变化' ,
+    'method' : 'on.pinRequired' ,
+    'api' : testOnPinRequired ,
+    'result' : 'None' ,
+    'category' : CaseCategory.BR
+  },
+  {
+    'name' : '注册绑定状态变化' ,
+    'detail' : '注册绑定状态变化' ,
+    'method' : 'on.bondStateChange' ,
+    'api' : testOnBondStateChange ,
     'result' : 'None' ,
     'category' : CaseCategory.BR
   },
@@ -257,30 +287,6 @@ const BRTestCase: [] = [
     'detail' : '获取设备的配置文件状态' ,
     'method' : 'getDeviceState' ,
     'api' : testGetProfileConnState2 ,
-    'result' : 'None' ,
-    'category' : CaseCategory.BR
-  },
-  {
-    'name' : '注册状态变化' ,
-    'detail' : '注册状态变化' ,
-    'method' : 'on.stateChange' ,
-    'api' : testOnStateChange ,
-    'result' : 'None' ,
-    'category' : CaseCategory.BR
-  },
-  {
-    'name' : '注册pin码变化' ,
-    'detail' : '注册pin码变化' ,
-    'method' : 'on.pinRequired' ,
-    'api' : testOnPinRequired ,
-    'result' : 'None' ,
-    'category' : CaseCategory.BR
-  },
-  {
-    'name' : '注册绑定状态变化' ,
-    'detail' : '注册绑定状态变化' ,
-    'method' : 'on.bondStateChange' ,
-    'api' : testOnBondStateChange ,
     'result' : 'None' ,
     'category' : CaseCategory.BR
   }
@@ -996,6 +1002,57 @@ const PanNetworkProfileTestCase: any[] = [
   },
 ]
 
+const OppProfileTestCase:any[] =[
+  {
+    'name' : '传输状态变化打开' ,
+    'detail' : '传输状态更改打开' ,
+    'method' : 'on.transferStateChange' ,
+    'api' :  testOnTransferStateChange ,
+    'result' : 'None' ,
+    'category' : CaseCategory.ProfileOpp
+  },
+  {
+    'name' : '接收传入文件变化打开' ,
+    'detail' : '接收传入文件变化打开' ,
+    'method' : 'on.receiveIncomingFile' ,
+    'api' :  testOnReceiveIncomingFile ,
+    'result' : 'None' ,
+    'category' : CaseCategory.ProfileOpp
+  },
+  {
+    'name' : '发送文件' ,
+    'detail' : '发送文件' ,
+    'method' : 'sendFile' ,
+    'api' :  testSendFile ,
+    'result' : 'None' ,
+    'category' : CaseCategory.ProfileOpp
+  },
+  {
+    'name' : '设置传入文件确认' ,
+    'detail' : '设置传入文件确认' ,
+    'method' : 'setIncomingFileConfirmation' ,
+    'api' :  testSetIncomingFileConfirmation,
+    'result' : 'None' ,
+    'category' : CaseCategory.ProfileOpp
+  },
+  {
+    'name' : '获取当前传输信息' ,
+    'detail' : '获取当前传输信息' ,
+    'method' : 'getCurrentTransferInformation' ,
+    'api' :  testGetCurrentTransferInformation ,
+    'result' : 'None' ,
+    'category' : CaseCategory.ProfileOpp
+  },
+  {
+    'name' : '取消传输' ,
+    'detail' : '取消传输' ,
+    'method' : 'cancelTransfer' ,
+    'api' :  testCancelTransfer,
+    'result' : 'None' ,
+    'category' : CaseCategory.ProfileOpp
+  },
+]
+
 const TestComposition: any[] = [
   {
     'name' : 'Classic' ,
@@ -1170,6 +1227,20 @@ const TestComposition: any[] = [
     'image' : $r( 'app.media.ScenarioTest' ) ,
     'category' : Category.Scenario
   },
+  {
+    'name' : 'OppSendScenarioTest' ,
+    'detail' : 'Opp发送端场景测试' ,
+    'url' : 'pages/subScenarioTest/oppSendScenarioTest' ,
+    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'category' : Category.Scenario
+  },
+  {
+    'name' : 'OppRecvScenarioTest' ,
+    'detail' : 'Opp接收端场景测试' ,
+    'url' : 'pages/subScenarioTest/oppRecvScenarioTest' ,
+    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'category' : Category.Scenario
+  },
 
   {
     'name' : 'BrFound_M_ScenarioTest' ,
@@ -1242,6 +1313,13 @@ const TestComposition: any[] = [
     'image' : $r( 'app.media.profile' ) ,
     'category' : Category.Profile
   },
+  {
+    'name' : 'Opp' ,
+    'detail' : 'Opp配置测试' ,
+    'url' : 'pages/subProfileTest/oppProfileTest' ,
+    'image' : $r( 'app.media.profile' ) ,
+    'category' : Category.Profile
+  },
 
   {
     'name' : 'A2dpSource_M' ,
@@ -1271,7 +1349,6 @@ const TestComposition: any[] = [
     'image' : $r( 'app.media.profile' ) ,
     'category' : Category.ProfileManager
   },
-
 
   {
     'name' : 'BrBenchmarkTest' ,
@@ -1554,6 +1631,14 @@ export function initHitHostProfileApiData(): Array<TestApi> {
 export function initPanNetworkProfileApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
   PanNetworkProfileTestCase.forEach( item => {
+    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
+  } )
+  return TestApiArray;
+}
+
+export function initOppProfileApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  OppProfileTestCase.forEach( item => {
     TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
   } )
   return TestApiArray;

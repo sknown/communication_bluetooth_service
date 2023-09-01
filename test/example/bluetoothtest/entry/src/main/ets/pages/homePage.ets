@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2022 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Shenzhen Kaihong Digital Industry Development Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,6 +21,7 @@ import { ManualSceneTest } from '../Component/manualSceneTest';
 import { AutoTest } from '../Component/autoTest';
 import { ProfileTest } from '../Component/profileTest';
 import { BenchmarkTest } from '../Component/benchmarkTest';
+import abilityAccessCtrl from '@ohos.abilityAccessCtrl';
 import screenshot from '@ohos.screenshot'
 import image from '@ohos.multimedia.image'
 
@@ -93,6 +94,14 @@ struct TestCategory {
 @Component
 struct HomePage {
   private testItems: TestData[] = initTestData()
+
+  aboutToAppear(){
+    let abilityMgr = abilityAccessCtrl.createAtManager();
+    abilityMgr.requestPermissionsFromUser(globalThis.context, ["ohos.permission.LOCATION", "ohos.permission.APPROXIMATELY_LOCATION",
+    "ohos.permission.CAPTURE_SCREEN","ohos.permission.WRITE_MEDIA","ohos.permission.READ_MEDIA"], (error, result) => {
+      console.log("bluetooth requestPermissionsFromUser, err: "+JSON.stringify(error)+" ; result: "+JSON.stringify(result))
+    })
+  }
 
   build() {
     Column() {
