@@ -119,6 +119,10 @@ public:
     int32_t GetRandomAddress(const std::string &realAddr, std::string &randomAddr) override;
     int32_t SyncRandomAddress(const std::string &realAddr, const std::string &randomAddr) override;
     int32_t StartCrediblePair(int32_t transport, const std::string &address) override;
+    void DeregisterRemoteDeviceObserver(const wptr<IRemoteObject> &object);
+    void DeregisterBleAdapterObserver(const wptr<IRemoteObject> &object);
+    void DeregisterBlePeripheralCallback(const wptr<IRemoteObject> &object);
+    void DeregisterObserver(const wptr<IRemoteObject> &object);
 
 private:
     static sptr<BluetoothHostServer> instance;
