@@ -28,7 +28,8 @@ export default class MainAbility extends Ability {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onCreate');
     hilog.info(0x0000, 'testTag', '%{public}s', 'want param:' + JSON.stringify(want) ?? '');
     hilog.info(0x0000, 'testTag', '%{public}s', 'launchParam:' + JSON.stringify(launchParam) ?? '');
-    this.context.requestPermissionsFromUser(PERMISSIONS)
+    this.context.requestPermissionsFromUser(PERMISSIONS);
+    globalThis.context = this.context;
   }
 
   onDestroy() {

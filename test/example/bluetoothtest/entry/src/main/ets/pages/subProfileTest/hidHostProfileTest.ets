@@ -191,6 +191,13 @@ struct HidHostProfileTest {
     //        this.profileNotExist = "PBAP_SERVER does not exist";
     //        this.profileType = btProfileModel.PROFILE_PBAP_SERVER;
     //        break;
+
+      case 10:
+        this.title = $r( 'app.string.opp_profile_test_title' );
+        this.profileExist = "Opp exist";
+        this.profileNotExist = "Opp does not exist";
+        this.profileType = btProfileModel.PROFILE_OPP;
+        break;
       default:
         router.back();
     }

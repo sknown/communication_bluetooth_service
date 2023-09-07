@@ -27,6 +27,7 @@ export class BTProfileModel extends BaseModel {
   public PROFILE_HANDS_FREE_AUDIO_GATEWAY = 4;
   public PROFILE_HID_HOST = 6;
   public PROFILE_PAN_NETWORK = 7;
+  public PROFILE_OPP = 10 ;
   public BLUETOOTH_STATE_OFF = 0;
 
   constructor() {
@@ -43,6 +44,8 @@ export class BTProfileModel extends BaseModel {
     this.profiles[this.PROFILE_HID_HOST] = bt.getProfile( this.PROFILE_HID_HOST );
 
     this.profiles[this.PROFILE_PAN_NETWORK] = bt.getProfile( this.PROFILE_PAN_NETWORK );
+
+    this.profiles[this.PROFILE_OPP] = bt.getProfile( this.PROFILE_OPP );
 
     console.log( 'bt_test BTProfileModel end' );
   }
@@ -78,6 +81,13 @@ export class BTProfileModel extends BaseModel {
   getPanNetworkProfile(): bt.PanNetworkProfile {
     if ( this.profiles[this.PROFILE_PAN_NETWORK] != null ) {
       return this.profiles[this.PROFILE_PAN_NETWORK];
+    }
+    return null;
+  }
+
+  getOppProfile(): bt.OppProfile {
+    if ( this.profiles[this.PROFILE_OPP] != null ) {
+      return this.profiles[this.PROFILE_OPP];
     }
     return null;
   }
