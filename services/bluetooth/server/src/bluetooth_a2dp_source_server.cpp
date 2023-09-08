@@ -174,7 +174,8 @@ void BluetoothA2dpSourceServer::RegisterObserver(const sptr<IBluetoothA2dpSource
         HILOGI("observer is null");
         return;
     }
-    pimpl->observers_.Register(observer);
+    auto func = std::bind(&BluetoothA2dpSourceServer::DeregisterObserver, this, std::placeholders::_1);
+    pimpl->observers_.Register(observer, func);
     if (pimpl->a2dpSrcService_ == nullptr) {
         return;
     }

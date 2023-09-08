@@ -138,8 +138,8 @@ ErrCode BluetoothPanServer::RegisterObserver(const sptr<IBluetoothPanObserver> o
         HILOGE("pimpl is null");
         return ERR_NO_INIT;
     }
-
-    pimpl->observers_.Register(observer);
+    auto func = std::bind(&BluetoothPanServer::DeregisterObserver, this, std::placeholders::_1);
+    pimpl->observers_.Register(observer, func);
     pimpl->advCallBack_.push_back(observer);
     return ERR_OK;
 }

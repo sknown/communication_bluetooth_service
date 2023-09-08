@@ -234,7 +234,8 @@ void BluetoothBleAdvertiserServer::RegisterBleAdvertiserCallback(const sptr<IBlu
     std::lock_guard<std::recursive_mutex> lock(mutex_);
     if (pimpl != nullptr) {
         pimpl->observerImp_->observersUid_[callback->AsObject()] = IPCSkeleton::GetCallingUid();
-        pimpl->observers_.Register(callback);
+        auto func = std::bind(&BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback, this, std::placeholders::_1);
+        pimpl->observers_.Register(callback, func);
         pimpl->advCallBack_.push_back(callback);
     }
 }

@@ -229,7 +229,7 @@ int BluetoothHfpHfServer::GetDevicesByStates(const std::vector<int> &states,
     for (RawAddress device : rawDevices) {
         devices.push_back(BluetoothRawAddress(device));
     }
-    return BT_SUCC;
+    return BT_SUCCESS;
 }
 
 int BluetoothHfpHfServer::GetDeviceState(const BluetoothRawAddress &device) {
@@ -422,13 +422,14 @@ int BluetoothHfpHfServer::StartDial(const BluetoothRawAddress &device, const std
         return BT_FAILURE;
     } else {
         call = *ret;
-        return BT_SUCC;
+        return BT_SUCCESS;
     }
 }
 
 void BluetoothHfpHfServer::RegisterObserver(const sptr<IBluetoothHfpHfObserver> &observer) {
     HILOGI("Enter!");
-    pimpl->observers_.Register(observer);
+    auto func = std::bind(&BluetoothHfpHfServer::DeregisterObserver, this, std::placeholders::_1);
+    pimpl->observers_.Register(observer, func);
 }
 
 void BluetoothHfpHfServer::DeregisterObserver(const sptr<IBluetoothHfpHfObserver> &observer) {

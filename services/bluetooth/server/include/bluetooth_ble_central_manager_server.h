@@ -63,6 +63,49 @@ private:
     void SetWindowAndInterval(const int mode, uint16_t &window, uint16_t &interval);
     bool IsNewScanParams();
     bool IsAllStop();
+
+};
+
+class RemoteObserverManager {
+public:
+    RemoteObserverManager() = default;
+    ~RemoteObserverManager();
+
+    bool Register(const sptr<IBluetoothBleCentralManagerCallback> &observer,
+        std::function<void(int32_t, const sptr<IBluetoothBleCentralManagerCallback>&)> func, int32_t scannerId);
+    bool Deregister(const sptr<IBluetoothBleCentralManagerCallback> &observer);
+    void ForEach(const std::function<void(sptr<IBluetoothBleCentralManagerCallback>)> &observer);
+
+    class ObserverDeathRecipient : public IRemoteObject::DeathRecipient {
+    public:
+        ObserverDeathRecipient(const sptr<IBluetoothBleCentralManagerCallback> &observer, RemoteObserverManager *owner);
+        sptr<IBluetoothBleCentralManagerCallback> GetObserver() const
+        {
+            return observer_;
+        };
+        void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
+
+    private:
+        sptr<IBluetoothBleCentralManagerCallback> observer_{};
+        RemoteObserverManager *owner_{};
+    };
+
+    using ObserverMap = std::map<sptr<IBluetoothBleCentralManagerCallback>, sptr<ObserverDeathRecipient>>;
+    std::mutex lock_{};
+    ObserverMap observers_{};
+
+    struct ObserverInfo {
+        std::function<void(int32_t, const sptr<IBluetoothBleCentralManagerCallback>&)> func;
+        int32_t scannerId;
+    };
+    using BtServerMap = std::map<sptr<IBluetoothBleCentralManagerCallback>, struct ObserverInfo> ;
+    BtServerMap btServers_{};
+
+    RemoteObserverManager(const RemoteObserverManager &) = delete;
+    RemoteObserverManager &operator=(const RemoteObserverManager &) = delete;
+
+private:
+    bool UnregisterInternal(typename ObserverMap::iterator iter);
 };
 }  // namespace Bluetooth
 }  // namespace OHOS

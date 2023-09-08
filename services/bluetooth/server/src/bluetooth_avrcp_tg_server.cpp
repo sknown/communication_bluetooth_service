@@ -169,7 +169,8 @@ void BluetoothAvrcpTgServer::RegisterObserver(const sptr<IBluetoothAvrcpTgObserv
         HILOGI("observer is NULL.");
         return ;
     }
-    pimpl->observers_.Register(observer);
+    auto func = std::bind(&BluetoothAvrcpTgServer::UnregisterObserver, this, std::placeholders::_1);
+    pimpl->observers_.Register(observer, func);
     HILOGI("end.");
 
     return ;

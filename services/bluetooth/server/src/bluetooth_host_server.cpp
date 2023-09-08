@@ -87,20 +87,20 @@ struct BluetoothHostServer::impl {
     std::unique_ptr<BlePeripheralCallback> bleRemoteObserverImp_ = nullptr;
 
     /// user regist observers
-    RemoteObserverList2<IBluetoothHostObserver, BluetoothHostServer> observers_;
-    RemoteObserverList2<IBluetoothHostObserver, BluetoothHostServer> bleObservers_;
+    RemoteObserverList<IBluetoothHostObserver> observers_;
+    RemoteObserverList<IBluetoothHostObserver> bleObservers_;
     std::map<sptr<IRemoteObject>, uint32_t> observersToken_;
     std::map<sptr<IRemoteObject>, uint32_t> bleObserversToken_;
     std::map<sptr<IRemoteObject>, int32_t> observersUid_;
     std::map<sptr<IRemoteObject>, int32_t> bleObserversUid_;
 
     /// user regist remote observers
-    RemoteObserverList2<IBluetoothRemoteDeviceObserver, BluetoothHostServer> remoteObservers_;
+    RemoteObserverList<IBluetoothRemoteDeviceObserver> remoteObservers_;
     std::map<sptr<IRemoteObject>, uint32_t> remoteObserversToken_;
     std::map<sptr<IRemoteObject>, int32_t> remoteObserversUid_;
 
     /// user regist remote observers
-    RemoteObserverList2<IBluetoothBlePeripheralObserver, BluetoothHostServer> bleRemoteObservers_;
+    RemoteObserverList<IBluetoothBlePeripheralObserver> bleRemoteObservers_;
     std::map<sptr<IRemoteObject>, uint32_t> bleRemoteObserversToken_;
 
     std::map<std::string, sptr<IRemoteObject>> servers_;
@@ -755,14 +755,10 @@ void BluetoothHostServer::RegisterObserver(const sptr<IBluetoothHostObserver> &o
 
     pimpl->observersToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
     pimpl->observersUid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
-    pimpl->observers_.Register(observer, this, HOST_SERVER_OBSERVER);
-    pimpl->hostObservers_.push_back(observer);
-}
 
-void BluetoothHostServer::DeregisterObserver(const wptr<IRemoteObject> &object)
-{
-    sptr<IBluetoothHostObserver> observer = OHOS::iface_cast<IBluetoothHostObserver>(object.promote());
-    DeregisterObserver(observer);
+    auto func = std::bind(&BluetoothHostServer::DeregisterObserver, this, std::placeholders::_1);
+    pimpl->observers_.Register(observer, func);
+    pimpl->hostObservers_.push_back(observer);
 }
 
 void BluetoothHostServer::DeregisterObserver(const sptr<IBluetoothHostObserver> &observer)
@@ -1580,12 +1576,6 @@ void BluetoothHostServer::RegisterRemoteDeviceObserver(const sptr<IBluetoothRemo
     pimpl->remoteDeviceObservers_.push_back(observer);
 }
 
-void BluetoothHostServer::DeregisterRemoteDeviceObserver(const wptr<IRemoteObject> &object)
-{
-    sptr<IBluetoothRemoteDeviceObserver> observer = OHOS::iface_cast<IBluetoothRemoteDeviceObserver>(object.promote());
-    DeregisterRemoteDeviceObserver(observer);
-}
-
 void BluetoothHostServer::DeregisterRemoteDeviceObserver(const sptr<IBluetoothRemoteDeviceObserver> &observer)
 {
     HILOGI("Enter!");
@@ -1633,14 +1623,9 @@ void BluetoothHostServer::RegisterBleAdapterObserver(const sptr<IBluetoothHostOb
     }
     pimpl->bleObserversToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
     pimpl->bleObserversUid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
-    pimpl->bleObservers_.Register(observer, this, HOST_SERVER_BLE_ADAPTER_OBSERVER);
+    auto func = std::bind(&BluetoothHostServer::DeregisterBleAdapterObserver, this, std::placeholders::_1);
+    pimpl->bleObservers_.Register(observer, func);
     pimpl->bleAdapterObservers_.push_back(observer);
-}
-
-void BluetoothHostServer::DeregisterBleAdapterObserver(const wptr<IRemoteObject> &object)
-{
-    sptr<IBluetoothHostObserver> observer = iface_cast<IBluetoothHostObserver>(object.promote());
-    DeregisterBleAdapterObserver(observer);
 }
 
 void BluetoothHostServer::DeregisterBleAdapterObserver(const sptr<IBluetoothHostObserver> &observer)
@@ -1681,14 +1666,9 @@ void BluetoothHostServer::RegisterBlePeripheralCallback(const sptr<IBluetoothBle
         return;
     }
     pimpl->bleRemoteObserversToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
-    pimpl->bleRemoteObservers_.Register(observer, this, HOST_SERVER_BLE_PERIPHERAL_CALLBACK_OBSERVER);
+    auto func = std::bind(&BluetoothHostServer::DeregisterBlePeripheralCallback, this, std::placeholders::_1);
+    pimpl->bleRemoteObservers_.Register(observer, func);
     pimpl->blePeripheralObservers_.push_back(observer);
-}
-
-void BluetoothHostServer::DeregisterBlePeripheralCallback(const wptr<IRemoteObject> &object)
-{
-    sptr<IBluetoothBlePeripheralObserver> observer = OHOS::iface_cast<IBluetoothBlePeripheralObserver>(object.promote());
-    DeregisterBlePeripheralCallback(observer);
 }
 
 void BluetoothHostServer::DeregisterBlePeripheralCallback(const sptr<IBluetoothBlePeripheralObserver> &observer)
