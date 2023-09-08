@@ -74,7 +74,8 @@ export enum CaseCategory {
   ProfileA2dpSource ,
   ProfileHandsFreeAudioGateway ,
   ProfileHitHost ,
-  ProfilePanNetwork ,
+  ProfilePan ,
+  ProfileOpp,
 }
 
 export class TestApi {

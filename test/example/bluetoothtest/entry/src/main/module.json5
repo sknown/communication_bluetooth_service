@@ -51,13 +51,16 @@
     ],
     "requestPermissions": [
       {
-        "name": "ohos.permission.CAPTURE_SCREEN"
+        "name": "ohos.permission.CAPTURE_SCREEN",
+        "reason": "$string:reason"
       },
       {
-        "name": "ohos.permission.WRITE_MEDIA"
+        "name": "ohos.permission.WRITE_MEDIA",
+        "reason": "$string:reason"
       },
       {
-        "name": "ohos.permission.READ_MEDIA"
+        "name": "ohos.permission.READ_MEDIA",
+        "reason": "$string:reason"
       },
       {
         "name": "ohos.permission.DISCOVER_BLUETOOTH"
@@ -69,7 +72,12 @@
         "name": "ohos.permission.MANAGE_BLUETOOTH"
       },
       {
-        "name": "ohos.permission.LOCATION"
+        "name": "ohos.permission.LOCATION",
+        "reason": "$string:reason"
+      },
+      {
+        "name": "ohos.permission.APPROXIMATELY_LOCATION",
+        "reason": "$string:reason"
       }
     ]
   }
