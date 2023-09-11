@@ -63,7 +63,6 @@ private:
     void SetWindowAndInterval(const int mode, uint16_t &window, uint16_t &interval);
     bool IsNewScanParams();
     bool IsAllStop();
-
 };
 
 class RemoteObserverManager {
@@ -86,20 +85,20 @@ public:
         void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
 
     private:
-        sptr<IBluetoothBleCentralManagerCallback> observer_{};
-        RemoteObserverManager *owner_{};
+        sptr<IBluetoothBleCentralManagerCallback> observer_ {};
+        RemoteObserverManager *owner_ {};
     };
 
     using ObserverMap = std::map<sptr<IBluetoothBleCentralManagerCallback>, sptr<ObserverDeathRecipient>>;
-    std::mutex lock_{};
-    ObserverMap observers_{};
+    std::mutex lock_ {};
+    ObserverMap observers_ {};
 
     struct ObserverInfo {
         std::function<void(int32_t, const sptr<IBluetoothBleCentralManagerCallback>&)> func;
         int32_t scannerId;
     };
     using BtServerMap = std::map<sptr<IBluetoothBleCentralManagerCallback>, struct ObserverInfo> ;
-    BtServerMap btServers_{};
+    BtServerMap btServers_ {};
 
     RemoteObserverManager(const RemoteObserverManager &) = delete;
     RemoteObserverManager &operator=(const RemoteObserverManager &) = delete;

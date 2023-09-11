@@ -404,9 +404,8 @@ void BluetoothA2dpSourceServer::GetRenderPosition(uint16_t &delayValue, uint16_t
 {
     HILOGI("starts");
     pimpl->a2dpSrcService_->GetRenderPosition(delayValue, sendDataSize, timeStamp);
-    HILOGI("delayValue = %{public}hu, sendDataSize = %{public}hu, timeStamp = %{public}u", delayValue, sendDataSize, 
+    HILOGI("delayValue = %{public}hu, sendDataSize = %{public}hu, timeStamp = %{public}u", delayValue, sendDataSize,
         timeStamp);
 }
-    
 }  // namespace Bluetooth
 }  // namespace OHOS

@@ -371,7 +371,8 @@ bool BluetoothHfpHfServer::DialLastNumber(const BluetoothRawAddress &device)
 
 bool BluetoothHfpHfServer::DialMemory(const BluetoothRawAddress &device, int index)
 {
-    HILOGI("addr: %{public}s, index: %{public}d", GetEncryptAddr((device).GetAddress()).c_str(), index);
+    HILOGI("addr: %{public}s, index: %{public}d",
+        GetEncryptAddr((device).GetAddress()).c_str(), index);
     RawAddress addr(device.GetAddress());
     if (pimpl->HfpHfService_ != nullptr) {
         return pimpl->HfpHfService_->DialMemory(addr, index);
@@ -390,7 +391,8 @@ bool BluetoothHfpHfServer::HandleMultiCall(const BluetoothRawAddress &device, in
     return false;
 }
 
-bool BluetoothHfpHfServer::SendVoiceTag(const BluetoothRawAddress &device, int index) {
+bool BluetoothHfpHfServer::SendVoiceTag(const BluetoothRawAddress &device, int index)
+{
     HILOGD("[%{public}s]: %{public}s(): Enter!", __FILE__, __FUNCTION__);
     RawAddress addr(device.GetAddress());
     if (pimpl->HfpHfService_ != nullptr) {
@@ -399,7 +401,9 @@ bool BluetoothHfpHfServer::SendVoiceTag(const BluetoothRawAddress &device, int i
     return false;
 }
 
-bool BluetoothHfpHfServer::FinishActiveCall(const BluetoothRawAddress &device, const BluetoothHfpHfCall &call) {
+bool BluetoothHfpHfServer::FinishActiveCall(const BluetoothRawAddress &device,
+    const BluetoothHfpHfCall &call)
+{
     HILOGI("addr: %{public}s", GetEncryptAddr((device).GetAddress()).c_str());
     RawAddress addr(device.GetAddress());
     if (pimpl->HfpHfService_ != nullptr) {
@@ -409,8 +413,10 @@ bool BluetoothHfpHfServer::FinishActiveCall(const BluetoothRawAddress &device, c
 }
 
 int BluetoothHfpHfServer::StartDial(const BluetoothRawAddress &device, const std::string &number,
-    BluetoothHfpHfCall &call) {
-    HILOGI("addr: %{public}s, number: %{public}s", GetEncryptAddr((device).GetAddress()).c_str(), number.c_str());
+    BluetoothHfpHfCall &call)
+{
+    HILOGI("addr: %{public}s, number: %{public}s",
+        GetEncryptAddr((device).GetAddress()).c_str(), number.c_str());
     std::optional<HandsFreeUnitCalls> ret;
     HandsFreeUnitCalls calls;
     RawAddress addr(device.GetAddress());
@@ -426,13 +432,15 @@ int BluetoothHfpHfServer::StartDial(const BluetoothRawAddress &device, const std
     }
 }
 
-void BluetoothHfpHfServer::RegisterObserver(const sptr<IBluetoothHfpHfObserver> &observer) {
+void BluetoothHfpHfServer::RegisterObserver(const sptr<IBluetoothHfpHfObserver> &observer)
+{
     HILOGI("Enter!");
     auto func = std::bind(&BluetoothHfpHfServer::DeregisterObserver, this, std::placeholders::_1);
     pimpl->observers_.Register(observer, func);
 }
 
-void BluetoothHfpHfServer::DeregisterObserver(const sptr<IBluetoothHfpHfObserver> &observer) {
+void BluetoothHfpHfServer::DeregisterObserver(const sptr<IBluetoothHfpHfObserver> &observer)
+{
     HILOGI("Enter!");
     pimpl->observers_.Deregister(observer);
 }

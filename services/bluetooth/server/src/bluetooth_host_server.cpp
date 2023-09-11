@@ -413,6 +413,7 @@ private:
     BluetoothHostServer::impl *impl_ = nullptr;
     BLUETOOTH_DISALLOW_COPY_AND_ASSIGN(ClassicRemoteDeviceObserver);
 };
+
 class BluetoothHostServer::impl::AdapterBleObserver : public IAdapterBleObserver {
 public:
     AdapterBleObserver(BluetoothHostServer::impl *impl) : impl_(impl){};
@@ -755,7 +756,6 @@ void BluetoothHostServer::RegisterObserver(const sptr<IBluetoothHostObserver> &o
 
     pimpl->observersToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
     pimpl->observersUid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
-
     auto func = std::bind(&BluetoothHostServer::DeregisterObserver, this, std::placeholders::_1);
     pimpl->observers_.Register(observer, func);
     pimpl->hostObservers_.push_back(observer);
@@ -1572,7 +1572,9 @@ void BluetoothHostServer::RegisterRemoteDeviceObserver(const sptr<IBluetoothRemo
     }
     pimpl->remoteObserversToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
     pimpl->remoteObserversUid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
-    pimpl->remoteObservers_.Register(observer, this, HOST_SERVER_REMOTE_DEVICE_OBSERVER);
+    auto func = std::bind(&BluetoothHostServer::DeregisterRemoteDeviceObserver,
+        this, std::placeholders::_1);
+    pimpl->remoteObservers_.Register(observer, func);
     pimpl->remoteDeviceObservers_.push_back(observer);
 }
 

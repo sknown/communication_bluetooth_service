@@ -38,7 +38,6 @@ struct BluetoothBleCentralManagerServer::impl {
     /// sys state observer
     class SystemStateObserver;
     std::unique_ptr<SystemStateObserver> systemStateObserver_ = nullptr;
-
     RemoteObserverManager observers_;
     std::map<sptr<IRemoteObject>, uint32_t> observersToken_;
     std::map<sptr<IRemoteObject>, int32_t> observersUid_;

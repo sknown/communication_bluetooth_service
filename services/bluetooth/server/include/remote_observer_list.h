@@ -49,16 +49,16 @@ public:
         void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
 
     private:
-        sptr<T> observer_{};
-        RemoteObserverList<T> *owner_{};
+        sptr<T> observer_ {};
+        RemoteObserverList<T> *owner_ {};
     };
 
     using ObserverMap = std::map<sptr<T>, sptr<ObserverDeathRecipient>>;
-    std::mutex lock_{};
-    ObserverMap observers_{};
+    std::mutex lock_ {};
+    ObserverMap observers_ {};
 
     using BtServerMap = std::map<sptr<T>, std::function<void(const sptr<T> &object)>> ;
-    BtServerMap btServers_{};
+    BtServerMap btServers_ {};
 
     RemoteObserverList(const RemoteObserverList &) = delete;
     RemoteObserverList &operator=(const RemoteObserverList &) = delete;
@@ -121,7 +121,6 @@ template <typename T>
 bool RemoteObserverList<T>::Deregister(const sptr<T> &observer)
 {
     HILOGI("RemoteObserverList<T>::Deregister called");
-    //std::lock_guard<std::mutex> lock(lock_);
     for (auto it = observers_.begin(); it != observers_.end();) {
         if (it->first != nullptr && it->first->AsObject() == observer->AsObject()) {
             UnregisterInternal(it++);
@@ -129,7 +128,6 @@ bool RemoteObserverList<T>::Deregister(const sptr<T> &observer)
             it++;
         }
     }
-
     HILOGW("Given observer not registered with this list");
     return false;
 }
@@ -184,7 +182,6 @@ bool RemoteObserverList<T>::UnregisterInternal(typename ObserverMap::iterator it
     observers_.erase(iter);
     return true;
 }
-
 }  // namespace Bluetooth
 }  // namespace OHOS
 

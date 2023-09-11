@@ -903,7 +903,7 @@ void AvrcpTgService::OnConnectionStateChanged(const RawAddress &rawAddr, int sta
     HILOGI("Address: %{public}s, state: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), state);
     std::lock_guard<std::recursive_mutex> lock(mutex_);
     if (myObserver_ != nullptr) {
-        myObserver_->OnConnectionStateChanged(rawAddr.GetAddress(), state);
+        myObserver_->OnConnectionStateChanged(rawAddr, state);
     }
 }
 
