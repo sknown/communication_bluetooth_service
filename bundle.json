@@ -50,6 +50,7 @@
       "bluetooth_service_hfp_ag_feature",
       "bluetooth_service_hfp_hf_feature",
       "bluetooth_service_hid_host_feature",
+      "bluetooth_service_opp_feature",
       "bluetooth_service_pan_feature"
     ],
     "adapted_system_type": [
@@ -114,6 +115,7 @@
         "//foundation/communication/bluetooth_service/test/unittest/ble:unittest",
         "//foundation/communication/bluetooth_service/test/unittest/hid:unittest",
         "//foundation/communication/bluetooth_service/test/unittest/pan:unittest",
+        "//foundation/communication/bluetooth_service/test/unittest/opp:unittest",
         "//foundation/communication/bluetooth_service/test/unittest/gatt_c:unittest",
         "//foundation/communication/bluetooth_service/test/fuzztest/host:fuzztest",
         "//foundation/communication/bluetooth_service/test/example/bluetoothtest:bluetoothtest"

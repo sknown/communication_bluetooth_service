@@ -321,6 +321,20 @@ ohos_shared_library("btservice") {
     ]
   }
 
+  if (bluetooth_service_opp_feature) {
+    sources += [
+      "src/opp/opp_gap_client.cpp",
+      "src/opp/opp_gap_server.cpp",
+      "src/opp/opp_obex_client.cpp",
+      "src/opp/opp_obex_server.cpp",
+      "src/opp/opp_sdp_client.cpp",
+      "src/opp/opp_sdp_server.cpp",
+      "src/opp/opp_service.cpp",
+      "src/opp/opp_statemachine.cpp",
+      "src/opp/opp_transfer.cpp",
+    ]
+  }
+
   if (bluetooth_service_pan_feature) {
     sources += [
       "src/pan/pan_bnep.cpp",
