@@ -174,7 +174,8 @@ void BluetoothA2dpSourceServer::RegisterObserver(const sptr<IBluetoothA2dpSource
         HILOGI("observer is null");
         return;
     }
-    pimpl->observers_.Register(observer);
+    auto func = std::bind(&BluetoothA2dpSourceServer::DeregisterObserver, this, std::placeholders::_1);
+    pimpl->observers_.Register(observer, func);
     if (pimpl->a2dpSrcService_ == nullptr) {
         return;
     }
@@ -403,9 +404,8 @@ void BluetoothA2dpSourceServer::GetRenderPosition(uint16_t &delayValue, uint16_t
 {
     HILOGI("starts");
     pimpl->a2dpSrcService_->GetRenderPosition(delayValue, sendDataSize, timeStamp);
-    HILOGI("delayValue = %{public}hu, sendDataSize = %{public}hu, timeStamp = %{public}u", delayValue, sendDataSize, 
+    HILOGI("delayValue = %{public}hu, sendDataSize = %{public}hu, timeStamp = %{public}u", delayValue, sendDataSize,
         timeStamp);
 }
-    
 }  // namespace Bluetooth
 }  // namespace OHOS
