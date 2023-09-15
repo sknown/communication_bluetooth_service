@@ -16,27 +16,25 @@
   "module": {
     "name": "entry",
     "type": "entry",
-    "srcEntrance": "./ets/Application/MyAbilityStage.ts",
-    "description": "$string:entry_desc",
-    "mainElement": "MainAbility",
+    "description": "$string:module_desc",
+    "mainElement": "EntryAbility",
     "deviceTypes": [
-      "default",
+      "phone",
       "tablet"
     ],
     "deliveryWithInstall": true,
     "installationFree": false,
     "pages": "$profile:main_pages",
-    "uiSyntax": "ets",
     "abilities": [
       {
-        "name": "MainAbility",
-        "srcEntrance": "./ets/MainAbility/MainAbility.ts",
-        "description": "$string:MainAbility_desc",
+        "name": "EntryAbility",
+        "srcEntry": "./ets/entryability/EntryAbility.ts",
+        "description": "$string:EntryAbility_desc",
         "icon": "$media:icon",
         "label": "$string:MainAbility_label",
         "startWindowIcon": "$media:icon",
         "startWindowBackground": "$color:white",
-        "visible": true,
+        "exported": true,
         "skills": [
           {
             "entities": [
@@ -49,7 +47,7 @@
         ]
       }
     ],
-    "requestPermissions": [
+    "requestPermissions":[
       {
         "name": "ohos.permission.CAPTURE_SCREEN",
         "reason": "$string:reason"
