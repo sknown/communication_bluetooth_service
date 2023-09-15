@@ -29,7 +29,7 @@ export function testCreateGattServerDevice(): string {
   try {
     let message = "createGattServerDevice test"
     let btState = bluetooth.getState();
-    if ( btState == bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       message = "createGattServer starts";
       if ( !gattServerInstance ) {
         gattServerInstance = BluetoothModel.createGattServer();
@@ -59,7 +59,7 @@ export function testCreateGattClientDevice(): string {
     let message = "test createGattClientDevice"
     let btState = bluetooth.getState();
     let peripheralDeviceId = AppStorage.Get( 'peripheralDeviceId' );
-    if ( btState == bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       message = "createGattClient start"
       if ( !gattClientDeviceInstance ) {
         gattClientDeviceInstance = BluetoothModel.createGattClient( peripheralDeviceId );
