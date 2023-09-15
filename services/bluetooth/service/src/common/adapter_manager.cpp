@@ -43,7 +43,7 @@ namespace OHOS {
 namespace bluetooth {
 // data define
 const int TRANSPORT_MAX = 2;
-const std::string PERMISSIONS = "ohos.permission.USE_BLUETOOTH"; 
+const std::string PERMISSIONS = "ohos.permission.USE_BLUETOOTH";
 
 struct AdapterInfo {
     AdapterInfo(std::unique_ptr<IAdapter> instance, std::unique_ptr<AdapterStateMachine> stateMachine)
@@ -580,7 +580,14 @@ void AdapterManager::OnAdapterStateChange(const BTTransport transport, const BTS
     if (pimpl->adapters_[transport] == nullptr) {
         return;
     }
-
+    if ((transport == ADAPTER_BLE) && (state == STATE_TURN_ON)) {
+        HILOGI("enable ADAPTER_BREDR");
+        Enable(ADAPTER_BREDR);
+    }
+    if ((transport == ADAPTER_BREDR) && (state == STATE_TURN_OFF)) {
+        HILOGI("disable ADAPTER_BLE");
+        Disable(ADAPTER_BLE);
+    }
     // notify observers state update
     if (pimpl->adapters_[transport]->state_ != state) {
         pimpl->adapters_[transport]->state_ = state;
