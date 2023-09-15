@@ -555,7 +555,7 @@ void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t
             pimpl->observersToken_[callback->AsObject()] = IPCSkeleton::GetCallingTokenID();
             pimpl->observersUid_[callback->AsObject()] = uid;
             auto func = std::bind(&BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallbackInner,
-                 this, std::placeholders::_1, std::placeholders::_2);
+                this, std::placeholders::_1, std::placeholders::_2);
             pimpl->observers_.Register(callback, func, scannerId);
             impl::ScanCallbackInfo info;
             info.pid = pid;

@@ -16,7 +16,6 @@
 #ifndef REMOTE_OBSERVER_LIST_H
 #define REMOTE_OBSERVER_LIST_H
 
-#include "bluetooth_log.h"
 #include <functional>
 #include <map>
 #include <mutex>
@@ -25,6 +24,7 @@
 #include "refbase.h"
 #include "iremote_broker.h"
 #include "iremote_proxy.h"
+#include "bluetooth_log.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -115,7 +115,7 @@ bool RemoteObserverList<T, Args...>::Register(const sptr<T> &observer, DrCallbac
     }
     if (!isExist) {
         struct RtOberserInfo rtInfo;
-        rtInfo.callbackFunc = func;;
+        rtInfo.callbackFunc = func;
         rtInfo.args = std::make_tuple(args...);
         btServers_[observer] = rtInfo;
     }
