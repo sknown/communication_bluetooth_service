@@ -1633,7 +1633,6 @@ void BluetoothHostServer::RegisterBleAdapterObserver(const sptr<IBluetoothHostOb
 void BluetoothHostServer::DeregisterBleAdapterObserver(const sptr<IBluetoothHostObserver> &observer)
 {
     HILOGI("start.");
-
     if (observer == nullptr || pimpl == nullptr) {
         HILOGE("observer is nullptr!");
         return;
@@ -1676,7 +1675,6 @@ void BluetoothHostServer::RegisterBlePeripheralCallback(const sptr<IBluetoothBle
 void BluetoothHostServer::DeregisterBlePeripheralCallback(const sptr<IBluetoothBlePeripheralObserver> &observer)
 {
     HILOGI("start.");
-
     if (observer == nullptr) {
         HILOGE("observer is nullptr!");
         return;

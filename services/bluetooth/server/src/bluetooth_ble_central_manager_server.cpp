@@ -38,7 +38,7 @@ struct BluetoothBleCentralManagerServer::impl {
     /// sys state observer
     class SystemStateObserver;
     std::unique_ptr<SystemStateObserver> systemStateObserver_ = nullptr;
-    RemoteObserverManager observers_;
+    RemoteObserverList<IBluetoothBleCentralManagerCallback, int32_t> observers_;
     std::map<sptr<IRemoteObject>, uint32_t> observersToken_;
     std::map<sptr<IRemoteObject>, int32_t> observersUid_;
     class BleCentralManagerCallback;
@@ -208,13 +208,13 @@ public:
         return;
     }
 
-    void SetObserver(RemoteObserverManager *observers)
+    void SetObserver(RemoteObserverList<IBluetoothBleCentralManagerCallback, int32_t> *observers)
     {
         observers_ = observers;
     }
 
 private:
-    RemoteObserverManager *observers_ = nullptr;
+    RemoteObserverList<IBluetoothBleCentralManagerCallback, int32_t> *observers_ = nullptr;
     BluetoothBleCentralManagerServer::impl *pimpl_ = nullptr;
 
     void ClearMultiProcessScanState()
@@ -258,116 +258,6 @@ public:
 private:
     BluetoothBleCentralManagerServer::impl *pimpl_ = nullptr;
 };
-
-RemoteObserverManager::~RemoteObserverManager()
-{
-    HILOGI("RemoteObserverManager::~RemoteObserverManager() called");
-    std::lock_guard<std::mutex> lock(lock_);
-    for (auto it = observers_.begin(); it != observers_.end(); ++it) {
-        sptr<ObserverDeathRecipient> dr = it->second;
-        if (!dr->GetObserver()->AsObject()->RemoveDeathRecipient(dr)) {
-            HILOGE("Failed to unlink death recipient from observer");
-        }
-    }
-    observers_.clear();
-}
-
-bool RemoteObserverManager::Register(const sptr<IBluetoothBleCentralManagerCallback> &observer,
-    std::function<void(int32_t, const sptr<IBluetoothBleCentralManagerCallback>&)> func, int32_t scannerId)
-{
-    HILOGI("RemoteObserverManager::Register called");
-    std::lock_guard<std::mutex> lock(lock_);
-    bool isMatch = false;
-    for (const auto &it : observers_) {
-        if (it.first != nullptr && it.first->AsObject() == observer->AsObject()) {
-            HILOGW("Observer list already contains given observer");
-            isMatch = true;
-            break;
-        }
-    }
-    if (!isMatch) {
-        sptr<ObserverDeathRecipient> dr(new ObserverDeathRecipient(observer, this));
-        if (!observer->AsObject()->AddDeathRecipient(dr)) {
-            HILOGE("Failed to link death recipient to observer");
-        }
-        observers_[observer] = dr;
-    }
-
-    bool isExist = false;
-    for (const auto &it : btServers_) {
-        if (it.first != nullptr && it.first->AsObject() == observer->AsObject()) {
-            HILOGW("btServers_ list already contains given observer");
-            isExist = true;
-            break;
-        }
-    }
-    if (!isExist) {
-        struct ObserverInfo obInfo = {func, scannerId};
-        btServers_[observer] = obInfo;
-    }
-    return true;
-}
-
-bool RemoteObserverManager::Deregister(const sptr<IBluetoothBleCentralManagerCallback> &observer)
-{
-    HILOGI("RemoteObserverManager::Deregister called");
-    // std::lock_guard<std::mutex> lock(lock_);
-
-    for (auto it = observers_.begin(); it != observers_.end(); ++it) {
-        if (it->first != nullptr && it->first->AsObject() == observer->AsObject()) {
-            return UnregisterInternal(it);
-        }
-    }
-    HILOGW("Given observer not registered with this list");
-    return false;
-}
-
-void RemoteObserverManager::ForEach(const std::function<void(sptr<IBluetoothBleCentralManagerCallback>)> &observer)
-{
-    std::lock_guard<std::mutex> lock(lock_);
-    for (const auto &it : observers_) {
-        if (it.first != nullptr) {
-            observer(it.first);
-        }
-    }
-}
-
-RemoteObserverManager::ObserverDeathRecipient::ObserverDeathRecipient(
-    const sptr<IBluetoothBleCentralManagerCallback> &observer, RemoteObserverManager *owner)
-    : observer_(observer), owner_(owner)
-{
-    HILOGI("RemoteObserverManager::ObserverDeathRecipient::ObserverDeathRecipient called");
-}
-
-void RemoteObserverManager::ObserverDeathRecipient::OnRemoteDied(const wptr<IRemoteObject> &object)
-{
-    // Remove the observer but no need to call unlinkToDeath.
-    std::lock_guard<std::mutex> lock(owner_->lock_);
-
-    for (auto it = owner_->btServers_.begin(); it != owner_->btServers_.end(); ++it) {
-        if (it->first != nullptr && it->first->AsObject() == object) {
-            struct ObserverInfo& obInfo = it->second;
-            obInfo.func(obInfo.scannerId, it->first);
-            HILOGI("OnRemoteDied callback function called");
-            it = owner_->btServers_.erase(it);
-        } else {
-            it++;
-        }
-    }
-    HILOGI("Callback from dead process unregistered");
-}
-
-bool RemoteObserverManager::UnregisterInternal(ObserverMap::iterator iter)
-{
-    HILOGI("RemoteObserverManager::UnregisterInternal called");
-    sptr<ObserverDeathRecipient> dr = iter->second;
-    if (!dr->GetObserver()->AsObject()->RemoveDeathRecipient(dr)) {
-        HILOGE("Failed to unlink death recipient from observer");
-    }
-    observers_.erase(iter);
-
-    return true;
-}
 
 BluetoothBleCentralManagerServer::impl::impl()
 {
@@ -664,8 +554,8 @@ void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t
         if (pimpl != nullptr) {
             pimpl->observersToken_[callback->AsObject()] = IPCSkeleton::GetCallingTokenID();
             pimpl->observersUid_[callback->AsObject()] = uid;
-            auto func = std::bind(&BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallback,
-                this, std::placeholders::_1, std::placeholders::_2);
+            auto func = std::bind(&BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallbackInner,
+                 this, std::placeholders::_1, std::placeholders::_2);
             pimpl->observers_.Register(callback, func, scannerId);
             impl::ScanCallbackInfo info;
             info.pid = pid;
@@ -675,6 +565,12 @@ void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t
             pimpl->scanCallbackInfo_.push_back(info);
         }
     });
+}
+
+void BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallbackInner(
+    const sptr<IBluetoothBleCentralManagerCallback> &callback, int32_t scannerId)
+{
+    return DeregisterBleCentralManagerCallback(scannerId, callback);
 }
 
 void BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallback(int32_t scannerId,

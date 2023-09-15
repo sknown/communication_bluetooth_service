@@ -20,6 +20,7 @@
 #include <functional>
 #include <map>
 #include <mutex>
+#include <tuple>
 
 #include "refbase.h"
 #include "iremote_broker.h"
@@ -27,37 +28,38 @@
 
 namespace OHOS {
 namespace Bluetooth {
-template <typename T>
+template <typename T, typename... Args>
 class RemoteObserverList final {
+    using DrCallbackFunc = std::function<void(const sptr<T> &observer, Args... args)>;
 public:
     RemoteObserverList() = default;
     ~RemoteObserverList();
-    bool Register(const sptr<T> &observer, std::function<void(const sptr<T> &object)> func);
+    bool Register(const sptr<T> &observer, DrCallbackFunc func, Args... args);
     bool Deregister(const sptr<T> &observer);
-
     void ForEach(const std::function<void(sptr<T>)> &observer);
 
     class ObserverDeathRecipient : public IRemoteObject::DeathRecipient {
     public:
-        ObserverDeathRecipient(const sptr<T> &observer, RemoteObserverList *owner);
-
+        ObserverDeathRecipient(const sptr<T> &observer, RemoteObserverList<T, Args...> *owner);
         sptr<T> GetObserver() const
         {
             return observer_;
         };
-
         void OnRemoteDied(const wptr<IRemoteObject> &remote) override;
 
     private:
         sptr<T> observer_ {};
-        RemoteObserverList<T> *owner_ {};
+        RemoteObserverList<T, Args...> *owner_ {};
     };
-
-    using ObserverMap = std::map<sptr<T>, sptr<ObserverDeathRecipient>>;
     std::mutex lock_ {};
+    using ObserverMap = std::map<sptr<T>, sptr<ObserverDeathRecipient>>;
     ObserverMap observers_ {};
 
-    using BtServerMap = std::map<sptr<T>, std::function<void(const sptr<T> &object)>> ;
+    struct RtOberserInfo {
+        DrCallbackFunc callbackFunc;
+        std::tuple<Args...> args;
+    };
+    using BtServerMap = std::map<sptr<T>, RtOberserInfo> ;
     BtServerMap btServers_ {};
 
     RemoteObserverList(const RemoteObserverList &) = delete;
@@ -67,10 +69,10 @@ private:
     bool UnregisterInternal(typename ObserverMap::iterator iter);
 };
 
-template <typename T>
-RemoteObserverList<T>::~RemoteObserverList()
+template <typename T, typename... Args>
+RemoteObserverList<T, Args...>::~RemoteObserverList()
 {
-    HILOGI("RemoteObserverList<T>::~RemoteObserverList() called");
+    HILOGI("RemoteObserverList<T, Args...>::~RemoteObserverList() called");
     std::lock_guard<std::mutex> lock(lock_);
     for (auto it = observers_.begin(); it != observers_.end(); ++it) {
         sptr<ObserverDeathRecipient> dr = it->second;
@@ -79,12 +81,13 @@ RemoteObserverList<T>::~RemoteObserverList()
         }
     }
     observers_.clear();
+    btServers_.clear();
 }
 
-template <typename T>
-bool RemoteObserverList<T>::Register(const sptr<T> &observer, std::function<void(const sptr<T> &object)> func)
+template <typename T, typename... Args>
+bool RemoteObserverList<T, Args...>::Register(const sptr<T> &observer, DrCallbackFunc func, Args... args)
 {
-    HILOGI("RemoteObserverList<T>::Register called");
+    HILOGI("RemoteObserverList<T, Args...>::Register called");
     std::lock_guard<std::mutex> lock(lock_);
     bool isMatch = false;
     for (const auto &it : observers_) {
@@ -111,16 +114,19 @@ bool RemoteObserverList<T>::Register(const sptr<T> &observer, std::function<void
         }
     }
     if (!isExist) {
-        btServers_[observer] = func;
+        struct RtOberserInfo rtInfo;
+        rtInfo.callbackFunc = func;;
+        rtInfo.args = std::make_tuple(args...);
+        btServers_[observer] = rtInfo;
     }
 
     return true;
 }
 
-template <typename T>
-bool RemoteObserverList<T>::Deregister(const sptr<T> &observer)
+template <typename T, typename... Args>
+bool RemoteObserverList<T, Args...>::Deregister(const sptr<T> &observer)
 {
-    HILOGI("RemoteObserverList<T>::Deregister called");
+    HILOGI("RemoteObserverList<T, Args...>::Deregister called");
     for (auto it = observers_.begin(); it != observers_.end();) {
         if (it->first != nullptr && it->first->AsObject() == observer->AsObject()) {
             UnregisterInternal(it++);
@@ -132,8 +138,8 @@ bool RemoteObserverList<T>::Deregister(const sptr<T> &observer)
     return false;
 }
 
-template <typename T>
-void RemoteObserverList<T>::ForEach(const std::function<void(sptr<T>)> &observer)
+template <typename T, typename... Args>
+void RemoteObserverList<T, Args...>::ForEach(const std::function<void(sptr<T>)> &observer)
 {
     std::lock_guard<std::mutex> lock(lock_);
     for (const auto &it : observers_) {
@@ -143,23 +149,23 @@ void RemoteObserverList<T>::ForEach(const std::function<void(sptr<T>)> &observer
     }
 }
 
-template <typename T>
-RemoteObserverList<T>::ObserverDeathRecipient::ObserverDeathRecipient(
-    const sptr<T> &observer, RemoteObserverList<T> *owner)
+template <typename T, typename... Args>
+RemoteObserverList<T, Args...>::ObserverDeathRecipient::ObserverDeathRecipient(
+    const sptr<T> &observer, RemoteObserverList<T, Args...> *owner)
     : observer_(observer), owner_(owner)
 {
     HILOGI("RemoteObserverList<T>::ObserverDeathRecipient::ObserverDeathRecipient called");
 }
 
-template <typename T>
-void RemoteObserverList<T>::ObserverDeathRecipient::OnRemoteDied(const wptr<IRemoteObject> &object)
+template <typename T, typename... Args>
+void RemoteObserverList<T, Args...>::ObserverDeathRecipient::OnRemoteDied(const wptr<IRemoteObject> &object)
 {
     // Remove the observer but no need to call unlinkToDeath.
     std::lock_guard<std::mutex> lock(owner_->lock_);
-    HILOGI("zhangsz OnRemoteDied");
+    HILOGD("Enter OnRemoteDied");
     for (auto it = owner_->btServers_.begin(); it != owner_->btServers_.end();) {
         if (it->first != nullptr && it->first->AsObject() == object) {
-            it->second(it->first);
+            std::apply(it->second.callbackFunc, std::tuple_cat(std::make_tuple(it->first), it->second.args));
             it = owner_->btServers_.erase(it);
         } else {
             it++;
@@ -169,10 +175,10 @@ void RemoteObserverList<T>::ObserverDeathRecipient::OnRemoteDied(const wptr<IRem
     HILOGI("Callback from dead process unregistered");
 }
 
-template <typename T>
-bool RemoteObserverList<T>::UnregisterInternal(typename ObserverMap::iterator iter)
+template <typename T, typename... Args>
+bool RemoteObserverList<T, Args...>::UnregisterInternal(typename ObserverMap::iterator iter)
 {
-    HILOGI("RemoteObserverList2<T>::UnregisterInternal called");
+    HILOGI("RemoteObserverList<T, Args...>::UnregisterInternal called");
     sptr<ObserverDeathRecipient> dr = iter->second;
 
     if (!dr->GetObserver()->AsObject()->RemoveDeathRecipient(dr)) {
@@ -184,5 +190,4 @@ bool RemoteObserverList<T>::UnregisterInternal(typename ObserverMap::iterator it
 }
 }  // namespace Bluetooth
 }  // namespace OHOS
-
 #endif  // REMOTE_OBSERVER_LIST_H
