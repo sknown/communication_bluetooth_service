@@ -30,7 +30,7 @@ export function testCreateGattClient(): String {
     let message = "createGattClient test "
     let peripheralDeviceId = AppStorage.Get( 'peripheralDeviceId' );
     let btState = bluetooth.getState();
-    if ( btState === bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState === bluetooth.BluetoothState.STATE_ON || btState === bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( gattClientInstance ) {
         message = "GattClient exists!";
         prompt.showToast( { message : message } )
@@ -88,7 +88,7 @@ export function testConnect(): String {
   try {
     let message = "connect test";
     let btState = bluetooth.getState();
-    if ( btState === bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState === bluetooth.BluetoothState.STATE_ON || btState === bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( gattClientInstance ) {
         if ( bleConnectionState == 0 ) {
           console.log( "GattClient.connect: start----------------" )
@@ -121,7 +121,7 @@ export function testDisconnect(): String {
   try {
     let message = "test disconnect";
     let btState = bluetooth.getState();
-    if ( btState == bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattClientInstance ) {
         message = "NO_GATT_CLIENT_OBJECT";
         prompt.showToast( { message : message } )
@@ -211,7 +211,7 @@ export function testGattClientClose(): String {
   try {
     let message = "gattClientClose test"
     let btState = bluetooth.getState();
-    if ( btState == bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattClientInstance ) {
         message = "NO_GATT_CLIENT_OBJECT";
         prompt.showToast( { message : message } )
@@ -241,7 +241,7 @@ export function testGetServicesCallback(): String {
   try {
     let message = "getServicesCallback test"
     let btState = bluetooth.getState();
-    if ( btState == bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattClientInstance ) {
         message = "NO_GATT_CLIENT_OBJECT";
         prompt.showToast( { message : message } )
@@ -292,7 +292,7 @@ export function testGetServicesPromise(): String {
     }
     message = "getServices promise:starts";
     let btState = bluetooth.getState();
-    if ( btState == bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       console.log( "gattClientInstance.getServices,promise start----------" )
       gattClientInstance.getServices().then( gattServices => {
         console.log( "getServices(): Promise<Array<GattService>> start --------------" )
