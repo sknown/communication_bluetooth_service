@@ -22,11 +22,6 @@ import { AutoTest } from '../Component/autoTest';
 import { ProfileTest } from '../Component/profileTest';
 import { BenchmarkTest } from '../Component/benchmarkTest';
 import abilityAccessCtrl from '@ohos.abilityAccessCtrl';
-import screenshot from '@ohos.screenshot'
-import image from '@ohos.multimedia.image'
-
-import MediaUtils from '../MainAbility/model/MediaUtils'
-import Logger from '../MainAbility/model/Logger'
 
 const TAG = '[Screenshot]'
 
