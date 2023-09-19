@@ -19,7 +19,5 @@ action("bluetoothtest") {
   outputs = [ "${target_out_dir}/cpvkgl.log" ]
   root_vkgl_path = rebase_path("//")
   args = [ "$root_vkgl_path" ]
-  deps = [
-  ]
+  deps = []
 }
-
