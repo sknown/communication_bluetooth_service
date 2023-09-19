@@ -32,14 +32,12 @@
     }
   ],
   "segment": {
-    "destPath": "foundation/communication/bluetooth_service"
+    "destPath": "communication_bluetooth_service"
   },
   "component": {
     "name": "bluetooth_service",
-    "subsystem": "communication",
+    "subsystem": "connectivity",
     "syscap": [
-      "SystemCapability.Communication.Bluetooth.Core",
-      "SystemCapability.Communication.Bluetooth.Lite"
     ],
     "features": [
       "bluetooth_service_avrcp_avsession",
