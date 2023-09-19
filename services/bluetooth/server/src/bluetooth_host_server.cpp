@@ -1728,5 +1728,10 @@ int32_t BluetoothHostServer::StartCrediblePair(int32_t transport, const std::str
 {
     return NO_ERROR;
 }
+
+int32_t BluetoothHostServer::CountEnableTimes(bool enable)
+{
+    return NO_ERROR;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
