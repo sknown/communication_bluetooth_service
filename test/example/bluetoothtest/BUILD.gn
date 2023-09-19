@@ -18,6 +18,6 @@ action("bluetoothtest") {
   script = "cpbt.sh"
   outputs = [ "${target_out_dir}/cpbt.log" ]
   root_vkgl_path = rebase_path("//")
-  args = [ "$root_bt_path" ]
+  args = [ "$root_vkgl_path" ]
   deps = []
 }
