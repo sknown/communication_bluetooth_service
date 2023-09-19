@@ -16,8 +16,8 @@ import("//test/xts/tools/build/suite.gni")
 action("bluetoothtest") {
   testonly = true
   script = "cpbt.sh"
-  outputs = [ "${target_out_dir}/cpvkgl.log" ]
+  outputs = [ "${target_out_dir}/cpbt.log" ]
   root_vkgl_path = rebase_path("//")
-  args = [ "$root_vkgl_path" ]
+  args = [ "$root_bt_path" ]
   deps = []
 }

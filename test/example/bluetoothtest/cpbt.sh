@@ -14,5 +14,5 @@
 # limitations under the License.
 
 set -e
-root_vkgl_path=$1
+root_bt_path=$1
 
