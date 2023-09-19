@@ -32,12 +32,14 @@
     }
   ],
   "segment": {
-    "destPath": "communication_bluetooth_service"
+    "destPath": "foundation/communication/bluetooth_service"
   },
   "component": {
     "name": "bluetooth_service",
     "subsystem": "communication",
     "syscap": [
+      "SystemCapability.Communication.Bluetooth.Core",
+      "SystemCapability.Communication.Bluetooth.Lite"
     ],
     "features": [
       "bluetooth_service_avrcp_avsession",
@@ -113,7 +115,8 @@
         "//foundation/communication/bluetooth_service/test/unittest/hid:unittest",
         "//foundation/communication/bluetooth_service/test/unittest/pan:unittest",
         "//foundation/communication/bluetooth_service/test/unittest/gatt_c:unittest",
-        "//foundation/communication/bluetooth_service/test/fuzztest/host:fuzztest"
+        "//foundation/communication/bluetooth_service/test/fuzztest/host:fuzztest",
+        "//foundation/communication/bluetooth_service/test/example/bluetoothtest:bluetoothtest"
       ]
     }
   }
