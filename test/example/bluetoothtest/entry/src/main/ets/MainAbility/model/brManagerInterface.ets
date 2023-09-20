@@ -188,9 +188,11 @@ export function testSetBluetoothScanModeManager( mode: number , dur: number ): {
       console.log( "BluetoothModelManager.setBluetoothScanMode failed!" )
     }
     console.log( "BluetoothModelManager.setBluetoothScanMode success!" + JSON.stringify( retObj ) )
-    let message = ret ? "setBluetoothScanMode执行成功" + JSON.stringify( retObj ) : "setBluetoothScanMode执行失败"
-    prompt.showToast( { message : message } )
-    return retObj
+    // let message = ret ? "setBluetoothScanMode执行成功" + JSON.stringify( retObj ) : "setBluetoothScanMode执行失败"    //dialog会报错
+    let message = ret ? retObj : "setBluetoothScanMode执行失败"
+    let showToastMessage = ret ? "setBluetoothScanMode执行成功;" + JSON.stringify( retObj ) : "setBluetoothScanMode执行失败"
+    prompt.showToast( { message : showToastMessage } )
+    return message
   } catch( e ) {
     console.log( `Failed to testSetBluetoothScanModeManager. message: ${ e.message }, code: ${ e.code }` )
     let message = `Failed to testSetBluetoothScanModeManager. message: ${ e.message }, code: ${ e.code }`

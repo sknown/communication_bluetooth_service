@@ -139,7 +139,7 @@ export struct SetScanModeDialog {
           if ( value == "" ) {
             this.duration = 0
           } else {
-            this.duration = parseInt( value ) == nil ? 0 : parseInt( value )
+            this.duration = parseInt( value ) //== null ? 0 : parseInt( value )
           }
         } )
       Flex( { justifyContent : FlexAlign.SpaceAround } ) {
@@ -158,11 +158,12 @@ export struct SetScanModeDialog {
               let message = {}
               message = this.apiItem.api( this.currentClick , this.duration )
               //              this.apiItem.result = message.mod.toString() + message.duration.toString()
-              this.apiItem.result = "类型:" + this.scanModeList[message.mod].value + "延迟:" + message.duration.toString()
+              console.log( "类型:" + this.scanModeList[ message.mod ].value )
+              console.log( "延迟:" + message.duration )
+              this.apiItem.result = "类型:" + this.scanModeList[ message.mod ].value + ";延迟:" + message.duration.toString()
               console.log( "this.apiItem.result:" + this.apiItem.result )
             } else {
-              let message = ""
-              this.apiItem.result = this.scanModeList[this.currentClick].value
+              this.apiItem.result = this.scanModeList[ this.currentClick ].value
               console.log( "this.apiItem.result:" + this.apiItem.result )
             }
             this.controller.close()
@@ -215,6 +216,7 @@ export struct InputDialog {
             let message = ""
             if ( true ) {
               message = this.apiItem.api( this.textValue )
+              console.log( "message:" + message )
               this.apiItem.result = message
             } else {
               this.apiItem.result = this.textValue
@@ -222,7 +224,8 @@ export struct InputDialog {
             this.controller.close()
             this.confirm( this.inputValue )
           } )
-          .backgroundColor( 0xffffff ).fontColor( Color.Red )
+          .backgroundColor( 0xffffff )
+          .fontColor( Color.Red )
       }
       .margin( { bottom : 10 } )
     }
@@ -442,11 +445,11 @@ export struct ContentTable {
         }
           break;
         case "getDeviceStateManager": {
-        this.currentApiItem = apiItem;
-        this.currentIndex += 1;
-        this.getProfileConnSateDialog.open();
-      }
-        break;
+          this.currentApiItem = apiItem;
+          this.currentIndex += 1;
+          this.getProfileConnSateDialog.open();
+        }
+          break;
         default: {
           let message = apiItem.api();
           apiItem.result = message;
@@ -460,7 +463,7 @@ export struct ContentTable {
   }
 
   getCurrentState( index: number ) {
-    return this.apiItems[index].result
+    return this.apiItems[ index ].result
   }
 
   build() {

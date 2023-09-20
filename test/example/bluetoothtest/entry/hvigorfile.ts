@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (C) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,24 +12,5 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-/**
- * Auto Test Page Of Bluetooth test
- */
-@Entry
-@Component
-struct AutoTest {
-  @State message: string = 'AutoTest'
-
-  build() {
-    Column() {
-      Text( this.message )
-        .fontSize( $r( 'app.float.font_20' ) )
-        .lineHeight( $r( 'app.float.wh_value_22' ) )
-        .fontColor( $r( 'app.color.font_color_182431' ) )
-        .fontWeight( FontWeight.Medium )
-        .margin( { left : $r( 'app.float.distance_8' ) } )
-        .textAlign( TextAlign.Start );
-    }
-  }
-}
+// Script for compiling build behavior. It is built in the build plug-in and cannot be modified currently.
+export { hapTasks } from '@ohos/hvigor-ohos-plugin';
