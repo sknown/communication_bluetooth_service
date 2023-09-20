@@ -777,7 +777,8 @@ void BluetoothAvrcpCtServer::RegisterObserver(const sptr<IBluetoothAvrcpCtObserv
         HILOGI("observer is NULL.");
         return ;
     }
-    pimpl->observers_.Register(observer);
+    auto func = std::bind(&BluetoothAvrcpCtServer::UnregisterObserver, this, std::placeholders::_1);
+    pimpl->observers_.Register(observer, func);
     HILOGI("end.");
 
     return ;
@@ -1006,7 +1007,7 @@ int32_t BluetoothAvrcpCtServer::GetPlayerAppSettingValues(const RawAddress &devi
 }
 
 int32_t BluetoothAvrcpCtServer::GetPlayerAppSettingCurrentValue(const RawAddress &device,
-        const std::vector<int32_t> &attributes)
+    const std::vector<int32_t> &attributes)
 {
     HILOGI("addr: %{public}s", GetEncryptAddr(device.GetAddress()).c_str());
     int32_t result = 0;
@@ -1028,7 +1029,7 @@ int32_t BluetoothAvrcpCtServer::GetPlayerAppSettingCurrentValue(const RawAddress
 }
 
 int32_t BluetoothAvrcpCtServer::SetPlayerAppSettingCurrentValue(const RawAddress &device,
-        const std::vector<int32_t> &attributes, const std::vector<int32_t> &values)
+    const std::vector<int32_t> &attributes, const std::vector<int32_t> &values)
 {
     HILOGI("addr: %{public}s", GetEncryptAddr(device.GetAddress()).c_str());
     int32_t result = 0;
@@ -1054,7 +1055,7 @@ int32_t BluetoothAvrcpCtServer::SetPlayerAppSettingCurrentValue(const RawAddress
 }
 
 int32_t BluetoothAvrcpCtServer::GetPlayerAppSettingAttributeText(const RawAddress &device,
-        const std::vector<int32_t> &attributes)
+    const std::vector<int32_t> &attributes)
 {
     HILOGI("addr: %{public}s", GetEncryptAddr(device.GetAddress()).c_str());
     int32_t result = 0;
@@ -1075,7 +1076,7 @@ int32_t BluetoothAvrcpCtServer::GetPlayerAppSettingAttributeText(const RawAddres
 }
 
 int32_t BluetoothAvrcpCtServer::GetPlayerAppSettingValueText(const RawAddress &device, int32_t attributes,
-        const std::vector<int32_t> &values)
+    const std::vector<int32_t> &values)
 {
     HILOGI("addr: %{public}s, attributes: %{public}d", GetEncryptAddr(device.GetAddress()).c_str(), attributes);
     int32_t result = 0;
@@ -1099,7 +1100,7 @@ int32_t BluetoothAvrcpCtServer::GetPlayerAppSettingValueText(const RawAddress &d
 }
 
 int32_t BluetoothAvrcpCtServer::GetElementAttributes(const RawAddress &device,
-        const std::vector<int32_t> &attributes)
+    const std::vector<int32_t> &attributes)
 {
     HILOGI("addr: %{public}s", GetEncryptAddr(device.GetAddress()).c_str());
     int32_t result = 0;
@@ -1155,7 +1156,7 @@ int32_t BluetoothAvrcpCtServer::PlayItem(const RawAddress &device, int32_t scope
 }
 
 int32_t BluetoothAvrcpCtServer::GetFolderItems(const RawAddress &device, int32_t startItem, int32_t endItem,
-        const std::vector<int32_t> &attributes)
+    const std::vector<int32_t> &attributes)
 {
     HILOGI("res: %{public}s, startItem: %{public}d, endItem: %{public}d",
         GetEncryptAddr(device.GetAddress()).c_str(), startItem, endItem);
@@ -1210,7 +1211,7 @@ int32_t BluetoothAvrcpCtServer::SetAbsoluteVolume(const RawAddress &device, int3
 }
 
 int32_t BluetoothAvrcpCtServer::EnableNotification(const RawAddress &device,
-        const std::vector<int32_t> &events, int32_t interval)
+    const std::vector<int32_t> &events, int32_t interval)
 {
     HILOGI("addr: %{public}s, interval: %{public}d", GetEncryptAddr(device.GetAddress()).c_str(), interval);
     int32_t result = 0;
@@ -1254,7 +1255,7 @@ int32_t BluetoothAvrcpCtServer::DisableNotification(const RawAddress &device, co
 }
 
 int32_t BluetoothAvrcpCtServer::GetItemAttributes(const RawAddress &device, int64_t uid, int32_t uidCounter,
-        const std::vector<int32_t> &attributes)
+    const std::vector<int32_t> &attributes)
 {
     HILOGI("res: %{public}s, uid: %{public}jd, uidCounter: %{public}d",
         GetEncryptAddr(device.GetAddress()).c_str(), uid, uidCounter);
@@ -1309,10 +1310,7 @@ int32_t BluetoothAvrcpCtServer::GetMeidaPlayerList(const RawAddress &device, int
         HILOGE("service is null or disable");
     }
     HILOGI("end.");
-
     return result;
 }
-
 }  // namespace Bluetooth
-
 }  // namespace OHOS
