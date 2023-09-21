@@ -1785,8 +1785,12 @@ std::vector<RawAddress> ClassicAdapter::GetPairedDevices() const
 {
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
     std::vector<RawAddress> pairedList;
+    if (devices_.empty()) {
+        HILOGE("GetPairedDevices devices_ is empty!");
+        return pairedList;
+    }
     for (auto &device : devices_) {
-        if (device.second->IsPaired() == true) {
+        if ((device.second != nullptr) && (device.second->IsPaired() == true)) {
             RawAddress rawAddr(device.second->GetAddress());
             pairedList.push_back(rawAddr);
         }
