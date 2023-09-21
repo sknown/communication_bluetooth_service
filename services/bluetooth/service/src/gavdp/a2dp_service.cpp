@@ -598,7 +598,9 @@ int A2dpService::SetActiveSinkDevice(const RawAddress &device)
     auto curDevice = a2dpDevices_.find(activeDevice_.GetAddress().c_str());
     if (strcmp(device.GetAddress().c_str(), activeDevice_.GetAddress().c_str()) == 0) {
         LOG_ERROR("[A2dpService]The device is already active");
-        pflA2dp->Start(curDevice->second->GetHandle());
+        if (curDevice != a2dpDevices_.end() && curDevice->second != nullptr) {
+            pflA2dp->Start(curDevice->second->GetHandle());
+        }
     } else {
         if (curDevice != a2dpDevices_.end() && curDevice->second != nullptr) {
             if (pflA2dp->Stop(curDevice->second->GetHandle(), true)) {
@@ -1147,6 +1149,10 @@ void A2dpService::CheckDisable()
         __func__, isDoDisable, GetConnectState());
 
     A2dpProfile *instance = GetProfileInstance(role_);
+    if (instance == nullptr) {
+        LOG_WARN("[A2dpService] %{public}s Failed to get profile instance\n", __func__);
+        return;
+    }
     std::lock_guard<std::recursive_mutex> lock(g_a2dpServiceMutex);
 
     if (isDoDisable && (GetConnectState() == PROFILE_STATE_DISCONNECTED)) {
