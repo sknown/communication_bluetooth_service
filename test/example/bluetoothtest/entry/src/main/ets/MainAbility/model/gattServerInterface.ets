@@ -29,7 +29,7 @@ export function testCreateGattServer(): String {
   try {
     let btState = bluetooth.getState();
     let message = "createGattServer test"
-    if ( btState === bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState === bluetooth.BluetoothState.STATE_ON || btState === bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( gattServerInstance ) {
         message = "GattServer exists!";
         prompt.showToast( { message : message } )
@@ -105,6 +105,7 @@ export function testAddService(): String {
     console.log( "gattServerInstance.addService start -----------" )
     let ret = gattServerInstance.addService( curGattService );
     message = "result: addService," + ret;
+    console.log( "服务的参数为：" + JSON.stringify( curGattService ) )
     console.log( "gattServerInstance.addService succeeds!-----------" + message )
     prompt.showToast( { message : message } )
     return message
@@ -121,7 +122,7 @@ export function testRemoveService(): String {
     let message = "removeService test"
     let curServiceUUID = AppStorage.Get( "curServiceUUID" )
     let btState = bluetooth.getState();
-    if ( btState == bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattServerInstance ) {
         message = "NO_GATT_Server_OBJECT";
         prompt.showToast( { message : message } )
@@ -154,41 +155,41 @@ let curAdvData: bluetooth.AdvertiseData = {
     "00008899-0000-1000-8000-00805f9b34fb"
   ] ,
   manufactureData : [ {
-                        manufactureId : 7456 ,
-                        manufactureValue : string2ArrayBuffer( "OHOS CHN" )
-                      } ] ,
+    manufactureId : 7456 ,
+    manufactureValue : string2ArrayBuffer( "OHOS CHN" )
+  } ] ,
   serviceData : [ {
-                    serviceUuid : "000054F6-0000-1000-8000-00805f9b34fb" ,
-                    serviceValue : string2ArrayBuffer( "OhosBle!" )
-                  }, {
-                    serviceUuid : "00009999-0000-1000-8000-00805f9b34fb" ,
-                    serviceValue : string2ArrayBuffer( "dudu_tiger" )
-                  } ]
+    serviceUuid : "000054F6-0000-1000-8000-00805f9b34fb" ,
+    serviceValue : string2ArrayBuffer( "OhosBle!" )
+  }, {
+    serviceUuid : "00009999-0000-1000-8000-00805f9b34fb" ,
+    serviceValue : string2ArrayBuffer( "dudu_tiger" )
+  } ]
 };
 
 let curAdvResponse: bluetooth.AdvertiseData = {
   serviceUuids : [
-    //"000054F6-0000-1000-8000-00805f9b34fb",
+  //"000054F6-0000-1000-8000-00805f9b34fb",
     "00009999-0000-1000-8000-00805f9b34fb"
   ] ,
   manufactureData : [ {
-                        manufactureId : 6547 ,
-                        manufactureValue : string2ArrayBuffer( "OHOS CHN" )
-                      } ] ,
+    manufactureId : 6547 ,
+    manufactureValue : string2ArrayBuffer( "OHOS CHN" )
+  } ] ,
   serviceData : [ {
-                    serviceUuid : "000054F6-0000-1000-8000-00805f9b34fb" ,
-                    serviceValue : string2ArrayBuffer( "OhosBle!" )
-                  }, {
-                    serviceUuid : "00007456-0000-1000-8000-00805f9b34fb" ,
-                    serviceValue : string2ArrayBuffer( "OhosBle" )
-                  } ]
+    serviceUuid : "000054F6-0000-1000-8000-00805f9b34fb" ,
+    serviceValue : string2ArrayBuffer( "OhosBle!" )
+  }, {
+    serviceUuid : "00007456-0000-1000-8000-00805f9b34fb" ,
+    serviceValue : string2ArrayBuffer( "OhosBle" )
+  } ]
 };
 
 export function testStartAdvertising(): String {
   try {
     let message = "startAdvertising test"
     let btState = bluetooth.getState();
-    if ( btState === bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState === bluetooth.BluetoothState.STATE_ON || btState === bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattServerInstance ) {
         message = "NO_GATT_Server_OBJECT";
         prompt.showToast( { message : message } )
@@ -314,7 +315,7 @@ export function testStopAdvertising(): String {
   try {
     let message = "stopAdvertising test"
     let btState = bluetooth.getState();
-    if ( btState == bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattServerInstance ) {
         message = "NO_GATT_Server_OBJECT";
         prompt.showToast( { message : message } )
@@ -341,7 +342,7 @@ export function testGattServerClose(): String {
   try {
     let message = "gattServerClose test"
     let btState = bluetooth.getState();
-    if ( btState == bluetooth.BluetoothState.STATE_ON ) {
+    if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattServerInstance ) {
         message = "NO_GATT_Server_OBJECT";
         prompt.showToast( { message : message } )
@@ -385,7 +386,18 @@ export function testOnConnectStateChange(): String {
     } else {
       gattServerInstance.on( 'connectStateChange' , ( data ) => {
         let connectStateMsg = "deviceId:" + data.deviceId + ",connectState:" + data.state;
-        AppStorage.SetOrCreate( "connect_StateMsg" , data.state )
+        let connect_StateMsg = ""
+        if ( data.state == 0 ) {
+          connect_StateMsg = "STATE_DISCONNECTED"
+        } else if ( data.state == 1 ) {
+          connect_StateMsg = "STATE_CONNECTING"
+        } else if ( data.state == 2 ) {
+          connect_StateMsg = "STATE_CONNECTED"
+        } else {
+          connect_StateMsg = "STATE_DISCONNECTING"
+        }
+        AppStorage.SetOrCreate( "connect_StateMsg" , connect_StateMsg )
+        console.log( "connectStateChange:" + JSON.stringify( data ) )
         prompt.showToast( { message : connectStateMsg } )
       } )
       message = '打开连接状态变化'

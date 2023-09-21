@@ -42,6 +42,7 @@ let btEnable = false
 
 export function testEnableBluetooth() {
   try {
+    console.log( "testEnableBluetooth start-------------" )
     let message = "enableBluetooth test"
     if ( btEnable ) {
       message = '蓝牙已经使能';
@@ -53,11 +54,13 @@ export function testEnableBluetooth() {
         message = "蓝牙使能执行结果：" + ret + "\n"
         message += "蓝牙已打开或打开失败,请确认"
       }
+      console.log( "蓝牙使能执行结果：" + ret );
       btEnable = true;
       AppStorage.SetOrCreate( 'bluetoothIsOn' , btEnable );
     }
     prompt.showToast( { message : message } )
     return message
+    console.log( "testEnableBluetooth end-------------" )
   } catch( e ) {
     console.log( `Failed to testEnableBluetooth. message: ${ e.message }, code: ${ e.code }` )
     let message = `Failed to testEnableBluetooth. message: ${ e.message }, code: ${ e.code }`
@@ -68,6 +71,7 @@ export function testEnableBluetooth() {
 
 export function testDisableBluetooth(): string {
   try {
+    console.log( "testDisableBluetooth start-------------" )
     let message = "disableBluetooth test"
     if ( !btEnable ) {
       message = '蓝牙还未使能';
@@ -79,11 +83,13 @@ export function testDisableBluetooth(): string {
         message = "蓝牙去使能执行结果：" + ret + "\n"
         message += "蓝牙已关闭或关闭失败,请确认"
       }
+      console.log( "蓝牙去使能执行结果：" + ret );
       btEnable = false;
       AppStorage.SetOrCreate( 'bluetoothIsOn' , btEnable );
     }
     prompt.showToast( { message : message } )
     return message
+    console.log( "testDisableBluetooth end-------------" )
   } catch( e ) {
     console.log( `Failed to testDisableBluetooth. message: ${ e.message }, code: ${ e.code }` )
     let message = `Failed to testDisableBluetooth. message: ${ e.message }, code: ${ e.code }`
@@ -198,8 +204,10 @@ export function testSetBluetoothScanMode( mode: number , dur: number ): {} {
       console.log( "BluetoothModel.setBluetoothScanMode failed!" )
     }
     console.log( "BluetoothModel.setBluetoothScanMode success!" + JSON.stringify( retObj ) )
-    let message = ret ? "setBluetoothScanMode执行成功" + JSON.stringify( retObj ) : "setBluetoothScanMode执行失败"
-    prompt.showToast( { message : message } )
+    // let message = ret ? "setBluetoothScanMode执行成功" + JSON.stringify( retObj ) : "setBluetoothScanMode执行失败"
+    let message = ret ? retObj : "setBluetoothScanMode执行失败"
+    let showToastMessage = ret ? "setBluetoothScanMode执行成功;" + JSON.stringify( retObj ) : "setBluetoothScanMode执行失败"
+    prompt.showToast( { message : showToastMessage } )
     return message
   } catch( e ) {
     console.log( `Failed to testSetBluetoothScanMode. message: ${ e.message }, code: ${ e.code }` )
