@@ -100,6 +100,7 @@ private:
     ErrCode GetRandomAddressInner(MessageParcel &data, MessageParcel &reply);
     ErrCode SyncRandomAddressInner(MessageParcel &data, MessageParcel &reply);
     ErrCode StartCrediblePairInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode CountEnableTimesInner(MessageParcel &data, MessageParcel &reply);
 
     static const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParcel &, MessageParcel &)>>
         memberFuncMap_;
