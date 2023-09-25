@@ -19,6 +19,7 @@
 #include "allocator.h"
 
 #include "btm/btm_thread.h"
+#include "log.h"
 
 void GapBlockInTaskProcess(void *ctx)
 {
@@ -63,8 +64,10 @@ int GapRunTaskBlockProcess(void (*func)(void *), void *ctx)
     if (ret == BT_SUCCESS) {
         ret = EventWait(info->event, WAIT_TIME);
         if (ret == EVENT_WAIT_TIMEOUT_ERR) {
+            HILOGE("EventWait result is timeout");
             ret = BT_TIMEOUT;
         } else if (ret == EVENT_WAIT_OTHER_ERR) {
+            HILOGE("EventWait result is wait err");
             ret = BT_OS_ERROR;
         }
     }
