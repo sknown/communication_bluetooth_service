@@ -18,6 +18,7 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include "platform/include/platform_def.h"
+#include "log.h"
 
 typedef struct Event {
     pthread_mutex_t mutex;
@@ -104,8 +105,10 @@ int32_t EventWait(Event *event, int64_t ms)
         int32_t err;
         err = EventWaitInternal(event, ms);
         if (err == ETIMEDOUT) {
+            HILOGE("EventWait result is timeout");
             ret = EVENT_WAIT_TIMEOUT_ERR;
         } else if (err) {
+            HILOGE("EventWait result is wait err");
             ret = EVENT_WAIT_OTHER_ERR;
         }
         if (event->autoClear && event->signal) {
