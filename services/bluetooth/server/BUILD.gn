@@ -90,6 +90,12 @@ ohos_shared_library("bluetooth_server") {
     sources += [ "src/bluetooth_hid_host_server.cpp" ]
   }
 
+  if (bluetooth_service_opp_feature) {
+    defines += [ "BLUETOOTH_OPP_FEATURE" ]
+
+    sources += [ "src/bluetooth_opp_server.cpp" ]
+  }
+
   if (bluetooth_service_pan_feature) {
     defines += [ "BLUETOOTH_PAN_FEATURE" ]
 

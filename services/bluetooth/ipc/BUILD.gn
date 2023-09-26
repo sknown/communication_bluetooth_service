@@ -97,6 +97,13 @@ ohos_static_library("btipc_service") {
     ]
   }
 
+  if (bluetooth_service_opp_feature) {
+    sources += [
+      "src/bluetooth_opp_observer_proxy.cpp",
+      "src/bluetooth_opp_stub.cpp",
+    ]
+  }
+
   if (bluetooth_service_pan_feature) {
     sources += [
       "src/bluetooth_pan_observer_proxy.cpp",
