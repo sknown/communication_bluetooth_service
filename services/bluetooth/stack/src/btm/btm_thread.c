@@ -24,6 +24,7 @@
 #include "platform/include/queue.h"
 #include "platform/include/semaphore.h"
 #include "platform/include/thread.h"
+#include "log.h"
 
 typedef struct {
     void (*task)(void *context);
@@ -227,6 +228,7 @@ int BTM_DeleteProcessingQueue(uint8_t queueId)
 
 int BTM_RunTaskInProcessingQueue(uint8_t queueId, void (*task)(void *context), void *context)
 {
+    HILOGD("%{public}d ,start process queueId is ", queueId);
     int result = BT_SUCCESS;
     MutexLock(g_processingQueueLock);
     BtmProcessingQueue *queue = FindProcessingQueueById(queueId);
@@ -241,5 +243,6 @@ int BTM_RunTaskInProcessingQueue(uint8_t queueId, void (*task)(void *context), v
         result = BT_BAD_STATUS;
     }
     MutexUnlock(g_processingQueueLock);
+    HILOGD("%{public}d ,end process queueId is ", queueId);
     return result;
 }
