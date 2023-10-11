@@ -35,6 +35,7 @@ public:
 private:
     ErrCode AddServiceInner(MessageParcel &data, MessageParcel &reply);
     ErrCode ClearServicesInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode ConnectInner(MessageParcel &data, MessageParcel &reply);
     ErrCode CancelConnectionInner(MessageParcel &data, MessageParcel &reply);
     ErrCode RegisterApplicationInner(MessageParcel &data, MessageParcel &reply);
     ErrCode DeregisterApplicationInner(MessageParcel &data, MessageParcel &reply);
