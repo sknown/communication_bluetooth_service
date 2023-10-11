@@ -333,9 +333,16 @@ void BluetoothGattServerServer::ClearServices(int appId)
     pimpl->serverService_->ClearServices(appId);
 }
 
-void BluetoothGattServerServer::CancelConnection(const BluetoothGattDevice &device)
+int BluetoothGattServerServer::Connect(int appId, const BluetoothGattDevice &device, bool isDirect)
+{
+    HILOGE("Unsupport GattServer Connect");
+    return BT_ERR_INTERNAL_ERROR;
+}
+
+int BluetoothGattServerServer::CancelConnection(int appId, const BluetoothGattDevice &device)
 {
     HILOGE("Unsupport GattServer CancelConnection");
+    return BT_ERR_INTERNAL_ERROR;
 }
 
 int BluetoothGattServerServer::NotifyClient(
