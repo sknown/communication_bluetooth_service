@@ -45,6 +45,8 @@ BluetoothGattServerStub::BluetoothGattServerStub()
         &BluetoothGattServerStub::RespondDescriptorReadInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_RESPOND_DESCRIPTOR_WRITE)] =
         &BluetoothGattServerStub::RespondDescriptorWriteInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothGattServerInterfaceCode::GATT_SERVER_CONNECT)] =
+        &BluetoothGattServerStub::ConnectInner;
 }
 
 BluetoothGattServerStub::~BluetoothGattServerStub()
@@ -95,15 +97,21 @@ ErrCode BluetoothGattServerStub::ClearServicesInner(MessageParcel &data, Message
     return NO_ERROR;
 }
 
+ErrCode BluetoothGattServerStub::ConnectInner(MessageParcel &data, MessageParcel &reply)
+{
+    int appId = data.ReadInt32();
+    std::shared_ptr<BluetoothGattDevice> device(data.ReadParcelable<BluetoothGattDevice>());
+    CHECK_AND_RETURN_LOG_RET(device != nullptr, TRANSACTION_ERR, "Read parcelable BluetoothGattDevice failed");
+    bool isDirect = data.ReadBool();
+    return Connect(appId, *device, isDirect);
+}
+
 ErrCode BluetoothGattServerStub::CancelConnectionInner(MessageParcel &data, MessageParcel &reply)
 {
+    int appId = data.ReadInt32();
     std::shared_ptr<BluetoothGattDevice> device(data.ReadParcelable<BluetoothGattDevice>());
-    if (!device) {
-        return TRANSACTION_ERR;
-    }
-    CancelConnection(*device);
-
-    return NO_ERROR;
+    CHECK_AND_RETURN_LOG_RET(device != nullptr, TRANSACTION_ERR, "Read parcelable BluetoothGattDevice failed");
+    return CancelConnection(appId, *device);
 }
 ErrCode BluetoothGattServerStub::RegisterApplicationInner(MessageParcel &data, MessageParcel &reply)
 {
