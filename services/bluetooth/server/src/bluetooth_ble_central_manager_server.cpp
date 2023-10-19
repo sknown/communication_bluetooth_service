@@ -38,8 +38,7 @@ struct BluetoothBleCentralManagerServer::impl {
     /// sys state observer
     class SystemStateObserver;
     std::unique_ptr<SystemStateObserver> systemStateObserver_ = nullptr;
-
-    RemoteObserverList<IBluetoothBleCentralManagerCallback> observers_;
+    RemoteObserverList<IBluetoothBleCentralManagerCallback, int32_t> observers_;
     std::map<sptr<IRemoteObject>, uint32_t> observersToken_;
     std::map<sptr<IRemoteObject>, int32_t> observersUid_;
     class BleCentralManagerCallback;
@@ -209,13 +208,13 @@ public:
         return;
     }
 
-    void SetObserver(RemoteObserverList<IBluetoothBleCentralManagerCallback> *observers)
+    void SetObserver(RemoteObserverList<IBluetoothBleCentralManagerCallback, int32_t> *observers)
     {
         observers_ = observers;
     }
 
 private:
-    RemoteObserverList<IBluetoothBleCentralManagerCallback> *observers_ = nullptr;
+    RemoteObserverList<IBluetoothBleCentralManagerCallback, int32_t> *observers_ = nullptr;
     BluetoothBleCentralManagerServer::impl *pimpl_ = nullptr;
 
     void ClearMultiProcessScanState()
@@ -555,7 +554,9 @@ void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t
         if (pimpl != nullptr) {
             pimpl->observersToken_[callback->AsObject()] = IPCSkeleton::GetCallingTokenID();
             pimpl->observersUid_[callback->AsObject()] = uid;
-            pimpl->observers_.Register(callback);
+            auto func = std::bind(&BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallbackInner,
+                this, std::placeholders::_1, std::placeholders::_2);
+            pimpl->observers_.Register(callback, func, scannerId);
             impl::ScanCallbackInfo info;
             info.pid = pid;
             info.uid = uid;
@@ -564,6 +565,12 @@ void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t
             pimpl->scanCallbackInfo_.push_back(info);
         }
     });
+}
+
+void BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallbackInner(
+    const sptr<IBluetoothBleCentralManagerCallback> &callback, int32_t scannerId)
+{
+    return DeregisterBleCentralManagerCallback(scannerId, callback);
 }
 
 void BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallback(int32_t scannerId,
