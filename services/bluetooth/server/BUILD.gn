@@ -37,6 +37,7 @@ ohos_shared_library("bluetooth_server") {
   sources = [
     "src/bluetooth_ble_advertiser_server.cpp",
     "src/bluetooth_ble_central_manager_server.cpp",
+    "src/bluetooth_ble_filter_matcher.cpp",
     "src/bluetooth_gatt_client_server.cpp",
     "src/bluetooth_gatt_server_server.cpp",
     "src/bluetooth_hitrace.cpp",

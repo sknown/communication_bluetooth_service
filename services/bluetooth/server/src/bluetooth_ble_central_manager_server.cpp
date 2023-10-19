@@ -13,7 +13,8 @@
  * limitations under the License.
  */
 
-#include "bluetooth_ble_central_manager_server.h"
+#include <string>
+#include "bluetooth_ble_filter_matcher.h"
 #include "ble_service_data.h"
 #include "bluetooth_log.h"
 #include "bluetooth_utils_server.h"
@@ -26,7 +27,7 @@
 #include "ipc_skeleton.h"
 #include "remote_observer_list.h"
 #include "permission_utils.h"
-#include <string>
+#include "bluetooth_ble_central_manager_server.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -41,6 +42,9 @@ struct BluetoothBleCentralManagerServer::impl {
     RemoteObserverList<IBluetoothBleCentralManagerCallback, int32_t> observers_;
     std::map<sptr<IRemoteObject>, uint32_t> observersToken_;
     std::map<sptr<IRemoteObject>, int32_t> observersUid_;
+    std::map<sptr<IRemoteObject>, int32_t> observersScannerId_;
+    std::map<int32_t, std::vector<bluetooth::BleScanFilterImpl>> observersBleScanFilters_;
+    std::mutex bleScanFiltersMutex_;
     class BleCentralManagerCallback;
     std::unique_ptr<BleCentralManagerCallback> observerImp_ = std::make_unique<BleCentralManagerCallback>(this);
     IAdapterBle *bleService_ = nullptr;
@@ -83,7 +87,7 @@ public:
         HILOGI("Address: %{public}s",
             GetEncryptAddr(result.GetPeripheralDevice().GetRawAddress().GetAddress()).c_str());
         observers_->ForEach([this, result](IBluetoothBleCentralManagerCallback *observer) {
-            uint32_t  tokenId = this->pimpl_->observersToken_[observer->AsObject()];
+            uint32_t tokenId = this->pimpl_->observersToken_[observer->AsObject()];
             int32_t uid = this->pimpl_->observersUid_[observer->AsObject()];
             if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
                 HILOGD("uid:%{public}d is proxy uid, not callback.", uid);
@@ -93,7 +97,19 @@ public:
                 HILOGE("OnScanCallback(): failed, check permission failed, tokenId: %{public}u", tokenId);
             } else {
                 BluetoothBleScanResult bleScanResult(result);
-                observer->OnScanCallback(bleScanResult);
+                int32_t scannerId = this->pimpl_->observersScannerId_[observer->AsObject()];
+                std::lock_guard<std::mutex> lock(this->pimpl_->bleScanFiltersMutex_);
+                std::vector<bluetooth::BleScanFilterImpl> scanFilters_ = this->pimpl_-> 
+                    observersBleScanFilters_[scannerId];
+                HILOGD("OnScanCallback() start bleScanFilter Address: %{public}s scannerId:%{public}d",
+                    GetEncryptAddr(result.GetPeripheralDevice().GetRawAddress().GetAddress()).c_str(), scannerId);
+                if (scanFilters_.empty() ||
+                    BluetoothBleFilterMatcher::MatchesScanFilters(scanFilters_, bleScanResult) ==
+                    FilterCheckState::FILTER_CHECK_PASS) {
+                    observer->OnScanCallback(bleScanResult);
+                    HILOGD("OnScanCallback() passed bleScanFilter Address: %{public}s scannerId:%{public}d",
+                        GetEncryptAddr(result.GetPeripheralDevice().GetRawAddress().GetAddress()).c_str(), scannerId);
+                }
             }
         });
     }
@@ -467,6 +483,8 @@ int BluetoothBleCentralManagerServer::StopScan(int32_t scannerId)
 
         if (IsAllStop() || IsNewScanParams()) {
             HILOGI("stop ble scan.");
+            std::lock_guard<std::mutex> lock(pimpl->bleScanFiltersMutex_);
+            pimpl->observersBleScanFilters_.erase(scannerId);
             pimpl->bleService_->StopScan();
             pimpl->isScanning = false;
             HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "BLE_SCAN_STOP",
@@ -509,6 +527,8 @@ int BluetoothBleCentralManagerServer::ConfigScanFilter(
             filterImpl.SetManufactureDataMask(filter.GetManufactureDataMask());
             filterImpls.push_back(filterImpl);
         }
+        std::lock_guard<std::mutex> lock(pimpl->bleScanFiltersMutex_);
+        pimpl->observersBleScanFilters_[scannerId] = filterImpls;
         return pimpl->bleService_->ConfigScanFilter(scannerId, filterImpls);
     }
     return NO_ERROR;
@@ -554,6 +574,7 @@ void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t
         if (pimpl != nullptr) {
             pimpl->observersToken_[callback->AsObject()] = IPCSkeleton::GetCallingTokenID();
             pimpl->observersUid_[callback->AsObject()] = uid;
+            pimpl->observersScannerId_[callback->AsObject()] = scannerId;
             auto func = std::bind(&BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallbackInner,
                 this, std::placeholders::_1, std::placeholders::_2);
             pimpl->observers_.Register(callback, func, scannerId);
