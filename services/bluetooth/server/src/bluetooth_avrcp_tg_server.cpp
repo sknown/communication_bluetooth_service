@@ -465,5 +465,20 @@ void BluetoothAvrcpTgServer::NotifyVolumeChanged(int32_t volume)
     pimpl->service_->NotifyVolumeChanged(static_cast<uint8_t>(volume));
     HILOGI("end.");
 }
+int32_t SetDeviceAbsoluteVolume(const BluetoothRawAddress &addr, int32_t volumeLevel)
+{
+    return BT_NO_ERROR;
+}
+
+int32_t SetDeviceAbsVolumeAbility(const BluetoothRawAddress &addr, int32_t ability)
+{
+    return BT_NO_ERROR;
+}
+
+int32_t GetDeviceAbsVolumeAbility(const BluetoothRawAddress &addr, int32_t &ability)
+{
+    ability = DeviceAbsVolumeAbility::DEVICE_ABSVOL_UNSUPPORT;
+    return BT_NO_ERROR;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

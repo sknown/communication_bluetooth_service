@@ -52,6 +52,10 @@ public:
     void NotifyUidChanged(int32_t uidCounter) override;
     void NotifyVolumeChanged(int32_t volume) override;
 
+    int32_t SetDeviceAbsoluteVolume(const BluetoothRawAddress &addr, int32_t volumeLevel) override;
+    int32_t SetDeviceAbsVolumeAbility(const BluetoothRawAddress &addr, int32_t ability) override;
+    int32_t GetDeviceAbsVolumeAbility(const BluetoothRawAddress &addr, int32_t &ability) override;
+
 private:
     BLUETOOTH_DISALLOW_COPY_AND_ASSIGN(BluetoothAvrcpTgServer);
     BLUETOOTH_DECLARE_IMPL();
