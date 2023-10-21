@@ -53,7 +53,8 @@ public:
     bool IsLpDeviceAvailable() override;
     int SetLpDeviceParam(const BluetoothLpDeviceParamSet &paramSet) override;
     int RemoveLpDeviceParam(const bluetooth::Uuid &uuid) override;
-
+    void DeregisterBleCentralManagerCallbackInner(const sptr<IBluetoothBleCentralManagerCallback> &callback,
+        int32_t scannerId);
 private:
     BLUETOOTH_DECLARE_IMPL();
     BLUETOOTH_DISALLOW_COPY_AND_ASSIGN(BluetoothBleCentralManagerServer);

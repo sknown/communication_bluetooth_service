@@ -169,7 +169,8 @@ void BluetoothAvrcpTgServer::RegisterObserver(const sptr<IBluetoothAvrcpTgObserv
         HILOGI("observer is NULL.");
         return ;
     }
-    pimpl->observers_.Register(observer);
+    auto func = std::bind(&BluetoothAvrcpTgServer::UnregisterObserver, this, std::placeholders::_1);
+    pimpl->observers_.Register(observer, func);
     HILOGI("end.");
 
     return ;
@@ -241,9 +242,7 @@ int32_t BluetoothAvrcpTgServer::Disconnect(const BluetoothRawAddress &addr)
 std::vector<BluetoothRawAddress> BluetoothAvrcpTgServer::GetConnectedDevices()
 {
     HILOGI("start.");
-
     std::vector<BluetoothRawAddress> results;
-
     if (!pimpl->IsEnabled()) {
         HILOGE("service is null or disable ");
         return results;
@@ -254,10 +253,8 @@ std::vector<BluetoothRawAddress> BluetoothAvrcpTgServer::GetConnectedDevices()
     for (auto device : devices) {
         BluetoothRawAddress rawAddr = BluetoothRawAddress(device);
         results.emplace_back(rawAddr);
-
     }
     HILOGI("end.");
-
     return results;
 }
 
@@ -468,7 +465,5 @@ void BluetoothAvrcpTgServer::NotifyVolumeChanged(int32_t volume)
     pimpl->service_->NotifyVolumeChanged(static_cast<uint8_t>(volume));
     HILOGI("end.");
 }
-
 }  // namespace Bluetooth
-
 }  // namespace OHOS

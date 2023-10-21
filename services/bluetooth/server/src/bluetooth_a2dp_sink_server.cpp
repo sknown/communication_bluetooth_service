@@ -135,7 +135,8 @@ void BluetoothA2dpSinkServer::RegisterObserver(const sptr<IBluetoothA2dpSinkObse
         HILOGI("observer is null");
         return;
     }
-    pimpl->observers_.Register(observer);
+    auto func = std::bind(&BluetoothA2dpSinkServer::DeregisterObserver, this, std::placeholders::_1);
+    pimpl->observers_.Register(observer, func);
 }
 
 void BluetoothA2dpSinkServer::DeregisterObserver(const sptr<IBluetoothA2dpSinkObserver> &observer)

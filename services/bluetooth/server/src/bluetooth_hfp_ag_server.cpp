@@ -355,7 +355,8 @@ std::string BluetoothHfpAgServer::GetActiveDevice()
 void BluetoothHfpAgServer::RegisterObserver(const sptr<IBluetoothHfpAgObserver> &observer)
 {
     HILOGD("Enter!");
-    pimpl->observers_.Register(observer);
+    auto func = std::bind(&BluetoothHfpAgServer::DeregisterObserver, this, std::placeholders::_1);
+    pimpl->observers_.Register(observer, func);
 }
 
 void BluetoothHfpAgServer::DeregisterObserver(const sptr<IBluetoothHfpAgObserver> &observer)
