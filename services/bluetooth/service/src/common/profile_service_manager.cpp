@@ -113,11 +113,11 @@ void ProfileServiceManager::Start() const
 {
     LOG_DEBUG("%{public}s start", __PRETTY_FUNCTION__);
 
-    if (AdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BREDR)) {
+    if (IAdapterManager::GetInstance()->GetClassicAdapterInterface()) {
         CreateClassicProfileServices();
     }
 
-    if (AdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE)) {
+    if (IAdapterManager::GetInstance()->GetBleAdapterInterface()) {
         CreateBleProfileServices();
     }
 }

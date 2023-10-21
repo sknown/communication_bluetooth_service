@@ -502,8 +502,7 @@ std::string PanService::PanFindDeviceByLcid(uint16_t lcid)
 
 std::string PanService::GetLocalAddress()
 {
-    IAdapterClassic *adapterClassic = (IAdapterClassic *)(IAdapterManager::GetInstance()->
-        GetAdapter(ADAPTER_BREDR));
+    auto adapterClassic = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     if (adapterClassic != nullptr) {
         return adapterClassic->GetLocalAddress();
     }

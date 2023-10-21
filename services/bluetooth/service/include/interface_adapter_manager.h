@@ -33,8 +33,9 @@
 #ifndef INTERFACE_ADAPTER_MANAGER
 #define INTERFACE_ADAPTER_MANAGER
 
-#include "interface_adapter.h"
 #include <memory>
+#include "interface_adapter_ble.h"
+#include "interface_adapter_classic.h"
 
 namespace OHOS {
 namespace bluetooth {
@@ -276,13 +277,20 @@ public:
     virtual BTPermissionType GetMessagePermission(const std::string &address) const = 0;
 
     /**
-     * @brief Get classic adapter or ble adapter.
+     * @brief Get classic adapter.
      *
-     * @param transport classic or adapter.
-     * @return Returns Basic adapter pointer.
+     * @return Returns IAdapterClassic pointer.
      * @since 6
      */
-    virtual IAdapter *GetAdapter(const BTTransport transport) const = 0;
+    virtual std::shared_ptr<IAdapterClassic> GetClassicAdapterInterface(void) const = 0;
+
+    /**
+     * @brief Get ble adapter.
+     *
+     * @return Returns IAdapterBle pointer.
+     * @since 6
+     */
+    virtual std::shared_ptr<IAdapterBle> GetBleAdapterInterface(void) const = 0;
 
     /**
      * @brief Get power mode.
