@@ -45,16 +45,18 @@ namespace bluetooth {
 const int TRANSPORT_MAX = 2;
 const std::string PERMISSIONS = "ohos.permission.USE_BLUETOOTH"; 
 
+// T is BleAdapter or ClassicAdapter
+template <typename T>
 struct AdapterInfo {
-    AdapterInfo(std::unique_ptr<IAdapter> instance, std::unique_ptr<AdapterStateMachine> stateMachine)
-        : instance_(std::move(instance)), stateMachine_(std::move(stateMachine))
+    AdapterInfo(std::shared_ptr<T> instance, std::unique_ptr<AdapterStateMachine> stateMachine)
+        : instance(instance), stateMachine(std::move(stateMachine))
     {}
     ~AdapterInfo()
     {}
 
-    BTStateID state_ = BTStateID::STATE_TURN_OFF;
-    std::unique_ptr<IAdapter> instance_ = nullptr;
-    std::unique_ptr<AdapterStateMachine> stateMachine_ = nullptr;
+    BTStateID state = BTStateID::STATE_TURN_OFF;
+    std::shared_ptr<T> instance = nullptr;
+    std::unique_ptr<AdapterStateMachine> stateMachine = nullptr;
 };
 
 // static function
@@ -77,7 +79,8 @@ struct AdapterManager::impl {
     std::promise<void> stopPromise_ = {};
     std::promise<void> resetPromise_ = {};
     std::unique_ptr<utility::Dispatcher> dispatcher_ = nullptr;
-    std::array<std::unique_ptr<AdapterInfo>, TRANSPORT_MAX> adapters_ = {};
+    std::unique_ptr<AdapterInfo<ClassicAdapter>> classicAdapter_ = nullptr;
+    std::unique_ptr<AdapterInfo<BleAdapter>> bleAdapter_ = nullptr;
     SysStateMachine sysStateMachine_ = {};
     std::string sysState_ = SYS_STATE_STOPPED;
     BtmCallbacks hciFailureCallbacks = {};
@@ -168,17 +171,16 @@ void AdapterManager::impl::ProcessMessage(const BTTransport transport, const uti
 {
     std::lock_guard<std::recursive_mutex> lock(syncMutex_);
 
-    if (adapters_[transport] == nullptr) {
-        LOG_DEBUG("%{public}s adapter is nullptr", __PRETTY_FUNCTION__);
+    if (transport == ADAPTER_BREDR && classicAdapter_ && classicAdapter_->stateMachine) {
+        classicAdapter_->stateMachine->ProcessMessage(msg);
         return;
     }
 
-    if (adapters_[transport]->stateMachine_ == nullptr) {
-        LOG_DEBUG("%{public}s stateMachine_ is nullptr", __PRETTY_FUNCTION__);
+    if (transport == ADAPTER_BLE && bleAdapter_ && bleAdapter_->stateMachine) {
+        bleAdapter_->stateMachine->ProcessMessage(msg);
         return;
     }
-
-    adapters_[transport]->stateMachine_->ProcessMessage(msg);
+    LOG_ERROR("%{public}s transport(%{public}d) failed", __PRETTY_FUNCTION__, transport);
 }
 
 // AdapterManager class
@@ -314,11 +316,13 @@ bool AdapterManager::AdapterStop() const
 
     DeregisterHciResetCallback();
 
-    for (int i = 0; i < TRANSPORT_MAX; i++) {
-        if (pimpl->adapters_[i]) {
-            pimpl->adapters_[i]->instance_->GetContext()->Uninitialize();
-            pimpl->adapters_[i] = nullptr;
-        }
+    if (pimpl->classicAdapter_) {
+        pimpl->classicAdapter_->instance->GetContext()->Uninitialize();
+        pimpl->classicAdapter_ = nullptr;
+    }
+    if (pimpl->bleAdapter_) {
+        pimpl->bleAdapter_->instance->GetContext()->Uninitialize();
+        pimpl->bleAdapter_ = nullptr;
     }
 
     BTM_Close();
@@ -345,7 +349,8 @@ bool AdapterManager::Enable(const BTTransport transport) const
         return false;
     }
 
-    if (pimpl->adapters_[transport] == nullptr) {
+    if ((transport == ADAPTER_BREDR && pimpl->classicAdapter_ == nullptr) ||
+        (transport == ADAPTER_BLE && pimpl->bleAdapter_ == nullptr)) {
         LOG_INFO("%{public}s BTTransport not register", __PRETTY_FUNCTION__);
         return false;
     }
@@ -378,7 +383,8 @@ bool AdapterManager::Disable(const BTTransport transport) const
         return false;
     }
 
-    if (pimpl->adapters_[transport] == nullptr) {
+    if ((transport == ADAPTER_BREDR && pimpl->classicAdapter_ == nullptr) ||
+        (transport == ADAPTER_BLE && pimpl->bleAdapter_ == nullptr)) {
         LOG_INFO("%{public}s BTTransport not register", __PRETTY_FUNCTION__);
         return false;
     }
@@ -478,12 +484,14 @@ BTStateID AdapterManager::GetState(const BTTransport transport) const
 {
     std::lock_guard<std::recursive_mutex> lock(pimpl->syncMutex_);
 
-    if (pimpl->adapters_[transport] == nullptr) {
-        LOG_INFO("%{public}s BTTransport not register", __PRETTY_FUNCTION__);
-        return BTStateID::STATE_TURN_OFF;
+    BTStateID state = BTStateID::STATE_TURN_OFF;
+    if (transport == ADAPTER_BREDR && pimpl->classicAdapter_) {
+        state = pimpl->classicAdapter_->state;
     }
-
-    return pimpl->adapters_[transport]->state_;
+    if (transport == ADAPTER_BLE && pimpl->bleAdapter_) {
+        state = pimpl->bleAdapter_->state;
+    }
+    return state;
 }
 
 bool AdapterManager::RegisterStateObserver(IAdapterStateObserver &observer) const
@@ -512,15 +520,16 @@ BTConnectState AdapterManager::GetAdapterConnectState() const
     return ProfileServiceManager::GetInstance()->GetProfileServicesConnectState();
 }
 
-IAdapter *AdapterManager::GetAdapter(const BTTransport transport) const
+std::shared_ptr<IAdapterClassic> AdapterManager::GetClassicAdapterInterface(void) const
 {
     std::lock_guard<std::recursive_mutex> lock(pimpl->syncMutex_);
+    return pimpl->classicAdapter_ != nullptr ? pimpl->classicAdapter_->instance : nullptr;
+}
 
-    if (pimpl->adapters_[transport] != nullptr) {
-        return pimpl->adapters_[transport]->instance_.get();
-    } else {
-        return nullptr;
-    }
+std::shared_ptr<IAdapterBle> AdapterManager::GetBleAdapterInterface(void) const
+{
+    std::lock_guard<std::recursive_mutex> lock(pimpl->syncMutex_);
+    return pimpl->bleAdapter_ != nullptr ? pimpl->bleAdapter_->instance : nullptr;
 }
 
 void AdapterManager::OnSysStateChange(const std::string &state) const
@@ -577,13 +586,15 @@ void AdapterManager::OnAdapterStateChange(const BTTransport transport, const BTS
     LOG_DEBUG("%{public}s transport is %{public}d state is %{public}d", __PRETTY_FUNCTION__, transport, state);
     std::lock_guard<std::recursive_mutex> lock(pimpl->syncMutex_);
 
-    if (pimpl->adapters_[transport] == nullptr) {
+    if ((transport == ADAPTER_BREDR && pimpl->classicAdapter_ == nullptr) ||
+        (transport == ADAPTER_BLE && pimpl->bleAdapter_ == nullptr)) {
         return;
     }
 
     // notify observers state update
-    if (pimpl->adapters_[transport]->state_ != state) {
-        pimpl->adapters_[transport]->state_ = state;
+    auto &adapterState = transport == ADAPTER_BREDR ? pimpl->classicAdapter_->state : pimpl->bleAdapter_->state;
+    if (adapterState != state) {
+        adapterState = state;
         if (GetSysState() != SYS_STATE_RESETTING) {
             PublishBluetoothStateChangeEvent(transport, state);
             pimpl->adapterObservers_.ForEach(
@@ -592,11 +603,8 @@ void AdapterManager::OnAdapterStateChange(const BTTransport transport, const BTS
     }
 
     // notify sys state machine
-    int classicState = pimpl->adapters_[BTTransport::ADAPTER_BREDR]
-                           ? pimpl->adapters_[BTTransport::ADAPTER_BREDR]->state_
-                           : BTStateID::STATE_TURN_OFF;
-    int bleState = pimpl->adapters_[BTTransport::ADAPTER_BLE] ? pimpl->adapters_[BTTransport::ADAPTER_BLE]->state_
-                                                              : BTStateID::STATE_TURN_OFF;
+    int classicState = pimpl->classicAdapter_ ? pimpl->classicAdapter_->state : BTStateID::STATE_TURN_OFF;
+    int bleState = pimpl->bleAdapter_ ? pimpl->bleAdapter_->state : BTStateID::STATE_TURN_OFF;
 
     utility::Message msg(SysStateMachine::MSG_SYS_ADAPTER_STATE_CHANGE_REQ);
     msg.arg1_ = ((unsigned int)classicState << CLASSIC_ENABLE_STATE_BIT) + bleState;
@@ -629,14 +637,13 @@ void AdapterManager::RemoveDeviceProfileConfig(
 {
     LOG_DEBUG("%{public}s start", __PRETTY_FUNCTION__);
 
-    BTTransport otherTransport =
-        (transport == BTTransport::ADAPTER_BREDR) ? BTTransport::ADAPTER_BLE : BTTransport::ADAPTER_BREDR;
-
-    std::vector<RawAddress> otherDevices;
-    otherDevices.clear();
-
-    if (pimpl->adapters_[otherTransport] != nullptr) {
-        otherDevices = GetAdapter(otherTransport)->GetPairedDevices();
+    std::vector<RawAddress> otherDevices {};
+    std::shared_ptr<IAdapter> otherAdapter =
+        (transport == BTTransport::ADAPTER_BREDR) ?
+        static_cast<std::shared_ptr<IAdapter>>(GetBleAdapterInterface()) :
+        static_cast<std::shared_ptr<IAdapter>>(GetClassicAdapterInterface());
+    if (otherAdapter) {
+        otherDevices = otherAdapter->GetPairedDevices();
     }
 
     for (auto &device : devices) {
@@ -646,33 +653,35 @@ void AdapterManager::RemoveDeviceProfileConfig(
     }
 }
 
-void AdapterManager::CreateAdapters() const
+namespace {
+template <typename T>
+std::unique_ptr<AdapterInfo<T>> CreateAdapter(const std::string &adapterSection, const std::string &adapterName,
+    utility::Dispatcher &dispatcher, utility::IContextCallback &callback)
 {
-    static const std::array<std::pair<std::string, std::string>, TRANSPORT_MAX> adapterConfigTbl = {
-        std::make_pair(SECTION_CLASSIC_ADAPTER, ADAPTER_NAME_CLASSIC),
-        std::make_pair(SECTION_BLE_ADAPTER, ADAPTER_NAME_BLE),
-    };
-
-    for (int i = 0; i < TRANSPORT_MAX; i++) {
-        bool value = false;
-        if (AdapterConfig::GetInstance()->GetValue(adapterConfigTbl[i].first, PROPERTY_IS_VALID, value) && value) {
-            std::unique_ptr<IAdapter> adapter(ClassCreator<IAdapter>::NewInstance(adapterConfigTbl[i].second));
-            std::unique_ptr<AdapterStateMachine> stateMachine(
-                std::make_unique<AdapterStateMachine>(*pimpl->dispatcher_));
-
-            if (adapter == nullptr || stateMachine == nullptr) {
-                adapter = nullptr;
-                stateMachine = nullptr;
-                LOG_ERROR("Create %{public}s Failed!!", adapterConfigTbl[i].second.c_str());
-            } else {
-                adapter->GetContext()->Initialize();
-                adapter->GetContext()->RegisterCallback(*(pimpl->contextCallback_));
-                stateMachine->Init(*adapter);
-                pimpl->adapters_[i].reset(
-                    std::make_unique<AdapterInfo>(std::move(adapter), std::move(stateMachine)).release());
-            }
+    bool value = false;
+    std::unique_ptr<AdapterInfo<T>> adapterInfo = nullptr;
+    if (AdapterConfig::GetInstance()->GetValue(adapterSection, PROPERTY_IS_VALID, value) && value) {
+        std::shared_ptr<T> adapter(ClassCreator<T>::NewInstance(adapterName));
+        auto stateMachine = std::make_unique<AdapterStateMachine>(dispatcher);
+        if (adapter && stateMachine) {
+            adapter->GetContext()->Initialize();
+            adapter->GetContext()->RegisterCallback(callback);
+            stateMachine->Init(*adapter);
+            adapterInfo = std::make_unique<AdapterInfo<T>>(adapter, std::move(stateMachine));
+        } else {
+            LOG_ERROR("Create %{public}s failed", adapterName.c_str());
         }
     }
+    return adapterInfo;
+}
+} // namespace {}
+
+void AdapterManager::CreateAdapters() const
+{
+    pimpl->classicAdapter_ = CreateAdapter<ClassicAdapter>(
+        SECTION_CLASSIC_ADAPTER, ADAPTER_NAME_CLASSIC, *pimpl->dispatcher_, *(pimpl->contextCallback_));
+    pimpl->bleAdapter_ = CreateAdapter<BleAdapter>(
+        SECTION_BLE_ADAPTER, ADAPTER_NAME_BLE, *pimpl->dispatcher_, *(pimpl->contextCallback_));
 }
 
 int AdapterManager::GetMaxNumConnectedAudioDevices() const
@@ -792,6 +801,12 @@ void AdapterManager::RestoreTurnOnState()
             std::make_pair(PROPERTY_BREDR_TURNON, BTTransport::ADAPTER_BREDR),
         };
 
+        auto classicAdapter = GetClassicAdapterInterface();
+        if (!classicAdapter) {
+            LOG_ERROR("classicAdapter is nullptr");
+            return;
+        }
+
         while (true) {
             sleep(1);
             
@@ -812,10 +827,8 @@ void AdapterManager::RestoreTurnOnState()
                 
                 processed++;
                 if (adapterConfigTbl[i].second == BTTransport::ADAPTER_BREDR) {
-                    IAdapterClassic* adapter = static_cast<IAdapterClassic*>
-                        (IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BREDR));
-                    adapter->SetBtScanMode(SCAN_MODE_CONNECTABLE_GENERAL_DISCOVERABLE, 0);
-                    adapter->SetBondableMode(BONDABLE_MODE_ON);
+                    classicAdapter->SetBtScanMode(SCAN_MODE_CONNECTABLE_GENERAL_DISCOVERABLE, 0);
+                    classicAdapter->SetBondableMode(BONDABLE_MODE_ON);
                 }
             }
 

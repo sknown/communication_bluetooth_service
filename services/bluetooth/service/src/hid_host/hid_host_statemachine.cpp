@@ -50,8 +50,7 @@ void HidHostStateMachine::Init()
 
 void HidHostStateMachine::SetDeviceType()
 {
-    IAdapterClassic *adapterClassic = (IAdapterClassic *)(IAdapterManager::GetInstance()->
-        GetAdapter(ADAPTER_BREDR));
+    auto adapterClassic = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     if (adapterClassic != nullptr) {
         std::vector<RawAddress> devices = adapterClassic->GetPairedDevices();
         if (std::find(devices.begin(), devices.end(), RawAddress(address_)) != devices.end()) {
@@ -63,7 +62,7 @@ void HidHostStateMachine::SetDeviceType()
         }
     }
 
-    IAdapterBle *adapterBle = (IAdapterBle *)(IAdapterManager::GetInstance()->GetAdapter(ADAPTER_BLE));
+    auto adapterBle = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     if (adapterBle != nullptr) {
         std::vector<RawAddress> devices = adapterBle->GetPairedDevices();
         if (std::find(devices.begin(), devices.end(), RawAddress(address_)) != devices.end()) {

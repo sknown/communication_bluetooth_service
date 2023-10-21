@@ -76,7 +76,6 @@ constexpr uint8_t BLE_DEFAULT_SCAN_MODE = 0x03;
 constexpr uint8_t BLE_NON_RES_PRI_ADDR = 0x3F;
 constexpr uint8_t BLE_STATIC_PRI_ADDR = 0xC0;
 
-constexpr int BTM_ACL_DISCONNECT_REASON = 0x13;
 constexpr int BLE_THREAD_WAIT_TIMEOUT = 5;
 
 constexpr int BLE_CHANGE_RPA_ADDRESS_INTERVAL = 15 * 60 * 1000;
