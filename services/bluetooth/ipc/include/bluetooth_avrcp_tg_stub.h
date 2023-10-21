@@ -51,6 +51,9 @@ private:
     ErrCode NotifyAddressedPlayerChangedInner(MessageParcel &data, MessageParcel &reply);
     ErrCode NotifyUidChangedInner(MessageParcel &data, MessageParcel &reply);
     ErrCode NotifyVolumeChangedInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SetDeviceAbsoluteVolumeInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SetDeviceAbsVolumeAbilityInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode GetDeviceAbsVolumeAbilityInner(MessageParcel &data, MessageParcel &reply);
 
     bool IsInvalidAttributesSize(int32_t attributesSize);
     bool IsInvalidDeviceStatesSize(int32_t statesSize);
