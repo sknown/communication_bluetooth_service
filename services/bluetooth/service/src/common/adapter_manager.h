@@ -19,7 +19,9 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include "ble/ble_adapter.h"
 #include "bt_def.h"
+#include "classic/classic_adapter.h"
 #include "interface_adapter.h"
 #include "interface_adapter_manager.h"
 #include "util/context.h"
@@ -44,13 +46,20 @@ public:
 
     // framework function
     /**
-     * @brief Get classic adapter or ble adapter.
+     * @brief Get classic adapter interface, called in bluetooth_server.
      *
-     * @param transport Adapter transport.
-     * @return Returns Basic adapter pointer.
+     * @return Returns IAdapterClassic pointer.
      * @since 6
      */
-    IAdapter *GetAdapter(const BTTransport transport) const override;
+    std::shared_ptr<IAdapterClassic> GetClassicAdapterInterface(void) const override;
+
+    /**
+     * @brief Get ble adapter interface, called in bluetooth_server.
+     *
+     * @return Returns IAdapterBle pointer.
+     * @since 6
+     */
+    std::shared_ptr<IAdapterBle> GetBleAdapterInterface(void) const override;
 
     /**
      * @brief bluetooth adapter start.
