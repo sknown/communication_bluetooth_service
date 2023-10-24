@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2023 Huawei Device Co., Ltd.
+ * Copyright (C) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,28 +22,28 @@
 
 namespace OHOS {
 namespace Bluetooth {
-enum class FilterCheckState {
-    FILTER_CHECK_PASS,
-    FILTER_CHECK_FAIL,
+enum class MatchResult {
+    MATCH,
+    MISMATCH,
 };
 
 class BluetoothBleFilterMatcher {
 public:
     BluetoothBleFilterMatcher() = default;
     ~BluetoothBleFilterMatcher() = default;
-    static FilterCheckState MatchesScanFilters(const std::vector<bluetooth::BleScanFilterImpl> &bleScanFilters,
+    static MatchResult MatchesScanFilters(const std::vector<bluetooth::BleScanFilterImpl> &bleScanFilters,
         const BluetoothBleScanResult &result);
-    static FilterCheckState MatchesScanFilter(const bluetooth::BleScanFilterImpl &filter,
+    static MatchResult MatchesScanFilter(const bluetooth::BleScanFilterImpl &filter,
         const BluetoothBleScanResult &result);
-    static FilterCheckState MatchesAddress(const bluetooth::BleScanFilterImpl &filter,
+    static MatchResult MatchesAddress(const bluetooth::BleScanFilterImpl &filter,
         const BluetoothBleScanResult &result);
-    static FilterCheckState MatchesName(const bluetooth::BleScanFilterImpl &filter,
+    static MatchResult MatchesName(const bluetooth::BleScanFilterImpl &filter,
         const BluetoothBleScanResult &result);
-    static FilterCheckState MatchesServiceUuids(const bluetooth::BleScanFilterImpl &filter,
+    static MatchResult MatchesServiceUuids(const bluetooth::BleScanFilterImpl &filter,
         const BluetoothBleScanResult &result);
-    static FilterCheckState MatchesManufacturerDatas(const bluetooth::BleScanFilterImpl &filter,
+    static MatchResult MatchesManufacturerDatas(const bluetooth::BleScanFilterImpl &filter,
         const BluetoothBleScanResult &result);
-    static FilterCheckState MatchesServiceDatas(const bluetooth::BleScanFilterImpl &filter,
+    static MatchResult MatchesServiceDatas(const bluetooth::BleScanFilterImpl &filter,
         const BluetoothBleScanResult &result);
     static bool MatchesUuidWithMask(bluetooth::Uuid filterUuid, bluetooth::Uuid uuid, bluetooth::Uuid uuidMask);
     static std::string ParseServiceDataUUidToString(bluetooth::Uuid uuid, std::string data);

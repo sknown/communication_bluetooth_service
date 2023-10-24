@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021-2022 Huawei Device Co., Ltd.
+ * Copyright (C) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,104 +18,104 @@
 namespace OHOS {
 namespace Bluetooth {
 using namespace OHOS::bluetooth;
-FilterCheckState BluetoothBleFilterMatcher::MatchesScanFilters(
+MatchResult BluetoothBleFilterMatcher::MatchesScanFilters(
     const std::vector<bluetooth::BleScanFilterImpl> &bleScanFilters,
     const BluetoothBleScanResult &result)
 {
     // no filters equals all result pass
     if (bleScanFilters.empty()) {
-        return FilterCheckState::FILTER_CHECK_PASS;
+        return MatchResult::MATCH;
     }
 
     for (const auto &filter : bleScanFilters) {
-        if (MatchesScanFilter(filter, result) == FilterCheckState::FILTER_CHECK_PASS) {
-            return FilterCheckState::FILTER_CHECK_PASS;
+        if (MatchesScanFilter(filter, result) == MatchResult::MATCH) {
+            return MatchResult::MATCH;
         }
     }
-    return FilterCheckState::FILTER_CHECK_FAIL;
+    return MatchResult::MISMATCH;
 }
 
-FilterCheckState BluetoothBleFilterMatcher::MatchesScanFilter(
+MatchResult BluetoothBleFilterMatcher::MatchesScanFilter(
     const bluetooth::BleScanFilterImpl &filter,
     const BluetoothBleScanResult &result)
 {
-    if (MatchesAddress(filter, result) == FilterCheckState::FILTER_CHECK_FAIL) {
-        return FilterCheckState::FILTER_CHECK_FAIL;
+    if (MatchesAddress(filter, result) == MatchResult::MISMATCH) {
+        return MatchResult::MISMATCH;
     }
 
-    if (MatchesName(filter, result) == FilterCheckState::FILTER_CHECK_FAIL) {
-        return FilterCheckState::FILTER_CHECK_FAIL;
+    if (MatchesName(filter, result) == MatchResult::MISMATCH) {
+        return MatchResult::MISMATCH;
     }
 
-    if (MatchesServiceUuids(filter, result) == FilterCheckState::FILTER_CHECK_FAIL) {
-        return FilterCheckState::FILTER_CHECK_FAIL;
+    if (MatchesServiceUuids(filter, result) == MatchResult::MISMATCH) {
+        return MatchResult::MISMATCH;
     }
 
-    if (MatchesManufacturerDatas(filter, result) == FilterCheckState::FILTER_CHECK_FAIL) {
-        return FilterCheckState::FILTER_CHECK_FAIL;
+    if (MatchesManufacturerDatas(filter, result) == MatchResult::MISMATCH) {
+        return MatchResult::MISMATCH;
     }
 
-    if (MatchesServiceDatas(filter, result) == FilterCheckState::FILTER_CHECK_FAIL) {
-        return FilterCheckState::FILTER_CHECK_FAIL;
+    if (MatchesServiceDatas(filter, result) == MatchResult::MISMATCH) {
+        return MatchResult::MISMATCH;
     }
 
-    return FilterCheckState::FILTER_CHECK_PASS;
+    return MatchResult::MATCH;
 }
 
-FilterCheckState BluetoothBleFilterMatcher::MatchesAddress(const bluetooth::BleScanFilterImpl &filter,
+MatchResult BluetoothBleFilterMatcher::MatchesAddress(const bluetooth::BleScanFilterImpl &filter,
     const BluetoothBleScanResult &result)
 {
     std::string filterAddress = filter.GetDeviceId();
     // no fiilter equals all result pass
     if (filterAddress.empty()) {
-        return FilterCheckState::FILTER_CHECK_PASS;
+        return MatchResult::MATCH;
     }
 
     std::string resultAdderss = result.GetPeripheralDevice().GetAddress();
     if (resultAdderss.empty()) {
-        return FilterCheckState::FILTER_CHECK_FAIL;
+        return MatchResult::MISMATCH;
     }
 
-    return filterAddress == resultAdderss ? FilterCheckState::FILTER_CHECK_PASS : FilterCheckState::FILTER_CHECK_FAIL;
+    return filterAddress == resultAdderss ? MatchResult::MATCH : MatchResult::MISMATCH;
 }
 
-FilterCheckState BluetoothBleFilterMatcher::MatchesName(const bluetooth::BleScanFilterImpl &filter,
+MatchResult BluetoothBleFilterMatcher::MatchesName(const bluetooth::BleScanFilterImpl &filter,
     const BluetoothBleScanResult &result)
 {
     std::string filterName = filter.GetName();
     // no fiilter equals all result pass
     if (filterName.empty()) {
-        return FilterCheckState::FILTER_CHECK_PASS;
+        return MatchResult::MATCH;
     }
 
     std::string resultName = result.GetName();
     if (resultName.empty()) {
-        return FilterCheckState::FILTER_CHECK_FAIL;
+        return MatchResult::MISMATCH;
     }
 
-    return filterName == resultName ? FilterCheckState::FILTER_CHECK_PASS : FilterCheckState::FILTER_CHECK_FAIL;
+    return filterName == resultName ? MatchResult::MATCH : MatchResult::MISMATCH;
 }
 
-FilterCheckState BluetoothBleFilterMatcher::MatchesServiceUuids(const bluetooth::BleScanFilterImpl &filter,
+MatchResult BluetoothBleFilterMatcher::MatchesServiceUuids(const bluetooth::BleScanFilterImpl &filter,
     const BluetoothBleScanResult &result)
 {
     // no fiilter equals all result pass
     if (!filter.HasServiceUuid()) {
-        return FilterCheckState::FILTER_CHECK_PASS;
+        return MatchResult::MATCH;
     }
     bluetooth::Uuid filterUuid = filter.GetServiceUuid();
 
     std::vector<bluetooth::Uuid> resultUuids = result.GetServiceUuids();
     // if filter needs but result is empty means fail
     if (resultUuids.empty()) {
-        return FilterCheckState::FILTER_CHECK_FAIL;
+        return MatchResult::MISMATCH;
     }
 
     for (auto &uuid : resultUuids) {
         // mask means filter = result
         if (!filter.HasServiceUuidMask()) {
             if (filterUuid.operator == (uuid)) {
-                return FilterCheckState::FILTER_CHECK_PASS;
+                return MatchResult::MATCH;
             }
         }
 
@@ -123,14 +123,14 @@ FilterCheckState BluetoothBleFilterMatcher::MatchesServiceUuids(const bluetooth:
         if (filter.HasServiceUuidMask()) {
             bluetooth::Uuid uuidMask = filter.GetServiceUuidMask();
             if (MatchesUuidWithMask(filterUuid, uuid, uuidMask)) {
-            return FilterCheckState::FILTER_CHECK_PASS;
+            return MatchResult::MATCH;
             }
         }
     }
-    return FilterCheckState::FILTER_CHECK_FAIL;
+    return MatchResult::MISMATCH;
 }
 
-FilterCheckState BluetoothBleFilterMatcher::MatchesManufacturerDatas(const bluetooth::BleScanFilterImpl &filter,
+MatchResult BluetoothBleFilterMatcher::MatchesManufacturerDatas(const bluetooth::BleScanFilterImpl &filter,
     const BluetoothBleScanResult &result)
 {
     uint16_t filterManufacturerId = filter.GetManufacturerId();
@@ -138,43 +138,43 @@ FilterCheckState BluetoothBleFilterMatcher::MatchesManufacturerDatas(const bluet
     std::vector<uint8_t> fiilterDataMask = filter.GetManufactureDataMask();
     // no fiilter equals all result pass
     if (filterData.size() == 0) {
-        return FilterCheckState::FILTER_CHECK_PASS;
+        return MatchResult::MATCH;
     }
     // if filter needs but result is empty means fail
     if (result.GetManufacturerData().empty()) {
-        return FilterCheckState::FILTER_CHECK_FAIL;
+        return MatchResult::MISMATCH;
     }
 
     for (auto &resultManufacturerData : result.GetManufacturerData()) {
         // if ManufacturerId same then check data
         if (filterManufacturerId == resultManufacturerData.first) {
             bool result = MatchesData(filterData, resultManufacturerData.second, fiilterDataMask);
-            return result ? FilterCheckState::FILTER_CHECK_PASS : FilterCheckState::FILTER_CHECK_FAIL;
+            return result ? MatchResult::MATCH : MatchResult::MISMATCH;
         }
     }
-    return FilterCheckState::FILTER_CHECK_FAIL;
+    return MatchResult::MISMATCH;
 }
 
-FilterCheckState BluetoothBleFilterMatcher::MatchesServiceDatas(const bluetooth::BleScanFilterImpl &filter,
+MatchResult BluetoothBleFilterMatcher::MatchesServiceDatas(const bluetooth::BleScanFilterImpl &filter,
     const BluetoothBleScanResult &result)
 {
     std::vector<uint8_t> filterData = filter.GetServiceData();
     std::vector<uint8_t> dataMask = filter.GetServiceDataMask();
     // no Filter equals all result pass
     if (filterData.size() == 0) {
-        return FilterCheckState::FILTER_CHECK_PASS;
+        return MatchResult::MATCH;
     }
     // if filter needs but result is empty means fail
     if (result.GetServiceData().empty()) {
-        return FilterCheckState::FILTER_CHECK_FAIL;
+        return MatchResult::MISMATCH;
     }
     for (auto &serviceData : result.GetServiceData()) {
         std::string resultData = ParseServiceDataUUidToString(serviceData.first, serviceData.second);
         if (MatchesData(filterData, resultData, dataMask)) {
-            return FilterCheckState::FILTER_CHECK_PASS;
+            return MatchResult::MATCH;
         }
     }
-    return FilterCheckState::FILTER_CHECK_FAIL;
+    return MatchResult::MISMATCH;
 }
 
 bool BluetoothBleFilterMatcher::MatchesUuidWithMask(bluetooth::Uuid filterUuid,

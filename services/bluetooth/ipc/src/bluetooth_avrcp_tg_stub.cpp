@@ -63,6 +63,12 @@ BluetoothAvrcpTgStub::BluetoothAvrcpTgStub()
         &BluetoothAvrcpTgStub::NotifyUidChangedInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_NOTIFY_VOLUME_CHANGED)] =
         &BluetoothAvrcpTgStub::NotifyVolumeChangedInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_SET_DEVICE_ABSOLUTE_VOLUME)] =
+        &BluetoothAvrcpTgStub::SetDeviceAbsoluteVolumeInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_SET_DEVICE_ABS_VOLUME_ABILITY)] =
+        &BluetoothAvrcpTgStub::SetDeviceAbsVolumeAbilityInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothAvrcpTgInterfaceCode::BT_AVRCP_TG_GET_DEVICE_ABS_VOLUME_ABILITY)] =
+        &BluetoothAvrcpTgStub::GetDeviceAbsVolumeAbilityInner;
 }
 
 BluetoothAvrcpTgStub::~BluetoothAvrcpTgStub()
@@ -333,6 +339,54 @@ ErrCode BluetoothAvrcpTgStub::NotifyVolumeChangedInner(MessageParcel &data, Mess
     int32_t volume = data.ReadInt32();
 
     NotifyVolumeChanged(volume);
+    return NO_ERROR;
+}
+
+ErrCode BluetoothAvrcpTgStub::SetDeviceAbsoluteVolumeInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("enter");
+    std::shared_ptr<BluetoothRawAddress> addr(data.ReadParcelable<BluetoothRawAddress>());
+    if (!addr) {
+        return BT_ERROR_IPC_TRANS_FAILED;
+    }
+    int32_t volumeLevel = data.ReadInt32();
+
+    int32_t result = SetDeviceAbsoluteVolume(*addr, volumeLevel);
+    if (!reply.WriteInt32(result)) {
+        return BT_ERROR_IPC_TRANS_FAILED;
+    }
+    return NO_ERROR;
+}
+ErrCode BluetoothAvrcpTgStub::SetDeviceAbsVolumeAbilityInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("enter");
+    std::shared_ptr<BluetoothRawAddress> addr(data.ReadParcelable<BluetoothRawAddress>());
+    if (!addr) {
+        return BT_ERROR_IPC_TRANS_FAILED;
+    }
+    int32_t ability = data.ReadInt32();
+    int32_t result = SetDeviceAbsVolumeAbility(*addr, ability);
+    if (!reply.WriteInt32(result)) {
+        return BT_ERROR_IPC_TRANS_FAILED;
+    }
+    return NO_ERROR;
+}
+ErrCode BluetoothAvrcpTgStub::GetDeviceAbsVolumeAbilityInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("enter");
+    std::shared_ptr<BluetoothRawAddress> addr(data.ReadParcelable<BluetoothRawAddress>());
+    if (!addr) {
+        return BT_ERROR_IPC_TRANS_FAILED;
+    }
+    int32_t ability = 0;
+    int32_t result = GetDeviceAbsVolumeAbility(*addr, ability);
+    if (!reply.WriteInt32(result)) {
+        return BT_ERROR_IPC_TRANS_FAILED;
+    }
+
+    if (!reply.WriteInt32(ability)) {
+        return BT_ERROR_IPC_TRANS_FAILED;
+    }
     return NO_ERROR;
 }
 
