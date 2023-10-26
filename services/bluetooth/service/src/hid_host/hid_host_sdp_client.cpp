@@ -18,6 +18,7 @@
 #include "hid_host_service.h"
 #include "hid_host_sdp_client.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 HidHostSdpClient::HidHostSdpClient(std::string address)

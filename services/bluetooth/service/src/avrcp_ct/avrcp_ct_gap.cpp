@@ -17,6 +17,7 @@
 #include "avrcp_ct_internal.h"
 #include "gap_if.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 AvrcCtGapManager::AvrcCtGapManager()

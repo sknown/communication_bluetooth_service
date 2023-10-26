@@ -14,6 +14,7 @@
  */
 #include "../include/ble_scan_filter_lsf.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 BleScanFilterLsf::BleScanFilterLsf()

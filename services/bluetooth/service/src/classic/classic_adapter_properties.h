@@ -313,11 +313,11 @@ private:
 
     int cod_ {DEFAULT_CLASS_OF_DEVICE};
     std::string passkey_ {DEFAULT_PASSKEY};
-    int bondableMode_ {INVALID_VALUE};
+    int bondableMode_ {Bluetooth::INVALID_VALUE};
     int securityMode_ {SEC_MODE_2};
     int ioCapability_ {GAP_IO_DISPLAYYESNO};
     int discoverableTimeout_ {DEFAULT_SCANMODE_DURATION_MILLIS};
-    std::string macAddr_ {INVALID_MAC_ADDRESS};
+    std::string macAddr_ {Bluetooth::INVALID_MAC_ADDRESS};
     std::string deviceName_ {DEFAULT_DEVICE_NAME};
     std::vector<Uuid> uuids_ {};
     BaseObserverList<IAdapterClassicObserver> adapterObservers_ {};

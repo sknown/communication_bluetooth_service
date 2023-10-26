@@ -144,7 +144,7 @@ private:
     // The playing state of device.
     bool isPlaying_ = false;
     // The connection state of device.
-    int currentConnectState_ = static_cast<int>(BTConnectState::DISCONNECTED);
+    int currentConnectState_ = static_cast<int>(Bluetooth::BTConnectState::DISCONNECTED);
     // The pointer of device's state machine.
     A2dpStateManager state_ {};
 };

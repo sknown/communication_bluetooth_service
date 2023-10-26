@@ -19,6 +19,7 @@
 #include "a2dp_source.h"
 #include "log.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 bool A2dpDisconnected::Dispatch(const utility::Message &msg)

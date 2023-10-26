@@ -20,6 +20,7 @@
 #include "gatt_service_base.h"
 #include "log.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 struct GattServerProfile::impl {

@@ -186,7 +186,7 @@ protected:
     uint8_t pduId_ {AVRC_CT_PDU_ID_INVALID};                         // The value of the "PDU ID".
     uint8_t packetType_ {AVRC_CT_VENDOR_PACKET_TYPE};                // The value of the "Packet type".
     uint16_t parameterLength_ {AVRC_CT_VENDOR_PARAMETER_LENGTH};     // The value of the "Parameter Length".
-    uint8_t status_ {AVRC_ES_CODE_INVALID};                          // The value of the "Status".
+    uint8_t status_ {Bluetooth::AVRC_ES_CODE_INVALID};                          // The value of the "Status".
     uint8_t receivedFragments_ {AVRC_CT_VENDOR_RECEIVED_FRAGMENTS};  // The value of the received fragments.
     Packet *pkt_ {nullptr};                                          // The frame packet.
     bool isValid_ {false};                                           // The frame packet is valid or not.
@@ -594,9 +594,9 @@ public:
     }
 
 private:
-    uint32_t songLength_ {AVRC_PLAY_STATUS_INVALID_SONG_LENGTH};      // The value of the "SongLength".
-    uint32_t songPosition_ {AVRC_PLAY_STATUS_INVALID_SONG_POSITION};  // The value of the "SongPosition".
-    uint8_t playStatus_ {AVRC_PLAY_STATUS_ERROR};                     // The value of the "PlayStatus".
+    uint32_t songLength_ {Bluetooth::AVRC_PLAY_STATUS_INVALID_SONG_LENGTH};      // The value of the "SongLength".
+    uint32_t songPosition_ {Bluetooth::AVRC_PLAY_STATUS_INVALID_SONG_POSITION};  // The value of the "SongPosition".
+    uint8_t playStatus_ {Bluetooth::AVRC_PLAY_STATUS_ERROR};                     // The value of the "PlayStatus".
 };
 
 /******************************************************************
@@ -772,7 +772,8 @@ public:
     }
 
 private:
-    uint8_t scope_ {AVRC_MEDIA_SCOPE_INVALID};          // The scope in which media content navigation may take place.
+    // The scope in which media content navigation may take place.
+    uint8_t scope_ {Bluetooth::AVRC_MEDIA_SCOPE_INVALID};
     uint64_t uid_ {AVRC_CT_VENDOR_UID};                 // The uid in the frame.
     uint16_t uidCounter_ {AVRC_CT_VENDOR_UID_COUNTER};  // The uid counter in the frame.
 
@@ -869,7 +870,7 @@ public:
     }
 
 private:
-    uint8_t scope_ {AVRC_MEDIA_SCOPE_INVALID};          // The value of the "Scope".
+    uint8_t scope_ {Bluetooth::AVRC_MEDIA_SCOPE_INVALID};          // The value of the "Scope".
     uint64_t uid_ {AVRC_CT_VENDOR_UID};                 // The value of the "UID".
     uint16_t uidCounter_ {AVRC_CT_VENDOR_UID_COUNTER};  // The value of the "UID Counter".
 
@@ -964,7 +965,7 @@ public:
     }
 
 private:
-    uint8_t volume_ {AVRC_ABSOLUTE_VOLUME_INVALID};  // The value of the "Absolute Volume".
+    uint8_t volume_ {Bluetooth::AVRC_ABSOLUTE_VOLUME_INVALID};  // The value of the "Absolute Volume".
 
     /**
      * @brief A constructor used to create an <b>AvrcCtSavPacket</b> instance.

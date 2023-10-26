@@ -28,6 +28,7 @@
 #include "raw_address.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 const int CODEC_SBC_TYPE_INDEX = 2;

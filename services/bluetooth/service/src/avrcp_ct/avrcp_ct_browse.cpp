@@ -17,6 +17,7 @@
 
 #include "avrcp_ct_browse.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 /******************************************************************

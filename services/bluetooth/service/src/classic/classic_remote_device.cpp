@@ -19,6 +19,7 @@
 #include "log.h"
 #include "log_util.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 ClassicRemoteDevice::ClassicRemoteDevice()

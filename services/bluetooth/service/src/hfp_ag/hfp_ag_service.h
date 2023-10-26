@@ -759,10 +759,10 @@ private:
 
     // const state map
     const std::map<const int, const int> stateMap_ = {
-        {HFP_AG_STATE_DISCONNECTED, static_cast<int>(BTConnectState::DISCONNECTED)},
-        {HFP_AG_STATE_CONNECTING, static_cast<int>(BTConnectState::CONNECTING)},
-        {HFP_AG_STATE_DISCONNECTING, static_cast<int>(BTConnectState::DISCONNECTING)},
-        {HFP_AG_STATE_CONNECTED, static_cast<int>(BTConnectState::CONNECTED)}
+        {HFP_AG_STATE_DISCONNECTED, static_cast<int>(Bluetooth::BTConnectState::DISCONNECTED)},
+        {HFP_AG_STATE_CONNECTING, static_cast<int>(Bluetooth::BTConnectState::CONNECTING)},
+        {HFP_AG_STATE_DISCONNECTING, static_cast<int>(Bluetooth::BTConnectState::DISCONNECTING)},
+        {HFP_AG_STATE_CONNECTED, static_cast<int>(Bluetooth::BTConnectState::CONNECTED)}
     };
 
     int mockState_ {0};

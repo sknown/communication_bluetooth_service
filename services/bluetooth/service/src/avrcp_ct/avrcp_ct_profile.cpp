@@ -26,6 +26,7 @@
 #include "compat.h"
 #include "power_manager.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 bool AvrcCtProfile::g_isEnabled = false;

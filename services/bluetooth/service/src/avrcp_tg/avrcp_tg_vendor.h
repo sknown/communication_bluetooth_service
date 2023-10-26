@@ -699,7 +699,7 @@ public:
 private:
     uint32_t songLength_ {AVRC_PLAY_STATUS_INVALID_SONG_LENGTH};      // The value of the "SongLength".
     uint32_t songPosition_ {AVRC_PLAY_STATUS_INVALID_SONG_POSITION};  // The value of the "SongPosition".
-    uint8_t playStatus_ {AVRC_PLAY_STATUS_ERROR};                     // The value of the "PlayStatus".
+    uint8_t playStatus_ {Bluetooth::AVRC_PLAY_STATUS_ERROR};                     // The value of the "PlayStatus".
 
     /**
      * @brief A constructor used to create an <b>AvrcTgGpsPacket</b> instance.
@@ -1157,7 +1157,7 @@ public:
     }
 
 private:
-    uint8_t volume_ {AVRC_ABSOLUTE_VOLUME_INVALID};  // The value of the "Absolute Volume".
+    uint8_t volume_ {Bluetooth::AVRC_ABSOLUTE_VOLUME_INVALID};  // The value of the "Absolute Volume".
 
     /**
      * @brief A constructor used to create an <b>AvrcTgSavPacket</b> instance.

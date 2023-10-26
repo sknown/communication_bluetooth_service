@@ -331,7 +331,7 @@ void ObexPrivateServer::Shutdown() const
 int ObexPrivateServer::RemoveSession(ObexServerSession &session) const
 {
     if (serverSessionsMap_.find(&session.GetTransport()) == serverSessionsMap_.end()) {
-        return RET_NO_SUPPORT;
+        return Bluetooth::RET_NO_SUPPORT;
     }
     return serverTransport_->Disconnect(session.GetTransport());
 }

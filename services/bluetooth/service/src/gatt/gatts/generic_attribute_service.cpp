@@ -23,6 +23,7 @@
 #include "log.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 const size_t GenericAttributeService::CLIENT_CHARACTERISTIC_CONFIGURATION_VALUE_LENGTH = 0x02;

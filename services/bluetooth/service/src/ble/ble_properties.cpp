@@ -24,6 +24,7 @@
 #include "raw_address.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 struct BleProperties::impl {

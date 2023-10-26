@@ -17,6 +17,7 @@
 
 #include "bluetooth_errorcode.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 HidHostService::HidHostService() : utility::Context(PROFILE_NAME_HID_HOST, "1.1.1")

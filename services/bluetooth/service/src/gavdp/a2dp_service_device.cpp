@@ -19,6 +19,7 @@
 #include "log.h"
 #include "memory.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 std::recursive_mutex g_deviceMutex {};

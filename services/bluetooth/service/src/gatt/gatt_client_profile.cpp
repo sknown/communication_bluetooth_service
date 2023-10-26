@@ -22,6 +22,7 @@
 #include "log.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 struct GattClientProfile::impl {

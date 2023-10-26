@@ -22,6 +22,7 @@
 #include "gatt_defines.h"
 #include "openssl/md4.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 using GattAttributeEntity = std::optional<std::reference_wrapper<GattDatabase::AttributeEntity>>;

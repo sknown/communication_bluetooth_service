@@ -800,7 +800,7 @@ private:
      * @param device Remote device.
      * @param status Pair status.
      */
-    void SendPairStatusChanged(const BTTransport transport, const RawAddress &device, int status) const;
+    void SendPairStatusChanged(const Bluetooth::BTTransport transport, const RawAddress &device, int status) const;
 
     /**
      * @brief Send pair request.
@@ -808,7 +808,7 @@ private:
      * @param transport Remote device transport.
      * @param device Remote device.
      */
-    void SendPairRequested(const BTTransport transport, const RawAddress &device) const;
+    void SendPairRequested(const Bluetooth::BTTransport transport, const RawAddress &device) const;
 
     /**
      * @brief Send pair confirmed.
@@ -1067,7 +1067,7 @@ private:
     bool waitPairResult_ {};
     uint16_t searchUuid_ {};
     std::vector<Uuid> uuids_ {};
-    std::string remoteNameAddr_ {INVALID_MAC_ADDRESS};
+    std::string remoteNameAddr_ {Bluetooth::INVALID_MAC_ADDRESS};
     std::map<std::string, std::shared_ptr<ClassicRemoteDevice>> devices_ {};
     BtmAclCallbacks btmAclCbs_ {};
     ClassicBluetoothData eirData_ {};

@@ -64,7 +64,7 @@ public:
     /**
      * @brief A constructor used to create an <b>AvrcCtNotifyPacket</b> instance.
      */
-    explicit AvrcCtNotifyPacket(uint8_t eventId, uint32_t interval = AVRC_PLAYBACK_INTERVAL_1_SEC);
+    explicit AvrcCtNotifyPacket(uint8_t eventId, uint32_t interval = Bluetooth::AVRC_PLAYBACK_INTERVAL_1_SEC);
 
     /**
      * @brief A constructor used to create an <b>AvrcCtNotifyPacket</b> instance.
@@ -229,8 +229,8 @@ public:
 
 private:
     uint8_t eventId_ {AVRC_CT_EVENT_ID_RESERVED};              // The value of the "EventID".
-    uint32_t interval_ {AVRC_PLAYBACK_INTERVAL_1_SEC};         // The value of the "Playback interval".
-    uint8_t playStatus_ {AVRC_PLAY_STATUS_ERROR};              // The value of the "PlayStatus".
+    uint32_t interval_ {Bluetooth::AVRC_PLAYBACK_INTERVAL_1_SEC};         // The value of the "Playback interval".
+    uint8_t playStatus_ {Bluetooth::AVRC_PLAY_STATUS_ERROR};              // The value of the "PlayStatus".
     uint64_t uid_ {AVRC_CT_VENDOR_UID};                        // The value of the "Identifier".
     uint32_t playbackPos_ {AVRC_CT_NOTIFY_PLAYBACK_POSITION};  // The value of the "Playback position".
     std::vector<uint8_t> attributes_ {};
@@ -238,7 +238,7 @@ private:
     std::vector<uint8_t> values_ {};                           // The value of the "PlayerApplicationSettingValueID".
     uint16_t playerId_ {AVRC_CT_NOTIFY_PLAYER_ID};             // The value of the "Player Id".
     uint16_t uidCounter_ {AVRC_CT_VENDOR_UID_COUNTER};         // The value of the "UID Counter".
-    uint8_t volume_ {AVRC_ABSOLUTE_VOLUME_INVALID};            // The value of the "Absolute Volume".
+    uint8_t volume_ {Bluetooth::AVRC_ABSOLUTE_VOLUME_INVALID};            // The value of the "Absolute Volume".
 
     /**
      * @brief Disassembles the operands behind the "Packet Type" of the frame.

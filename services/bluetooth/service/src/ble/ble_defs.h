@@ -420,7 +420,7 @@ typedef enum {
 /// Ble scan parameters
 typedef struct {
     BLE_SCAN_TYPE scanType;            /// Scan type
-    BLE_ADDR_TYPE ownAddrType;         /// Owner address type
+    Bluetooth::BLE_ADDR_TYPE ownAddrType;         /// Owner address type
     BLE_SCAN_FILTER scanFilterPolicy;  /// Scan filter policy
     uint16_t scanInterval;             /// Scan interval. This is defined as the time interval from
     /// when the Controller started its last LE scan until it begins the subsequent LE scan.
@@ -481,9 +481,9 @@ typedef struct {
     /// Range: 0x0020 to 0x4000 Default: N = 0x0800 (1.28 second)
     /// Time = N * 0.625 msec Time Range: 20 ms to 10.24 sec Advertising max interval
     BLE_ADV_TYPE advType;            /// Advertising type
-    BLE_ADDR_TYPE ownAddrType;       /// Owner bluetooth device address type
+    Bluetooth::BLE_ADDR_TYPE ownAddrType;       /// Owner bluetooth device address type
     BtAddr peerAddr;                 /// Peer device bluetooth device address
-    BLE_ADDR_TYPE peerAddrType;      /// Peer device bluetooth device address type
+    Bluetooth::BLE_ADDR_TYPE peerAddrType;      /// Peer device bluetooth device address type
     BLE_ADV_CHANNEL channelMap;      /// Advertising channel map
     BLE_ADV_FILTER advFilterPolicy;  /// Advertising filter policy
 } BleAdvParams;

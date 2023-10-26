@@ -472,7 +472,7 @@ int BluetoothGattServerServer::RegisterApplication(const sptr<IBluetoothGattServ
     pimpl->serverService_ = pimpl->GetServicePtr();
     if (!pimpl->serverService_) {
         HILOGE("serverService_ is null");
-        return bluetooth::GattStatus::REQUEST_NOT_SUPPORT;
+        return GattStatus::REQUEST_NOT_SUPPORT;
     }
 
     auto it = pimpl->callbacks_.emplace(

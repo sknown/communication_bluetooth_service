@@ -16,6 +16,7 @@
 #include "sdp.h"
 #include "avrcp_ct_sdp.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 /// Number of items when add service class id list.

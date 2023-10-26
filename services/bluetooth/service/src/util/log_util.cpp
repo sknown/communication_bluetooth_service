@@ -19,6 +19,7 @@
 
 
 using namespace std;
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 constexpr int startPos = 6;

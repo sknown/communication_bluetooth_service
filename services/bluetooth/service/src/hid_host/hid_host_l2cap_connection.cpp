@@ -16,6 +16,7 @@
 #include "hid_host_l2cap_connection.h"
 #include "hid_host_service.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 int HidHostL2capConnection::Startup()

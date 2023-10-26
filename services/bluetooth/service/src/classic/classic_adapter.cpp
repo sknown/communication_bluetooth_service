@@ -29,6 +29,7 @@
 #include "interface_profile_manager.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 struct ClassicAdapter::impl {

@@ -18,6 +18,7 @@
 #include "avrcp_ct_vendor_player_application_settings.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 /******************************************************************

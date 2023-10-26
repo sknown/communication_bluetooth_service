@@ -17,6 +17,7 @@
 #include "bt_def.h"
 #include "gatt_defines.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 using Descriptors = std::pair<std::map<uint16_t, GattCache::Descriptor> *, uint16_t>;

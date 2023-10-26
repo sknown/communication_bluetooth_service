@@ -60,7 +60,7 @@ public:
      * @param state Change to the new state.
      * @since 6
      */
-    virtual void OnStateChange(const BTTransport transport, const BTStateID state) = 0;
+    virtual void OnStateChange(const Bluetooth::BTTransport transport, const Bluetooth::BTStateID state) = 0;
 };
 
 /**
@@ -159,7 +159,7 @@ public:
      *         returns <b>false</b> if the operation is rejected.
      * @since 6
      */
-    virtual bool Enable(const BTTransport transport) const = 0;
+    virtual bool Enable(const Bluetooth::BTTransport transport) const = 0;
 
     /**
      * @brief Disable bluetooth service.
@@ -169,7 +169,7 @@ public:
      *         returns <b>false</b> if the operation is rejected.
      * @since 6
      */
-    virtual bool Disable(const BTTransport transport) const = 0;
+    virtual bool Disable(const Bluetooth::BTTransport transport) const = 0;
 
     /**
      * @brief Get adapter enable/disable state.
@@ -178,7 +178,7 @@ public:
      * @return Returns adapter enable/disable state.
      * @since 6
      */
-    virtual BTStateID GetState(const BTTransport transport) const = 0;
+    virtual Bluetooth::BTStateID GetState(const Bluetooth::BTTransport transport) const = 0;
 
     /**
      * @brief Get adapter connects state.
@@ -186,7 +186,7 @@ public:
      * @return Returns adapter connects state.
      * @since 6
      */
-    virtual BTConnectState GetAdapterConnectState() const = 0;
+    virtual Bluetooth::BTConnectState GetAdapterConnectState() const = 0;
 
     /**
      * @brief Register adapter state observer.
@@ -245,7 +245,7 @@ public:
      *         returns <b>false</b> if the operation fails.
      * @since 6
      */
-    virtual bool SetPhonebookPermission(const std::string &address, BTPermissionType permission) const = 0;
+    virtual bool SetPhonebookPermission(const std::string &address, Bluetooth::BTPermissionType permission) const = 0;
 
     /**
      * @brief Get phonebook permission for device.
@@ -254,7 +254,7 @@ public:
      * @return Returns Permission grade.
      * @since 6
      */
-    virtual BTPermissionType GetPhonebookPermission(const std::string &address) const = 0;
+    virtual Bluetooth::BTPermissionType GetPhonebookPermission(const std::string &address) const = 0;
 
     /**
      * @brief Set message permission for device.
@@ -265,7 +265,7 @@ public:
      *         returns <b>false</b> if the operation fails.
      * @since 6
      */
-    virtual bool SetMessagePermission(const std::string &address, BTPermissionType permission) const = 0;
+    virtual bool SetMessagePermission(const std::string &address, Bluetooth::BTPermissionType permission) const = 0;
 
     /**
      * @brief Get message permission for device.
@@ -274,7 +274,7 @@ public:
      * @return Returns Permission grade.
      * @since 6
      */
-    virtual BTPermissionType GetMessagePermission(const std::string &address) const = 0;
+    virtual Bluetooth::BTPermissionType GetMessagePermission(const std::string &address) const = 0;
 
     /**
      * @brief Get classic adapter.

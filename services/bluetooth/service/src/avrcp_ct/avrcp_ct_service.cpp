@@ -19,6 +19,7 @@
 #include "class_creator.h"
 #include "profile_service_manager.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 AvrcpCtService::AvrcpCtService() : utility::Context(PROFILE_NAME_AVRCP_CT, "1.6.2")

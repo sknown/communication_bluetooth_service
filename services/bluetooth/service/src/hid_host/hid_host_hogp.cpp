@@ -16,6 +16,7 @@
 #include "hid_host_hogp.h"
 #include "hid_host_service.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 HidHostHogp::HidHostHogp(const std::string &address) : address_(address)

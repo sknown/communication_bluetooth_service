@@ -129,10 +129,10 @@ private:
     std::map<const std::string, std::unique_ptr<HidHostStateMachine>> stateMachines_ {};
     // const state map
     const std::map<const int, const int> stateMap_ = {
-        {HID_HOST_STATE_DISCONNECTED, static_cast<int>(BTConnectState::DISCONNECTED)},
-        {HID_HOST_STATE_CONNECTING, static_cast<int>(BTConnectState::CONNECTING)},
-        {HID_HOST_STATE_DISCONNECTING, static_cast<int>(BTConnectState::DISCONNECTING)},
-        {HID_HOST_STATE_CONNECTED, static_cast<int>(BTConnectState::CONNECTED)}
+        {HID_HOST_STATE_DISCONNECTED, static_cast<int>(Bluetooth::BTConnectState::DISCONNECTED)},
+        {HID_HOST_STATE_CONNECTING, static_cast<int>(Bluetooth::BTConnectState::CONNECTING)},
+        {HID_HOST_STATE_DISCONNECTING, static_cast<int>(Bluetooth::BTConnectState::DISCONNECTING)},
+        {HID_HOST_STATE_CONNECTED, static_cast<int>(Bluetooth::BTConnectState::CONNECTED)}
     };
 };
 }  // namespace bluetooth

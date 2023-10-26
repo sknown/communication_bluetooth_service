@@ -30,6 +30,7 @@
 #include "log_util.h"
 #include "power_manager.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 struct ServerApplication {

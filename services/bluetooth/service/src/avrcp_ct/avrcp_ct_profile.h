@@ -861,7 +861,7 @@ public:
      * notified.
      */
     void EnableNotification(const RawAddress &rawAddr, const std::vector<uint8_t> &events,
-        uint32_t interval = AVRC_PLAYBACK_INTERVAL_1_SEC);
+        uint32_t interval = Bluetooth::AVRC_PLAYBACK_INTERVAL_1_SEC);
 
     /**
      * @brief Sends the command of the <b>RegisterNotification</b>.

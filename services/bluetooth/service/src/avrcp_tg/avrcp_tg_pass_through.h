@@ -200,7 +200,7 @@ private:
     uint8_t subunitId_ {AVRC_TG_AVC_COMMON_SUBUNIT_ID};      // The value of the "Subunit_ID".
     uint8_t opCode_ {AVRC_TG_OP_CODE_PASS_THROUGH};          // The value of the "Opcode".
     uint8_t stateFlag_ {AVRC_KEY_STATE_INVALID};             // The value of the "State flag".
-    uint8_t operationId_ {AVRC_KEY_OPERATION_INVALID};       // The value of the "Operation_ID".
+    uint8_t operationId_ {Bluetooth::AVRC_KEY_OPERATION_INVALID};       // The value of the "Operation_ID".
     uint8_t operationDataFieldLength_ {AVRC_TG_PASS_OPERATION_DATA_FIELD_LENGTH};
     // The value of the "Operation_data_field_length".
     Packet *pkt_ {nullptr};                          // The frame packet.

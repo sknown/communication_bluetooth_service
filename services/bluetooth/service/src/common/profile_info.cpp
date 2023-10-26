@@ -20,6 +20,7 @@
 #include "adapter_config.h"
 #include "interface_profile.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 const std::vector<ProfileInfo> SupportProfilesInfo::SUPPORT_FILES = {

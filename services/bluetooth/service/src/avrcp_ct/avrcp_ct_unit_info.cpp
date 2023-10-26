@@ -15,6 +15,7 @@
 
 #include "avrcp_ct_unit_info.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 AvrcCtUnitPacket::AvrcCtUnitPacket(void)
