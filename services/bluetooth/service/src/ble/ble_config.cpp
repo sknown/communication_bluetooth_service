@@ -19,6 +19,7 @@
 #include "log.h"
 #include "xml_parse.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 BleConfig &BleConfig::GetInstance()

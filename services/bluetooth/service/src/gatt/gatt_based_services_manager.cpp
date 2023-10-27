@@ -19,6 +19,7 @@
 #include "bt_def.h"
 #include "log.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 GattBasedServicesManager::GattBasedServicesManager(GattServerService &server, utility::Dispatcher &dispatcher)

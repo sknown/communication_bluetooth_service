@@ -101,7 +101,7 @@ public:
      *         returns <b>false</b> if the operation is rejected.
      * @since 6
      */
-    bool Enable(const BTTransport transport) const override;
+    bool Enable(const Bluetooth::BTTransport transport) const override;
 
     /**
      * @brief Disable bluetooth service.
@@ -111,7 +111,7 @@ public:
      *         returns <b>false</b> if the operation is rejected.
      * @since 6
      */
-    bool Disable(const BTTransport transport) const override;
+    bool Disable(const Bluetooth::BTTransport transport) const override;
 
     /**
      * @brief Get adapter enable/disable state.
@@ -120,7 +120,7 @@ public:
      * @return Returns adapter enable/disable state.
      * @since 6
      */
-    BTStateID GetState(const BTTransport transport) const override;
+    Bluetooth::BTStateID GetState(const Bluetooth::BTTransport transport) const override;
 
     /**
      * @brief Get adapter connects state.
@@ -128,7 +128,7 @@ public:
      * @return Returns adapter connects state.
      * @since 6
      */
-    BTConnectState GetAdapterConnectState() const override;
+    Bluetooth::BTConnectState GetAdapterConnectState() const override;
 
     /**
      * @brief Register adapter state observer.
@@ -187,7 +187,7 @@ public:
      *         returns <b>false</b> if the operation fails.
      * @since 6
      */
-    bool SetPhonebookPermission(const std::string &address, BTPermissionType permission) const override;
+    bool SetPhonebookPermission(const std::string &address, Bluetooth::BTPermissionType permission) const override;
 
     /**
      * @brief Get phonebook permission for device.
@@ -196,7 +196,7 @@ public:
      * @return Returns permission grade.
      * @since 6
      */
-    BTPermissionType GetPhonebookPermission(const std::string &address) const override;
+    Bluetooth::BTPermissionType GetPhonebookPermission(const std::string &address) const override;
 
     /**
      * @brief Set message permission for device.
@@ -207,7 +207,7 @@ public:
      *         returns <b>false</b> if the operation fails.
      * @since 6
      */
-    bool SetMessagePermission(const std::string &address, BTPermissionType permission) const override;
+    bool SetMessagePermission(const std::string &address, Bluetooth::BTPermissionType permission) const override;
 
     /**
      * @brief Get message permission for device.
@@ -216,7 +216,7 @@ public:
      * @return Returns Permission grade.
      * @since 6
      */
-    BTPermissionType GetMessagePermission(const std::string &address) const override;
+    Bluetooth::BTPermissionType GetMessagePermission(const std::string &address) const override;
 
     /**
      * @brief Get power mode.
@@ -273,7 +273,7 @@ public:
      * @param state Change to a new state.
      * @since 6
      */
-    void OnAdapterStateChange(const BTTransport transport, const BTStateID state) const;
+    void OnAdapterStateChange(const Bluetooth::BTTransport transport, const Bluetooth::BTStateID state) const;
 
     /**
      * @brief Profile services enable complete notify.
@@ -282,7 +282,7 @@ public:
      * @param ret Profile services enable operation result.
      * @since 6
      */
-    void OnProfileServicesEnableComplete(const BTTransport transport, const bool ret) const;
+    void OnProfileServicesEnableComplete(const Bluetooth::BTTransport transport, const bool ret) const;
 
     /**
      * @brief Profile services disable complete notify.
@@ -291,7 +291,7 @@ public:
      * @param ret Profile services disable operation result.
      * @since 6
      */
-    void OnProfileServicesDisableComplete(const BTTransport transport, const bool ret) const;
+    void OnProfileServicesDisableComplete(const Bluetooth::BTTransport transport, const bool ret) const;
 
     /**
      * @brief Pair devices remove notify.
@@ -300,7 +300,7 @@ public:
      * @param devices The vector of removed devices.
      * @since 6
      */
-    void OnPairDevicesRemoved(const BTTransport transport, const std::vector<RawAddress> &devices) const;
+    void OnPairDevicesRemoved(const Bluetooth::BTTransport transport, const std::vector<RawAddress> &devices) const;
 
     void RestoreTurnOnState();
 private:
@@ -311,8 +311,10 @@ private:
     bool OutputSetting() const;
     void RegisterHciResetCallback();
     void DeregisterHciResetCallback() const;
-    void RemoveDeviceProfileConfig(const BTTransport transport, const std::vector<RawAddress> &devices) const;
-    void PublishBluetoothStateChangeEvent(const BTTransport transport, const BTStateID state) const;
+    void RemoveDeviceProfileConfig(
+        const Bluetooth::BTTransport transport, const std::vector<RawAddress> &devices) const;
+    void PublishBluetoothStateChangeEvent(
+        const Bluetooth::BTTransport transport, const Bluetooth::BTStateID state) const;
 
     static void HciFailedReset(void *context);
 

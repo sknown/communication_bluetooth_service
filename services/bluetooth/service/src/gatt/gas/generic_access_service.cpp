@@ -24,6 +24,7 @@
 #include "log.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 const uint16_t GenericAccessService::GATT_UUID_GAP_SERVICE = 0x1800;
@@ -269,10 +270,10 @@ void GenericAccessService::OnDeviceNameChanged(std::string &deviceName) const
     LOG_DEBUG("%{public}s:%{public}d:%{public}s : device name: %{public}s", __FILE__, __LINE__, __FUNCTION__, deviceName.c_str());
 
     auto cIt = std::find_if(instance_->characteristics_.begin(),
-            instance_->characteristics_.end(),
-            [](Characteristic &ccc) {
-            return ccc.uuid_ == Uuid::ConvertFrom16Bits(GATT_UUID_GAP_DEVICE_NAME);
-        });
+        instance_->characteristics_.end(),
+        [](Characteristic &ccc) {
+        return ccc.uuid_ == Uuid::ConvertFrom16Bits(GATT_UUID_GAP_DEVICE_NAME);
+    });
 
     if (cIt != instance_->characteristics_.end()) {
         cIt->SetValue((uint8_t *)deviceName.c_str(), deviceName.length());

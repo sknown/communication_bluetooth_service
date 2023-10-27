@@ -26,6 +26,7 @@
 #include "profile_info.h"
 #include "profile_list.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 class ProfileServicesContextCallback : public utility::IContextCallback {

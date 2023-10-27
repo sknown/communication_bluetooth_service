@@ -25,6 +25,8 @@
 #include "securec.h"
 #include "idevmgr_hdi.h"
 
+using namespace OHOS::Bluetooth;
+
 constexpr const char *AUDIO_BLUETOOTH_SERVICE_NAME = "audio_bluetooth_hdi_service";
 
 namespace OHOS {

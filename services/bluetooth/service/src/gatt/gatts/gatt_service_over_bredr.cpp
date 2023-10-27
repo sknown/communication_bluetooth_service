@@ -20,6 +20,7 @@
 #include "log.h"
 #include "sdp.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 int GattServiceOverBredr::RegisterSDP(uint16_t startHandle, uint16_t endHandle)

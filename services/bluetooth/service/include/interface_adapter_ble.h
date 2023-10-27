@@ -101,7 +101,7 @@ public:
 class IBleAdvertiserCallback {
 public:
     virtual ~IBleAdvertiserCallback() = default;
-    virtual void OnStartResultEvent(int result, uint8_t advHandle, int opcode = BLE_ADV_DEFAULT_OP_CODE) = 0;
+    virtual void OnStartResultEvent(int result, uint8_t advHandle, int opcode = Bluetooth::BLE_ADV_DEFAULT_OP_CODE) = 0;
     virtual void OnAutoStopAdvEvent(uint8_t advHandle) = 0;
     virtual void OnSetAdvDataEvent(int32_t result, int32_t advHandle) = 0;
 };
@@ -142,7 +142,7 @@ public:
      * @param device Remote device.
      * @since 6
      */
-    virtual void OnPairRequested(const BTTransport transport, const RawAddress &device) = 0;
+    virtual void OnPairRequested(const Bluetooth::BTTransport transport, const RawAddress &device) = 0;
 
     /**
      * @brief Pair confirmed observer.
@@ -153,7 +153,7 @@ public:
      * @since 6
      */
     virtual void OnPairConfirmed(
-        const BTTransport transport, const RawAddress &device, const int reqType, const int number) = 0;
+        const Bluetooth::BTTransport transport, const RawAddress &device, const int reqType, const int number) = 0;
 
     /**
      * @brief Scan mode changed observer.
@@ -219,7 +219,7 @@ public:
      * @param status Read status.
      * @since 6
      */
-    virtual void OnPairStatusChanged(const BTTransport transport, const RawAddress &device, int status) = 0;
+    virtual void OnPairStatusChanged(const Bluetooth::BTTransport transport, const RawAddress &device, int status) = 0;
 
     virtual void OnAclStateChanged(const RawAddress &device, int state, unsigned int reason) = 0;
 };

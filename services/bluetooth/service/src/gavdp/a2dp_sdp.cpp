@@ -17,6 +17,7 @@
 
 #include "log.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 const int ATTR_NUMBER2 = 2;

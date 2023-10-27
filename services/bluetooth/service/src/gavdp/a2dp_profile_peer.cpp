@@ -27,7 +27,7 @@
 #include "stub/a2dp_data_service.h"
 
 using namespace stub;
-
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 const int CODEC_BIT_MOVE8 = 8;

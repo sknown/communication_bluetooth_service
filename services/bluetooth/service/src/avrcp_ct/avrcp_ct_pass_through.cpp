@@ -14,6 +14,7 @@
  */
 #include "avrcp_ct_pass_through.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 AvrcCtPassPacket::AvrcCtPassPacket(void) : stateFlag_(AVRC_KEY_STATE_INVALID), operationId_(AVRC_KEY_OPERATION_INVALID)

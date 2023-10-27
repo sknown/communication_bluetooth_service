@@ -396,9 +396,9 @@ private:
     int ioCapability_ {};
     int batteryLevel_ {};
 
-    std::string macAddr_ {INVALID_MAC_ADDRESS};
-    std::string deviceName_ {INVALID_NAME};
-    std::string aliasName_ {INVALID_NAME};
+    std::string macAddr_ {Bluetooth::INVALID_MAC_ADDRESS};
+    std::string deviceName_ {Bluetooth::INVALID_NAME};
+    std::string aliasName_ {Bluetooth::INVALID_NAME};
     std::string uri_ {};
     std::vector<uint8_t> manuSpecData_ {};
     std::vector<uint8_t> linkKey_ {};

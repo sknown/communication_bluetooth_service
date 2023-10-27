@@ -17,6 +17,7 @@
 #include "avrcp_ct_pass_through.h"
 #include "avrcp_ct_vendor.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 /// The name of state "CONNECTING".

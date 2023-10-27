@@ -104,7 +104,7 @@ public:
      *         returns <b>false</b> if the operation fails.
      * @since 6
      */
-    bool Enable(const BTTransport transport) const;
+    bool Enable(const Bluetooth::BTTransport transport) const;
 
     /**
      * @brief Set all profile services states as turn on.
@@ -112,7 +112,7 @@ public:
      * @param transport Adapter transport.
      * @since 6
      */
-    void OnAllEnabled(const BTTransport transport) const;
+    void OnAllEnabled(const Bluetooth::BTTransport transport) const;
 
     /**
      * @brief Disable profile services.
@@ -122,7 +122,7 @@ public:
      *         returns <b>false</b> if the operation fails.
      * @since 6
      */
-    bool Disable(const BTTransport transport) const;
+    bool Disable(const Bluetooth::BTTransport transport) const;
 
     /**
      * @brief Set all profile services states as turn off.
@@ -130,7 +130,7 @@ public:
      * @param transport Adapter transport.
      * @since 6
      */
-    void OnAllDisabled(const BTTransport transport) const;
+    void OnAllDisabled(const Bluetooth::BTTransport transport) const;
 
     /**
      * @brief Get profile service ID list.
@@ -147,7 +147,7 @@ public:
      * @return Returns connect state for designated profile service.
      * @since 6
      */
-    BTConnectState GetProfileServiceConnectState(const uint32_t profileID) const override;
+    Bluetooth::BTConnectState GetProfileServiceConnectState(const uint32_t profileID) const override;
 
     /**
      * @brief Get local device supported uuids.
@@ -162,7 +162,7 @@ public:
      * @return Returns profile services connect state.
      * @since 6
      */
-    BTConnectState GetProfileServicesConnectState() const;
+    Bluetooth::BTConnectState GetProfileServicesConnectState() const;
 
     /**
      * @brief Profile service enable complete notify.
@@ -204,16 +204,16 @@ private:
     void CreateClassicProfileServices() const;
     void CreateBleProfileServices() const;
 
-    void EnableProfiles(const BTTransport transport) const;
-    void DisableProfiles(const BTTransport transport) const;
+    void EnableProfiles(const Bluetooth::BTTransport transport) const;
+    void DisableProfiles(const Bluetooth::BTTransport transport) const;
     void EnableCompleteProcess(const std::string &name, bool ret) const;
     void DisableCompleteProcess(const std::string &name, bool ret) const;
-    void EnableCompleteNotify(const BTTransport transport) const;
-    void DisableCompleteNotify(const BTTransport transport) const;
-    bool IsAllEnabled(const BTTransport transport) const;
-    bool IsProfilesTurning(const BTTransport transport) const;
-    bool IsAllDisabled(const BTTransport transport) const;
-    void CheckWaitEnableProfiles(const std::string &name, const BTTransport transport) const;
+    void EnableCompleteNotify(const Bluetooth::BTTransport transport) const;
+    void DisableCompleteNotify(const Bluetooth::BTTransport transport) const;
+    bool IsAllEnabled(const Bluetooth::BTTransport transport) const;
+    bool IsProfilesTurning(const Bluetooth::BTTransport transport) const;
+    bool IsAllDisabled(const Bluetooth::BTTransport transport) const;
+    void CheckWaitEnableProfiles(const std::string &name, const Bluetooth::BTTransport transport) const;
 
     BT_DISALLOW_COPY_AND_ASSIGN(ProfileServiceManager);
     DECLARE_IMPL();

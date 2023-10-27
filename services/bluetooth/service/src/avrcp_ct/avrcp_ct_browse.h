@@ -226,7 +226,7 @@ public:
 
 private:
     uint16_t playerId_ {AVRC_CT_SBP_PLAYER_ID};          // The value of the "Player Id".
-    uint8_t status_ {AVRC_ES_CODE_INVALID};              // The value of the "Status".
+    uint8_t status_ {Bluetooth::AVRC_ES_CODE_INVALID};              // The value of the "Status".
     uint16_t uidCounter_ {AVRC_CT_BROWSE_UID_COUNTER};   // The value of the "UID Counter".
     uint32_t numOfItems_ {AVRC_CT_SBP_NUMBER_OF_ITEMS};  // The value of the "Number of items".
     // The value of the "Folder Depth".The root folder has no name and its folder depth is 0.
@@ -332,9 +332,9 @@ public:
 
 private:
     uint16_t uidCounter_ {AVRC_CT_BROWSE_UID_COUNTER};   // The value of the "UID Counter".
-    uint8_t direction_ {AVRC_FOLDER_DIRECTION_INVALID};  // The value of the "Direction".
+    uint8_t direction_ {Bluetooth::AVRC_FOLDER_DIRECTION_INVALID};  // The value of the "Direction".
     uint64_t folderUid_ {AVRC_CT_BROWSE_FOLDER_UID};     // The value of the "Folder UID".
-    uint8_t status_ {AVRC_ES_CODE_INVALID};              // The value of the "Status".
+    uint8_t status_ {Bluetooth::AVRC_ES_CODE_INVALID};              // The value of the "Status".
     uint32_t numOfItems_ {AVRC_CT_CP_NUMBER_OF_ITEMS};   // The value of the "Number of items".
 };
 
@@ -503,12 +503,12 @@ public:
     }
 
 private:
-    uint8_t scope_ {AVRC_MEDIA_SCOPE_INVALID};              // The value of the "Scope".
+    uint8_t scope_ {Bluetooth::AVRC_MEDIA_SCOPE_INVALID};              // The value of the "Scope".
     uint32_t startItem_ {AVRC_CT_GFI_START_ITEM};           // The value of the "Start Item".
     uint32_t endItem_ {AVRC_CT_GFI_END_ITEM};               // The value of the "End Item".
     uint8_t attributeCount_ {AVRC_CT_GFI_ATTRIBUTE_COUNT};  // The value of the "AttributeCount".
     std::vector<uint32_t> attributes_ {};                   // The value of the "Attribute ID".
-    uint8_t status_ {AVRC_ES_CODE_INVALID};                 // The value of the "Status".
+    uint8_t status_ {Bluetooth::AVRC_ES_CODE_INVALID};                 // The value of the "Status".
     uint16_t uidCounter_ {AVRC_CT_BROWSE_UID_COUNTER};      // The value of the "UID Counter".
     uint16_t numOfItems_ {AVRC_CT_GFI_NUMBER_OF_ITEMS};     // The value of the "Number of Items".
     std::vector<AvrcMpItem> mpItems_ {};                    // The list of the <b>AvrcMpItem</b> class.
@@ -709,12 +709,12 @@ public:
     }
 
 private:
-    uint8_t scope_ {AVRC_MEDIA_SCOPE_INVALID};                    // The value of the "Scope".
+    uint8_t scope_ {Bluetooth::AVRC_MEDIA_SCOPE_INVALID};                    // The value of the "Scope".
     uint64_t uid_ {AVRC_CT_BROWSE_UID};                           // The value of the "UID".
     uint16_t uidCounter_ {AVRC_CT_BROWSE_UID_COUNTER};            // The value of the "UID Counter".
     uint8_t numOfAttributes_ {AVRC_CT_GIA_NUMBER_OF_ATTRIBUTES};  // The value of the "Number of Attributes".
     std::vector<uint32_t> attributes_ {};                         // The value of the "Attribute ID".
-    uint8_t status_ {AVRC_ES_CODE_INVALID};                       // The value of the "Status".
+    uint8_t status_ {Bluetooth::AVRC_ES_CODE_INVALID};                       // The value of the "Status".
     std::vector<std::string> values_ {};                          // The value of the "Attribute Value".
 
     /**
@@ -823,9 +823,9 @@ public:
     }
 
 private:
-    uint8_t scope_ {AVRC_MEDIA_SCOPE_INVALID};             // The value of the "Scope".
+    uint8_t scope_ {Bluetooth::AVRC_MEDIA_SCOPE_INVALID};             // The value of the "Scope".
     uint16_t uidCounter_ {AVRC_CT_BROWSE_UID_COUNTER};     // The value of the "UID Counter".
-    uint8_t status_ {AVRC_ES_CODE_INVALID};                // The value of the "Status".
+    uint8_t status_ {Bluetooth::AVRC_ES_CODE_INVALID};                // The value of the "Status".
     uint32_t numOfItems_ {AVRC_CT_GTNOI_NUMBER_OF_ITEMS};  // The value of the "Number of items".
 };
 }  // namespace bluetooth

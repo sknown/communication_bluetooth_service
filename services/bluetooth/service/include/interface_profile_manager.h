@@ -84,7 +84,7 @@ public:
      * @return Returns connect state for designated profile service.
      * @since 6
      */
-    virtual BTConnectState GetProfileServiceConnectState(const uint32_t profileID) const = 0;
+    virtual Bluetooth::BTConnectState GetProfileServiceConnectState(const uint32_t profileID) const = 0;
 
     /**
      * @brief Get local device supported uuids.

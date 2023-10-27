@@ -55,7 +55,7 @@ public:
      * @return Returns profile by adapter transport and profile name.
      * @since 6
      */
-    T Get(const BTTransport transport, const std::string &name)
+    T Get(const Bluetooth::BTTransport transport, const std::string &name)
     {
         std::lock_guard<std::mutex> lock(lock_);
         return profiles_[transport][name];
@@ -77,7 +77,7 @@ public:
      * @return Returns profiles map by adapter transport.
      * @since 6
      */
-    std::map<std::string, T> *GetProfiles(const BTTransport transport)
+    std::map<std::string, T> *GetProfiles(const Bluetooth::BTTransport transport)
     {
         std::lock_guard<std::mutex> lock(lock_);
 
@@ -96,7 +96,7 @@ public:
      * @param data Used to set profile value.
      * @since 6
      */
-    void SetProfile(const BTTransport transport, const std::string &name, const T &data)
+    void SetProfile(const Bluetooth::BTTransport transport, const std::string &name, const T &data)
     {
         std::lock_guard<std::mutex> lock(lock_);
 
@@ -111,7 +111,7 @@ public:
      *         returns <b>false</b> if profiles map does not contain this profile.
      * @since 6
      */
-    bool Contains(const BTTransport transport, const std::string &name)
+    bool Contains(const Bluetooth::BTTransport transport, const std::string &name)
     {
         std::lock_guard<std::mutex> lock(lock_);
 
@@ -155,7 +155,7 @@ public:
      *         returns <b>false</b> if profiles map does not contain this profile.
      * @since 6
      */
-    bool Find(const BTTransport transport, const std::string &name, T &data)
+    bool Find(const Bluetooth::BTTransport transport, const std::string &name, T &data)
     {
         std::lock_guard<std::mutex> lock(lock_);
 
@@ -200,7 +200,7 @@ public:
      *         returns <b>false</b> if profiles map is not empty.
      * @since 6
      */
-    bool IsEmpty(const BTTransport transport)
+    bool IsEmpty(const Bluetooth::BTTransport transport)
     {
         std::lock_guard<std::mutex> lock(lock_);
 
@@ -218,7 +218,7 @@ public:
      * @return Returns profiles map size
      * @since 6
      */
-    int Size(const BTTransport transport)
+    int Size(const Bluetooth::BTTransport transport)
     {
         std::lock_guard<std::mutex> lock(lock_);
 
@@ -232,7 +232,7 @@ public:
 
 private:
     std::mutex lock_ = {};
-    std::map<BTTransport, std::map<std::string, T>> profiles_ = {};
+    std::map<Bluetooth::BTTransport, std::map<std::string, T>> profiles_ = {};
     BT_DISALLOW_COPY_AND_ASSIGN(ProfilesList);
 };
 

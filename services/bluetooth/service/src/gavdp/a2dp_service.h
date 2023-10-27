@@ -619,7 +619,7 @@ private:
 
     int maxConnectNumSnk_ = A2DP_CONNECT_NUM_MAX;             // max number of connected peer device
     uint8_t role_ = A2DP_ROLE_SOURCE;                         // A2DP role
-    uint32_t profileId_ = PROFILE_ID_A2DP_SRC;                // profile ID
+    uint32_t profileId_ = Bluetooth::PROFILE_ID_A2DP_SRC;                // profile ID
     RawAddress activeDevice_ {};                               // Address to active device
     A2dpConnectManager connectManager_ {};                     // A2dpConnectManager's object pointer.
     ObserverProfile profileObserver_ {};                       // Observer pointer of profile.

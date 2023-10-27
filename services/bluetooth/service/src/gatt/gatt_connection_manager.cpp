@@ -28,6 +28,7 @@
 #include "log_util.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 constexpr uint8_t OBSERVER_EVENT_CONNECTED = 0x0;

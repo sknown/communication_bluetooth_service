@@ -322,7 +322,7 @@ int BluetoothGattClientServer::DeregisterApplication(int32_t appId)
     std::lock_guard<std::mutex> lck(pimpl->registerMutex_);
     if (pimpl->clientService_ == nullptr) {
         HILOGE("request not support.");
-        return bluetooth::GattStatus::REQUEST_NOT_SUPPORT;
+        return GattStatus::REQUEST_NOT_SUPPORT;
     }
     HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "GATT_APP_REGISTER",
         OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC,  "ACTION", "deregister",
@@ -429,7 +429,7 @@ int BluetoothGattClientServer::SignedWriteCharacteristic(int32_t appId, Bluetoot
     std::lock_guard<std::mutex> lck(pimpl->registerMutex_);
     if (pimpl->clientService_ == nullptr) {
         HILOGE("request not support.");
-        return bluetooth::GattStatus::REQUEST_NOT_SUPPORT;
+        return GattStatus::REQUEST_NOT_SUPPORT;
     }
     return pimpl->clientService_->SignedWriteCharacteristic(appId, character);
 }

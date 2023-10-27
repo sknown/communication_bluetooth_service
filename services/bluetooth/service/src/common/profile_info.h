@@ -91,7 +91,7 @@ public:
      * @return Returns profiles information by adapter transport.
      * @since 6
      */
-    static const std::vector<ProfileInfo> GetConfigSupportProfiles(BTTransport transport);
+    static const std::vector<ProfileInfo> GetConfigSupportProfiles(Bluetooth::BTTransport transport);
 
 private:
     static const std::vector<ProfileInfo> SUPPORT_FILES;

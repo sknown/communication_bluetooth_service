@@ -21,6 +21,7 @@
 #include "power_manager.h"
 #include "profile_service_manager.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 const int ENABLE_DISABLE_TIMEOUT_TIME = 70000;

@@ -22,6 +22,7 @@
 #include "raw_address.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 const int MEDIA_CATEGORY = 7;

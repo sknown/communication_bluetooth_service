@@ -35,6 +35,7 @@
 #include "log_util.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 struct BleAdapter::impl {

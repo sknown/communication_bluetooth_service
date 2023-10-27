@@ -17,6 +17,7 @@
 
 #include "log.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 A2dpSnkProfile::A2dpSnkProfile() : A2dpProfile(A2DP_ROLE_SINK)

@@ -15,6 +15,7 @@
 
 #include "avrcp_ct_notification.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 AvrcCtNotifyPacket::AvrcCtNotifyPacket(uint8_t eventId, uint32_t interval)

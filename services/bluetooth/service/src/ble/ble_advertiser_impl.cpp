@@ -24,6 +24,7 @@
 #include "ble_utils.h"
 #include "securec.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 struct BleAdvertiserImpl::impl {

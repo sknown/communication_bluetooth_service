@@ -19,6 +19,7 @@
 #include "log.h"
 #include "log_util.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 A2dpConnectManager::A2dpConnectManager(uint8_t role)

@@ -585,7 +585,7 @@ public:
      * @retval RET_BAD_STATUS Execute failure.
      */
     int EnableNotification(const RawAddress &rawAddr, const std::vector<uint8_t> &events,
-        uint8_t interval = AVRC_PLAYBACK_INTERVAL_1_SEC) override;
+        uint8_t interval = Bluetooth::AVRC_PLAYBACK_INTERVAL_1_SEC) override;
 
     /**
      * @brief Disables for receiving notifications asynchronously based on specific events occurring.

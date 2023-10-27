@@ -17,6 +17,7 @@
 #include "avrcp_ct_packet.h"
 #include "avrcp_ct_pass_through.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 AvrcCtConnectManager *AvrcCtConnectManager::g_instance = nullptr;
@@ -192,7 +193,7 @@ std::list<std::string> AvrcCtConnectManager::GetDeviceAddresses(void)
 
     std::list<std::string> addrs;
 
-    std::transform(infos_.begin(), infos_.end(), std::inserter(addrs,addrs.end()),
+    std::transform(infos_.begin(), infos_.end(), std::inserter(addrs, addrs.end()),
         [](const std::pair<std::string, AvrcCtConnectInfo> &info){return info.second.btAddr_;});
 
     return addrs;

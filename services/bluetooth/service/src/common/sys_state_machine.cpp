@@ -17,6 +17,7 @@
 #include "adapter_manager.h"
 #include "log.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 void SysStateMachine::Init(AdapterManager &am)

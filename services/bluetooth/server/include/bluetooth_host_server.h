@@ -124,7 +124,7 @@ public:
 private:
     static sptr<BluetoothHostServer> instance;
     static std::mutex instanceLock;
-    int32_t transport_ = bluetooth::BT_TRANSPORT_BREDR;
+    int32_t transport_ = BT_TRANSPORT_BREDR;
     bool Init();
 
     bool registeredToService_ = false;

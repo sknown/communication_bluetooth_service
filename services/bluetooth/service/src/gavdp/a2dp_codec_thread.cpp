@@ -22,6 +22,7 @@
 #include "log.h"
 #include "a2dp_service.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 const int ENCODE_TIMER_SBC = 20;

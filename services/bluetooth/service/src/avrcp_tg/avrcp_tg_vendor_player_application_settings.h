@@ -235,7 +235,8 @@ public:
     bool IsValidAttribute(void) const;
 
 private:
-    uint8_t attribute_ {AVRC_PLAYER_ATTRIBUTE_ILLEGAL};   // The value of the "PlayerApplicationSettingAttributeID".
+    // The value of the "PlayerApplicationSettingAttributeID".
+    uint8_t attribute_ {Bluetooth::AVRC_PLAYER_ATTRIBUTE_ILLEGAL};
     uint16_t numOfValues_ {AVRC_TG_LPASV_NUM_OF_VALUES};  // The value of the "NumPlayerApplicationSettingValues".
     std::deque<uint8_t> values_ {};                       // A set of values of the "PlayerApplicationSettingValueID".
 

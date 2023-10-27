@@ -17,6 +17,7 @@
 #include "hid_host_service.h"
 #include "log_util.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 HidHostUhid::HidHostUhid(std::string address)

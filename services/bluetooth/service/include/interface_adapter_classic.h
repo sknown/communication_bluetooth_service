@@ -73,7 +73,7 @@ public:
      * @param device Remote device.
      * @since 6
      */
-    virtual void OnPairRequested(const BTTransport transport, const RawAddress &device) = 0;
+    virtual void OnPairRequested(const Bluetooth::BTTransport transport, const RawAddress &device) = 0;
 
     /**
      * @brief Pair confirmed observer.
@@ -83,7 +83,8 @@ public:
      * @param number Paired passkey.
      * @since 6
      */
-    virtual void OnPairConfirmed(const BTTransport transport, const RawAddress &device, int reqType, int number) = 0;
+    virtual void OnPairConfirmed(
+        const Bluetooth::BTTransport transport, const RawAddress &device, int reqType, int number) = 0;
 
     /**
      * @brief Scan mode changed observer.
@@ -133,7 +134,7 @@ public:
      * @param status Remote device pair status.
      * @since 6
      */
-    virtual void OnPairStatusChanged(const BTTransport transport, const RawAddress &device, int status) = 0;
+    virtual void OnPairStatusChanged(const Bluetooth::BTTransport transport, const RawAddress &device, int status) = 0;
 
     /**
      * @brief Remote uuid changed observer.

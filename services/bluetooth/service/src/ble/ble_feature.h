@@ -128,7 +128,7 @@ public:
      */
     static uint8_t GetBleExAdvGetMaxHandleNum()
     {
-        uint8_t num = BLE_INVALID_ADVERTISING_HANDLE;
+        uint8_t num = Bluetooth::BLE_INVALID_ADVERTISING_HANDLE;
         int ret = GAPIF_LeExAdvGetMaxHandleNum(&num);
         if (ret == BT_SUCCESS) {
             return num;

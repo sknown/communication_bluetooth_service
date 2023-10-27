@@ -144,7 +144,7 @@ ErrCode BluetoothBleAdvertiserStub::CloseInner(MessageParcel &data, MessageParce
 
 ErrCode BluetoothBleAdvertiserStub::GetAdvertiserHandleInner(MessageParcel &data, MessageParcel &reply)
 {
-    int advHandle = bluetooth::BLE_INVALID_ADVERTISING_HANDLE;
+    int advHandle = BLE_INVALID_ADVERTISING_HANDLE;
     int result = GetAdvertiserHandle(advHandle);
     bool resultRet = reply.WriteInt32(result);
     bool advHandleRet = reply.WriteInt32(advHandle);

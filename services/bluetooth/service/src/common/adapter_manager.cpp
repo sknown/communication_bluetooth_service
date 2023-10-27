@@ -39,6 +39,7 @@
 #include "profile_service_manager.h"
 #include "sys_state_machine.h"
 
+using namespace OHOS::Bluetooth;
 namespace OHOS {
 namespace bluetooth {
 // data define
