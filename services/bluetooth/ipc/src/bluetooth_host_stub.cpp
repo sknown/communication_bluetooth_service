@@ -227,6 +227,12 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::BT_COUNT_ENABLE_TIMES,
             std::bind(&BluetoothHostStub::CountEnableTimesInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::BT_SEND_DEVICE_SELECTION,
+            std::bind(&BluetoothHostStub::SendDeviceSelectionInner, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::BT_GET_FEATURES,
+            std::bind(&BluetoothHostStub::GetFeatures, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -1262,6 +1268,16 @@ ErrCode BluetoothHostStub::StartCrediblePairInner(MessageParcel &data, MessagePa
 }
 
 ErrCode BluetoothHostStub::CountEnableTimesInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHostStub::SendDeviceSelectionInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHostStub::GetFeatures(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }

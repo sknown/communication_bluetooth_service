@@ -112,6 +112,35 @@ void BluetoothA2dpSrcObserverProxy::OnConfigurationChanged(
     }
 }
 
+void BluetoothA2dpSrcObserverProxy::OnMediaStackChanged(
+    const RawAddress &device, int action)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothA2dpSrcObserverProxy::GetDescriptor())) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnMediaStackChanged WriteInterfaceToken error");
+        return;
+    }
+    if (!data.WriteString(device.GetAddress())) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnMediaStackChanged write device error");
+        return;
+    }
+    if (!data.WriteInt32(action)) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnMediaStackChanged error error");
+        return;
+    }
+
+    MessageParcel reply;
+    MessageOption option {
+        MessageOption::TF_ASYNC
+    };
+
+    ErrCode result = InnerTransact(BT_A2DP_SRC_OBSERVER_MEDIASTACK_CHANGED, option, data, reply);
+    if (result != NO_ERROR) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnMediaStackChanged done fail, error: %{public}d", result);
+        return;
+    }
+}
+
 ErrCode BluetoothA2dpSrcObserverProxy::InnerTransact(
     uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply)
 {
