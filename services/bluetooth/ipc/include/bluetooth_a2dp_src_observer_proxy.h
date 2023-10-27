@@ -30,6 +30,7 @@ public:
     void OnConnectionStateChanged(const RawAddress &device, int state) override;
     void OnPlayingStatusChanged(const RawAddress &device, int playingState, int error) override;
     void OnConfigurationChanged(const RawAddress &device, const BluetoothA2dpCodecInfo &info, int error) override;
+    void OnMediaStackChanged(const RawAddress &device, int action) override;
 
 private:
     ErrCode InnerTransact(uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply);
