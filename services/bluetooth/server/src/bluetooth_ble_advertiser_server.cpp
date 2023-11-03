@@ -46,6 +46,15 @@ public:
         });
     }
 
+    void OnEnableResultEvent(int result, uint8_t advHandle) override
+    {}
+
+    void OnDisableResultEvent(int result, uint8_t advHandle) override
+    {}
+
+    void OnStopResultEvent(int result, uint8_t advHandle) override
+    {}
+
     void OnAutoStopAdvEvent(uint8_t advHandle) override
     {
         HILOGI("advHandle: %{public}d", advHandle);
@@ -159,7 +168,7 @@ BleAdvertiserDataImpl BluetoothBleAdvertiserServer::impl::ConvertAdvertisingData
 
 int BluetoothBleAdvertiserServer::StartAdvertising(const BluetoothBleAdvertiserSettings &settings,
     const BluetoothBleAdvertiserData &advData, const BluetoothBleAdvertiserData &scanResponse, int32_t advHandle,
-    bool isRawData)
+    uint16_t duration, bool isRawData)
 {
     HILOGI("enter");
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
@@ -180,9 +189,21 @@ int BluetoothBleAdvertiserServer::StartAdvertising(const BluetoothBleAdvertiserS
             bleAdvertiserData.SetFlags(advData.GetAdvFlag());
         }
         BleAdvertiserDataImpl bleScanResponse = pimpl->ConvertAdvertisingData(scanResponse);
-
+        HILOGI("NOT support duration now");
         bleService->StartAdvertising(settingsImpl, bleAdvertiserData, bleScanResponse, advHandle);
     }
+    return NO_ERROR;
+}
+
+int BluetoothBleAdvertiserServer::EnableAdvertising(uint8_t advHandle, uint16_t duration)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+int BluetoothBleAdvertiserServer::DisableAdvertising(uint8_t advHandle)
+{
+    HILOGI("NOT SUPPORT NOW");
     return NO_ERROR;
 }
 
