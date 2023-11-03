@@ -102,6 +102,9 @@ class IBleAdvertiserCallback {
 public:
     virtual ~IBleAdvertiserCallback() = default;
     virtual void OnStartResultEvent(int result, uint8_t advHandle, int opcode = BLE_ADV_DEFAULT_OP_CODE) = 0;
+    virtual void OnEnableResultEvent(int result, uint8_t advHandle) = 0;
+    virtual void OnDisableResultEvent(int result, uint8_t advHandle) = 0;
+    virtual void OnStopResultEvent(int result, uint8_t advHandle) = 0;
     virtual void OnAutoStopAdvEvent(uint8_t advHandle) = 0;
     virtual void OnSetAdvDataEvent(int32_t result, int32_t advHandle) = 0;
 };

@@ -28,7 +28,12 @@ public:
     ~BleAdvertiseCallbackTest(){};
 
 private:
-    void OnStartResultEvent(int result);
+    void OnStartResultEvent(int result, int advHandle) {}
+    void OnEnableResultEvent(int result, int advHandle) {}
+    void OnDisableResultEvent(int result, int advHandle) {}
+    void OnStopResultEvent(int result, int advHandle) {}
+    void OnSetAdvDataEvent(int result) {}
+    void OnGetAdvHandleEvent(int result, int advHandle) {}
 };
 
 class BleHostObserverTest : public Bluetooth::BluetoothHostObserver {

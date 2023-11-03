@@ -165,9 +165,6 @@ void BleTest::TearDown()
     host_->DeregisterObserver(bleHostObserverTest_);
 }
 
-void BleAdvertiseCallbackTest::OnStartResultEvent(int result)
-{}
-
 void BleHostObserverTest::OnStateChanged(const int transport, const int status)
 {
     GTEST_LOG_(INFO) << "OnStateChanged";
@@ -200,7 +197,7 @@ HWTEST_F(BleTest, BLE_ModuleTest_StartAdvertising_00100, TestSize.Level1)
     advData.AddServiceData(g_serviceDataUuid, g_serviceData);
     advData.SetAdvFlag(BLE_ADV_FLAG_GEN_DISC);
     bleAdvertise.StartAdvertising(
-        BleTest::bleInstance_->bleAdvertiserSettings_, advData, scanData, bleAdvertiseCallbackTest_);
+        BleTest::bleInstance_->bleAdvertiserSettings_, advData, scanData, 0, bleAdvertiseCallbackTest_);
 
     GTEST_LOG_(INFO) << "advData function test";
     EXPECT_TRUE(BleTest::bleInstance_->HaveUuid(advData));
@@ -212,7 +209,7 @@ HWTEST_F(BleTest, BLE_ModuleTest_StartAdvertising_00100, TestSize.Level1)
     vector<uint8_t> advData1 = {1, 2, 3};
     vector<uint8_t> scanData1 = {3, 2, 1};
     bleAdvertise.StartAdvertising(
-        BleTest::bleInstance_->bleAdvertiserSettings_, advData1, scanData1, bleAdvertiseCallbackTest_);
+        BleTest::bleInstance_->bleAdvertiserSettings_, advData1, scanData1, 0, bleAdvertiseCallbackTest_);
     bleAdvertise.StopAdvertising(bleAdvertiseCallbackTest_);
     int32_t length = host_->GetBleMaxAdvertisingDataLength();
     EXPECT_LE(MIN_ADV_LENGTH, length);

@@ -34,6 +34,10 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothBleAdvertiserStub *, Mes
             std::bind(&BluetoothBleAdvertiserStub::DeregisterBleAdvertiserCallbackInner, _1, _2, _3)},
         {BluetoothBleAdvertiserInterfaceCode::BLE_START_ADVERTISING,
             std::bind(&BluetoothBleAdvertiserStub::StartAdvertisingInner, _1, _2, _3)},
+        {BluetoothBleAdvertiserInterfaceCode::BLE_ENABLE_ADVERTISING,
+            std::bind(&BluetoothBleAdvertiserStub::EnableAdvertisingInner, _1, _2, _3)},
+        {BluetoothBleAdvertiserInterfaceCode::BLE_DISABLE_ADVERTISING,
+            std::bind(&BluetoothBleAdvertiserStub::DisableAdvertisingInner, _1, _2, _3)},
         {BluetoothBleAdvertiserInterfaceCode::BLE_STOP_ADVERTISING,
             std::bind(&BluetoothBleAdvertiserStub::StopAdvertisingInner, _1, _2, _3)},
         {BluetoothBleAdvertiserInterfaceCode::BLE_CLOSE,
@@ -115,8 +119,32 @@ ErrCode BluetoothBleAdvertiserStub::StartAdvertisingInner(MessageParcel &data, M
     }
 
     int32_t advHandle = data.ReadInt32();
+    uint16_t duration = data.ReadUint16();
     bool isRawData = data.ReadBool();
-    int32_t ret = StartAdvertising(*settings, *advData, *scanResponse, advHandle, isRawData);
+    int32_t ret = StartAdvertising(*settings, *advData, *scanResponse, advHandle, duration, isRawData);
+    if (!reply.WriteInt32(ret)) {
+        HILOGE("reply writing failed.");
+        return ERR_INVALID_VALUE;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothBleAdvertiserStub::EnableAdvertisingInner(MessageParcel &data, MessageParcel &reply)
+{
+    uint8_t advHandle = data.ReadUint8();
+    uint16_t duration = data.ReadUint16();
+    int32_t ret = EnableAdvertising(advHandle, duration);
+    if (!reply.WriteInt32(ret)) {
+        HILOGE("reply writing failed.");
+        return ERR_INVALID_VALUE;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothBleAdvertiserStub::DisableAdvertisingInner(MessageParcel &data, MessageParcel &reply)
+{
+    uint8_t advHandle = data.ReadUint8();
+    int32_t ret = DisableAdvertising(advHandle);
     if (!reply.WriteInt32(ret)) {
         HILOGE("reply writing failed.");
         return ERR_INVALID_VALUE;
