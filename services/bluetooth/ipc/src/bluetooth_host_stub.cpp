@@ -746,15 +746,21 @@ ErrCode BluetoothHostStub::GetDeviceAliasInner(MessageParcel &data, MessageParce
 
 ErrCode BluetoothHostStub::IsBtDiscoveringInner(MessageParcel &data, MessageParcel &reply)
 {
+    bool isDiscovering = false;
     int32_t transport;
     data.ReadInt32(transport);
-    bool result = IsBtDiscovering(transport);
-    bool ret = reply.WriteBool(result);
+    int32_t result = IsBtDiscovering(isDiscovering, transport);
+    bool ret = reply.WriteInt32(result);
     if (!ret) {
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
+        return BT_ERR_IPC_TRANS_FAILED;
     }
-    return NO_ERROR;
+    ret = reply.WriteBool(isDiscovering);
+    if (!ret) {
+        HILOGE("BluetoothHostStub: reply isDiscovering writing failed in: %{public}s.", __func__);
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
+    return BT_NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::SetDeviceAliasInner(MessageParcel &data, MessageParcel &reply)
@@ -817,13 +823,19 @@ ErrCode BluetoothHostStub::GetPairStateInner(MessageParcel &data, MessageParcel 
         HILOGE("BluetoothHostStub::GetPairState address failed");
         return TRANSACTION_ERR;
     }
-    int result = GetPairState(transport, address);
+    int32_t pairState;
+    int result = GetPairState(transport, address, pairState);
     bool ret = reply.WriteInt32(result);
     if (!ret) {
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
+        return BT_ERR_IPC_TRANS_FAILED;
     }
-    return NO_ERROR;
+    ret = reply.WriteInt32(pairState);
+    if (!ret) {
+        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
+    return BT_NO_ERROR;
 }
 
 int32_t BluetoothHostStub::GetPairedDevicesInner(MessageParcel &data, MessageParcel &reply)
