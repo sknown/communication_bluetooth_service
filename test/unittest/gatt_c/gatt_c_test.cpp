@@ -176,5 +176,63 @@ HWTEST_F(GattCTest, GattCTest_004, TestSize.Level1)
     res = BleStartScanEx(scanerId, &configs, filter, filterSize);
     EXPECT_EQ(res, OHOS_BT_STATUS_SUCCESS);
 }
+
+/*
+ * @tc.name: BleStartAdvWithAddrTest_001
+ * @tc.desc: Test BleStartAdvWithAddr when param is invalid
+ * @tc.type: FUNC
+ * @tc.require: issueI5OH5C
+*/
+HWTEST_F(GattCTest, BleStartAdvWithAddrTest_001, TestSize.Level1)
+{
+    int advId = -1;
+    StartAdvRawData rawData;
+    BleAdvParams advParam;
+    AdvOwnAddrParams advOwnAddrParams = {
+        .addr = {0x11, 0x66, 0x55, 0x44, 0x33, 0x22},
+        .addrType = BLE_ADDR_RANDOM,
+    };
+    int ret = BleStartAdvWithAddr(nullptr, &rawData, &advParam, &advOwnAddrParams);
+    EXPECT_EQ(ret, OHOS_BT_STATUS_PARM_INVALID);
+    ret = BleStartAdvWithAddr(&advId, nullptr, &advParam, &advOwnAddrParams);
+    EXPECT_EQ(ret, OHOS_BT_STATUS_PARM_INVALID);
+    ret = BleStartAdvWithAddr(&advId, &rawData, nullptr, &advOwnAddrParams);
+    EXPECT_EQ(ret, OHOS_BT_STATUS_PARM_INVALID);
+    ret = BleStartAdvWithAddr(&advId, &rawData, &advParam, nullptr);
+    EXPECT_EQ(ret, OHOS_BT_STATUS_PARM_INVALID);
+    ret = BleStartAdvWithAddr(&advId, &rawData, &advParam, &advOwnAddrParams);
+    EXPECT_EQ(ret, OHOS_BT_STATUS_PARM_INVALID);
+}
+
+/*
+ * @tc.name: BleStartAdvWithAddrTest_002
+ * @tc.desc: Test BleStartAdvWithAddr when adv addr is not changed, when adv num is max
+ * @tc.type: FUNC
+ * @tc.require: issueI5OH5C
+*/
+HWTEST_F(GattCTest, BleStartAdvWithAddrTest_002, TestSize.Level1)
+{
+    int advId = -1;
+    StartAdvRawData rawData;
+    BleAdvParams advParam;
+    AdvOwnAddrParams advOwnAddrParams = {
+        .addr = {0x77, 0x66, 0x55, 0x44, 0x33, 0x01},
+        .addrType = BLE_ADDR_RANDOM,
+    };
+    int ret = BleStartAdvWithAddr(advId, &rawData, &advParam, &advOwnAddrParams);
+    EXPECT_EQ(ret, OHOS_BT_STATUS_SUCCESS);
+    // same adv addr in one hour
+    ret = BleStartAdvWithAddr(advId, &rawData, &advParam, &advOwnAddrParams);
+    EXPECT_EQ(ret, OHOS_BT_STATUS_UNHANDLED);
+    for (uint8_t i = 2; i < 8; i++) {
+        advOwnAddrParams.addr = {0x77, 0x66, 0x55, 0x44, 0x33, i};
+        ret = BleStartAdvWithAddr(advId, &rawData, &advParam, &advOwnAddrParams);
+        EXPECT_EQ(ret, OHOS_BT_STATUS_SUCCESS);
+    }
+    // adv num is max
+    advOwnAddrParams.addr = {0x77, 0x66, 0x55, 0x44, 0x33, 0x29};
+    ret = BleStartAdvWithAddr(advId, &rawData, &advParam, &advOwnAddrParams);
+    EXPECT_EQ(ret, OHOS_BT_STATUS_UNHANDLED);
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
