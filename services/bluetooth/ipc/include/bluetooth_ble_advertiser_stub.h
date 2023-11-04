@@ -40,6 +40,8 @@ private:
     ErrCode RegisterBleAdvertiserCallbackInner(MessageParcel &data, MessageParcel &reply);
     ErrCode DeregisterBleAdvertiserCallbackInner(MessageParcel &data, MessageParcel &reply);
     ErrCode StartAdvertisingInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode EnableAdvertisingInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode DisableAdvertisingInner(MessageParcel &data, MessageParcel &reply);
     ErrCode StopAdvertisingInner(MessageParcel &data, MessageParcel &reply);
     ErrCode CloseInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetAdvertiserHandleInner(MessageParcel &data, MessageParcel &reply);
