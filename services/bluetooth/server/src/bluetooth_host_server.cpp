@@ -1744,7 +1744,7 @@ int32_t BluetoothHostServer::SendDeviceSelection(const std::string &address, int
     return NO_ERROR;
 }
 
-int32_t GetFeatures(const std::string &address)
+int32_t BluetoothHostServer::GetFeatures(const std::string &address)
 {
     return NO_ERROR;
 }
