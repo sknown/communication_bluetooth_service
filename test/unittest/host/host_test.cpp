@@ -492,7 +492,9 @@ HWTEST_F(HostTest, Host_ModuleTest_IsBtDiscovering_00100, TestSize.Level1)
     GTEST_LOG_(INFO) << "Host_ModuleTest_IsBtDiscovering_00100 start";
 
     host_ = &BluetoothHost::GetDefaultHost();
-    EXPECT_FALSE(host_->IsBtDiscovering(BTTransport::ADAPTER_BREDR));
+    bool isDisCovering = false;
+    host_->IsBtDiscovering(isDisCovering, BTTransport::ADAPTER_BREDR);
+    EXPECT_FALSE(isDisCovering);
 
     GTEST_LOG_(INFO) << "Host_ModuleTest_IsBtDiscovering_00100 end";
 }
@@ -794,7 +796,9 @@ HWTEST_F(HostTest, Host_ModuleTest_GetPairState_00100, TestSize.Level1)
     GTEST_LOG_(INFO) << "Host_ModuleTest_GetPairState_00100 start";
 
     BluetoothRemoteDevice device_("00:00:00:00:00:00", BT_TRANSPORT_BREDR);
-    EXPECT_EQ(device_.GetPairState(), 0);
+    int pairState;
+    device_.GetPairState(pairState);
+    EXPECT_EQ(pairState, PAIR_NONE);
 
     GTEST_LOG_(INFO) << "Host_ModuleTest_GetPairState_00100 end";
 }

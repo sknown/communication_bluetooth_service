@@ -1135,19 +1135,20 @@ int32_t BluetoothHostServer::CancelBtDiscovery()
     return BT_ERR_INTERNAL_ERROR;
 }
 
-bool BluetoothHostServer::IsBtDiscovering(int32_t transport)
+int32_t BluetoothHostServer::IsBtDiscovering(bool &isDisCovering, int32_t transport)
 {
     HILOGI("transport: %{public}d", transport);
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
-        return classicService->IsBtDiscovering();
+        isDisCovering = classicService->IsBtDiscovering();
     } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled() && bleService) {
-        return bleService->IsBtDiscovering();
+        isDisCovering = bleService->IsBtDiscovering();
     } else {
         HILOGE("Parameter::transport invalid or BT current state is not enabled!");
+        return BT_ERR_INVALID_STATE;
     }
-    return false;
+    return BT_NO_ERROR;
 }
 
 long BluetoothHostServer::GetBtDiscoveryEndMillis()
@@ -1362,20 +1363,21 @@ int32_t BluetoothHostServer::GetDeviceBatteryLevel(const std::string &address)
     return INVALID_VALUE;
 }
 
-int32_t BluetoothHostServer::GetPairState(int32_t transport, const std::string &address)
+int32_t BluetoothHostServer::GetPairState(int32_t transport, const std::string &address, int32_t &pairState)
 {
     HILOGI("transport: %{public}d, address: %{public}s", transport, GetEncryptAddr(address).c_str());
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
     if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
-        return classicService->GetPairState(addr);
+        pairState = classicService->GetPairState(addr);
     } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
-        return bleService->GetPairState(addr);
+        pairState = bleService->GetPairState(addr);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
+        return BT_ERR_INVALID_STATE;
     }
-    return INVALID_VALUE;
+    return BT_NO_ERROR;
 }
 
 int32_t BluetoothHostServer::StartPair(int32_t transport, const std::string &address)
