@@ -66,5 +66,10 @@ void BluetoothSocketServer::RemoveObserver(const sptr<IBluetoothSocketObserver> 
 {
     socketObserverList_->RemoveObserver(observer->AsObject());
 }
+
+int BluetoothSocketServer::UpdateCocConnectionParams(const BluetoothSocketCocInfo &info)
+{
+    return reply.WriteInt32(BT_ERR_API_NOT_SUPPORT);
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

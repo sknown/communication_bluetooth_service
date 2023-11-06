@@ -30,6 +30,8 @@ BluetoothSocketStub::BluetoothSocketStub()
         &BluetoothSocketStub::ListenInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::REMOVE_OBSERVER)] =
         &BluetoothSocketStub::RemoveObserverInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::SOCKET_UPDATE_COC_PARAMS)] =
+        &BluetoothSocketStub::UpdateCocConnectionParamsInner;
 }
 
 BluetoothSocketStub::~BluetoothSocketStub()
@@ -134,6 +136,11 @@ ErrCode BluetoothSocketStub::RemoveObserverInner(MessageParcel &data, MessagePar
     RemoveObserver(observer);
 
     return NO_ERROR;
+}
+
+ErrCode BluetoothSocketStub::UpdateCocConnectionParamsInner(MessageParcel &data, MessageParcel &reply)
+{
+    return reply.WriteInt32(BT_ERR_API_NOT_SUPPORT);
 }
 }  // namespace Bluetooth
 }  // namespace OHOS
