@@ -340,6 +340,11 @@ BluetoothA2dpCodecStatus BluetoothA2dpSourceServer::GetCodecStatus(const RawAddr
     return codeStatus;
 }
 
+int BluetoothA2dpSourceServer::GetCodecPreference(const RawAddress &device, const BluetoothA2dpCodecInfo &info)
+{
+    return  NO_ERROR;
+}
+
 int BluetoothA2dpSourceServer::SetCodecPreference(const RawAddress &device, const BluetoothA2dpCodecInfo &info)
 {
     HILOGI("BluetoothA2dpSourceServer::SetCodecPreference starts, codecPriority = %{public}u,"
