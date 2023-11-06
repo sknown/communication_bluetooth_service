@@ -289,7 +289,7 @@ ErrCode BluetoothA2dpSrcStub::GetCodecStatusInner(MessageParcel &data, MessagePa
 
 ErrCode BluetoothA2dpSrcStub::GetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
 {
-    HILOGI("NOT SUPPORT NOW")
+    HILOGI("NOT SUPPORT NOW");
     return NO_ERROR;
 }
 
