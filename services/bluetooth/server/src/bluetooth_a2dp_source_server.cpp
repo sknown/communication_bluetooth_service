@@ -340,7 +340,7 @@ BluetoothA2dpCodecStatus BluetoothA2dpSourceServer::GetCodecStatus(const RawAddr
     return codeStatus;
 }
 
-int BluetoothA2dpSourceServer::GetCodecPreference(const RawAddress &device, const BluetoothA2dpCodecInfo &info)
+int BluetoothA2dpSourceServer::GetCodecPreference(const RawAddress &device, BluetoothA2dpCodecInfo &info)
 {
     return  NO_ERROR;
 }
