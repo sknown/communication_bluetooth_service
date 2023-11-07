@@ -206,7 +206,7 @@ HWTEST_F(GattCTest, BleStartAdvWithAddrTest_001, TestSize.Level1)
 
 /*
  * @tc.name: BleStartAdvWithAddrTest_002
- * @tc.desc: Test BleStartAdvWithAddr when adv addr is not changed, when adv num is max
+ * @tc.desc: Test BleStartAdvWithAddr when adv same addr in 15 mins, when adv num is max
  * @tc.type: FUNC
  * @tc.require: issueI5OH5C
 */
@@ -221,9 +221,9 @@ HWTEST_F(GattCTest, BleStartAdvWithAddrTest_002, TestSize.Level1)
     };
     int ret = BleStartAdvWithAddr(advId, &rawData, &advParam, &advOwnAddrParams);
     EXPECT_EQ(ret, OHOS_BT_STATUS_SUCCESS);
-    // same adv addr in one hour
+    // same adv addr in 15 mins
     ret = BleStartAdvWithAddr(advId, &rawData, &advParam, &advOwnAddrParams);
-    EXPECT_EQ(ret, OHOS_BT_STATUS_UNHANDLED);
+    EXPECT_EQ(ret, OHOS_BT_STATUS_SUCCESS);
     for (uint8_t i = 2; i < 8; i++) {
         advOwnAddrParams.addr = {0x77, 0x66, 0x55, 0x44, 0x33, i};
         ret = BleStartAdvWithAddr(advId, &rawData, &advParam, &advOwnAddrParams);
