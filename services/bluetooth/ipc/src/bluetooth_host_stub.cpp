@@ -1272,12 +1272,12 @@ ErrCode BluetoothHostStub::CountEnableTimesInner(MessageParcel &data, MessagePar
     return NO_ERROR;
 }
 
-ErrCode BluetoothHostStub::SendDeviceSelectionInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothHostStub::SendDeviceSelectionInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
 
-ErrCode BluetoothHostStub::IsSupportWearDetectionInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothHostStub::IsSupportWearDetectionInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
