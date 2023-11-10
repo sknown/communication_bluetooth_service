@@ -50,6 +50,8 @@ BluetoothA2dpSrcStub::BluetoothA2dpSrcStub()
         &BluetoothA2dpSrcStub::GetActiveSinkDeviceInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_GET_CODEC_STATUS)] =
         &BluetoothA2dpSrcStub::GetCodecStatusInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_GET_CODEC_PREFERENCE)] =
+        &BluetoothA2dpSrcStub::GetCodecPreferenceInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_SET_CODEC_PREFERENCE)] =
         &BluetoothA2dpSrcStub::SetCodecPreferenceInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_SWITCH_OPTIONAL_CODECS)] =
@@ -285,7 +287,13 @@ ErrCode BluetoothA2dpSrcStub::GetCodecStatusInner(MessageParcel &data, MessagePa
     return NO_ERROR;
 }
 
-ErrCode BluetoothA2dpSrcStub::SetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothA2dpSrcStub::GetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+int32_t BluetoothA2dpSrcStub::SetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
 {
     std::string addr = data.ReadString();
     std::shared_ptr<BluetoothA2dpCodecInfo> info(data.ReadParcelable<BluetoothA2dpCodecInfo>());

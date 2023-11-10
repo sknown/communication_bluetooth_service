@@ -43,6 +43,7 @@ private:
     ErrCode SetActiveSinkDeviceInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetActiveSinkDeviceInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetCodecStatusInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode GetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply);
     ErrCode SetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply);
     ErrCode SwitchOptionalCodecsInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetOptionalCodecsSupportStateInner(MessageParcel &data, MessageParcel &reply);
