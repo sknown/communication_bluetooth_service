@@ -1163,9 +1163,9 @@ long BluetoothHostServer::GetBtDiscoveryEndMillis()
     return INVALID_VALUE;
 }
 
-int32_t BluetoothHostServer::GetPairedDevices(const int32_t transport, std::vector<BluetoothRawAddress> &pairedAddr)
+int32_t BluetoothHostServer::GetPairedDevices(std::vector<BluetoothRawAddress> &pairedAddr)
 {
-    HILOGI("transport: %{public}d", transport);
+    HILOGI("GetPairedDevices");
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
         return BT_ERR_SYSTEM_PERMISSION_FAILED;
@@ -1173,9 +1173,17 @@ int32_t BluetoothHostServer::GetPairedDevices(const int32_t transport, std::vect
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     std::vector<RawAddress> rawAddrVec;
-    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
+    if (IsBtEnabled() && classicService) {
         rawAddrVec = classicService->GetPairedDevices();
-    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled() && bleService) {
+    } else {
+        HILOGE("transport invalid or BT current state is not enabled!");
+        return BT_ERR_INVALID_STATE;
+    }
+    for (auto it = rawAddrVec.begin(); it != rawAddrVec.end(); ++it) {
+        BluetoothRawAddress rawAddr = BluetoothRawAddress(*it);
+        pairedAddr.emplace_back(rawAddr);
+    }
+    if (IsBleEnabled() && bleService) {
         rawAddrVec = bleService->GetPairedDevices();
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");

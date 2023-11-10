@@ -840,9 +840,8 @@ ErrCode BluetoothHostStub::GetPairStateInner(MessageParcel &data, MessageParcel 
 
 int32_t BluetoothHostStub::GetPairedDevicesInner(MessageParcel &data, MessageParcel &reply)
 {
-    int32_t transport = data.ReadInt32();
     std::vector<BluetoothRawAddress> pairDevice;
-    int32_t result = GetPairedDevices(transport, pairDevice);
+    int32_t result = GetPairedDevices(pairDevice);
     bool ret = true;
     if (!reply.WriteInt32(pairDevice.size())) {
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
