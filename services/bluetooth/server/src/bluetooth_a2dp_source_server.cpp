@@ -74,6 +74,11 @@ public:
         });
     }
 
+    void OnMediaStackChanged(const RawAddress &device, int action) override
+    {
+        HILOGI("addr: %{public}s, action: %{public}d", GET_ENCRYPT_ADDR(device), action);
+    }
+
     void SetObserver(RemoteObserverList<IBluetoothA2dpSourceObserver> *observers)
     {
         observers_ = observers;

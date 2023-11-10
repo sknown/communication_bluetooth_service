@@ -1799,5 +1799,15 @@ int32_t BluetoothHostServer::CountEnableTimes(bool enable)
 {
     return NO_ERROR;
 }
+
+int32_t BluetoothHostServer::SendDeviceSelection(const std::string &address, int useA2dp, int useHfp, int userSelection)
+{
+    return NO_ERROR;
+}
+
+bool BluetoothHostServer::IsSupportWearDetection(const std::string &address)
+{
+    return false;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
