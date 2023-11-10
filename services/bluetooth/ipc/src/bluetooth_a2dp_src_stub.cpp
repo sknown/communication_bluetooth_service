@@ -287,13 +287,13 @@ ErrCode BluetoothA2dpSrcStub::GetCodecStatusInner(MessageParcel &data, MessagePa
     return NO_ERROR;
 }
 
-ErrCode BluetoothA2dpSrcStub::GetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothA2dpSrcStub::GetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
 {
     HILOGI("NOT SUPPORT NOW");
     return NO_ERROR;
 }
 
-ErrCode BluetoothA2dpSrcStub::SetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothA2dpSrcStub::SetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
 {
     std::string addr = data.ReadString();
     std::shared_ptr<BluetoothA2dpCodecInfo> info(data.ReadParcelable<BluetoothA2dpCodecInfo>());
