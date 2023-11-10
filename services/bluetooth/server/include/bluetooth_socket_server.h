@@ -97,6 +97,7 @@ public:
     int Connect(ConnectSocketParam &param, int &fd) override;
     int Listen(ListenSocketParam &param, int &fd) override;
     void RemoveObserver(const sptr<IBluetoothSocketObserver> &observer) override;
+    int UpdateCocConnectionParams(const BluetoothSocketCocInfo &info) override;
 private:
     std::unique_ptr<SocketObserverList> socketObserverList_;
 };
