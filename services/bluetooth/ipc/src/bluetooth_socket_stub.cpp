@@ -13,11 +13,12 @@
  * limitations under the License.
  */
 
-#include "bluetooth_socket_stub.h"
-#include "bluetooth_socket_observer_proxy.h"
 #include "bluetooth_bt_uuid.h"
+#include "bluetooth_errorcode.h"
 #include "bluetooth_log.h"
+#include "bluetooth_socket_observer_proxy.h"
 #include "ipc_types.h"
+#include "bluetooth_socket_stub.h"
 
 namespace OHOS {
 namespace Bluetooth {

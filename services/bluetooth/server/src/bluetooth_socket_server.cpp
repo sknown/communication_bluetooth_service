@@ -13,13 +13,14 @@
  * limitations under the License.
  */
 
-#include "bluetooth_socket_server.h"
+#include "bluetooth_errorcode.h"
 #include "bluetooth_log.h"
 #include "bluetooth_utils_server.h"
 #include "bt_def.h"
 #include "interface_profile_manager.h"
 #include "interface_profile_socket.h"
 #include "permission_utils.h"
+#include "bluetooth_socket_server.h"
 
 using namespace OHOS::bluetooth;
 
@@ -69,7 +70,7 @@ void BluetoothSocketServer::RemoveObserver(const sptr<IBluetoothSocketObserver> 
 
 int BluetoothSocketServer::UpdateCocConnectionParams(const BluetoothSocketCocInfo &info)
 {
-    return reply.WriteInt32(BT_ERR_API_NOT_SUPPORT);
+    return BT_ERR_API_NOT_SUPPORT;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS
