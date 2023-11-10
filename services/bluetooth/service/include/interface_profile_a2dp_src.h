@@ -114,6 +114,14 @@ public:
      * @since 6.0
      */
     virtual void OnConnectionStateChanged(const RawAddress &remoteAddr, int state) {};
+
+    /**
+     * @brief Media stack Changed observer.
+     * @param device bluetooth device address.
+     * @param state Action on the device.
+     * @since 10.0
+     */
+    virtual void OnMediaStackChanged(const RawAddress &remoteAddr, int action) {};
 };
 
 /**
