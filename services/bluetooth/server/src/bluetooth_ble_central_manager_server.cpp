@@ -44,6 +44,7 @@ struct BluetoothBleCentralManagerServer::impl {
     std::map<sptr<IRemoteObject>, int32_t> observersUid_;
     std::map<sptr<IRemoteObject>, int32_t> observersScannerId_;
     std::map<int32_t, std::vector<bluetooth::BleScanFilterImpl>> observersBleScanFilters_;
+    std::map<int32_t, bool> observersScanFiltersIsEnanled_;
     std::mutex bleScanFiltersMutex_;
     class BleCentralManagerCallback;
     std::unique_ptr<BleCentralManagerCallback> observerImp_ = std::make_unique<BleCentralManagerCallback>(this);
@@ -98,10 +99,15 @@ public:
                 BluetoothBleScanResult bleScanResult(result);
                 int32_t scannerId = this->pimpl_->observersScannerId_[observer->AsObject()];
                 std::lock_guard<std::mutex> lock(this->pimpl_->bleScanFiltersMutex_);
-                std::vector<bluetooth::BleScanFilterImpl> scanFilters_ = this->pimpl_->
-                    observersBleScanFilters_[scannerId];
                 HILOGD("OnScanCallback() start bleScanFilter Address: %{public}s scannerId:%{public}d",
                     GetEncryptAddr(result.GetPeripheralDevice().GetRawAddress().GetAddress()).c_str(), scannerId);
+                bool scanFiltersIsEnanled_ = this->pimpl_->observersScanFiltersIsEnanled_[scannerId];
+                // if bleScanFilter been set empty when stopped scan, we need refuse callback instead of filter pass
+                if (!scanFiltersIsEnanled_) {
+                    return;
+                }
+                std::vector<bluetooth::BleScanFilterImpl> scanFilters_ = this->pimpl_->
+                    observersBleScanFilters_[scannerId];
                 if (scanFilters_.empty() ||
                     BluetoothBleFilterMatcher::MatchesScanFilters(scanFilters_, bleScanResult) == MatchResult::MATCH) {
                     observer->OnScanCallback(bleScanResult);
@@ -514,6 +520,7 @@ int BluetoothBleCentralManagerServer::ConfigScanFilter(
         }
         std::lock_guard<std::mutex> lock(pimpl->bleScanFiltersMutex_);
         pimpl->observersBleScanFilters_[scannerId] = filterImpls;
+        pimpl->observersScanFiltersIsEnanled_[scannerId] = true;
         return bleService->ConfigScanFilter(scannerId, filterImpls);
     }
     return NO_ERROR;
@@ -528,6 +535,7 @@ void BluetoothBleCentralManagerServer::RemoveScanFilter(int32_t scannerId)
         bleService->RemoveScanFilter(scannerId);
     }
     std::lock_guard<std::mutex> lock(pimpl->bleScanFiltersMutex_);
+    pimpl->observersScanFiltersIsEnanled_[scannerId] = false;
     pimpl->observersBleScanFilters_.erase(scannerId);
 }
 
