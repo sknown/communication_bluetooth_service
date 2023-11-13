@@ -374,5 +374,15 @@ int BluetoothHfpAgServer::GetConnectStrategy(const BluetoothRawAddress &device, 
 {
     return NO_ERROR;
 }
+
+int BluetoothHfpAgServer::ConnectSco(const uint8_t callType)
+{
+    return NO_ERROR;
+}
+
+int BluetoothHfpAgServer::DisConnectSco(const uint8_t callType)
+{
+    return NO_ERROR;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

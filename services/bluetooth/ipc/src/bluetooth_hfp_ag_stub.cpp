@@ -62,6 +62,10 @@ BluetoothHfpAgStub::BluetoothHfpAgStub() {
         &BluetoothHfpAgStub::SetConnectStrategyInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_GET_CONNECT_STRATEGY)] =
         &BluetoothHfpAgStub::GetConnectStrategyInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_CONNECT_SCO_EX)] =
+        &BluetoothHfpAgStub::ConnectScoInnerEx;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_DISCONNECT_SCO_EX)] =
+        &BluetoothHfpAgStub::DisConnectScoInnerEx;
 
     HILOGI("%{public}s ends.", __func__);
 }
@@ -348,5 +352,14 @@ ErrCode BluetoothHfpAgStub::GetConnectStrategyInner(MessageParcel &data, Message
     return NO_ERROR;
 }
 
+ErrCode BluetoothHfpAgStub::ConnectScoInnerEx(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHfpAgStub::DisConnectScoInnerEx(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
