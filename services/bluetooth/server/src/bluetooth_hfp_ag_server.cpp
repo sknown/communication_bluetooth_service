@@ -380,7 +380,7 @@ int BluetoothHfpAgServer::ConnectSco(const uint8_t callType)
     return NO_ERROR;
 }
 
-int BluetoothHfpAgServer::DisConnectSco(const uint8_t callType)
+int BluetoothHfpAgServer::DisconnectSco(const uint8_t callType)
 {
     return NO_ERROR;
 }

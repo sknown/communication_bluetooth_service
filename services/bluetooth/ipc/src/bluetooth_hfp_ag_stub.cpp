@@ -65,7 +65,7 @@ BluetoothHfpAgStub::BluetoothHfpAgStub() {
     memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_CONNECT_SCO_EX)] =
         &BluetoothHfpAgStub::ConnectScoInnerEx;
     memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_DISCONNECT_SCO_EX)] =
-        &BluetoothHfpAgStub::DisConnectScoInnerEx;
+        &BluetoothHfpAgStub::DisconnectScoInnerEx;
 
     HILOGI("%{public}s ends.", __func__);
 }
@@ -357,7 +357,7 @@ ErrCode BluetoothHfpAgStub::ConnectScoInnerEx(MessageParcel &data, MessageParcel
     return NO_ERROR;
 }
 
-ErrCode BluetoothHfpAgStub::DisConnectScoInnerEx(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothHfpAgStub::DisconnectScoInnerEx(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
