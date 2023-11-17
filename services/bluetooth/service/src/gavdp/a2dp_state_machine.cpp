@@ -117,6 +117,10 @@ void A2dpStateIdle::ProcessDisconnectReq(BtAddr addr, uint8_t role)
 
     SetStateName(A2DP_PROFILE_CLOSING);
     avdtp.DisconnectReq(addr);
+    
+    A2dpProfile *profile = GetProfileInstance(role);
+    CallbackParameter param = {role, true, 0};
+    profile->ConnectStateChangedNotify(addr, STREAM_DISCONNECT, (void *)&param);
 }
 
 void A2dpStateIdle::ProcessTimeout(BtAddr addr, uint8_t role)

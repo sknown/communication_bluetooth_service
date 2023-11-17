@@ -258,8 +258,6 @@ void HfpAgConnecting::Exit()
 bool HfpAgConnecting::Dispatch(const utility::Message &msg)
 {
     HfpAgMessage &event = (HfpAgMessage &)msg;
-    LOG_INFO("[HFP AG]%{public}s():[Connecting][%{public}s]", __FUNCTION__,
-        HfpAgStateMachine::GetEventName(event.what_).c_str());
     switch (event.what_) {
         case HFP_AG_AUDIO_CONNECT_REQUEST_EVT:
             profile_.ProcessAudioConnectRequest();
@@ -267,8 +265,10 @@ bool HfpAgConnecting::Dispatch(const utility::Message &msg)
         case HFP_AG_AUDIO_CONNECTED_EVT:
         case HFP_AG_AUDIO_DISCONNECTED_EVT:
         case HFP_AG_CONNECT_EVT:
-        case HFP_AG_DISCONNECT_EVT:
             stateMachine_.AddDeferredMessage(event);
+            break;
+        case HFP_AG_DISCONNECT_EVT:
+            Transition(HfpAgStateMachine::DISCONNECTED);
             break;
         case HFP_AG_SDP_DISCOVERY_RESULT_SUCCESS:
             if (profile_.ServiceDiscoveryResult() != HFP_AG_SUCCESS) {
