@@ -35,6 +35,8 @@ import {
   testGetRemoteDeviceClass ,
   testGetPairedDevices ,
   testUnPairedDevice ,
+  testSetConnectionStrategy,
+  testGetConnectionStrategy,
   testGetProfileConnState1 ,
   testGetProfileConnState2 ,
   testOnStateChange ,
@@ -271,6 +273,22 @@ const BRTestCase: [] = [
     'detail' : '获取配对蓝牙设备的信息' ,
     'method' : 'getPairedDeviceIds' ,
     'api' : testGetPairedDevices ,
+    'result' : 'None' ,
+    'category' : CaseCategory.BR
+  },
+  {
+    'name' : '设置Profile连接策略' ,
+    'detail' : '设置Profile连接策略' ,
+    'method' : 'setConnectionStrategy' ,
+    'api' : testSetConnectionStrategy ,
+    'result' : 'None' ,
+    'category' : CaseCategory.BR
+  },
+  {
+    'name' : '获取Profile连接策略' ,
+    'detail' : '获取Profile连接策略' ,
+    'method' : 'getConnectionStrategy' ,
+    'api' : testGetConnectionStrategy ,
     'result' : 'None' ,
     'category' : CaseCategory.BR
   },

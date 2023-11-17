@@ -855,6 +855,10 @@
     {
       "name": "passwordSetting_button_width",
       "value": "261vp"
+    },
+    {
+      "name": "distance_5",
+      "value": "5vp"
     }
   ]
 }
