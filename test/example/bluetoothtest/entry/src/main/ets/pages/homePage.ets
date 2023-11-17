@@ -75,7 +75,8 @@ struct TestCategory {
         }.tabBar( $r( "app.string.benchmark_M" ) )
       }
       .barWidth( "80%" )
-      .barHeight( 60 )
+      .barHeight( "40vp" )
+      .align( Alignment.TopStart )
       .barMode( BarMode.Scrollable )
       .backgroundColor( $r( "app.color.white" ) )
     }
@@ -90,7 +91,7 @@ struct TestCategory {
 struct HomePage {
   private testItems: TestData[] = initTestData()
 
-  aboutToAppear(){
+  aboutToAppear() {
     let abilityMgr = abilityAccessCtrl.createAtManager();
     abilityMgr.requestPermissionsFromUser(globalThis.context, ["ohos.permission.LOCATION", "ohos.permission.APPROXIMATELY_LOCATION",
     "ohos.permission.CAPTURE_SCREEN","ohos.permission.WRITE_MEDIA","ohos.permission.READ_MEDIA"], (error, result) => {
@@ -106,7 +107,7 @@ struct HomePage {
         Image( $r( 'app.media.Switch' ) )
           .height( 30 )
           .width( 30 )
-          .margin( { top : 15 , right : 10 } )
+          .margin( { top : $r( "app.float.distance_5" ) , right : $r( "app.float.distance_10" ) } )
           .onClick( () => {
           } )
       }

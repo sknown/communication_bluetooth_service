@@ -16,6 +16,7 @@
 
 import { TestData } from '../MainAbility/model/testData'
 import { TestListItem } from './testListItems';
+import ConfigData from '../utils/ConfigData';
 /**
  * Test-List of bluetooth test
  */
@@ -34,7 +35,7 @@ export struct TestList {
           }
         } , item => item.id.toString() )
       }
-      .height( '93%' )
+      .height( ConfigData.WH_100_100 )
       .backgroundColor( $r( "app.color.lead" ) )
     }
   }
