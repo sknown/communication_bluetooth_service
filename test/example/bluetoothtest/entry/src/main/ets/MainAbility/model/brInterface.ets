@@ -25,6 +25,8 @@ import Router from '@system.router';
 import BluetoothDeviceController from '../controller/BluetoothDeviceController';
 import bluetooth from '@ohos.bluetooth';
 import bt from '@ohos.bluetooth';
+import baseProfile from '@ohos.bluetooth.baseProfile';
+import a2dp from '@ohos.bluetooth.a2dp';
 
 const PAGE_URI_DEVICE_FOUND_MODE = 'pages/subManualApiTest/subBrTest/deviceFound';
 
@@ -353,6 +355,60 @@ export function testGetPairedDevices(): string {
   }
 }
 
+export function testSetConnectionStrategy( connectionStrategy: number ) {
+  try {
+    let message = "setConnectionStrategy test"
+    let a2dpSrc = a2dp.createA2dpSrcProfile();
+    let pairedMac = AppStorage.Get( 'pairedMac' )
+    if ( pairedMac.length == 0 ) {
+      message = '当前Mac值为空，请检查是否已配对';
+    } else {
+      a2dpSrc.setConnectionStrategy( pairedMac , connectionStrategy , ( err ) => {
+        if ( !err ) {
+          message = "设置连接策略,mac值为: " + pairedMac + ";策略为: " + connectionStrategy
+          console.log( "设置连接策略,mac值为: " + pairedMac + ";策略为: " + connectionStrategy )
+        } else {
+          console.log( 'setConnectionStrategy, err: ' + JSON.stringify( err ) );
+        }
+        prompt.showToast( { message : message } )
+      } );
+    }
+    return message
+  } catch( e ) {
+    console.log( `Failed to testSetConnectionStrategy. message: ${ e.message }, code: ${ e.code }` )
+    let message = `Failed to testSetConnectionStrategy. message: ${ e.message }, code: ${ e.code }`
+    prompt.showToast( { message : message } )
+    return message
+  }
+}
+
+export function testGetConnectionStrategy( deviceId: string ): string {
+  try {
+    let message = "getConnectionStrategy test"
+    let a2dpSrc = a2dp.createA2dpSrcProfile();
+    let pairedMac = AppStorage.Get( 'pairedMac' )
+    if ( pairedMac.length == 0 ) {
+      message = '当前Mac值为空，请检查是否已配对';
+    } else {
+      a2dpSrc.getConnectionStrategy( pairedMac , ( err , connectionStrategy ) => {
+        if ( !err ) {
+          message = "获取连接策略,mac值为: " + pairedMac + ";策略为: " + connectionStrategy
+          console.log( "获取连接策略,mac值为: " + pairedMac + ";策略为: " + connectionStrategy )
+        } else {
+          console.log( 'getConnectionStrategy, err: ' + JSON.stringify( err ) );
+        }
+        prompt.showToast( { message : message } )
+        return message
+      } );
+    }
+    return message
+  } catch( e ) {
+    console.log( `Failed to testGetConnectionStrategy. message: ${ e.message }, code: ${ e.code }` )
+    let message = `Failed to testGetConnectionStrategy. message: ${ e.message }, code: ${ e.code }`
+    prompt.showToast( { message : message } )
+    return message
+  }
+}
 
 export function testGetProfileConnState1( profileId: number ): string {
   try {

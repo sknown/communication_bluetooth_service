@@ -72,7 +72,7 @@ export struct GetProfileConnSateDialog {
             //TODO: 设备调试时候需要打开
             if ( true ) {
               let message = ""
-              message = this.apiItem.api( this.currentClick , this.pairedMac )
+              message = this.apiItem.api( this.currentClick, this.pairedMac )
               this.apiItem.result = this.getProfileList[this.currentClick].value + "状态:" + message
               console.log( "this.apiItem.result:" + this.apiItem.result )
             } else {
@@ -232,6 +232,74 @@ export struct InputDialog {
   }
 }
 
+@CustomDialog
+export struct SetConnectionStrategyDialog {
+  private hitText: string
+  private connectionStrategyList: [] = [
+    { value : 'CONNECTION_STRATEGY_UNSUPPORTED' },
+    { value : 'CONNECTION_STRATEGY_ALLOWED' },
+    { value : 'CONNECTION_STRATEGY_FORBIDDEN' },
+  ]
+  @State currentClick: number = 1;
+  @Link textValue: string
+  @Link inputValue: string
+  @Link apiItem: TestApi
+  @Link currentIndex: number
+  @Link changeIndex: number
+  controller: CustomDialogController
+  cancel: () => void
+  confirm: ( string ) => void
+
+  build() {
+    Column() {
+      Text( this.hitText )
+        .fontSize( 20 )
+        .margin( { top : 10 , bottom : 10 } )
+      Select( this.connectionStrategyList )
+        .selected( this.currentClick )
+        .value( this.connectionStrategyList[this.currentClick].value )
+        .font( { size : 18 } )
+        .selectedOptionFont( { size : 18 } )
+        .optionFont( { size : 17 } )
+        .height( 80 )
+        .width( "90%" )
+        .onSelect( ( index: number ) => {
+          console.log( "Select:" + index )
+          this.currentClick = index
+        } )
+
+      Flex( { justifyContent : FlexAlign.SpaceAround } ) {
+        Button( '取消' )
+          .onClick( () => {
+            this.controller.close()
+            this.cancel()
+          } )
+          .backgroundColor( 0xffffff ).fontColor( Color.Black )
+        Button( '确认' )
+          .onClick( () => {
+            this.inputValue = this.currentClick
+            this.changeIndex = this.currentIndex
+            //TODO: 设备调试时候需要打开
+            if ( true ) {
+              let message = ""
+              message = this.apiItem.api( this.currentClick )
+              this.apiItem.result = this.connectionStrategyList[this.currentClick].value
+              console.log( "this.apiItem.result:" + this.apiItem.result )
+            } else {
+              let message = ""
+              this.apiItem.result = this.connectionStrategyList[this.currentClick].value
+              console.log( "this.apiItem.result:" + this.apiItem.result )
+            }
+            this.controller.close()
+            this.confirm( this.inputValue )
+          } )
+          .backgroundColor( 0xffffff ).fontColor( Color.Red )
+      }
+      .margin( { bottom : 10 } )
+    }
+  }
+}
+
 /**
  * ContentTable
  */
@@ -286,7 +354,20 @@ export struct ContentTable {
     cancel : this.onCancel() ,
     autoCancel : true
   })
-
+  setConnectionStrategyDialog: CustomDialogController = new CustomDialogController({
+    builder : SetConnectionStrategyDialog( {
+      hitText : "设置连接策略" ,
+      cancel : this.onCancel ,
+      confirm : this.onAccept ,
+      textValue : $localName ,
+      inputValue : $localName ,
+      currentIndex : $currentIndex ,
+      apiItem : $currentApiItem ,
+      changeIndex : $changeIndex ,
+    } ) ,
+    cancel : this.onCancel() ,
+    autoCancel : true
+  })
   onCancel() {
     console.log( '取消' )
   }
@@ -450,6 +531,19 @@ export struct ContentTable {
           this.getProfileConnSateDialog.open();
         }
           break;
+        case "setConnectionStrategy": {
+          this.currentApiItem = apiItem;
+          this.currentIndex += 1;
+          this.setConnectionStrategyDialog.open();
+        }
+          break;
+        // case "getConnectionStrategy": {
+        //   let message = apiItem.api( this.pairedMac );
+        //   apiItem.result = message;
+        //   this.currentIndex += 1;
+        //   this.changeIndex = this.currentIndex;
+        //   prompt.showToast( { message : message } );
+        // }
         default: {
           let message = apiItem.api();
           apiItem.result = message;
