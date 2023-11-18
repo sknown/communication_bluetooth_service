@@ -35,7 +35,7 @@ private:
 
 
 static Bluetooth::Pan *profile_;
-static PanObserverTest panObserverTest;
+static std::shared_ptr<PanObserverTest> panObserverTest = std::make_shared<PanObserverTest>();
 
 class PanTest : public testing::Test {
 public:
@@ -158,7 +158,7 @@ HWTEST_F(PanTest, PAN_ModuleTest_RegisterObserver_00100, TestSize.Level1)
     GTEST_LOG_(INFO) << "RegisterObserver function test";
 
     profile_ = Pan::GetProfile();
-    profile_->RegisterObserver(&panObserverTest);
+    profile_->RegisterObserver(panObserverTest);
 
     GTEST_LOG_(INFO) << "PAN_ModuleTest_RegisterObserver_00100 end";
 }
@@ -175,7 +175,7 @@ HWTEST_F(PanTest, PAN_ModuleTest_DeregisterObserver_00100, TestSize.Level1)
     GTEST_LOG_(INFO) << "DeregisterObserver function test";
 
     profile_ = Pan::GetProfile();
-    profile_->DeregisterObserver(&panObserverTest);
+    profile_->DeregisterObserver(panObserverTest);
 
     GTEST_LOG_(INFO) << "PAN_ModuleTest_DeregisterObserver_00100 end";
 }
@@ -193,7 +193,7 @@ HWTEST_F(PanTest, PAN_ModuleTest_OnConnectionStateChanged_00100, TestSize.Level1
 
     BluetoothRemoteDevice device;
     int state = static_cast<int>(BTConnectState::DISCONNECTED);;
-    panObserverTest.OnConnectionStateChanged(device, state);
+    panObserverTest->OnConnectionStateChanged(device, state);
 
     GTEST_LOG_(INFO) << "PAN_ModuleTest_OnConnectionStateChanged_00100 end";
 }
