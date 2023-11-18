@@ -230,8 +230,8 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::BT_SEND_DEVICE_SELECTION,
             std::bind(&BluetoothHostStub::SendDeviceSelectionInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::BT_IS_SUPPORT_WEAR_DETECTION,
-            std::bind(&BluetoothHostStub::IsSupportWearDetectionInner, std::placeholders::_1, std::placeholders::_2,
+        {BluetoothHostInterfaceCode::BT_IS_WEAR_DETECTION_SUPPORTED,
+            std::bind(&BluetoothHostStub::IsWearDetectionSupportedInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
 };
 
@@ -1288,7 +1288,7 @@ int32_t BluetoothHostStub::SendDeviceSelectionInner(MessageParcel &data, Message
     return NO_ERROR;
 }
 
-int32_t BluetoothHostStub::IsSupportWearDetectionInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothHostStub::IsWearDetectionSupportedInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }

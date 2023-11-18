@@ -121,7 +121,7 @@ public:
     int32_t StartCrediblePair(int32_t transport, const std::string &address) override;
     int32_t CountEnableTimes(bool enable) override;
     int32_t SendDeviceSelection(const std::string &address, int useA2dp, int useHfp, int userSelection) override;
-    bool IsSupportWearDetection(const std::string &address) override;
+    int32_t IsWearDetectionSupported(const std::string &address, bool &isSupported) override;
 
 private:
     static sptr<BluetoothHostServer> instance;
