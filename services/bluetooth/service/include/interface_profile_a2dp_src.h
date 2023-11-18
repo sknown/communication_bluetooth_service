@@ -119,7 +119,7 @@ public:
      * @brief Media stack Changed observer.
      * @param device bluetooth device address.
      * @param state Action on the device.
-     * @since 10.0
+     * @since 11.0
      */
     virtual void OnMediaStackChanged(const RawAddress &remoteAddr, int action) {};
 };

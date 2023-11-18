@@ -1805,9 +1805,9 @@ int32_t BluetoothHostServer::SendDeviceSelection(const std::string &address, int
     return NO_ERROR;
 }
 
-bool BluetoothHostServer::IsSupportWearDetection(const std::string &address)
+int32_t BluetoothHostServer::IsWearDetectionSupported(const std::string &address, bool &isSupported)
 {
-    return false;
+    return NO_ERROR;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS
