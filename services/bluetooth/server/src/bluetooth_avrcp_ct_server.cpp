@@ -308,7 +308,7 @@ public:
 
     void OnConnectionStateChanged(const RawAddress &rawAddr, int state)
     {
-        HILOGI("address: %{public}s, state: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), state);
+        HILOGI("address: %{public}s, state: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), state);
         std::lock_guard<std::mutex> lock(observerMutex_);
 
         observers_.ForEach([rawAddr, state](IBluetoothAvrcpCtObserver *observer) {
@@ -320,7 +320,7 @@ public:
     void OnPressButton(const RawAddress &rawAddr, uint8_t button, int result)
     {
         HILOGI("address: %{public}s, button: %{public}d, result: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), button, result);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), button, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -334,7 +334,7 @@ public:
     void OnReleaseButton(const RawAddress &rawAddr, uint8_t button, int result)
     {
         HILOGI("address: %{public}s, button: %{public}d, result: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), button, result);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), button, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -349,7 +349,7 @@ public:
         const std::vector<std::string> &folderNames, int result, int detail)
     {
         HILOGI("addr: %{public}s, res: %{public}d, detail: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), result, detail);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), result, detail);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -367,7 +367,7 @@ public:
     void OnGetCapabilities(const RawAddress &rawAddr, const std::vector<uint32_t> &companies,
         const std::vector<uint8_t> &events, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -381,7 +381,7 @@ public:
 
     void OnGetPlayerAppSettingAttributes(const RawAddress &rawAddr, std::vector<uint8_t> attributes, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -395,7 +395,7 @@ public:
         const RawAddress &rawAddr, uint8_t attribute, const std::vector<uint8_t> values, int result)
     {
         HILOGI("addr: %{public}s, attribute: %{public}d, res: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), attribute, result);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), attribute, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -408,7 +408,7 @@ public:
     void OnGetPlayerAppSettingCurrentValue(const RawAddress &rawAddr, const std::vector<uint8_t> &attributes,
         const std::vector<uint8_t> &values, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -422,7 +422,7 @@ public:
 
     void OnSetPlayerAppSettingCurrentValue(const RawAddress &rawAddr, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -435,7 +435,7 @@ public:
     void OnGetPlayerAppSettingAttributeText(const RawAddress &rawAddr, const std::vector<uint8_t> &attributes,
         const std::vector<std::string> &attributeName, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -450,7 +450,7 @@ public:
     void OnGetPlayerAppSettingValueText(const RawAddress &rawAddr, const std::vector<uint8_t> &values,
         const std::vector<std::string> &valueName, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -463,7 +463,7 @@ public:
     void OnGetElementAttributes(const RawAddress &rawAddr, const std::vector<uint32_t> &attributes,
         const std::vector<std::string> &valueName, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -479,7 +479,7 @@ public:
         const RawAddress &rawAddr, uint32_t songLength, uint32_t songPosition, uint8_t playStatus, int result)
     {
         HILOGI("addr: %{public}s, songLength: %{public}u, songPosition: %{public}u, playStatus: %{public}d, "
-            "res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), songLength, songPosition, playStatus, result);
+            "res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), songLength, songPosition, playStatus, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -496,7 +496,7 @@ public:
     void OnPlayItem(const RawAddress &rawAddr, int result, int detail)
     {
         HILOGI("addr: %{public}s, res: %{public}d, detail: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), result, detail);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), result, detail);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -511,7 +511,7 @@ public:
         const RawAddress &rawAddr, uint16_t uidCounter, const std::vector<AvrcMpItem> &items, int result, int detail)
     {
         HILOGI("addr: %{public}s, res: %{public}d, detail: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), result, detail);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), result, detail);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -532,7 +532,7 @@ public:
         const RawAddress &rawAddr, uint16_t uidCounter, const std::vector<AvrcMeItem> &items, int result, int detail)
     {
         HILOGI("addr: %{public}s, uidCounter: %{public}hu, res: %{public}d, detail: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), uidCounter, result, detail);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), uidCounter, result, detail);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -553,7 +553,7 @@ public:
         const std::vector<std::string> &values, int result, int detail)
     {
         HILOGI("addr: %{public}s, res: %{public}d, detail: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), result, detail);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), result, detail);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -570,7 +570,7 @@ public:
         const RawAddress &rawAddr, uint16_t uidCounter, uint32_t numOfItems, int result, int detail)
     {
         HILOGI("addr: %{public}s, uidCounter: %{public}hu, numOfItems: %{public}u, res: %{public}d, detail: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), uidCounter, numOfItems, result, detail);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), uidCounter, numOfItems, result, detail);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -586,7 +586,7 @@ public:
     void OnSetAbsoluteVolume(const RawAddress &rawAddr, uint8_t volume, int result)
     {
         HILOGI("addr: %{public}s, volume: %{public}d, res: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), volume, result);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), volume, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -600,7 +600,7 @@ public:
     void OnPlaybackStatusChanged(const RawAddress &rawAddr, uint8_t playStatus, int result)
     {
         HILOGI("addr: %{public}s, playStatus: %{public}d, res: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), playStatus, result);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), playStatus, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -614,7 +614,7 @@ public:
     void OnTrackChanged(const RawAddress &rawAddr, uint64_t uid, int result)
     {
         HILOGI("addr: %{public}s, uid: %{public}llu, res: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), (unsigned long long)uid, result);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), (unsigned long long)uid, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -627,7 +627,7 @@ public:
 
     void OnTrackReachedEnd(const RawAddress &rawAddr, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -639,7 +639,7 @@ public:
 
     void OnTrackReachedStart(const RawAddress &rawAddr, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -652,7 +652,7 @@ public:
     void OnPlaybackPosChanged(const RawAddress &rawAddr, uint32_t playbackPos, int result)
     {
         HILOGI("addr: %{public}s, playbackPos: %{public}u, res: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), playbackPos, result);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), playbackPos, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -666,7 +666,7 @@ public:
     void OnPlayerAppSettingChanged(const RawAddress &rawAddr, const std::vector<uint8_t> &attributes,
         const std::vector<uint8_t> &values, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -680,7 +680,7 @@ public:
 
     void OnNowPlayingContentChanged(const RawAddress &rawAddr, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -692,7 +692,7 @@ public:
 
     void OnAvailablePlayersChanged(const RawAddress &rawAddr, int result)
     {
-        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), result);
+        HILOGI("addr: %{public}s, res: %{public}d", GET_ENCRYPT_RAW_ADDR(rawAddr), result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -705,7 +705,7 @@ public:
     void OnAddressedPlayerChanged(const RawAddress &rawAddr, uint16_t playerId, uint16_t uidCounter, int result)
     {
         HILOGI("addr: %{public}s, playerId: %{public}hu, uidCounter: %{public}hu, res: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), playerId, uidCounter, result);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), playerId, uidCounter, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -720,7 +720,7 @@ public:
     void OnUidChanged(const RawAddress &rawAddr, uint16_t uidCounter, int result)
     {
         HILOGI("addr: %{public}s, uidCounter: %{public}hu, res: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), uidCounter, result);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), uidCounter, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
@@ -734,7 +734,7 @@ public:
     void OnVolumeChanged(const RawAddress &rawAddr, uint8_t volume, int result)
     {
         HILOGI("addr: %{public}s, volume: %{public}d, res: %{public}d",
-            GET_ENCRYPT_AVRCP_ADDR(rawAddr), volume, result);
+            GET_ENCRYPT_RAW_ADDR(rawAddr), volume, result);
 
         std::lock_guard<std::mutex> lock(observerMutex_);
 
