@@ -45,6 +45,7 @@ ohos_static_library("btipc_service") {
     "src/bluetooth_host_observer_proxy.cpp",
     "src/bluetooth_host_stub.cpp",
     "src/bluetooth_remote_device_observer_proxy.cpp",
+    "src/bluetooth_socket_observer_proxy.cpp",
     "src/bluetooth_socket_stub.cpp",
   ]
 
