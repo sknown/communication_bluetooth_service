@@ -37,10 +37,6 @@ int BluetoothSocketServer::Connect(ConnectSocketParam &param, int &fd)
         fd = socket->Connect(param.addr, param.uuid, (int)param.securityFlag, (int)param.type);
     }
 
-    if (fd != -1 && param.observer != nullptr) {
-        socketObserverList_->AddObserver(fd, param.observer->AsObject());
-    }
-
     return NO_ERROR;
 }
 
@@ -63,9 +59,22 @@ int BluetoothSocketServer::Listen(ListenSocketParam &param, int &fd)
     return NO_ERROR;
 }
 
-void BluetoothSocketServer::RemoveObserver(const sptr<IBluetoothSocketObserver> &observer)
+int BluetoothSocketServer::DeregisterServerObserver(const sptr<IBluetoothServerSocketObserver> &observer)
 {
     socketObserverList_->RemoveObserver(observer->AsObject());
+    return NO_ERROR;
+}
+
+int BluetoothSocketServer::RegisterClientObserver(const BluetoothRawAddress &addr, const bluetooth::Uuid uuid,
+    const sptr<IBluetoothClientSocketObserver> &observer)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int BluetoothSocketServer::DeregisterClientObserver(const BluetoothRawAddress &addr, const bluetooth::Uuid uuid,
+    const sptr<IBluetoothClientSocketObserver> &observer)
+{
+    return BT_ERR_API_NOT_SUPPORT;
 }
 
 int BluetoothSocketServer::UpdateCocConnectionParams(const BluetoothSocketCocInfo &info)
