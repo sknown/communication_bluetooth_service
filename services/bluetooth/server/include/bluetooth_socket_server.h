@@ -19,6 +19,9 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include "bluetooth_socket_stub.h"
+#include "bt_uuid.h"
+#include "bluetooth_raw_address.h"
+#include "base_def.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -96,7 +99,11 @@ public:
 
     int Connect(ConnectSocketParam &param, int &fd) override;
     int Listen(ListenSocketParam &param, int &fd) override;
-    void RemoveObserver(const sptr<IBluetoothSocketObserver> &observer) override;
+    int DeregisterServerObserver(const sptr<IBluetoothServerSocketObserver> &observer) override;
+    int RegisterClientObserver(const BluetoothRawAddress &addr, const bluetooth::Uuid uuid,
+        const sptr<IBluetoothClientSocketObserver> &observer) override;
+    int DeregisterClientObserver(const BluetoothRawAddress &addr, const bluetooth::Uuid uuid,
+        const sptr<IBluetoothClientSocketObserver> &observer) override;
     int UpdateCocConnectionParams(const BluetoothSocketCocInfo &info) override;
 private:
     std::unique_ptr<SocketObserverList> socketObserverList_;
