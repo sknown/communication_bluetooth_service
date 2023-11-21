@@ -44,7 +44,8 @@ public:
 
 private:
 };
-static HandsFreeUnitObserverCommon observer_;
+static std::shared_ptr<HandsFreeUnitObserverCommon> observer_ =
+    std::make_shared<HandsFreeUnitObserverCommon>();
 static HandsFreeUnit *profile_;
 static BluetoothHost *host_;
 class HandsFreeUnitTest : public testing::Test {
@@ -370,7 +371,7 @@ HWTEST_F(HandsFreeUnitTest, HandsFreeUnit_UnitTest_RegisterObserver, TestSize.Le
     GTEST_LOG_(INFO) << "HandsFreeAudioGateway_UnitTest_RegisterObserver start";
  
     profile_ = HandsFreeUnit::GetProfile();
-    profile_->RegisterObserver(&observer_);
+    profile_->RegisterObserver(observer_);
     
     GTEST_LOG_(INFO) << "HandsFreeAudioGateway_UnitTest_RegisterObserver end";
 }
@@ -385,7 +386,7 @@ HWTEST_F(HandsFreeUnitTest, HandsFreeUnit_UnitTest_DeregisterObserver, TestSize.
     GTEST_LOG_(INFO) << "HandsFreeAudioGateway_UnitTest_DeregisterObserver start";
  
     profile_ = HandsFreeUnit::GetProfile();
-    profile_->DeregisterObserver(&observer_);
+    profile_->DeregisterObserver(observer_);
     
     GTEST_LOG_(INFO) << "HandsFreeAudioGateway_UnitTest_DeregisterObserver end";
 }

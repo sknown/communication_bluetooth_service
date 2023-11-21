@@ -36,7 +36,7 @@ private:
 
 
 static Bluetooth::HidHost  *profile_;
-static HidHostObserverTest hidHostObserverTest;
+static std::shared_ptr<HidHostObserverTest> hidHostObserverTest = std::make_shared<HidHostObserverTest>();
 
 class HidHostTest : public testing::Test {
 public:
@@ -181,7 +181,7 @@ HWTEST_F(HidHostTest, HID_ModuleTest_RegisterObserver_00100, TestSize.Level1)
     GTEST_LOG_(INFO) << "RegisterObserver function test";
 
     profile_ = HidHost::GetProfile();
-    profile_->RegisterObserver(&hidHostObserverTest);
+    profile_->RegisterObserver(hidHostObserverTest);
 
     GTEST_LOG_(INFO) << "HID_ModuleTest_RegisterObserver_00100 end";
 }
@@ -198,7 +198,7 @@ HWTEST_F(HidHostTest, HID_ModuleTest_DeregisterObserver_00100, TestSize.Level1)
     GTEST_LOG_(INFO) << "DeregisterObserver function test";
 
     profile_ = HidHost::GetProfile();
-    profile_->DeregisterObserver(&hidHostObserverTest);
+    profile_->DeregisterObserver(hidHostObserverTest);
 
     GTEST_LOG_(INFO) << "HID_ModuleTest_DeregisterObserver_00100 end";
 }
@@ -216,7 +216,7 @@ HWTEST_F(HidHostTest, HID_ModuleTest_OnConnectionStateChanged_00100, TestSize.Le
 
     BluetoothRemoteDevice device;
     int ret = 0;
-    hidHostObserverTest.OnConnectionStateChanged(device, ret);
+    hidHostObserverTest->OnConnectionStateChanged(device, ret);
 
     GTEST_LOG_(INFO) << "HID_ModuleTest_OnConnectionStateChanged_00100 end";
 }
