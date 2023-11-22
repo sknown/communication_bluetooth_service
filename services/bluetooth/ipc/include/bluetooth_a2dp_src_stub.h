@@ -52,6 +52,10 @@ private:
     ErrCode StopPlayingInner(MessageParcel &data, MessageParcel &reply);
     ErrCode WriteFrameInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetRenderPositionInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode OffloadStartPlayingInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode OffloadStopPlayingInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode A2dpOffloadSessionPathRequestInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode GetOffloadCodecStatusInner(MessageParcel &data, MessageParcel &reply);
 
     using BluetoothA2dpSrcServerFunc = ErrCode (BluetoothA2dpSrcStub::*)(MessageParcel &data, MessageParcel &reply);
     std::map<uint32_t, BluetoothA2dpSrcServerFunc> memberFuncMap_;
