@@ -417,5 +417,27 @@ void BluetoothA2dpSourceServer::GetRenderPosition(uint16_t &delayValue, uint16_t
     HILOGI("delayValue = %{public}hu, sendDataSize = %{public}hu, timeStamp = %{public}u", delayValue, sendDataSize,
         timeStamp);
 }
+
+int BluetoothA2dpSourceServer::OffloadStartPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId)
+{
+    return NO_ERROR;
+}
+
+int BluetoothA2dpSourceServer::OffloadStopPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId)
+{
+    return NO_ERROR;
+}
+int BluetoothA2dpSourceServer::A2dpOffloadSessionPathRequest(const RawAddress &device,
+    const std::vector<BluetoothA2dpStreamInfo> &info)
+{
+    return NO_ERROR;
+}
+
+BluetoothA2dpOffloadCodecStatus BluetoothA2dpSourceServer::GetOffloadCodecStatus(const RawAddress &device)
+{
+    BluetoothA2dpOffloadCodecStatus ret;
+    HILOGI("enter");
+    return ret;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

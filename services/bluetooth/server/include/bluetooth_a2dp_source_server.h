@@ -53,6 +53,11 @@ public:
     int StopPlaying(const RawAddress &device) override;
     int WriteFrame(const uint8_t *data, uint32_t size) override;
     void GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp) override;
+    int OffloadStartPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId) override;
+    int OffloadStopPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId) override;
+    int A2dpOffloadSessionPathRequest(const RawAddress &device,
+        const std::vector<BluetoothA2dpStreamInfo> &info) override;
+    BluetoothA2dpOffloadCodecStatus GetOffloadCodecStatus(const RawAddress &device) override;
 
 private:
     BLUETOOTH_DECLARE_IMPL();
