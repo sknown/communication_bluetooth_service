@@ -24,7 +24,7 @@
 #endif
 
 #define STUB_REGISTER_FUN(map, code, func) \
-    map[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::code)] = &&BluetoothA2dpSrcStub::func
+    map[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::code)] = &BluetoothA2dpSrcStub::func
 
 namespace OHOS {
 namespace Bluetooth {
