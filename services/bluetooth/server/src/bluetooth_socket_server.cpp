@@ -29,7 +29,7 @@ namespace Bluetooth {
 int BluetoothSocketServer::Connect(ConnectSocketParam &param, int &fd)
 {
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
-        HILOGE("false, check permission failed");
+        HILOGE("false, check permission failed test");
         return RET_NO_SUPPORT;
     }
     IProfileSocket *socket = (IProfileSocket *)IProfileManager::GetInstance()->GetProfileService(PROFILE_NAME_SPP);
