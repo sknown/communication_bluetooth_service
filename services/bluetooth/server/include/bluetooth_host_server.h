@@ -122,6 +122,8 @@ public:
     int32_t CountEnableTimes(bool enable) override;
     int32_t SendDeviceSelection(const std::string &address, int useA2dp, int useHfp, int userSelection) override;
     bool IsSupportWearDetection(const std::string &address) override;
+    int32_t ConnectAllowedProfiles(const std::string &address) override;
+    int32_t DisconnectAllowedProfiles(const std::string &address) override;
 
 private:
     static sptr<BluetoothHostServer> instance;
