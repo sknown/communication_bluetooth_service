@@ -1792,7 +1792,7 @@ int32_t BluetoothHostServer::SyncRandomAddress(const std::string &realAddr, cons
 
 int32_t BluetoothHostServer::StartCrediblePair(int32_t transport, const std::string &address)
 {
-    return NO_ERROR;
+    return BT_ERR_API_NOT_SUPPORT;
 }
 
 int32_t BluetoothHostServer::CountEnableTimes(bool enable)
@@ -1808,6 +1808,16 @@ int32_t BluetoothHostServer::SendDeviceSelection(const std::string &address, int
 bool BluetoothHostServer::IsSupportWearDetection(const std::string &address)
 {
     return false;
+}
+
+int32_t BluetoothHostServer::ConnectAllowedProfiles(const std::string &address)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostServer::DisconnectAllowedProfiles(const std::string &address)
+{
+    return BT_ERR_API_NOT_SUPPORT;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS
