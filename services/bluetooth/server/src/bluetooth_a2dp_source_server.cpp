@@ -420,17 +420,17 @@ void BluetoothA2dpSourceServer::GetRenderPosition(uint16_t &delayValue, uint16_t
 
 int BluetoothA2dpSourceServer::OffloadStartPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId)
 {
-    return NO_ERROR;
+    return BT_ERR_API_NOT_SUPPORT;
 }
 
 int BluetoothA2dpSourceServer::OffloadStopPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId)
 {
-    return NO_ERROR;
+    return BT_ERR_API_NOT_SUPPORT;
 }
 int BluetoothA2dpSourceServer::A2dpOffloadSessionPathRequest(const RawAddress &device,
     const std::vector<BluetoothA2dpStreamInfo> &info)
 {
-    return NO_ERROR;
+    return BT_ERR_API_NOT_SUPPORT;
 }
 
 BluetoothA2dpOffloadCodecStatus BluetoothA2dpSourceServer::GetOffloadCodecStatus(const RawAddress &device)
