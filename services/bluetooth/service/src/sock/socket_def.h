@@ -85,6 +85,8 @@ enum { SOCK_SDP_IDX0 = 0, SOCK_SDP_IDX1 = 1, SOCK_SDP_IDX2 = 2 };
 typedef struct {
     bool status;      // connect state
     uint8_t addr[6];  // remote device address
+    uint16_t tx_mtu   // send mtu (L2CAP only)
+    uint16_t rx_mtu   // recv mtu (L2CAP only)
 } SocketConnectInfo;
 }  // namespace bluetooth
 }  // namespace OHOS

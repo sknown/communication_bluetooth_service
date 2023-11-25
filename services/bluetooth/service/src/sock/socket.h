@@ -218,6 +218,16 @@ private:
     void SetRemoteAddr(std::string addr);
 
     /**
+     * @brief Send connection scn to app.
+     *
+     * @param fd socket fd.
+     * @param scn socket scn.
+     * @return true
+     * @return false
+     */
+    static bool SendAppConnectScn(int fd, int scn);
+
+    /**
      * @brief Send connection information to app.
      *
      * @param fd socket fd.
