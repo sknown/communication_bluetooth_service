@@ -426,6 +426,12 @@ int Socket::Listen(const std::string &name, const Uuid &uuid, int securityFlag, 
         LOG_ERROR("[sock]%{public}s: Discovery SPP Service Fail!", __FUNCTION__);
     }
 
+    if (!SendAppConnectScn(transportFd_, scn_)) {
+        LOG_ERROR("send scn failed");
+        CloseSocketFd();
+        return -1;
+    }
+
     serviceId_ = AssignServiceId();
     LOG_INFO("[sock]%{public}s securityFlag:%{public}d serviceId_:%{public}d", __func__, securityFlag_, serviceId_);
     socketGapServer_ = std::make_unique<SocketGapServer>();
@@ -458,6 +464,12 @@ int Socket::ReceiveSdpResult(uint8_t scn)
     RawAddress rawAddr = RawAddress::ConvertToString(remoteAddr_.addr);
     sockTransport_ = std::move(transportFactory_->CreateRfcommTransport(
         &rawAddr, scn_, SOCK_DEF_RFC_MTU, *this->pimpl->transportObserver_.get(), *GetDispatchter()));
+
+    if (!SendAppConnectScn(transportFd_, scn_)) {
+        LOG_ERROR("send scn failed");
+        CloseSocketFd();
+        return -1;
+    }
 
     switch (state_) {
         case INIT:
