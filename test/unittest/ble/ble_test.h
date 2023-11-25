@@ -83,7 +83,7 @@ public:
     Bluetooth::BleAdvertiserSettings bleAdvertiserSettings_ {};
     BleCentralManagerCallbackTest bleCentralManagerCallbackTest_ {};
     BleAdvertiseCallbackTest bleAdvertiseCallbackTest_ {};
-    BleHostObserverTest bleHostObserverTest_ {};
+    std::shared_ptr<BleHostObserverTest> bleHostObserverTest_ = nullptr;
     Bluetooth::BleScanSettings bleScanSettings_ {};
 
     static void SetUpTestCase(void);

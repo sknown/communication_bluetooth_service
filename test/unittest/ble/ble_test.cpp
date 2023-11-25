@@ -156,13 +156,16 @@ void BleTest::TearDownTestCase(void)
 void BleTest::SetUp()
 {
     GTEST_LOG_(INFO) << "SetUp";
+    bleHostObserverTest_ = std::make_shared<BleHostObserverTest>();
     host_->RegisterObserver(bleHostObserverTest_);
 }
 
 void BleTest::TearDown()
 {
     GTEST_LOG_(INFO) << "SetUp";
-    host_->DeregisterObserver(bleHostObserverTest_);
+    if (bleHostObserverTest_) {
+        host_->DeregisterObserver(bleHostObserverTest_);
+    }
 }
 
 void BleHostObserverTest::OnStateChanged(const int transport, const int status)

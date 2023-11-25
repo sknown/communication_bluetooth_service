@@ -37,7 +37,7 @@ private:
 };
 
 
-static A2dpSinkObserverCommon observer_;
+static std::shared_ptr<A2dpSinkObserverCommon> observer_ = std::make_shared<A2dpSinkObserverCommon>();
 static A2dpSink *profile_;
 static BluetoothHost *host_;
 
@@ -153,7 +153,7 @@ HWTEST_F(A2dpSinkTest, A2dpSink_UnitTest_RegisterObserver, TestSize.Level1)
     GTEST_LOG_(INFO) << "A2dpSink_UnitTest_RegisterObserver start";
  
     profile_ = A2dpSink::GetProfile();
-    profile_->RegisterObserver(&observer_);
+    profile_->RegisterObserver(observer_);
     GTEST_LOG_(INFO) << "A2dpSink_UnitTest_RegisterObserver end";
 }
 
@@ -167,7 +167,7 @@ HWTEST_F(A2dpSinkTest, A2dpSink_UnitTest_DeregisterObserver, TestSize.Level1)
     GTEST_LOG_(INFO) << "A2dpSink_UnitTest_DeregisterObserver start";
  
     profile_ = A2dpSink::GetProfile();
-    profile_->DeregisterObserver(&observer_);
+    profile_->DeregisterObserver(observer_);
     GTEST_LOG_(INFO) << "A2dpSink_UnitTest_DeregisterObserver end";
 }
 

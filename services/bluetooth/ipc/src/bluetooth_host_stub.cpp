@@ -227,6 +227,12 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::BT_COUNT_ENABLE_TIMES,
             std::bind(&BluetoothHostStub::CountEnableTimesInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::CONNECT_ALLOWED_PROFILES,
+            std::bind(&BluetoothHostStub::ConnectAllowedProfilesInner, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::DISCONNECT_ALLOWED_PROFILES,
+            std::bind(&BluetoothHostStub::DisconnectAllowedProfilesInner, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -1269,12 +1275,22 @@ ErrCode BluetoothHostStub::SyncRandomAddressInner(MessageParcel &data, MessagePa
 
 ErrCode BluetoothHostStub::StartCrediblePairInner(MessageParcel &data, MessageParcel &reply)
 {
-    return NO_ERROR;
+    return BT_ERR_API_NOT_SUPPORT;
 }
 
 ErrCode BluetoothHostStub::CountEnableTimesInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
+}
+
+int32_t BluetoothHostStub::ConnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::DisconnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS
