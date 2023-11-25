@@ -167,11 +167,8 @@ void HfpAgSystemEventProcesser::ProcessDialOutCallEvent(const std::string &numbe
         return;
     }
 
-    LOG_INFO("[HFP AG]%{public}s():: number[%{public}s], dialNumber[%{public}s], dialType[%{public}d]",
-        __FUNCTION__,
-        number.c_str(),
-        dialNumber.c_str(),
-        dialType);
+    LOG_INFO("[HFP AG]%{public}s():: dialNumber length[%{public}d], dialType[%{public}d]", __FUNCTION__,
+        dialNumber.length(), dialType);
 
     if (dialNumber.length() == 0) {
         profile_.SendResultCode(HFP_AG_RESULT_ERROR);
