@@ -101,8 +101,6 @@ private:
     ErrCode SyncRandomAddressInner(MessageParcel &data, MessageParcel &reply);
     ErrCode StartCrediblePairInner(MessageParcel &data, MessageParcel &reply);
     ErrCode CountEnableTimesInner(MessageParcel &data, MessageParcel &reply);
-    int32_t SendDeviceSelectionInner(MessageParcel &data, MessageParcel &reply);
-    int32_t IsSupportWearDetectionInner(MessageParcel &data, MessageParcel &reply);
     int32_t ConnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply);
     int32_t DisconnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply);
 
