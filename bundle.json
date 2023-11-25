@@ -80,6 +80,7 @@
         "ability_base",
         "call_manager",
         "core_service",
+        "graphic_2d",
         "hdf_core",
         "init",
         "input",
