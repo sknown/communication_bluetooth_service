@@ -273,10 +273,10 @@ void Socket::impl::SockRfcConnectFail(Socket &socket, DataTransport *transport)
         if (socket.socketMap_.find(transport) != socket.socketMap_.end()) {
             Socket *serverSocket = nullptr;
             serverSocket = socket.socketMap_.at(transport).get();
-            Socket::SendAppConnectInfo(serverSocket->transportFd_, socket.remoteAddr_, false, -1, sendMTU, recvMTU);
+            Socket::SendAppConnectInfo(serverSocket->transportFd_, socket.remoteAddr_, false, -1, 0, 0);
         }
     } else {
-        Socket::SendAppConnectInfo(socket.transportFd_, socket.remoteAddr_, false, -1, sendMTU, recvMTU);
+        Socket::SendAppConnectInfo(socket.transportFd_, socket.remoteAddr_, false, -1, 0, 0);
     }
     socket.ProcessDisconnection(socket, transport);
 }
