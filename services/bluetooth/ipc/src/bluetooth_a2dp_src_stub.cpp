@@ -15,6 +15,7 @@
 
 #include "bluetooth_a2dp_src_stub.h"
 #include "bluetooth_log.h"
+#include "bluetooth_errorcode.h"
 #include "ipc_types.h"
 #include "parcel_bt_uuid.h"
 #include "raw_address.h"
