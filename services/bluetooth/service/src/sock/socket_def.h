@@ -89,6 +89,7 @@ typedef struct {
     uint16_t txMtu;  // send mtu (L2CAP only)
     uint16_t rxMtu;  // recv mtu (L2CAP only)
 } SocketConnectInfo;
+#pragma pack(0)
 }  // namespace bluetooth
 }  // namespace OHOS
 
