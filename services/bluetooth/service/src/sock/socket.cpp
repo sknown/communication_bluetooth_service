@@ -163,11 +163,11 @@ void Socket::impl::OnConnectedNative(Socket &socket, DataTransport *transport, u
         RequestStatus::CONNECT_ON, PROFILE_NAME_SPP, RawAddress::ConvertToString(socket.remoteAddr_.addr));
     SocketConnectInfo connectInfo;
     (void)memset_s(&connectInfo, sizeof(connectInfo), 0, sizeof(connectInfo));
-    (void)memcpy_s(connectInfo.addr, sizeof(socket.remoteAddr_.addr), socket.remoteAddr_.addr,
+    (void)memcpy_s(connectInfo.addr, sizeof(connectInfo.addr), socket.remoteAddr_.addr,
         sizeof(socket.remoteAddr_.addr));
     connectInfo.status = true;
-    connectInfo.tx_Mtu = sendMTU;
-    connectInfo.rx_Mtu = recvMTU;
+    connectInfo.txMtu = sendMTU;
+    connectInfo.rxMtu = recvMTU;
     if (socket.IsServer()) {
         socket.clientNumber_++;
         int newFd = socket.AddSocketInternal(socket.remoteAddr_, transport, sendMTU, recvMTU);
@@ -277,11 +277,11 @@ void Socket::impl::SockRfcConnectFail(Socket &socket, DataTransport *transport)
     LOG_INFO("[sock]%{public}s", __func__);
     SocketConnectInfo connectInfo;
     (void)memset_s(&connectInfo, sizeof(connectInfo), 0, sizeof(connectInfo));
-    (void)memcpy_s(connectInfo.addr, sizeof(socket.remoteAddr_.addr), socket.remoteAddr_.addr,
+    (void)memcpy_s(connectInfo.addr, sizeof(connectInfo.addr), socket.remoteAddr_.addr,
         sizeof(socket.remoteAddr_.addr));
     connectInfo.status = false;
-    connectInfo.tx_Mtu = 0;
-    connectInfo.rx_Mtu = 0;
+    connectInfo.txMtu = 0;
+    connectInfo.rxMtu = 0;
     if (socket.IsServer()) {
         if (socket.socketMap_.find(transport) != socket.socketMap_.end()) {
             Socket *serverSocket = nullptr;
@@ -550,7 +550,7 @@ bool Socket::SendAppConnectScn(int fd, int scn)
     return SocketUtil::SocketSendData(fd, reinterpret_cast<const uint8_t *>(&scn), sizeof(scn));
 }
 
-bool Socket::SendAppConnectInfo(int fd, int acceptFd, SocketConnectInfo &connectInfo)
+bool Socket::SendAppConnectInfo(int fd, int acceptFd, const SocketConnectInfo &connectInfo)
 {
     LOG_INFO("[sock]%{public}s", __func__);
     LOG_INFO("[sock]%{public}s size:%{public}zu", __func__, sizeof(connectInfo));
