@@ -15,6 +15,7 @@
 
 #include "bluetooth_a2dp_src_stub.h"
 #include "bluetooth_log.h"
+#include "bluetooth_errorcode.h"
 #include "ipc_types.h"
 #include "parcel_bt_uuid.h"
 #include "raw_address.h"
@@ -69,6 +70,14 @@ BluetoothA2dpSrcStub::BluetoothA2dpSrcStub()
         &BluetoothA2dpSrcStub::WriteFrameInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_GET_RENDER_POSITION)] =
         &BluetoothA2dpSrcStub::GetRenderPositionInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_OFFLOAD_START_PLAYING)] =
+        &BluetoothA2dpSrcStub::OffloadStartPlayingInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_OFFLOAD_STOP_PLAYING)] =
+        &BluetoothA2dpSrcStub::OffloadStopPlayingInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_OFFLOAD_SESSION_REQUEST)] =
+        &BluetoothA2dpSrcStub::A2dpOffloadSessionPathRequestInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_OFFLOAD_GET_CODEC_STATUS)] =
+        &BluetoothA2dpSrcStub::GetOffloadCodecStatusInner;
 }
 
 BluetoothA2dpSrcStub::~BluetoothA2dpSrcStub()
@@ -414,5 +423,28 @@ ErrCode BluetoothA2dpSrcStub::GetRenderPositionInner(MessageParcel &data, Messag
     return NO_ERROR;
 }
 
+ErrCode BluetoothA2dpSrcStub::OffloadStartPlayingInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+ErrCode BluetoothA2dpSrcStub::OffloadStopPlayingInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+ErrCode BluetoothA2dpSrcStub::A2dpOffloadSessionPathRequestInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+ErrCode BluetoothA2dpSrcStub::GetOffloadCodecStatusInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    return BT_ERR_API_NOT_SUPPORT;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
