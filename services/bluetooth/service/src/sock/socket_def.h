@@ -82,6 +82,7 @@ enum { SOCK_SDP_IDX0 = 0, SOCK_SDP_IDX1 = 1, SOCK_SDP_IDX2 = 2 };
 /**
  * @brief Service sends messages to app through socket.
  */
+#pragma pack(1)
 typedef struct {
     bool status;      // connect state
     uint8_t addr[6];  // remote device address
