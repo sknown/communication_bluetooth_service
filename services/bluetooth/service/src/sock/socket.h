@@ -237,7 +237,7 @@ private:
      * @return true
      * @return false
      */
-    static bool SendAppConnectInfo(int fd, BtAddr addr, bool status, int acceptFd);
+    static bool SendAppConnectInfo(int fd, int acceptFd, SocketConnectInfo &connectInfo);
 
     /**
      * @brief When server accept a connection request, generate a new socket.

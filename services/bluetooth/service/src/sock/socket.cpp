@@ -161,15 +161,22 @@ void Socket::impl::OnConnectedNative(Socket &socket, DataTransport *transport, u
     LOG_INFO("[sock]%{public}s", __func__);
     IPowerManager::GetInstance().StatusUpdate(
         RequestStatus::CONNECT_ON, PROFILE_NAME_SPP, RawAddress::ConvertToString(socket.remoteAddr_.addr));
+    SocketConnectInfo connectInfo;
+    (void)memset_s(&connectInfo, sizeof(connectInfo), 0, sizeof(connectInfo));
+    (void)memcpy_s(connectInfo.addr, sizeof(socket.remoteAddr_.addr), socket.remoteAddr_.addr,
+        sizeof(socket.remoteAddr_.addr));
+    connectInfo.status = true;
+    connectInfo.tx_Mtu = sendMTU;
+    connectInfo.rx_Mtu = recvMTU;
     if (socket.IsServer()) {
         socket.clientNumber_++;
         int newFd = socket.AddSocketInternal(socket.remoteAddr_, transport, sendMTU, recvMTU);
-        Socket::SendAppConnectInfo(socket.transportFd_, socket.remoteAddr_, true, newFd, sendMTU, recvMTU);
+        Socket::SendAppConnectInfo(socket.transportFd_, newFd, connectInfo);
     } else {
         socket.state_ = CONNECTED;
         socket.sendMTU_ = sendMTU;
         socket.recvMTU_ = recvMTU;
-        Socket::SendAppConnectInfo(socket.transportFd_, socket.remoteAddr_, true, -1, sendMTU, recvMTU);
+        Socket::SendAppConnectInfo(socket.transportFd_, -1, connectInfo);
         LOG_INFO("[sock]%{public}s app fd:%{public}d client connect successfully", __func__, socket.upperlayerFd_);
         std::lock_guard<std::recursive_mutex> lck(Socket::g_socketMutex);
         g_allServerSockets.push_back(&socket);
@@ -268,15 +275,21 @@ void Socket::impl::OnTransportErrorNative(Socket &socket, DataTransport *transpo
 void Socket::impl::SockRfcConnectFail(Socket &socket, DataTransport *transport)
 {
     LOG_INFO("[sock]%{public}s", __func__);
-
+    SocketConnectInfo connectInfo;
+    (void)memset_s(&connectInfo, sizeof(connectInfo), 0, sizeof(connectInfo));
+    (void)memcpy_s(connectInfo.addr, sizeof(socket.remoteAddr_.addr), socket.remoteAddr_.addr,
+        sizeof(socket.remoteAddr_.addr));
+    connectInfo.status = false;
+    connectInfo.tx_Mtu = 0;
+    connectInfo.rx_Mtu = 0;
     if (socket.IsServer()) {
         if (socket.socketMap_.find(transport) != socket.socketMap_.end()) {
             Socket *serverSocket = nullptr;
             serverSocket = socket.socketMap_.at(transport).get();
-            Socket::SendAppConnectInfo(serverSocket->transportFd_, socket.remoteAddr_, false, -1, 0, 0);
+            Socket::SendAppConnectInfo(serverSocket->transportFd_, -1, connectInfo);
         }
     } else {
-        Socket::SendAppConnectInfo(socket.transportFd_, socket.remoteAddr_, false, -1, 0, 0);
+        Socket::SendAppConnectInfo(socket.transportFd_, -1, connectInfo);
     }
     socket.ProcessDisconnection(socket, transport);
 }
@@ -537,16 +550,9 @@ bool Socket::SendAppConnectScn(int fd, int scn)
     return SocketUtil::SocketSendData(fd, reinterpret_cast<const uint8_t *>(&scn), sizeof(scn));
 }
 
-bool Socket::SendAppConnectInfo(int fd, BtAddr addr, bool status, int acceptFd, uint16_t sendMtu, uint16_t recvMtu)
+bool Socket::SendAppConnectInfo(int fd, int acceptFd, SocketConnectInfo &connectInfo)
 {
     LOG_INFO("[sock]%{public}s", __func__);
-
-    SocketConnectInfo connectInfo;
-    (void)memset_s(&connectInfo, sizeof(connectInfo), 0, sizeof(connectInfo));
-    (void)memcpy_s(connectInfo.addr, sizeof(addr.addr), addr.addr, sizeof(addr.addr));
-    connectInfo.status = status;
-    connectInfo.tx_mtu = sendMtu;
-    connectInfo.rx_mtu = recvMtu;
     LOG_INFO("[sock]%{public}s size:%{public}zu", __func__, sizeof(connectInfo));
     if (acceptFd == -1) {
         return SocketUtil::SocketSendData(fd, reinterpret_cast<const uint8_t *>(&connectInfo), sizeof(connectInfo));
