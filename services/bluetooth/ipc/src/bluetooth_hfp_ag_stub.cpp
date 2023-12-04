@@ -222,13 +222,10 @@ ErrCode BluetoothHfpAgStub::DisconnectScoInner(MessageParcel &data, MessageParce
 
 ErrCode BluetoothHfpAgStub::PhoneStateChangedInner(MessageParcel &data, MessageParcel &reply)
 {
-    int numActive = data.ReadInt32();
-    int numHeld = data.ReadInt32();
-    int callState = data.ReadInt32();
-    std::string number = data.ReadString();
-    int type = data.ReadInt32();
-    std::string name = data.ReadString();
-    PhoneStateChanged(numActive, numHeld, callState, number, type, name);
+    std::shared_ptr<BluetoothPhoneState> phoneState(data.ReadParcelable<BluetoothPhoneState>());
+    CHECK_AND_RETURN_LOG_RET(phoneState, BT_ERR_IPC_TRANS_FAILED,
+        "BluetoothHfpAgStub: read phone state failed");
+    PhoneStateChanged(*phoneState);
     return NO_ERROR;
 }
 

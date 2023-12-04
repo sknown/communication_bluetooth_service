@@ -34,6 +34,7 @@
 #ifndef INTERFACE_PROFILE_HFP_AG_H
 #define INTERFACE_PROFILE_HFP_AG_H
 
+#include "bluetooth_phone_state.h"
 #include "interface_profile.h"
 #include <vector>
 #include <string>
@@ -172,8 +173,7 @@ public:
      * @param name Name of phone call number.
      * @since 6
      */
-    virtual void PhoneStateChanged(
-        int numActive, int numHeld, int callState, const std::string &number, int type, const std::string &name) = 0;
+    virtual void PhoneStateChanged(BluetoothPhoneState &phoneState) = 0;
 
     /**
      * @brief Send response for querying standard list current calls by remote Hf device.

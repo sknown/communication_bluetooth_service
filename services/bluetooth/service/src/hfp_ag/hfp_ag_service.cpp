@@ -489,10 +489,12 @@ void HfpAgService::UpdateMockCallList(int callState, const std::string &number, 
     callList_.push_back(call);
 }
 
-void HfpAgService::PhoneStateChanged(
-    int numActive, int numHeld, int callState, const std::string &number, int type, const std::string &name)
+void HfpAgService::PhoneStateChanged(BluetoothPhoneState &phoneState)
 {
     LOG_INFO("[HFP AG]%{public}s(): ==========<start>==========", __FUNCTION__);
+    int numActive = phoneState.GetActiveNum();
+    int numHeld = phoneState.GetHeldNum();
+    int callState = phoneState.GetCallState();
     if (mockState_ == HFP_AG_MOCK) {
         UpdateMockCallList(callState, number, type);
         return;
@@ -522,12 +524,8 @@ void HfpAgService::PhoneStateChanged(
     HfpAgSystemInterface::GetInstance().SetCallState(callState);
 
     HfpAgMessage curEvent(HFP_AG_CALL_STATE_CHANGE);
-    curEvent.state_.activeNum = numActive;
-    curEvent.state_.heldNum = numHeld;
-    curEvent.state_.callState = callState;
-    curEvent.state_.number = number;
-    curEvent.state_.type = type;
-    curEvent.state_.name = name;
+    curEvent.state_ = {numActive, numHeld, callState, phoneState.GetNumber(), phoneState.GetCallType(),
+        phoneState.GetName()};
     PostEvent(curEvent);
     UpdateAgIndicators();
 }

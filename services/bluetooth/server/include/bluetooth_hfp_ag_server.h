@@ -37,8 +37,7 @@ public:
     int GetScoState(const BluetoothRawAddress &device) override;
     bool ConnectSco() override;
     bool DisconnectSco() override;
-    void PhoneStateChanged(int numActive, int numHeld, int callState, const std::string &number, int type,
-        const std::string &name) override;
+    void PhoneStateChanged(BluetoothPhoneState &phoneState) override;
     void ClccResponse(int index, int direction, int status, int mode, bool mpty, const std::string &number,
         int type) override;
     bool OpenVoiceRecognition(const BluetoothRawAddress &device) override;
