@@ -357,6 +357,11 @@ std::string BluetoothHfpAgServer::GetActiveDevice()
     return dev;
 }
 
+bool IsInbandRingingEnabled()
+{
+    return true;
+}
+
 void BluetoothHfpAgServer::RegisterObserver(const sptr<IBluetoothHfpAgObserver> &observer)
 {
     HILOGD("Enter!");
