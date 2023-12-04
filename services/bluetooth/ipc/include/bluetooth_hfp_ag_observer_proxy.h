@@ -30,6 +30,7 @@ public:
     void OnScoStateChanged(const BluetoothRawAddress &device, int state) override;
     void OnActiveDeviceChanged(const BluetoothRawAddress &device) override;
     void OnHfEnhancedDriverSafetyChanged(const BluetoothRawAddress &device, int indValue) override;
+    void OnHfpStackChanged(const BluetoothRawAddress &device, int action) override;
 
 private:
     static inline BrokerDelegator<BluetoothHfpAgObserverProxy> delegator_;
