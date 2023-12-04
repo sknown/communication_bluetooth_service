@@ -308,7 +308,7 @@ bool PanBnep::CheckBnepEthernetDataFilter(EthernetHeader ethernetHeader, uint8_t
 {
     if (!protocolFilterList_.empty()) {
         std::vector<BnepProtocolFilterRange>::iterator it;
-        for (protocolFilterList_.begin(); it != protocolFilterList_.end(); it++) {
+        for (it = protocolFilterList_.begin(); it != protocolFilterList_.end(); it++) {
             if ((ethernetHeader.protocol >= it->start) && (ethernetHeader.protocol <= it->end)) {
                 break;
             }
@@ -320,7 +320,7 @@ bool PanBnep::CheckBnepEthernetDataFilter(EthernetHeader ethernetHeader, uint8_t
     // Just check broadcast
     if ((ethernetHeader.destAddr[0] & 0x01) && !multycastFilterList_.empty()) {
         std::vector<BnepMultycastFilterRange>::iterator it;
-        for (multycastFilterList_.begin(); it != multycastFilterList_.end(); it++) {
+        for (it = multycastFilterList_.begin(); it != multycastFilterList_.end(); it++) {
             if ((memcmp(ethernetHeader.destAddr, it->start, BT_ADDRESS_LENGTH) >= 0) &&
                 (memcmp(ethernetHeader.destAddr, it->end, BT_ADDRESS_LENGTH) <= 0)) {
                 break;
