@@ -60,6 +60,8 @@
 
 #define HCI_H4_HEADER_LEN 1
 
+#define KILOBYTES 1024
+
 #pragma pack(1)
 typedef struct {
     uint8_t identificationPattern[8];  // { 0x62, 0x74, 0x73, 0x6e, 0x6f, 0x6f, 0x70, 0x00 }
@@ -81,6 +83,7 @@ static char *g_outputPath = NULL;
 static FILE *g_outputFile = NULL;
 static bool g_hciLogOuput = false;
 static Mutex *g_outputMutex = NULL;
+static uint32_t g_outputMaxsize = 0;
 
 static void GetH4HeaderAndPacketFlags(uint8_t type, uint8_t *h4Header, uint32_t *packetFlags)
 {
@@ -143,6 +146,14 @@ static void BtmSnoopOutput(uint8_t type, const uint8_t *data, uint16_t length)
     (void)fwrite(outputData, 1, includedLength - HCI_H4_HEADER_LEN, g_outputFile);
 
     fflush(g_outputFile);
+
+    long int position = ftell(g_outputFile);
+    LOG_ERROR("%{public}s, ftell snooplog %{public}ld", __FUNCTION__, position);
+
+    if (position >= g_outputMaxsize) {
+        LOG_ERROR("%{public}s, snooplog %{public}ld larger than output maxsize %{public}ld", __FUNCTION__, position, g_outputMaxsize);
+        fseek(g_outputFile, 0, SEEK_SET)
+    }
 
     if (outputData != data) {
         MEM_MALLOC.free((void *)outputData);
@@ -230,6 +241,12 @@ static void BtmPrepareSnoopFile(void)
 
         BtmWriteSnoopFileHeader();
     }
+}
+
+int BTM_SetSnoopOutputMaxsize(uint16_t maxSize)
+{
+    g_outputMaxsize = maxSize * KILOBYTES * KILOBYTES;
+    return BT_SUCCESS;
 }
 
 static void BtmCloseSnoopFile(void)

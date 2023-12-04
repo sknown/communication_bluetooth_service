@@ -251,6 +251,11 @@ bool AdapterManager::OutputSetting() const
         std::string outputPath = "./snoop.log";
         AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_BTSNOOP_OUTPUT_PATH, outputPath);
 
+        if (BTM_SetSnoopOutputMaxsize(maxSize)) {
+            LOG_ERROR("Set snoop file output maxsize Failed!!");
+            return false;
+        }
+        
         if (BTM_SetSnoopFilePath(outputPath.c_str(), outputPath.length()) != BT_SUCCESS) {
             LOG_ERROR("Set snoop file path Failed!!");
             return false;
