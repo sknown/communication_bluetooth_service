@@ -375,12 +375,12 @@ int BluetoothHfpAgServer::GetConnectStrategy(const BluetoothRawAddress &device, 
     return NO_ERROR;
 }
 
-int BluetoothHfpAgServer::ConnectSco(const uint8_t callType)
+int BluetoothHfpAgServer::ConnectSco(uint8_t callType)
 {
     return NO_ERROR;
 }
 
-int BluetoothHfpAgServer::DisconnectSco(const uint8_t callType)
+int BluetoothHfpAgServer::DisconnectSco(uint8_t callType)
 {
     return NO_ERROR;
 }
