@@ -83,7 +83,7 @@ static char *g_outputPath = NULL;
 static FILE *g_outputFile = NULL;
 static bool g_hciLogOuput = false;
 static Mutex *g_outputMutex = NULL;
-static uint32_t g_outputMaxsize = 0;
+static long int g_outputMaxsize = 0;
 
 static void GetH4HeaderAndPacketFlags(uint8_t type, uint8_t *h4Header, uint32_t *packetFlags)
 {
@@ -152,7 +152,7 @@ static void BtmSnoopOutput(uint8_t type, const uint8_t *data, uint16_t length)
 
     if (position >= g_outputMaxsize) {
         LOG_ERROR("%{public}s, snooplog %{public}ld larger than output maxsize %{public}ld", __FUNCTION__, position, g_outputMaxsize);
-        fseek(g_outputFile, 0, SEEK_SET)
+        fseek(g_outputFile, 0, SEEK_SET);
     }
 
     if (outputData != data) {
