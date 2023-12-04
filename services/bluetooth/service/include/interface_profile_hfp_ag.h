@@ -102,6 +102,16 @@ public:
      */
     virtual void OnHfBatteryLevelChanged(const RawAddress &device, int indValue)
     {}
+
+    /**
+     * @brief The observer function to notify audio framework the hfp stack changed.
+     *
+     * @param device Remote device object.
+     * @param action Action on the device.
+     * @since 11
+     */
+    virtual void OnHfpStackChanged(const RawAddress &device, int action)
+    {}
 };
 
 /**

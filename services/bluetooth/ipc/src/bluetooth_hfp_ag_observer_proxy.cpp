@@ -118,5 +118,32 @@ void BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged(const Bluetoot
     }    
 }
 
+void BluetoothHfpAgObserverProxy::OnHfpStackChanged(const BluetoothRawAddress &device, int action)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnHfpStackChanged WriteInterfaceToken error");
+        return;
+    }
+    if (!data.WriteParcelable(&device)) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnHfpStackChanged WriteParcelable error");
+        return;
+    }
+    if (!data.WriteInt32(action)) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnHfpStackChanged WriteInt32 error");
+        return;
+    }
+    MessageParcel reply;
+    MessageOption option {
+        MessageOption::TF_ASYNC
+    };
+    int error = Remote()->SendRequest(
+        BluetoothHfpAgObserverInterfaceCode::BT_HFP_AG_OBSERVER_HFP_STACK_CHANGED, data, reply, option);
+    if (error != NO_ERROR) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnHfpStackChanged done fail, error: %{public}d", error);
+        return;
+    } 
+}
+
 }  // namespace Bluetooth
 }  // namespace OHOS

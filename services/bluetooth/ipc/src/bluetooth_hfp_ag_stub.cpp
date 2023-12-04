@@ -62,6 +62,8 @@ BluetoothHfpAgStub::BluetoothHfpAgStub() {
         &BluetoothHfpAgStub::SetConnectStrategyInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_GET_CONNECT_STRATEGY)] =
         &BluetoothHfpAgStub::GetConnectStrategyInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_IS_IN_BAND_RINGING_ENABLE)] =
+        &BluetoothHfpAgStub::IsInbandRingingEnabledInner;
 
     HILOGI("%{public}s ends.", __func__);
 }
@@ -344,6 +346,11 @@ ErrCode BluetoothHfpAgStub::SetConnectStrategyInner(MessageParcel &data, Message
 }
 
 ErrCode BluetoothHfpAgStub::GetConnectStrategyInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHfpAgStub::IsInbandRingingEnabledInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }

@@ -75,6 +75,11 @@ public:
         });
     }
 
+    void OnHfpStackChanged(const RawAddress &device, int action) override
+    {
+        HILOGI("addr: %{public}s, action: %{public}d", GET_ENCRYPT_ADDR(device), action);
+    }
+
     void SetObserver(RemoteObserverList<IBluetoothHfpAgObserver>* observers)
     {
         observers_ = observers;
