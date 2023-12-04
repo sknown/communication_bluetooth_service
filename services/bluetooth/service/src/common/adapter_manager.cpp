@@ -244,7 +244,8 @@ bool AdapterManager::OutputSetting() const
 {
     bool outputValue = false;
     bool desensitization = false;
-
+    int maxSize = 0;
+    AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_OUTPUTMAXSIZE, maxSize);
     AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_DESENSITIZATION, desensitization);
     if (AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_BTSNOOP_OUTPUT, outputValue) &&
         outputValue) {
@@ -255,7 +256,7 @@ bool AdapterManager::OutputSetting() const
             LOG_ERROR("Set snoop file output maxsize Failed!!");
             return false;
         }
-        
+
         if (BTM_SetSnoopFilePath(outputPath.c_str(), outputPath.length()) != BT_SUCCESS) {
             LOG_ERROR("Set snoop file path Failed!!");
             return false;
