@@ -148,7 +148,6 @@ static void BtmSnoopOutput(uint8_t type, const uint8_t *data, uint16_t length)
     fflush(g_outputFile);
 
     long int position = ftell(g_outputFile);
-
     if (position >= g_outputMaxsize) {
         LOG_ERROR("%{public}s, snooplog %{public}ld larger than maxsize %{public}ld",
             __FUNCTION__, position, g_outputMaxsize);
