@@ -75,6 +75,11 @@ public:
         });
     }
 
+    void OnHfpStackChanged(const RawAddress &device, int action) override
+    {
+        HILOGI("addr: %{public}s, action: %{public}d", GET_ENCRYPT_ADDR(device), action);
+    }
+
     void SetObserver(RemoteObserverList<IBluetoothHfpAgObserver>* observers)
     {
         observers_ = observers;
@@ -349,6 +354,11 @@ std::string BluetoothHfpAgServer::GetActiveDevice()
     }
     HILOGI("active dev:%{public}s()", GetEncryptAddr(dev).c_str());
     return dev;
+}
+
+bool BluetoothHfpAgServer::IsInbandRingingEnabled()
+{
+    return true;
 }
 
 void BluetoothHfpAgServer::RegisterObserver(const sptr<IBluetoothHfpAgObserver> &observer)
