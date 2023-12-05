@@ -276,6 +276,12 @@ bool AdapterManager::OutputSetting() const
     outputValue = false;
     if (AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_HCILOG_OUTPUT, outputValue) &&
         outputValue) {
+        
+        if (BTM_SetSnoopOutputMaxsize(maxSize)) {
+            LOG_ERROR("Set snoop file output maxsize Failed!!");
+            return false;
+        }
+        
         if (BTM_EnableHciLogOutput(desensitization) != BT_SUCCESS) {
             LOG_ERROR("Enable HciLog output Failed!!");
             return false;
