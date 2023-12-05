@@ -276,13 +276,12 @@ bool BluetoothHfpAgServer::DisconnectSco()
     return false;
 }
 
-void BluetoothHfpAgServer::PhoneStateChanged(int numActive, int numHeld, int callState, const std::string &number,
-    int type, const std::string &name)
+void BluetoothHfpAgServer::PhoneStateChanged(BluetoothPhoneState &phoneState)
 {
     HILOGI("numActive:%{public}d, numHeld:%{public}d, callState:%{public}d, type:%{public}d",
-        numActive, numHeld, callState, type);
+        phoneState.GetActiveNum(), phoneState.GetHeldNum(), phoneState.GetCallState(), phoneState.GetCallType());
     if (pimpl->HfpAgService_ != nullptr) {
-        pimpl->HfpAgService_->PhoneStateChanged(numActive, numHeld, callState, number, type, name);
+        pimpl->HfpAgService_->PhoneStateChanged(phoneState);
     }
 }
 
@@ -381,6 +380,16 @@ int BluetoothHfpAgServer::SetConnectStrategy(const BluetoothRawAddress &device, 
 }
 
 int BluetoothHfpAgServer::GetConnectStrategy(const BluetoothRawAddress &device, int &strategy)
+{
+    return NO_ERROR;
+}
+
+int BluetoothHfpAgServer::ConnectSco(uint8_t callType)
+{
+    return NO_ERROR;
+}
+
+int BluetoothHfpAgServer::DisconnectSco(uint8_t callType)
 {
     return NO_ERROR;
 }
