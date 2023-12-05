@@ -62,6 +62,10 @@ BluetoothHfpAgStub::BluetoothHfpAgStub() {
         &BluetoothHfpAgStub::SetConnectStrategyInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_GET_CONNECT_STRATEGY)] =
         &BluetoothHfpAgStub::GetConnectStrategyInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_CONNECT_SCO_EX)] =
+        &BluetoothHfpAgStub::ConnectScoInnerEx;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_DISCONNECT_SCO_EX)] =
+        &BluetoothHfpAgStub::DisconnectScoInnerEx;
 
     HILOGI("%{public}s ends.", __func__);
 }
@@ -218,13 +222,10 @@ ErrCode BluetoothHfpAgStub::DisconnectScoInner(MessageParcel &data, MessageParce
 
 ErrCode BluetoothHfpAgStub::PhoneStateChangedInner(MessageParcel &data, MessageParcel &reply)
 {
-    int numActive = data.ReadInt32();
-    int numHeld = data.ReadInt32();
-    int callState = data.ReadInt32();
-    std::string number = data.ReadString();
-    int type = data.ReadInt32();
-    std::string name = data.ReadString();
-    PhoneStateChanged(numActive, numHeld, callState, number, type, name);
+    std::shared_ptr<BluetoothPhoneState> phoneState(data.ReadParcelable<BluetoothPhoneState>());
+    CHECK_AND_RETURN_LOG_RET(phoneState, BT_ERR_IPC_TRANS_FAILED,
+        "BluetoothHfpAgStub: read phone state failed");
+    PhoneStateChanged(*phoneState);
     return NO_ERROR;
 }
 
@@ -348,5 +349,14 @@ ErrCode BluetoothHfpAgStub::GetConnectStrategyInner(MessageParcel &data, Message
     return NO_ERROR;
 }
 
+ErrCode BluetoothHfpAgStub::ConnectScoInnerEx(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHfpAgStub::DisconnectScoInnerEx(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
