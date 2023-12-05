@@ -489,7 +489,7 @@ void HfpAgService::UpdateMockCallList(int callState, const std::string &number, 
     callList_.push_back(call);
 }
 
-void HfpAgService::PhoneStateChanged(BluetoothPhoneState &phoneState)
+void HfpAgService::PhoneStateChanged(Bluetooth::BluetoothPhoneState &phoneState)
 {
     LOG_INFO("[HFP AG]%{public}s(): ==========<start>==========", __FUNCTION__);
     int numActive = phoneState.GetActiveNum();
