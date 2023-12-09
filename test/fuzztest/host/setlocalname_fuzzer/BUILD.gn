@@ -29,15 +29,15 @@ ohos_fuzztest("SetLocalNameFuzzTest") {
   ]
 
   include_dirs =
-      [ "//foundation/communication/bluetooth/frameworks/inner/common" ]
+      [ "//foundation/communication/bluetooth/frameworks/inner/include" ]
 
   sources = [ "setlocalname_fuzzer.cpp" ]
 
-  deps = [ ]
+  deps = []
 
   external_deps = [
     "bluetooth:btframework",
-    "hilog:libhilog"
+    "hilog:libhilog",
   ]
 }
 

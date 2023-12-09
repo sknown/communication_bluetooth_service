@@ -170,6 +170,7 @@ config("btservice_config") {
     "//base/telephony/state_registry/frameworks/native/observer/include",
     "//foundation/multimedia/audio_framework/interfaces/inner_api/native/audiocommon/include",
     "//foundation/multimedia/audio_framework/interfaces/inner_api/native/audiomanager/include",
+    "$PART_DIR/common",
   ]
 
   cflags_cc = [
@@ -376,6 +377,7 @@ ohos_shared_library("btsbc") {
   #   cfi = true
   # }
   stack_protector_ret = true
+  include_dirs = [ "$PART_DIR/common" ]
   sources = [
     "$SBC_CODEC_DIR/src/sbc_decoder.cpp",
     "$SBC_CODEC_DIR/src/sbc_encoder.cpp",

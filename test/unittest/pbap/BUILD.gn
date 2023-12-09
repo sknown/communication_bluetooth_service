@@ -31,7 +31,7 @@ config("module_private_config") {
     "//third_party/bounds_checking_function/include",
     "//commonlibrary/c_utils/base/include",
     "//utils/system/safwk/native/include",
-    "//foundation/communication/bluetooth/frameworks/inner/common",
+    "//foundation/communication/bluetooth/frameworks/inner/include",
   ]
   defines = [
     "BTFW_LOG_TAG = \"bluetooth_test\"",
@@ -58,7 +58,7 @@ ohos_unittest("btfw_pbap_client_test") {
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "resource_management:global_resmgr"
+    "resource_management:global_resmgr",
   ]
 }
 
@@ -81,7 +81,7 @@ ohos_unittest("btfw_pbap_server_test") {
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "resource_management:global_resmgr"
+    "resource_management:global_resmgr",
   ]
 }
 
