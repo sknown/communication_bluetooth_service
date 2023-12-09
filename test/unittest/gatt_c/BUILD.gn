@@ -23,7 +23,7 @@ config("module_private_config") {
     "//utils/system/safwk/native/include",
     "//foundation/communication/bluetooth/interfaces/inner_api/include",
     "//foundation/communication/bluetooth/interfaces/inner_api/include/c_header",
-    "//foundation/communication/bluetooth/frameworks/inner/common",
+    "//foundation/communication/bluetooth/frameworks/inner/include",
   ]
   defines = [
     "BTFW_LOG_TAG = \"bluetooth_test\"",
@@ -38,15 +38,13 @@ ohos_unittest("btfw_gatt_c_unit_test") {
 
   configs = [ ":module_private_config" ]
 
-  deps = [
-    "//third_party/googletest:gtest_main",
-  ]
+  deps = [ "//third_party/googletest:gtest_main" ]
 
   external_deps = [
     "bluetooth:btframework",
     "c_utils:utils",
     "hilog:libhilog",
-    "resource_management:global_resmgr"
+    "resource_management:global_resmgr",
   ]
 }
 
@@ -57,15 +55,13 @@ ohos_unittest("btfw_gatt_client_c_unit_test") {
 
   configs = [ ":module_private_config" ]
 
-  deps = [
-    "//third_party/googletest:gtest_main",
-  ]
+  deps = [ "//third_party/googletest:gtest_main" ]
 
   external_deps = [
     "bluetooth:btframework",
     "c_utils:utils",
     "hilog:libhilog",
-    "resource_management:global_resmgr"
+    "resource_management:global_resmgr",
   ]
 }
 

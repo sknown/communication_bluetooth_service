@@ -30,7 +30,7 @@ config("module_private_config") {
     "//commonlibrary/c_utils/base/include",
     "//utils/system/safwk/native/include",
     "//foundation/communication/bluetooth/interfaces/inner_api/include",
-    "//foundation/communication/bluetooth/frameworks/inner/common",
+    "//foundation/communication/bluetooth/frameworks/inner/include",
   ]
   defines = [
     "BTFW_LOG_TAG = \"bluetooth_test\"",
@@ -62,7 +62,7 @@ ohos_unittest("btfw_gatt_spp_unit_test") {
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "resource_management:global_resmgr"
+    "resource_management:global_resmgr",
   ]
 }
 

@@ -196,6 +196,7 @@ config("btstack_config") {
     "./",
     "src",
     "platform/include",
+    "$PART_DIR/common",
     "$PART_DIR/hardware/include",
   ]
 

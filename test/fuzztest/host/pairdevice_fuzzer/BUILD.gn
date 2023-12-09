@@ -28,16 +28,16 @@ ohos_fuzztest("PairDeviceFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
   include_dirs =
-      [ "//foundation/communication/bluetooth/frameworks/inner/common" ]
+      [ "//foundation/communication/bluetooth/frameworks/inner/include" ]
 
   sources = [ "pairdevice_fuzzer.cpp" ]
 
-  deps = [ ]
+  deps = []
 
   external_deps = [
     "bluetooth:btframework",
     "c_utils:utils",
-    "hilog:libhilog"
+    "hilog:libhilog",
   ]
 }
 
