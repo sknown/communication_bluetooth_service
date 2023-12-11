@@ -13,6 +13,9 @@
 
 import("//build/ohos.gni")
 
+SUBSYSTEM_DIR = "//foundation/communication"
+PART_DIR = "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth"
+
 config("btdummy_config") {
   cflags_cc = [
     "-fPIC",
@@ -21,6 +24,7 @@ config("btdummy_config") {
     "-Wno-format-nonliteral",
     "-Wno-non-c-typedef-for-linkage",
   ]
+  include_dirs = [ "$PART_DIR/common" ]
 }
 
 config("btdummy_public_config") {
