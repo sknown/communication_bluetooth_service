@@ -833,9 +833,10 @@ sptr<IRemoteObject> BluetoothHostServer::GetBleRemote(const std::string &name)
 }
 
 // Fac_Res_CODE
-bool BluetoothHostServer::BluetoothFactoryReset()
+int32_t BluetoothHostServer::BluetoothFactoryReset()
 {
-    return IAdapterManager::GetInstance()->FactoryReset();
+    bool ret = IAdapterManager::GetInstance()->FactoryReset();
+    return ret ? BT_NO_ERROR : BT_ERR_INTERNAL_ERROR;
 }
 
 int32_t BluetoothHostServer::GetDeviceType(int32_t transport, const std::string &address)

@@ -46,7 +46,7 @@ public:
     int32_t EnableBt() override;
     int32_t DisableBt() override;
     int32_t GetBtState(int32_t &state) override;
-    bool BluetoothFactoryReset() override;
+    int32_t BluetoothFactoryReset() override;
     int32_t GetDeviceType(int32_t transport, const std::string &address) override;
 
     std::string GetLocalAddress() override;

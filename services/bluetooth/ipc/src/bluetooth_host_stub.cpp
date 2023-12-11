@@ -323,13 +323,12 @@ ErrCode BluetoothHostStub::GetBleRemoteInner(MessageParcel &data, MessageParcel 
     return NO_ERROR;
 }
 
-ErrCode BluetoothHostStub::BluetoothFactoryResetInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothHostStub::BluetoothFactoryResetInner(MessageParcel &data, MessageParcel &reply)
 {
-    HILOGI("BluetoothHostStub::BluetoothFactoryResetInner starts");
-    bool result = BluetoothFactoryReset();
-    bool ret = reply.WriteBool(result);
+    int32_t result = BluetoothFactoryReset();
+    bool ret = reply.WriteInt32(result);
     if (!ret) {
-        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
+        HILOGE("WriteInt32 failed");
         return ERR_INVALID_VALUE;
     }
     return NO_ERROR;
