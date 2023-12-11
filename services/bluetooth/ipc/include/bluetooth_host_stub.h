@@ -38,7 +38,7 @@ private:
     int32_t DisableBtInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetProfileInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetBleRemoteInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode BluetoothFactoryResetInner(MessageParcel &data, MessageParcel &reply);
+    int32_t BluetoothFactoryResetInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetBtStateInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetLocalAddressInner(MessageParcel &data, MessageParcel &reply);
     int32_t DisableBleInner(MessageParcel &data, MessageParcel &reply);
