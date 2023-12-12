@@ -25,6 +25,7 @@
 #include "l2cap_core.h"
 #include "l2cap_inst.h"
 #include "l2cap_le.h"
+#include "hci_vendor_if.h"
 
 int L2CAP_ConnectReq(const BtAddr *addr, uint16_t lpsm, uint16_t rpsm, uint16_t *lcid)
 {
@@ -335,6 +336,7 @@ int L2CAP_SendData(uint16_t lcid, Packet *pkt)
     L2capConnection *conn = NULL;
     L2capChannel *chan = NULL;
     uint16_t length;
+    const uint16_t avdtpLength = 3;
 
     if (pkt == NULL) {
         return BT_BAD_PARAM;
@@ -351,6 +353,10 @@ int L2CAP_SendData(uint16_t lcid, Packet *pkt)
         return BT_BAD_PARAM;
     }
 
+    if (conn == NULL) {
+        return BT_BAD_PARAM;
+    }
+
     length = PacketSize(pkt);
     if (length > chan->rcfg.mtu) {
         return BT_BAD_PARAM;
@@ -358,6 +364,36 @@ int L2CAP_SendData(uint16_t lcid, Packet *pkt)
 
     if (chan->state != L2CAP_CHANNEL_CONNECTED) {
         return BT_BAD_STATUS;
+    }
+
+    if (length == avdtpLength) {
+        uint8_t temp[3] = {0};
+        const uint32_t avdtpOffset = 0;
+        const uint8_t avdtpSeid = 0x04;
+        const uint8_t avdtpSeidFlag = 2;
+        const uint8_t avdtpOpFlag = 1;
+        const uint8_t avdtpOpStart = 0x07;
+        const uint8_t avdtpOpSuspend = 0x09;
+
+        PacketRead(pkt,temp,avdtpOffset,(uint32_t)avdtpLength);
+        if (temp[avdtpSeidFlag] == avdtpSeid){
+	    uint8_t vendorPara[4] = {0};
+	    const uint16_t vendorOp = 0xfd1a;      //0x1a,0xfd
+	    const uint8_t vendorConnectHandleFlag = 0;
+	    const uint8_t vendorPriorityFlag = 2;
+	    const uint8_t aclPriorityMax = 0x01;
+	    const uint8_t aclPriorityMin = 0x00;
+
+	    vendorPara[vendorConnectHandleFlag] = (uint8_t)conn->aclHandle;
+	    if (temp[avdtpOpFlag] == avdtpOpStart){
+                vendorPara[vendorPriorityFlag] = aclPriorityMax;
+                HCIVIF_SendCmd(vendorOp,vendorPara,sizeof(vendorPara));
+	    }
+	    else if (temp[avdtpOpFlag] == avdtpOpSuspend){
+                vendorPara[vendorPriorityFlag] = aclPriorityMin;
+                HCIVIF_SendCmd(vendorOp,vendorPara,sizeof(vendorPara));
+	    }
+        }
     }
 
     if (chan->lcfg.rfc.mode == L2CAP_BASIC_MODE) {
