@@ -1810,5 +1810,11 @@ int32_t BluetoothHostServer::DisconnectAllowedProfiles(const std::string &addres
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
+
+int32_t BluetoothHostServer::GetDeviceProductId(const std::string &address, std::string &prodcutId)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
 }  // namespace Bluetooth
 }  // namespace OHOS
