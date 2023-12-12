@@ -102,6 +102,13 @@ ohos_static_library("btipc_service") {
     ]
   }
 
+  if (bluetooth_service_pbap_pse_feature) {
+    sources += [
+      "src/bluetooth_pbap_pse_observer_proxy.cpp",
+      "src/bluetooth_pbap_pse_stub.cpp",
+    ]
+  }
+
   cflags_cc = [ "-fvisibility=hidden" ]
 
   deps = []

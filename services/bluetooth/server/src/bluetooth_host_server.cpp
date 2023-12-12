@@ -30,6 +30,7 @@
 #include "bluetooth_host_dumper.h"
 #include "bluetooth_log.h"
 #include "bluetooth_pan_server.h"
+#include "bluetooth_pbap_pse_server.h"
 #include "bluetooth_socket_server.h"
 #include "bluetooth_utils_server.h"
 #include "file_ex.h"
@@ -37,7 +38,6 @@
 #include "interface_adapter_manager.h"
 #include "permission_utils.h"
 #include "bluetooth_host_server.h"
-
 
 #include "interface_adapter_ble.h"
 #include "interface_adapter_classic.h"
@@ -671,6 +671,11 @@ void BluetoothHostServer::impl::createServers()
 #ifdef BLUETOOTH_PAN_FEATURE
     sptr<BluetoothPanServer> panServer = new BluetoothPanServer();
     servers_[PROFILE_PAN_SERVER] = panServer->AsObject();
+#endif
+
+#ifdef BLUETOOTH_PBAP_PSE_FEATURE
+    sptr<BluetoothPbapPseServer> pbapPseServer = new BluetoothPbapPseServer();
+    servers_[PROFILE_PBAP_PSE] = pbapPseServer->AsObject();
 #endif
 
     HILOGI("servers_ constructed, size is %{public}zu", servers_.size());

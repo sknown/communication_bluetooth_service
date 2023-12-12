@@ -91,7 +91,7 @@ group("unittest") {
 
   deps = []
 
-  if (is_phone_product) {
+  if (is_phone_product && bluetooth_service_pbap_pse_feature) {
     if (bluetooth_service_pbap_client_feature) {
       deps += [ ":btfw_pbap_client_test" ]
     }

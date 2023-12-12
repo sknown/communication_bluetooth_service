@@ -98,6 +98,12 @@ ohos_shared_library("bluetooth_server") {
     sources += [ "src/bluetooth_pan_server.cpp" ]
   }
 
+  if (bluetooth_service_pbap_pse_feature) {
+    defines += [ "BLUETOOTH_PBAP_PSE_FEATURE" ]
+
+    sources += [ "src/bluetooth_pbap_pse_server.cpp" ]
+  }
+
   deps = [
     "$BT_ROOT/etc/init:etc",
     "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth/ipc:btipc_service",
