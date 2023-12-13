@@ -855,23 +855,25 @@ int32_t BluetoothHostServer::GetDeviceType(int32_t transport, const std::string 
     return INVALID_VALUE;
 }
 
-std::string BluetoothHostServer::GetLocalAddress()
+int32_t BluetoothHostServer::GetLocalAddress(std::string &addr)
 {
     HILOGI("Enter!");
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
-        return INVALID_MAC_ADDRESS;
+        return BT_ERR_PERMISSION_FAILED;
     }
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     if (IsBtEnabled() && classicService) {
-        return classicService->GetLocalAddress();
+        addr = classicService->GetLocalAddress();
+        return NO_ERROR;
     } else if (IsBleEnabled() && bleService) {
-        return bleService->GetLocalAddress();
+        addr = bleService->GetLocalAddress();
+        return NO_ERROR;
     } else {
-        HILOGE("GetLocalAddress failed");
+        HILOGW("BT current state is not enabled!");
+        return BT_ERR_INVALID_STATE;
     }
-    return INVALID_MAC_ADDRESS;
 }
 
 int32_t BluetoothHostServer::EnableBle()

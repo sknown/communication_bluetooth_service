@@ -49,7 +49,7 @@ public:
     int32_t BluetoothFactoryReset() override;
     int32_t GetDeviceType(int32_t transport, const std::string &address) override;
 
-    std::string GetLocalAddress() override;
+    int32_t GetLocalAddress(std::string &addr) override;
     sptr<IRemoteObject> GetProfile(const std::string &name) override;
     sptr<IRemoteObject> GetBleRemote(const std::string &name) override;
 
