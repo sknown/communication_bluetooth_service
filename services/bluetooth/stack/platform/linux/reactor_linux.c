@@ -236,13 +236,6 @@ void ReactorUnregister(ReactorItem *item)
         }
     }
 
-    MutexLock(item->reactor->apiMutex);
-    ListAddLast(item->reactor->movedItems, item);
-    MutexUnlock(item->reactor->apiMutex);
-
-    MutexLock(item->lock);
-    MutexUnlock(item->lock);
-
     free(item->lock);
     free(item);
 }
