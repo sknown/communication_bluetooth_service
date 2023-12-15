@@ -50,7 +50,7 @@ public:
     void DeregisterObserver(const sptr<IBluetoothHfpAgObserver> &observer) override;
     int SetConnectStrategy(const BluetoothRawAddress &device, int strategy) override;
     int GetConnectStrategy(const BluetoothRawAddress &device, int &strategy) override;
-    bool IsInbandRingingEnabled() override;
+    int IsInbandRingingEnabled(bool &isEnabled) override;
     int32_t ConnectSco(uint8_t callType) override;
     int32_t DisconnectSco(uint8_t callType) override;
 
