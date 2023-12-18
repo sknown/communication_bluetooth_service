@@ -332,7 +332,8 @@ HWTEST_F(HostTest, Host_ModuleTest_GetLocalAddress_00100, TestSize.Level1)
     GTEST_LOG_(INFO) << "Host_ModuleTest_GetLocalAddress_00100 start";
 
     host_ = &BluetoothHost::GetDefaultHost();
-    std::string addr = host_->GetLocalAddress();
+    std::string addr = "";
+    host_->GetLocalAddress(addr);
     EXPECT_TRUE(!addr.empty() && addr.size() > 0);
 
     GTEST_LOG_(INFO) << "Host_ModuleTest_GetLocalAddress_00100 end";

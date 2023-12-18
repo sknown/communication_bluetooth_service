@@ -40,7 +40,7 @@ private:
     ErrCode GetBleRemoteInner(MessageParcel &data, MessageParcel &reply);
     int32_t BluetoothFactoryResetInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetBtStateInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode GetLocalAddressInner(MessageParcel &data, MessageParcel &reply);
+    int32_t GetLocalAddressInner(MessageParcel &data, MessageParcel &reply);
     int32_t DisableBleInner(MessageParcel &data, MessageParcel &reply);
     int32_t EnableBleInner(MessageParcel &data, MessageParcel &reply);
     ErrCode IsBrEnabledInner(MessageParcel &data, MessageParcel &reply);
