@@ -344,14 +344,14 @@ ErrCode BluetoothHostStub::GetBtStateInner(MessageParcel &data, MessageParcel &r
     return NO_ERROR;
 }
 
-ErrCode BluetoothHostStub::GetLocalAddressInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothHostStub::GetLocalAddressInner(MessageParcel &data, MessageParcel &reply)
 {
-    std::string result = GetLocalAddress();
-    bool ret = reply.WriteString(result);
-    if (!ret) {
-        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
-    }
+    std::string addr = "00:00:00:00:00:00";
+    int32_t result = GetLocalAddress(addr);
+
+    CHECK_AND_RETURN_LOG_RET(reply.WriteInt32(result), BT_ERR_IPC_TRANS_FAILED, "writing res failed");
+    CHECK_AND_RETURN_LOG_RET((result == BT_NO_ERROR), NO_ERROR, "get local addr failed");
+    CHECK_AND_RETURN_LOG_RET(reply.WriteString(addr), BT_ERR_IPC_TRANS_FAILED, "writing addr failed");
     return NO_ERROR;
 }
 
