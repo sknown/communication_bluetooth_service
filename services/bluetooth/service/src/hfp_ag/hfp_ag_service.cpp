@@ -18,6 +18,7 @@
 #include "adapter_config.h"
 #include "bluetooth_errorcode.h"
 #include "class_creator.h"
+#include "adapter_manager.h"
 #include "hfp_ag_defines.h"
 #include "hfp_ag_system_interface.h"
 #include "log_util.h"
@@ -150,6 +151,12 @@ int HfpAgService::Connect(const RawAddress &device)
 {
     LOG_INFO("[HFP AG]%{public}s():==========<start>==========", __FUNCTION__);
     std::lock_guard<std::recursive_mutex> lk(mutex_);
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (!classicService || !(classicService->IsHfpCodSupported(device))) {
+        LOG_ERROR("[HFP AG]%{public}s():Not Support HFP!", __FUNCTION__);
+        return Bluetooth::BT_ERR_INTERNAL_ERROR;
+    }
+
     std::string address = device.GetAddress();
     auto it = stateMachines_.find(address);
     if ((it != stateMachines_.end()) && (it->second != nullptr)) {
@@ -165,7 +172,6 @@ int HfpAgService::Connect(const RawAddress &device)
         LOG_INFO("[HFP AG]%{public}s():Max connection has reached!", __FUNCTION__);
         return Bluetooth::BT_ERR_INTERNAL_ERROR;
     }
-
     HfpAgMessage event(HFP_AG_CONNECT_EVT);
     event.dev_ = address;
     PostEvent(event);
