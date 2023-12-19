@@ -818,11 +818,12 @@ void AdapterManager::RestoreTurnOnState()
             sleep(1);
             
             int processed = 0;
-            for (int i =  0; i < TRANSPORT_MAX; i++) {
-                int turnOn = 0;
-                AdapterDeviceConfig::GetInstance()->GetValue(SECTION_HOST, adapterConfigTbl[i].first, turnOn);
-                LOG_INFO("restore turnon, %{public}s, %{public}d", adapterConfigTbl[i].first.c_str(), turnOn);
+            const unsigned char btStateFlag = 0;
+            int turnOn = 0;
 
+            AdapterDeviceConfig::GetInstance()->GetValue(SECTION_HOST, adapterConfigTbl[btStateFlag].first, turnOn);
+            LOG_INFO("restore turnon, %{public}s, %{public}d", adapterConfigTbl[btStateFlag].first.c_str(), turnOn);
+            for (int i =  0; i < TRANSPORT_MAX; i++) {
                 if (!turnOn) {
                     processed++;
                     continue;
