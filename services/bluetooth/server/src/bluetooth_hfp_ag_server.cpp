@@ -356,7 +356,7 @@ std::string BluetoothHfpAgServer::GetActiveDevice()
     return dev;
 }
 
-bool BluetoothHfpAgServer::IsInbandRingingEnabled()
+int BluetoothHfpAgServer::IsInbandRingingEnabled(bool &isEnabled)
 {
     return true;
 }
