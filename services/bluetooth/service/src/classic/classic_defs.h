@@ -113,7 +113,7 @@ constexpr uint16_t PNP_SERVICE_CLASS_UUID = 0x1200;
 constexpr int CLASS_OF_DEVICE_RANGE = 0xFFFFFF;
 
 /// Class of Device defines
-constexpr uint32_t CLASS_OF_DEVICE_MASK = 0x07FF;
+constexpr uint32_t CLASS_OF_DEVICE_MASK = 0X1FFC;
 constexpr uint32_t CLASS_OF_DEVICE_UNCLASSIFIED = ((0x1F) << 8);
 constexpr uint32_t CLASS_OF_DEVICE_HID_KEYBOARD = 0x0540;
 constexpr uint32_t CLASS_OF_DEVICE_HID_POINTING = 0x0580;
