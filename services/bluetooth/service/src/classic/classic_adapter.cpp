@@ -2421,6 +2421,20 @@ void ClassicAdapter::SendRemoteBatteryLevelChanged(const RawAddress &device, int
     });
 }
 
+bool ClassicAdapter::IsHfpCodSupported(const RawAddress &device)
+{
+    std::shared_ptr<ClassicRemoteDevice> remoteDevice = FindRemoteDevice(device);
+    if (remoteDevice == nullptr) {
+        HILOGE("remoteDevice is nullptr");
+        return false;
+    }
+    int cod = remoteDevice->GetDeviceClass();
+    if ((cod & CLASS_OF_DEVICE_MASK) == CLASS_OF_DEVICE_AV_HEADSETS ||
+        (cod & CLASS_OF_DEVICE_MASK) == CLASS_OF_DEVICE_AV_HANDSFREE) {
+            return true;
+    }
+    return false;
+}
 REGISTER_CLASS_CREATOR(ClassicAdapter);
 }  // namespace bluetooth
 }  // namespace OHOS

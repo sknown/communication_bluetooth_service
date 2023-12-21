@@ -362,6 +362,16 @@ public:
      * @since 6
      */
     virtual bool DeregisterClassicAdapterObserver(IAdapterClassicObserver &observer) const = 0;
+
+    /**
+     * @brief Check if device is support hfp.
+     *
+     * @param  device Remote device which set alias name
+     * @return Returns <b>true</b> if device is support hfp profile;
+     *         returns <b>false</b> if device is not support hfp profile.
+     * @since 6
+     */
+    virtual bool IsHfpCodSupported(const RawAddress &device) = 0;
 };
 }  // namespace bluetooth
 }  // namespace OHOS
