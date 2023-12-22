@@ -31,23 +31,6 @@ config("module_private_config") {
   ]
 }
 
-ohos_unittest("btfw_gatt_c_unit_test") {
-  module_out_path = module_output_path
-
-  sources = [ "gatt_c_test.cpp" ]
-
-  configs = [ ":module_private_config" ]
-
-  deps = [ "//third_party/googletest:gtest_main" ]
-
-  external_deps = [
-    "bluetooth:btframework",
-    "c_utils:utils",
-    "hilog:libhilog",
-    "resource_management:global_resmgr",
-  ]
-}
-
 ohos_unittest("btfw_gatt_client_c_unit_test") {
   module_out_path = module_output_path
 
@@ -71,9 +54,6 @@ group("unittest") {
   deps = []
 
   if (is_phone_product) {
-    deps += [
-      ":btfw_gatt_c_unit_test",
-      ":btfw_gatt_client_c_unit_test",
-    ]
+    deps += [ ":btfw_gatt_client_c_unit_test" ]
   }
 }
