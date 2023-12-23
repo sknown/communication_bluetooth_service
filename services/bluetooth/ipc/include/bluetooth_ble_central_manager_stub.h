@@ -21,7 +21,7 @@
 #include "i_bluetooth_ble_central_manager.h"
 #include "iremote_stub.h"
 
-namespace OHOS {
+namespace OHOS {}
 namespace Bluetooth {
 class BluetoothBleCentralManagerStub : public IRemoteStub<IBluetoothBleCentralManager> {
 public:
@@ -44,7 +44,7 @@ private:
     ErrCode StopScanInner(MessageParcel &data, MessageParcel &reply);
     ErrCode ConfigScanFilterInner(MessageParcel &data, MessageParcel &reply);
     ErrCode RemoveScanFilterInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode ProxyUidInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode OnSuspendInner(MessageParcel &data, MessageParcel &reply);
     ErrCode ResetAllProxyInner(MessageParcel &data, MessageParcel &reply);
     ErrCode SetLpDeviceAdvParamInner(MessageParcel &data, MessageParcel &reply);
     ErrCode SetScanReportChannelToLpDeviceInner(MessageParcel &data, MessageParcel &reply);
