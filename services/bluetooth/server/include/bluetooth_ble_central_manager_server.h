@@ -42,7 +42,7 @@ public:
     int StopScan(int32_t scannerId) override;
     int ConfigScanFilter(int32_t scannerId, const std::vector<BluetoothBleScanFilter> &filters) override;
     void RemoveScanFilter(int32_t scannerId) override;
-    bool ProxyUid(int32_t uid, bool isProxy) override;
+    bool OnSuspend(int32_t uid, bool isProxy) override;
     bool ResetAllProxy() override;
     static bool IsProxyUid(int32_t uid);
     int SetLpDeviceAdvParam(int duration, int maxExtAdvEvents, int window, int interval, int advHandle) override;

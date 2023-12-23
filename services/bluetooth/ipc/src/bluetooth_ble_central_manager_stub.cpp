@@ -49,7 +49,7 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothBleCentralManagerStub *,
             std::bind(&BluetoothBleCentralManagerStub::StopScanInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
         {BluetoothBleCentralManagerInterfaceCode::BLE_PROXY_UID,
-            std::bind(&BluetoothBleCentralManagerStub::ProxyUidInner, std::placeholders::_1, std::placeholders::_2,
+            std::bind(&BluetoothBleCentralManagerStub::OnSuspendInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
         {BluetoothBleCentralManagerInterfaceCode::BLE_RESET_ALL_PROXY,
             std::bind(&BluetoothBleCentralManagerStub::ResetAllProxyInner, std::placeholders::_1, std::placeholders::_2,
@@ -217,7 +217,7 @@ ErrCode BluetoothBleCentralManagerStub::RemoveScanFilterInner(MessageParcel &dat
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::ProxyUidInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::OnSuspendInner(MessageParcel &data, MessageParcel &reply)
 {
     int32_t uid = data.ReadInt32();
     bool isProxy = data.ReadBool();
