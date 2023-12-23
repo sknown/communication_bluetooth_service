@@ -222,7 +222,7 @@ ErrCode BluetoothBleCentralManagerStub::OnSuspendInner(MessageParcel &data, Mess
     int32_t uid = data.ReadInt32();
     bool isProxy = data.ReadBool();
 
-    bool ret = ProxyUid(uid, isProxy);
+    bool ret = OnSuspend(uid, isProxy);
     if (!reply.WriteBool(ret)) {
         return ERR_INVALID_VALUE;
     }
