@@ -21,7 +21,7 @@
 #include "i_bluetooth_ble_central_manager.h"
 #include "iremote_stub.h"
 
-namespace OHOS {}
+namespace OHOS {
 namespace Bluetooth {
 class BluetoothBleCentralManagerStub : public IRemoteStub<IBluetoothBleCentralManager> {
 public:
