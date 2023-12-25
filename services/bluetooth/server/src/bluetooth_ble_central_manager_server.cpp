@@ -317,7 +317,7 @@ BluetoothBleCentralManagerServer::~BluetoothBleCentralManagerServer()
 std::mutex BluetoothBleCentralManagerServer::proxyMutex_;
 std::set<int32_t> BluetoothBleCentralManagerServer::proxyUids_;
 
-bool BluetoothBleCentralManagerServer::OnSuspend(int32_t uid, bool isProxy)
+bool BluetoothBleCentralManagerServer::FreezeByRss(int32_t uid, bool isProxy)
 {
     HILOGD("Start bluetooth proxy, uid: %{public}d, isProxy: %{public}d", uid, isProxy);
     std::lock_guard<std::mutex> lock(proxyMutex_);

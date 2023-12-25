@@ -48,8 +48,8 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothBleCentralManagerStub *,
         {BluetoothBleCentralManagerInterfaceCode::BLE_STOP_SCAN,
             std::bind(&BluetoothBleCentralManagerStub::StopScanInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothBleCentralManagerInterfaceCode::BLE_PROXY_UID,
-            std::bind(&BluetoothBleCentralManagerStub::OnSuspendInner, std::placeholders::_1, std::placeholders::_2,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_FREEZE_BY_RSS,
+            std::bind(&BluetoothBleCentralManagerStub::FreezeByRssInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
         {BluetoothBleCentralManagerInterfaceCode::BLE_RESET_ALL_PROXY,
             std::bind(&BluetoothBleCentralManagerStub::ResetAllProxyInner, std::placeholders::_1, std::placeholders::_2,
@@ -217,12 +217,12 @@ ErrCode BluetoothBleCentralManagerStub::RemoveScanFilterInner(MessageParcel &dat
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::OnSuspendInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::FreezeByRssInner(MessageParcel &data, MessageParcel &reply)
 {
     int32_t uid = data.ReadInt32();
     bool isProxy = data.ReadBool();
 
-    bool ret = OnSuspend(uid, isProxy);
+    bool ret = FreezeByRss(uid, isProxy);
     if (!reply.WriteBool(ret)) {
         return ERR_INVALID_VALUE;
     }
