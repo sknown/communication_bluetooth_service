@@ -145,12 +145,12 @@ ErrCode BluetoothSocketStub::DeregisterServerObserverInner(MessageParcel &data, 
 
 ErrCode BluetoothSocketStub::RegisterClientObserverInner(MessageParcel &data, MessageParcel &reply)
 {
-    return reply.WriteInt32(BT_ERR_API_NOT_SUPPORT);
+    return reply.WriteInt32(BT_NO_ERROR);
 }
 
 ErrCode BluetoothSocketStub::DeregisterClientObserverInner(MessageParcel &data, MessageParcel &reply)
 {
-    return reply.WriteInt32(BT_ERR_API_NOT_SUPPORT);
+    return reply.WriteInt32(BT_NO_ERROR);
 }
 
 ErrCode BluetoothSocketStub::UpdateCocConnectionParamsInner(MessageParcel &data, MessageParcel &reply)
