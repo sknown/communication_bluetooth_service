@@ -38,6 +38,7 @@
 #include "profile_config.h"
 #include "profile_service_manager.h"
 #include "sys_state_machine.h"
+#include <atomic>
 
 namespace OHOS {
 namespace bluetooth {
@@ -596,7 +597,7 @@ void AdapterManager::OnAdapterStateChange(const BTTransport transport, const BTS
         Disable(ADAPTER_BLE);
     }
     // notify observers state update
-    auto &adapterState = transport == ADAPTER_BREDR ? pimpl->classicAdapter_->state.load() :
+    auto adapterState = transport == ADAPTER_BREDR ? pimpl->classicAdapter_->state.load() :
         pimpl->bleAdapter_->state.load();
     if (adapterState != state) {
         adapterState = state;
