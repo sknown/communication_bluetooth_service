@@ -30,6 +30,8 @@ public:
     static int VerifyManageBluetoothPermission();
     static int VerifyLocationPermission();
     static int VerifyApproximatelyPermission();
+    static int VerifyAccessBluetoothPermission();
+    static int VerifyGetBluetoothLocalMacPermission();
 
     static int VerifyUseBluetoothPermission(const std::uint32_t  &tokenID);
     static int VerifyDiscoverBluetoothPermission(const std::uint32_t  &tokenID);

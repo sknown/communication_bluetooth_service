@@ -85,7 +85,25 @@ public:
      */
     static int VerifyApproximatelyPermission(const int &pid, const int &uid);
 
-        /**
+    /**
+     * @Description Verify where the app has the permission to access bluetooth
+     *
+     * @param pid the app's process id.
+     * @param uid the app id.
+     * @return int PERMISSION_DENIED or PERMISSION_GRANTED
+     */
+    static int VerifyAccessBluetoothPermission(const int &pid, const int &uid);
+
+    /**
+     * @Description Verify where the app has the permission to get bluetooth local mac
+     *
+     * @param pid the app's process id.
+     * @param uid the app id.
+     * @return int PERMISSION_DENIED or PERMISSION_GRANTED
+     */
+    static int VerifyGetBluetoothLocalMacPermission(const int &pid, const int &uid);
+
+    /**
      * @Description Verify where the app has the permission to use bluetooth
      *
      * @param tokenID The app's token id.

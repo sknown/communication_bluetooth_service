@@ -858,8 +858,12 @@ int32_t BluetoothHostServer::GetDeviceType(int32_t transport, const std::string 
 int32_t BluetoothHostServer::GetLocalAddress(std::string &addr)
 {
     HILOGI("Enter!");
-    if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
-        HILOGE("false, check permission failed");
+    if (PermissionUtils::VerifyAccessBluetoothPermission() == PERMISSION_DENIED) {
+        HILOGE("false, check Access permission failed");
+        return BT_ERR_PERMISSION_FAILED;
+    }
+    if (PermissionUtils::VerifyGetBluetoothLocalMacPermission() == PERMISSION_DENIED) {
+        HILOGE("false, check GetLocalMac permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();

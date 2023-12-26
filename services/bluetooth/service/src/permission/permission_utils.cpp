@@ -53,6 +53,18 @@ int PermissionUtils::VerifyApproximatelyPermission()
         IPCSkeleton::GetCallingPid(), IPCSkeleton::GetCallingUid());
 }
 
+int PermissionUtils::VerifyAccessBluetoothPermission()
+{
+    return AuthCenter::GetInstance().VerifyAccessBluetoothPermission(
+        IPCSkeleton::GetCallingPid(), IPCSkeleton::GetCallingUid());
+}
+
+int PermissionUtils::VerifyGetBluetoothLocalMacPermission()
+{
+    return AuthCenter::GetInstance().VerifyGetBluetoothLocalMacPermission(
+        IPCSkeleton::GetCallingPid(), IPCSkeleton::GetCallingUid());
+}
+
 int PermissionUtils::VerifyUseBluetoothPermission(const std::uint32_t  &tokenID)
 {
     return AuthCenter::GetInstance().VerifyUseBluetoothPermission(tokenID);
