@@ -483,14 +483,12 @@ bool AdapterManager::ClearAllStorage() const
 
 BTStateID AdapterManager::GetState(const BTTransport transport) const
 {
-    std::lock_guard<std::recursive_mutex> lock(pimpl->syncMutex_);
-
     BTStateID state = BTStateID::STATE_TURN_OFF;
     if (transport == ADAPTER_BREDR && pimpl->classicAdapter_) {
-        state = pimpl->classicAdapter_->state;
+        state = pimpl->classicAdapter_->state.load();
     }
     if (transport == ADAPTER_BLE && pimpl->bleAdapter_) {
-        state = pimpl->bleAdapter_->state;
+        state = pimpl->bleAdapter_->state.load();
     }
     return state;
 }
