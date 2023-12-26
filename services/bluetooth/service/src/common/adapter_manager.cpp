@@ -54,7 +54,7 @@ struct AdapterInfo {
     ~AdapterInfo()
     {}
 
-    BTStateID state = BTStateID::STATE_TURN_OFF;
+    std::atomic<BTStateID> state = BTStateID::STATE_TURN_OFF;
     std::shared_ptr<T> instance = nullptr;
     std::unique_ptr<AdapterStateMachine> stateMachine = nullptr;
 };
@@ -482,14 +482,12 @@ bool AdapterManager::ClearAllStorage() const
 
 BTStateID AdapterManager::GetState(const BTTransport transport) const
 {
-    std::lock_guard<std::recursive_mutex> lock(pimpl->syncMutex_);
-
     BTStateID state = BTStateID::STATE_TURN_OFF;
     if (transport == ADAPTER_BREDR && pimpl->classicAdapter_) {
-        state = pimpl->classicAdapter_->state;
+        state = pimpl->classicAdapter_->state.load();
     }
     if (transport == ADAPTER_BLE && pimpl->bleAdapter_) {
-        state = pimpl->bleAdapter_->state;
+        state = pimpl->bleAdapter_->state.load();
     }
     return state;
 }
@@ -584,7 +582,6 @@ void AdapterManager::PublishBluetoothStateChangeEvent(const BTTransport transpor
 void AdapterManager::OnAdapterStateChange(const BTTransport transport, const BTStateID state) const
 {
     LOG_DEBUG("%{public}s transport is %{public}d state is %{public}d", __PRETTY_FUNCTION__, transport, state);
-    std::lock_guard<std::recursive_mutex> lock(pimpl->syncMutex_);
 
     if ((transport == ADAPTER_BREDR && pimpl->classicAdapter_ == nullptr) ||
         (transport == ADAPTER_BLE && pimpl->bleAdapter_ == nullptr)) {
@@ -599,7 +596,8 @@ void AdapterManager::OnAdapterStateChange(const BTTransport transport, const BTS
         Disable(ADAPTER_BLE);
     }
     // notify observers state update
-    auto &adapterState = transport == ADAPTER_BREDR ? pimpl->classicAdapter_->state : pimpl->bleAdapter_->state;
+    auto &adapterState = transport == ADAPTER_BREDR ? pimpl->classicAdapter_->state.load() :
+        pimpl->bleAdapter_->state.load();
     if (adapterState != state) {
         adapterState = state;
         if (GetSysState() != SYS_STATE_RESETTING) {
@@ -610,8 +608,8 @@ void AdapterManager::OnAdapterStateChange(const BTTransport transport, const BTS
     }
 
     // notify sys state machine
-    int classicState = pimpl->classicAdapter_ ? pimpl->classicAdapter_->state : BTStateID::STATE_TURN_OFF;
-    int bleState = pimpl->bleAdapter_ ? pimpl->bleAdapter_->state : BTStateID::STATE_TURN_OFF;
+    int classicState = pimpl->classicAdapter_ ? pimpl->classicAdapter_->state.load() : BTStateID::STATE_TURN_OFF;
+    int bleState = pimpl->bleAdapter_ ? pimpl->bleAdapter_->state.load() : BTStateID::STATE_TURN_OFF;
 
     utility::Message msg(SysStateMachine::MSG_SYS_ADAPTER_STATE_CHANGE_REQ);
     msg.arg1_ = ((unsigned int)classicState << CLASSIC_ENABLE_STATE_BIT) + bleState;
