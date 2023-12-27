@@ -114,6 +114,24 @@ int PermissionHelper::VerifyApproximatelyPermission(const int &pid, const int &u
     return PERMISSION_GRANTED;
 }
 
+int PermissionHelper::VerifyAccessBluetoothPermission(const int &pid, const int &uid)
+{
+    if (VerifyPermission("ohos.permission.ACCESS_BLUETOOTH", pid, uid) == PERMISSION_DENIED) {
+        return PERMISSION_DENIED;
+    }
+
+    return PERMISSION_GRANTED;
+}
+
+int PermissionHelper::VerifyGetBluetoothLocalMacPermission(const int &pid, const int &uid)
+{
+    if (VerifyPermission("ohos.permission.GET_BLUETOOTH_LOCAL_MAC", pid, uid) == PERMISSION_DENIED) {
+        return PERMISSION_DENIED;
+    }
+
+    return PERMISSION_GRANTED;
+}
+
 int PermissionHelper::VerifyUseBluetoothPermission(const std::uint32_t  &tokenID)
 {
     if (VerifyPermission("ohos.permission.USE_BLUETOOTH", tokenID) == PERMISSION_DENIED) {
