@@ -53,7 +53,18 @@ public:
     {}
 
     void OnStopResultEvent(int result, uint8_t advHandle) override
-    {}
+    {
+        HILOGI("result: %{public}d, advHandle: %{public}d", result, advHandle);
+
+        observers_->ForEach([this, result, advHandle](IBluetoothBleAdvertiseCallback *observer) {
+            int32_t uid = observersUid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
+                HILOGD("uid:%{public}d is proxy uid, not callback.", uid);
+                return;
+            }
+            observer->OnStopResultEvent(result, advHandle);
+        });
+    }
 
     void OnAutoStopAdvEvent(uint8_t advHandle) override
     {
@@ -219,6 +230,7 @@ int BluetoothBleAdvertiserServer::StopAdvertising(int32_t advHandle)
     if (bleService != nullptr) {
         bleService->StopAdvertising(advHandle);
     }
+    pimpl->observerImp_->OnStopResultEvent(NO_ERROR, advHandle);
     return NO_ERROR;
 }
 
