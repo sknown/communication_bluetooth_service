@@ -1204,6 +1204,19 @@ int32_t BluetoothHostServer::GetPairedDevices(std::vector<BluetoothRawAddress> &
     return NO_ERROR;
 }
 
+int BluetoothHostServer::GetTransportByDeviceType(int32_t transport, const std::string &address)
+{
+    if (transport == BT_TRANSPORT_NONE) {
+        int deviceType = GetDeviceType(BT_TRANSPORT_BREDR, address);
+        if (deviceType == INVALID_TYPE || deviceType == DEVICE_TYPE_LE) {
+            transport = BT_TRANSPORT_BLE;
+        } else {
+            transport = BT_TRANSPORT_BREDR;
+        }
+    }
+    return transport;
+}
+
 int32_t BluetoothHostServer::RemovePair(int32_t transport, const sptr<BluetoothRawAddress> &device)
 {
     if (device == nullptr) {
@@ -1221,6 +1234,7 @@ int32_t BluetoothHostServer::RemovePair(int32_t transport, const sptr<BluetoothR
     }
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    transport = GetTransportByDeviceType(transport, device->GetAddress());
     if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
         if (classicService->RemovePair(*device)) {
             return NO_ERROR;
@@ -1319,6 +1333,7 @@ int32_t BluetoothHostServer::GetDeviceName(int32_t transport, const std::string 
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
+    transport = GetTransportByDeviceType(transport, address);
     if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
         name = classicService->GetDeviceName(addr);
         return NO_ERROR;
@@ -1405,6 +1420,7 @@ int32_t BluetoothHostServer::StartPair(int32_t transport, const std::string &add
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
+    transport = GetTransportByDeviceType(transport, address);
     if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
         if (classicService->StartPair(addr)) {
             return NO_ERROR;
@@ -1430,6 +1446,7 @@ bool BluetoothHostServer::CancelPairing(int32_t transport, const std::string &ad
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
+    transport = GetTransportByDeviceType(transport, address);
     if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
         return classicService->CancelPairing(addr);
     } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
@@ -1561,6 +1578,7 @@ int32_t BluetoothHostServer::SetDevicePairingConfirmation(int32_t transport, con
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
+    transport = GetTransportByDeviceType(transport, address);
     if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
         if (classicService->SetDevicePairingConfirmation(addr, accept)) {
             return NO_ERROR;
