@@ -332,6 +332,10 @@ ohos_shared_library("btservice") {
     ]
   }
 
+  if (bluetooth_service_pbap_pse_feature) {
+    sources += [ "src/pbap_pse/pbap_pse_service.cpp" ]
+  }
+
   deps = [
     "$PART_DIR/external:btdummy",
     "$PART_DIR/stack:btstack",

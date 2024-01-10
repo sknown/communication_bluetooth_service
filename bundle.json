@@ -50,7 +50,8 @@
       "bluetooth_service_hfp_ag_feature",
       "bluetooth_service_hfp_hf_feature",
       "bluetooth_service_hid_host_feature",
-      "bluetooth_service_pan_feature"
+      "bluetooth_service_pan_feature",
+      "bluetooth_service_pbap_pse_feature"
     ],
     "adapted_system_type": [
       "standard"
