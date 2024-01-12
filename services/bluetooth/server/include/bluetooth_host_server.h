@@ -133,6 +133,8 @@ private:
     bool registeredToService_ = false;
     ServiceRunningState state_ = ServiceRunningState::STATE_IDLE;
 
+    int GetTransportByDeviceType(int32_t transport, const std::string &address);
+
     BLUETOOTH_DISALLOW_COPY_AND_ASSIGN(BluetoothHostServer);
     BLUETOOTH_DECLARE_IMPL();
     bool IsBtEnabled();
