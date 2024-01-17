@@ -57,6 +57,7 @@ struct AdapterInfo {
     BTStateID state = BTStateID::STATE_TURN_OFF;
     std::shared_ptr<T> instance = nullptr;
     std::unique_ptr<AdapterStateMachine> stateMachine = nullptr;
+
 };
 
 // static function
