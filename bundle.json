@@ -37,10 +37,7 @@
   "component": {
     "name": "bluetooth_service",
     "subsystem": "communication",
-    "syscap": [
-      "SystemCapability.Communication.Bluetooth.Core",
-      "SystemCapability.Communication.Bluetooth.Lite"
-    ],
+    "syscap": [],
     "features": [
       "bluetooth_service_avrcp_avsession",
       "bluetooth_service_a2dp_sink_feature",
