@@ -45,7 +45,8 @@ private:
     void OnStateChanged(const int transport, const int status);
     void OnDiscoveryStateChanged(int status)
     {}
-    void OnDiscoveryResult(const BluetoothRemoteDevice &device)
+    void OnDiscoveryResult(
+        const BluetoothRemoteDevice &device, int rssi, const std::string deviceName, int deviceClass)
     {}
     void OnPairRequested(const BluetoothRemoteDevice &device)
     {}
