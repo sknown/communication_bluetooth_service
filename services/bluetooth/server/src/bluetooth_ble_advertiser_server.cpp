@@ -37,9 +37,9 @@ public:
         HILOGI("result: %{public}d, advHandle: %{public}d, opcode: %{public}d", result, advHandle, opcode);
 
         observers_->ForEach([this, result, advHandle, opcode](IBluetoothBleAdvertiseCallback *observer) {
-            int32_t uid = observersUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGD("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = observersPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGD("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             observer->OnStartResultEvent(result, advHandle, opcode);
@@ -57,9 +57,9 @@ public:
         HILOGI("result: %{public}d, advHandle: %{public}d", result, advHandle);
 
         observers_->ForEach([this, result, advHandle](IBluetoothBleAdvertiseCallback *observer) {
-            int32_t uid = observersUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGD("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = observersPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGD("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             observer->OnStopResultEvent(result, advHandle);
@@ -84,7 +84,7 @@ public:
         observers_ = observers;
     }
 
-    std::map<sptr<IRemoteObject>, int32_t> observersUid_;
+    std::map<sptr<IRemoteObject>, int32_t> observersPid_;
 
 private:
     RemoteObserverList<IBluetoothBleAdvertiseCallback> *observers_;
@@ -254,7 +254,7 @@ void BluetoothBleAdvertiserServer::RegisterBleAdvertiserCallback(const sptr<IBlu
     }
     std::lock_guard<std::recursive_mutex> lock(mutex_);
     if (pimpl != nullptr) {
-        pimpl->observerImp_->observersUid_[callback->AsObject()] = IPCSkeleton::GetCallingUid();
+        pimpl->observerImp_->observersPid_[callback->AsObject()] = IPCSkeleton::GetCallingPid();
         auto func = std::bind(&BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback,
             this, std::placeholders::_1);
         pimpl->observers_.Register(callback, func);
@@ -279,10 +279,10 @@ void BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback(const sptr<IB
             break;
         }
     }
-    for (auto iter = pimpl->observerImp_->observersUid_.begin(); iter != pimpl->observerImp_->observersUid_.end();
+    for (auto iter = pimpl->observerImp_->observersPid_.begin(); iter != pimpl->observerImp_->observersPid_.end();
         ++iter) {
         if (iter->first == callback->AsObject()) {
-            pimpl->observerImp_->observersUid_.erase(iter);
+            pimpl->observerImp_->observersPid_.erase(iter);
             break;
         }
     }

@@ -219,10 +219,12 @@ ErrCode BluetoothBleCentralManagerStub::RemoveScanFilterInner(MessageParcel &dat
 
 ErrCode BluetoothBleCentralManagerStub::FreezeByRssInner(MessageParcel &data, MessageParcel &reply)
 {
-    int32_t uid = data.ReadInt32();
+    std::vector<int> pidVec {};
+    CHECK_AND_RETURN_LOG_RET(data.ReadInt32Vector(&pidVec), ERR_INVALID_VALUE, "ipc failed");
     bool isProxy = data.ReadBool();
 
-    bool ret = FreezeByRss(uid, isProxy);
+    std::set<int> pidSet(pidVec.begin(), pidVec.end());
+    bool ret = FreezeByRss(pidSet, isProxy);
     if (!reply.WriteBool(ret)) {
         return ERR_INVALID_VALUE;
     }
