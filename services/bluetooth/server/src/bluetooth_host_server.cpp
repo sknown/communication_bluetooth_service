@@ -248,10 +248,12 @@ public:
         }
     }
 
-    void OnDiscoveryResult(const RawAddress &device) override
+    void OnDiscoveryResult(
+        const RawAddress &device, int rssi, const std::string deviceName, int deviceClass) override
     {
-        HILOGI("device: %{public}s", GET_ENCRYPT_ADDR(device));
-        impl_->observers_.ForEach([this, device](IBluetoothHostObserver *observer) {
+        HILOGI("device: %{public}s, rssi: %{public}d, deviceName: %{pubiic}s, deviceClass: %{public}d",
+            GET_ENCRYPT_ADDR(device), rssi, deviceName.c_str(), deviceClass);
+        impl_->observers_.ForEach([this, device, rssi, deviceName, deviceClass](IBluetoothHostObserver *observer) {
             int32_t uid = this->impl_->observersUid_[observer->AsObject()];
             if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
                 HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
@@ -261,7 +263,7 @@ public:
             if (PermissionUtils::VerifyDiscoverBluetoothPermission(tokenId) == PERMISSION_DENIED) {
                 HILOGE("OnDiscoveryResult() false, check permission failed");
             } else {
-                observer->OnDiscoveryResult(device);
+                observer->OnDiscoveryResult(device, rssi, deviceName, deviceClass);
             }
         });
     }
@@ -427,10 +429,12 @@ public:
         });
     }
 
-    void OnDiscoveryResult(const RawAddress &device) override
+    void OnDiscoveryResult(
+        const RawAddress &device, int rssi, const std::string deviceName, int deviceClass) override
     {
-        HILOGI("device: %{public}s", GET_ENCRYPT_ADDR(device));
-        impl_->bleObservers_.ForEach([this, device](IBluetoothHostObserver *observer) {
+        HILOGI("device: %{public}s, rssi: %{public}d, deviceName: %{pubiic}s, deviceClass: %{public}d",
+            GET_ENCRYPT_ADDR(device), rssi, deviceName.c_str(), deviceClass);
+        impl_->bleObservers_.ForEach([this, device, rssi, deviceName, deviceClass](IBluetoothHostObserver *observer) {
             int32_t uid = this->impl_->bleObserversUid_[observer->AsObject()];
             if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
                 HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
@@ -440,7 +444,7 @@ public:
             if (PermissionUtils::VerifyDiscoverBluetoothPermission(tokenId) == PERMISSION_DENIED) {
                 HILOGE("false, check permission failed");
             } else {
-                observer->OnDiscoveryResult(device);
+                observer->OnDiscoveryResult(device, rssi, deviceName, deviceClass);
             }
         });
     }

@@ -92,7 +92,8 @@ public:
     ~AdapterBleObserverImpl() = default;
     void OnDiscoveryStateChanged(const int status)
     {}
-    void OnDiscoveryResult(const RawAddress &device)
+    void OnDiscoveryResult(
+        const RawAddress &device, int rssi, const std::string deviceName, int deviceClass)
     {}
     void OnPairRequested(const BTTransport transport, const RawAddress &device)
     {}
@@ -122,7 +123,8 @@ public:
     ~AdapterClassicObserverImpl() = default;
     void OnDiscoveryStateChanged(int status)
     {}
-    void OnDiscoveryResult(const RawAddress &device)
+    void OnDiscoveryResult(
+        const RawAddress &device, int rssi, const std::string deviceName, int deviceClass)
     {}
     void OnPairRequested(const BTTransport transport, const RawAddress &device)
     {}
