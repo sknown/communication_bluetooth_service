@@ -129,6 +129,7 @@ BluetoothPanServer::~BluetoothPanServer()
 ErrCode BluetoothPanServer::RegisterObserver(const sptr<IBluetoothPanObserver> observer)
 {
     HILOGI("enter");
+    std::lock_guard<std::mutex> lock(oblock_);
 
     if (observer == nullptr) {
         HILOGE("observer is null");
@@ -147,6 +148,7 @@ ErrCode BluetoothPanServer::RegisterObserver(const sptr<IBluetoothPanObserver> o
 ErrCode BluetoothPanServer::DeregisterObserver(const sptr<IBluetoothPanObserver> observer)
 {
     HILOGI("enter");
+    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("observer is null");
         return ERR_INVALID_VALUE;
@@ -156,7 +158,7 @@ ErrCode BluetoothPanServer::DeregisterObserver(const sptr<IBluetoothPanObserver>
         return ERR_NO_INIT;
     }
     for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
-        if ((*iter)->AsObject() == observer->AsObject()) {
+        if ((*iter)->AsObject() != nullptr && (*iter)->AsObject() == observer->AsObject()) {
             if (pimpl != nullptr) {
                 pimpl->observers_.Deregister(*iter);
                 pimpl->advCallBack_.erase(iter);
