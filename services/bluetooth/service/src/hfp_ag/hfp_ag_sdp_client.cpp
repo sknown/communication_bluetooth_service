@@ -123,8 +123,8 @@ void HfpAgSdpClient::SdpHspHsCallback(const BtAddr *addr, const SdpService *serv
     }
     if (hfProfileState_ != -1) {
         msgWhat = HFP_AG_SDP_DISCOVERY_RESULT_SUCCESS;
-        HfpAgProfileEventSender::GetInstance().ProcessSdpDiscoveryResult(address, msgWhat);
     }
+    HfpAgProfileEventSender::GetInstance().ProcessSdpDiscoveryResult(address, msgWhat);
 }
 
 int HfpAgSdpClient::DoHspHsDiscovery(const std::string &remoteAddr)
