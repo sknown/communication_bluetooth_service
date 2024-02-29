@@ -1940,14 +1940,25 @@ bool ClassicAdapter::SetDevicePairingConfirmation(const RawAddress &device, bool
         return ret;
     }
 
+    int state = it->second->GetPairConfirmtype();
+    const uint8_t defPinCodeLength = 4;  //indicate the max value of the default pincode
+    const uint8_t defPinCode[defPinCodeLength] = {'0', '0', '0', '0'};  //The default pincode is "0000".
     it->second->SetPairConfirmState(PAIR_CONFIRM_STATE_USER_CONFIRM_REPLY);
     it->second->SetPairConfirmType(PAIR_CONFIRM_TYPE_INVALID);
 
     BtAddr btAddr = ConvertToBtAddr(device);
     if (it->second->GetPairedStatus() == PAIR_CANCELING || accept == false) {
-        ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_NOT_ACCEPT) == BT_SUCCESS);
+        if (state == PAIR_CONFIRM_TYPE_PIN_CODE) {
+            ret = (GAPIF_PinCodeRsp(&btAddr, GAP_NOT_ACCEPT, defPinCode, defPinCodeLength) == BT_SUCCESS);
+        } else {
+            ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_NOT_ACCEPT) == BT_SUCCESS);
+        }
     } else {
-        ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_ACCEPT) == BT_SUCCESS);
+        if (state == PAIR_CONFIRM_TYPE_PIN_CODE) {
+            ret = (GAPIF_PinCodeRsp(&btAddr, GAP_ACCEPT, defPinCode, defPinCodeLength) == BT_SUCCESS);
+        } else {
+            ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_ACCEPT) == BT_SUCCESS);
+        }
     }
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_UserConfirmRsp", ret);
 
