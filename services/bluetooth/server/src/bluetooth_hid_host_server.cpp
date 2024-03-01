@@ -133,6 +133,7 @@ BluetoothHidHostServer::~BluetoothHidHostServer()
 ErrCode BluetoothHidHostServer::RegisterObserver(const sptr<IBluetoothHidHostObserver> observer)
 {
     HILOGI("start");
+    std::lock_guard<std::mutex> lock(oblock_);
 
     if (observer == nullptr) {
         HILOGE("observer is null");
@@ -151,6 +152,7 @@ ErrCode BluetoothHidHostServer::RegisterObserver(const sptr<IBluetoothHidHostObs
 ErrCode BluetoothHidHostServer::DeregisterObserver(const sptr<IBluetoothHidHostObserver> observer)
 {
     HILOGI("start");
+    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("observer is null");
         return ERR_INVALID_VALUE;
@@ -160,7 +162,7 @@ ErrCode BluetoothHidHostServer::DeregisterObserver(const sptr<IBluetoothHidHostO
         return ERR_NO_INIT;
     }
     for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
-        if ((*iter)->AsObject() == observer->AsObject()) {
+        if ((*iter)->AsObject() != nullptr && (*iter)->AsObject() == observer->AsObject()) {
             if (pimpl != nullptr) {
                 pimpl->observers_.Deregister(*iter);
                 pimpl->advCallBack_.erase(iter);
