@@ -67,6 +67,8 @@ public:
 private:
     void OnScanCallback(const Bluetooth::BleScanResult &result)
     {}
+    void OnFoundOrLostCallback(const BleScanResult &result, uint8_t callbackType)
+    {}
     void OnBleBatchScanResultsEvent(const std::vector<Bluetooth::BleScanResult> &results)
     {}
     void OnStartOrStopScanEvent(int resultCode, bool isStartScan)

@@ -36,12 +36,6 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothBleCentralManagerStub *,
         {BluetoothBleCentralManagerInterfaceCode::BLE_START_SCAN,
             std::bind(&BluetoothBleCentralManagerStub::StartScanInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothBleCentralManagerInterfaceCode::BLE_START_SCAN_WITH_SETTINGS,
-            std::bind(&BluetoothBleCentralManagerStub::StartScanWithSettingsInner, std::placeholders::_1,
-                std::placeholders::_2, std::placeholders::_3)},
-        {BluetoothBleCentralManagerInterfaceCode::BLE_CONFIG_SCAN_FILTER,
-            std::bind(&BluetoothBleCentralManagerStub::ConfigScanFilterInner, std::placeholders::_1,
-                std::placeholders::_2, std::placeholders::_3)},
         {BluetoothBleCentralManagerInterfaceCode::BLE_REMOVE_SCAN_FILTER,
             std::bind(&BluetoothBleCentralManagerStub::RemoveScanFilterInner, std::placeholders::_1,
                 std::placeholders::_2, std::placeholders::_3)},
@@ -145,45 +139,13 @@ ErrCode BluetoothBleCentralManagerStub::DeregisterBleCentralManagerCallbackInner
 ErrCode BluetoothBleCentralManagerStub::StartScanInner(MessageParcel &data, MessageParcel &reply)
 {
     int32_t scannerId = data.ReadInt32();
-    int ret = StartScan(scannerId);
-    if (!reply.WriteInt32(ret)) {
-        HILOGE("reply writing failed");
-        return ERR_INVALID_VALUE;
-    }
-    return NO_ERROR;
-}
-
-ErrCode BluetoothBleCentralManagerStub::StartScanWithSettingsInner(MessageParcel &data, MessageParcel &reply)
-{
-    int32_t scannerId = data.ReadInt32();
     std::shared_ptr<BluetoothBleScanSettings> settings(data.ReadParcelable<BluetoothBleScanSettings>());
     if (settings == nullptr) {
-        HILOGW("[StartScanWithSettingsInner] fail: read settings failed");
+        HILOGW("[StartScanInner] fail: read settings failed");
         return TRANSACTION_ERR;
     }
 
-    int ret = StartScan(scannerId, *settings);
-    if (!reply.WriteInt32(ret)) {
-        HILOGE("reply writing failed");
-        return ERR_INVALID_VALUE;
-    }
-    return NO_ERROR;
-}
-
-ErrCode BluetoothBleCentralManagerStub::StopScanInner(MessageParcel &data, MessageParcel &reply)
-{
-    int32_t scannerId = data.ReadInt32();
-    int ret = StopScan(scannerId);
-    if (!reply.WriteInt32(ret)) {
-        HILOGE("reply writing failed");
-        return ERR_INVALID_VALUE;
-    }
-    return NO_ERROR;
-}
-ErrCode BluetoothBleCentralManagerStub::ConfigScanFilterInner(MessageParcel &data, MessageParcel &reply)
-{
     std::vector<BluetoothBleScanFilter> filters {};
-    int32_t scannerId = data.ReadInt32();
     int32_t itemsSize = 0;
     if (!data.ReadInt32(itemsSize) || itemsSize > BLE_CENTRAL_MANAGER_STUB_READ_DATA_SIZE_MAX_LEN) {
         HILOGE("read Parcelable size failed.");
@@ -199,11 +161,20 @@ ErrCode BluetoothBleCentralManagerStub::ConfigScanFilterInner(MessageParcel &dat
         filters.push_back(item);
     }
 
-    int result = ConfigScanFilter(scannerId, filters);
-    bool resultRet = reply.WriteInt32(result);
-    bool idRet = reply.WriteInt32(scannerId);
-    if (!(resultRet && idRet)) {
-        HILOGE("BluetoothBleCentralManagerStub: reply writing failed in: %{public}s.", __func__);
+    int ret = StartScan(scannerId, *settings, filters);
+    if (!reply.WriteInt32(ret)) {
+        HILOGE("reply writing failed");
+        return ERR_INVALID_VALUE;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothBleCentralManagerStub::StopScanInner(MessageParcel &data, MessageParcel &reply)
+{
+    int32_t scannerId = data.ReadInt32();
+    int ret = StopScan(scannerId);
+    if (!reply.WriteInt32(ret)) {
+        HILOGE("reply writing failed");
         return ERR_INVALID_VALUE;
     }
     return NO_ERROR;

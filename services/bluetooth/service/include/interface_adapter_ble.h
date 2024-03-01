@@ -415,13 +415,6 @@ public:
     /**
      * @brief Start scan
      *
-     * @since 6
-     */
-    virtual void StartScan() const = 0;
-
-    /**
-     * @brief Start scan
-     *
      * @param setting Scan setting.
      * @since 6
      */
