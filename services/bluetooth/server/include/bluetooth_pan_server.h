@@ -56,6 +56,7 @@ public:
 private:
     BLUETOOTH_DISALLOW_COPY_AND_ASSIGN(BluetoothPanServer);
     BLUETOOTH_DECLARE_IMPL();
+    std::mutex oblock_ {};
 };
 }  // namespace Bluetooth
 }  // namespace OHOS
