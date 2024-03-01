@@ -174,7 +174,6 @@ ErrCode BluetoothOppServer::DeregisterObserver(const sptr<IBluetoothOppObserver>
             }
         }
     }
-    pimpl->oppService_->DeregisterObserver(*pimpl->observerImp_.get());
     return ERR_OK;
 }
 
