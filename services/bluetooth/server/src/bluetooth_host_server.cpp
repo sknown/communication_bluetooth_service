@@ -769,6 +769,7 @@ void BluetoothHostServer::OnStop()
 
 void BluetoothHostServer::RegisterObserver(const sptr<IBluetoothHostObserver> &observer)
 {
+    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("RegisterObserver observer is null");
         return;
@@ -783,6 +784,7 @@ void BluetoothHostServer::RegisterObserver(const sptr<IBluetoothHostObserver> &o
 
 void BluetoothHostServer::DeregisterObserver(const sptr<IBluetoothHostObserver> &observer)
 {
+    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr || pimpl == nullptr) {
         HILOGE("DeregisterObserver observer is null");
         return;
@@ -795,13 +797,13 @@ void BluetoothHostServer::DeregisterObserver(const sptr<IBluetoothHostObserver> 
         }
     }
     for (auto iter =  pimpl->observersToken_.begin(); iter !=  pimpl->observersToken_.end(); ++iter) {
-        if (iter->first == observer->AsObject()) {
+        if (iter->first != nullptr && iter->first == observer->AsObject()) {
             pimpl->observersToken_.erase(iter);
             break;
         }
     }
     for (auto iter = pimpl->observersUid_.begin(); iter != pimpl->observersUid_.end(); ++iter) {
-        if (iter->first == observer->AsObject()) {
+        if (iter->first != nullptr && iter->first == observer->AsObject()) {
             pimpl->observersUid_.erase(iter);
             break;
         }
@@ -1586,6 +1588,7 @@ bool BluetoothHostServer::ReadRemoteRssiValue(const std::string &address)
 void BluetoothHostServer::RegisterRemoteDeviceObserver(const sptr<IBluetoothRemoteDeviceObserver> &observer)
 {
     HILOGI("Enter!");
+    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("observer is nullptr!");
         return;
@@ -1601,6 +1604,7 @@ void BluetoothHostServer::RegisterRemoteDeviceObserver(const sptr<IBluetoothRemo
 void BluetoothHostServer::DeregisterRemoteDeviceObserver(const sptr<IBluetoothRemoteDeviceObserver> &observer)
 {
     HILOGI("Enter!");
+    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr || pimpl == nullptr) {
         HILOGE("observer is nullptr!");
         return;
@@ -1613,13 +1617,13 @@ void BluetoothHostServer::DeregisterRemoteDeviceObserver(const sptr<IBluetoothRe
         }
     }
     for (auto iter =  pimpl->remoteObserversToken_.begin(); iter !=  pimpl->remoteObserversToken_.end(); ++iter) {
-        if (iter->first == observer->AsObject()) {
+        if (iter->first != nullptr && iter->first == observer->AsObject()) {
             pimpl->remoteObserversToken_.erase(iter);
             break;
         }
     }
     for (auto iter = pimpl->remoteObserversUid_.begin(); iter != pimpl->remoteObserversUid_.end(); ++iter) {
-        if (iter->first == observer->AsObject()) {
+        if (iter->first != nullptr && iter->first == observer->AsObject()) {
             pimpl->remoteObserversUid_.erase(iter);
             break;
         }
@@ -1639,6 +1643,7 @@ void BluetoothHostServer::RegisterBleAdapterObserver(const sptr<IBluetoothHostOb
 {
     HILOGI("start.");
 
+    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("observer is nullptr!");
         return;
@@ -1653,6 +1658,7 @@ void BluetoothHostServer::RegisterBleAdapterObserver(const sptr<IBluetoothHostOb
 void BluetoothHostServer::DeregisterBleAdapterObserver(const sptr<IBluetoothHostObserver> &observer)
 {
     HILOGI("start.");
+    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr || pimpl == nullptr) {
         HILOGE("observer is nullptr!");
         return;
@@ -1665,13 +1671,13 @@ void BluetoothHostServer::DeregisterBleAdapterObserver(const sptr<IBluetoothHost
         }
     }
     for (auto iter =  pimpl->bleObserversToken_.begin(); iter !=  pimpl->bleObserversToken_.end(); ++iter) {
-        if (iter->first == observer->AsObject()) {
+        if (iter->first != nullptr && iter->first == observer->AsObject()) {
             pimpl->bleObserversToken_.erase(iter);
             break;
         }
     }
     for (auto iter = pimpl->bleObserversUid_.begin(); iter != pimpl->bleObserversUid_.end(); ++iter) {
-        if (iter->first == observer->AsObject()) {
+        if (iter->first != nullptr && iter->first == observer->AsObject()) {
             pimpl->bleObserversUid_.erase(iter);
             break;
         }
@@ -1682,6 +1688,7 @@ void BluetoothHostServer::RegisterBlePeripheralCallback(const sptr<IBluetoothBle
 {
     HILOGI("start.");
 
+    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("observer is nullptr!");
         return;
@@ -1695,6 +1702,7 @@ void BluetoothHostServer::RegisterBlePeripheralCallback(const sptr<IBluetoothBle
 void BluetoothHostServer::DeregisterBlePeripheralCallback(const sptr<IBluetoothBlePeripheralObserver> &observer)
 {
     HILOGI("start.");
+    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("observer is nullptr!");
         return;
@@ -1709,7 +1717,7 @@ void BluetoothHostServer::DeregisterBlePeripheralCallback(const sptr<IBluetoothB
         }
     }
     for (auto iter =  pimpl->bleRemoteObserversToken_.begin(); iter !=  pimpl->bleRemoteObserversToken_.end(); ++iter) {
-        if (iter->first == observer->AsObject()) {
+        if (iter->first != nullptr && iter->first == observer->AsObject()) {
             pimpl->bleRemoteObserversToken_.erase(iter);
             break;
         }
