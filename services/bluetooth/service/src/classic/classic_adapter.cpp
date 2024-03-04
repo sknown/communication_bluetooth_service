@@ -1017,7 +1017,7 @@ void ClassicAdapter::HandleInquiryResult(
         }
     }
 
-    SendDiscoveryResult(device);
+    SendDiscoveryResult(device, rssi, remoteDevice->GetRemoteName(), cod);
 }
 
 std::shared_ptr<ClassicRemoteDevice> ClassicAdapter::FindRemoteDevice(const RawAddress &device)
@@ -1147,12 +1147,15 @@ void ClassicAdapter::SendDiscoveryStateChanged(int discoveryState) const
         [discoveryState](IAdapterClassicObserver &observer) { observer.OnDiscoveryStateChanged(discoveryState); });
 }
 
-void ClassicAdapter::SendDiscoveryResult(const RawAddress &device) const
+void ClassicAdapter::SendDiscoveryResult(
+    const RawAddress &device, int rssi, const std::string deviceName, int deviceClass) const
 {
     HILOGI("address: %{public}s", GetEncryptAddr(device.GetAddress()).c_str());
 
     pimpl->adapterObservers_.ForEach(
-        [device](IAdapterClassicObserver &observer) { observer.OnDiscoveryResult(device); });
+        [device, rssi, deviceName, deviceClass](IAdapterClassicObserver &observer) {
+            observer.OnDiscoveryResult(device, rssi, deviceName, deviceClass);
+        });
 }
 
 void ClassicAdapter::SendRemoteCodChanged(const RawAddress &device, int cod) const
