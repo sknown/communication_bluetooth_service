@@ -767,8 +767,12 @@ private:
      * @brief Send discovery result.
      *
      * @param device Remote device.
+     * @param rssi Rssi of device.
+     * @param deviceName Name of device.
+     * @param deviceClass Class of device.
      */
-    void SendDiscoveryResult(const RawAddress &device) const;
+    void SendDiscoveryResult(
+        const RawAddress &device, int rssi, const std::string deviceName, int deviceClass) const;
 
     /**
      * @brief Send remote device cod changed.
