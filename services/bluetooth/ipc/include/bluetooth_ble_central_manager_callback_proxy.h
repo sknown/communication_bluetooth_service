@@ -27,7 +27,7 @@ public:
     ~BluetoothBleCentralManagerCallBackProxy() override;
     DISALLOW_COPY_AND_MOVE(BluetoothBleCentralManagerCallBackProxy);
 
-    void OnScanCallback(const BluetoothBleScanResult &result) override;
+    void OnScanCallback(const BluetoothBleScanResult &result, uint8_t callbackType) override;
     void OnBleBatchScanResultsEvent(std::vector<BluetoothBleScanResult> &results) override;
     void OnStartOrStopScanEvent(int resultCode, bool isStartScan) override;
     void OnNotifyMsgReportFromLpDevice(const bluetooth::Uuid &uuid, int msgType,

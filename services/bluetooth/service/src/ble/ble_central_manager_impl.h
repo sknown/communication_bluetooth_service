@@ -52,13 +52,6 @@ public:
     ~BleCentralManagerImpl();
 
     /**
-     * @brief  Start Bluetooth LE scan with filters.
-     *
-     * @param [in] for finding exact BLE devices.
-     */
-    void StartScan() const;
-
-    /**
      * @brief Start Bluetooth LE scan with filters,dutyRatio and matching mode.
      *
      * @param [in] for finding exact BLE devices.
