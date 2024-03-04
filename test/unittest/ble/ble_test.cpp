@@ -268,8 +268,7 @@ HWTEST_F(BleTest, BLE_ModuleTest_StartCentralManager_00100, TestSize.Level1)
     filters.push_back(filter);
     BleTest::bleInstance_->InitScanSettings();
     BleCentralManager bleCentralManager(bleCentralManagerCallbackTest_);
-    bleCentralManager.ConfigScanFilter(filters);
-    bleCentralManager.StartScan(BleTest::bleInstance_->bleScanSettings_);
+    bleCentralManager.StartScan(BleTest::bleInstance_->bleScanSettings_, filters);
     EXPECT_TRUE(host_->IsBtDiscovering(1));
     bleCentralManager.StopScan();
     EXPECT_TRUE(DisableBle());

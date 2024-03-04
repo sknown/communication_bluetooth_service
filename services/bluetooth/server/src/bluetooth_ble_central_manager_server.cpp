@@ -343,11 +343,11 @@ bool BluetoothBleCentralManagerServer::IsProxyUid(int32_t uid)
     return proxyUids_.find(uid) != proxyUids_.end();
 }
 
-int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId)
+int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId, const BluetoothBleScanSettings &settings,
+    const std::vector<BluetoothBleScanFilter> &filters)
 {
     int32_t pid = IPCSkeleton::GetCallingPid();
     int32_t uid = IPCSkeleton::GetCallingUid();
-    HILOGI("pid: %{public}d, uid: %{public}d", pid, uid);
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED ||
         PermissionUtils::VerifyManageBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("check permission failed.");
@@ -359,54 +359,7 @@ int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId)
         return BT_ERR_PERMISSION_FAILED;
     }
 
-    pimpl->eventHandler_->PostSyncTask([&]() {
-        auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
-        if (bleService == nullptr) {
-            HILOGE("bleService is nullptr.");
-            return;
-        }
-
-        for (auto iter = pimpl->scanCallbackInfo_.begin(); iter != pimpl->scanCallbackInfo_.end(); ++iter) {
-            if (iter->pid == pid && iter->uid == uid) {
-                iter->isStart = true;
-                iter->param.reportDelayMillis = 0;
-                iter->param.scanInterval = BLE_SCAN_MODE_LOW_POWER_INTERVAL_MS;
-                iter->param.scanWindow = BLE_SCAN_MODE_LOW_POWER_WINDOW_MS;
-                iter->param.scanMode = SCAN_MODE_LOW_POWER;
-                iter->param.legacy = true;
-                iter->param.phy = PHY_LE_ALL_SUPPORTED;
-                break;
-            }
-        }
-
-        if (!pimpl->isScanning) {
-            HILOGI("start ble scan without params.");
-            bleService->StartScan();
-            pimpl->isScanning = true;
-            HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "BLE_SCAN_START",
-                OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "PID", pid, "UID", uid, "TYPE", 0);
-        } else {
-            HILOGI("scan is already started.");
-        }
-    });
-    return NO_ERROR;
-}
-
-int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId, const BluetoothBleScanSettings &settings)
-{
-    int32_t pid = IPCSkeleton::GetCallingPid();
-    int32_t uid = IPCSkeleton::GetCallingUid();
-    HILOGI("pid: %{public}d, uid: %{public}d", pid, uid);
-    if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED ||
-        PermissionUtils::VerifyManageBluetoothPermission() == PERMISSION_DENIED) {
-        HILOGE("check permission failed.");
-        return BT_ERR_PERMISSION_FAILED;
-    }
-    if (PermissionUtils::VerifyApproximatelyPermission() == PERMISSION_DENIED &&
-        PermissionUtils::VerifyLocationPermission() == PERMISSION_DENIED) {
-        HILOGE("No location permission");
-        return BT_ERR_PERMISSION_FAILED;
-    }
+    ConfigScanFilterInner(scannerId, filters);
 
     pimpl->eventHandler_->PostSyncTask([&]() {
         auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
@@ -487,7 +440,7 @@ int BluetoothBleCentralManagerServer::StopScan(int32_t scannerId)
     return NO_ERROR;
 }
 
-int BluetoothBleCentralManagerServer::ConfigScanFilter(
+int BluetoothBleCentralManagerServer::ConfigScanFilterInner(
     int32_t scannerId, const std::vector<BluetoothBleScanFilter> &filters)
 {
     HILOGI("enter, scannerId: %{public}d", scannerId);

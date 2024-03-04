@@ -674,28 +674,6 @@ void BleCentralManagerImpl::ScanExSetEnableResultTask(uint8_t status) const
     }
 }
 
-void BleCentralManagerImpl::StartScan() const
-{
-    LOG_DEBUG("[BleCentralManagerImpl] %{public}s:<-- Start scan start", __func__);
-
-    int status = AdapterManager::GetInstance()->GetState(BTTransport::ADAPTER_BLE);
-    if (status != BTStateID::STATE_TURN_ON) {
-        LOG_ERROR("[BleCentralManagerImpl] %{public}s:%{public}s", __func__, "Bluetooth adapter is invalid.");
-        pimpl->scanStatus_ = SCAN_NOT_STARTED;
-        centralManagerCallbacks_->OnStartOrStopScanEvent(SCAN_NOT_STARTED, true);
-        return;
-    }
-
-    uint16_t interval = BLE_SCAN_MODE_LOW_POWER_INTERVAL_MS;
-    SetInterval(interval);
-    uint16_t window = BLE_SCAN_MODE_LOW_POWER_WINDOW_MS;
-    SetWindow(window);
-    pimpl->callBackType_ = CALLBACK_TYPE_FIRST_MATCH;
-    Start(false);
-
-    LOG_DEBUG("[BleCentralManagerImpl] %{public}s:<-- Start scan end", __func__);
-}
-
 void BleCentralManagerImpl::StartScan(const BleScanSettingsImpl &setting) const
 {
     LOG_DEBUG("[BleCentralManagerImpl] %{public}s:<-- Start scan start", __func__);
