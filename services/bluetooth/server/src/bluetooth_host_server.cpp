@@ -88,13 +88,13 @@ struct BluetoothHostServer::impl {
     RemoteObserverList<IBluetoothHostObserver> bleObservers_;
     std::map<sptr<IRemoteObject>, uint32_t> observersToken_;
     std::map<sptr<IRemoteObject>, uint32_t> bleObserversToken_;
-    std::map<sptr<IRemoteObject>, int32_t> observersUid_;
-    std::map<sptr<IRemoteObject>, int32_t> bleObserversUid_;
+    std::map<sptr<IRemoteObject>, int32_t> observersPid_;
+    std::map<sptr<IRemoteObject>, int32_t> bleObserversPid_;
 
     /// user regist remote observers
     RemoteObserverList<IBluetoothRemoteDeviceObserver> remoteObservers_;
     std::map<sptr<IRemoteObject>, uint32_t> remoteObserversToken_;
-    std::map<sptr<IRemoteObject>, int32_t> remoteObserversUid_;
+    std::map<sptr<IRemoteObject>, int32_t> remoteObserversPid_;
 
     /// user regist remote observers
     RemoteObserverList<IBluetoothBlePeripheralObserver> bleRemoteObservers_;
@@ -179,9 +179,9 @@ public:
         }
         if (transport == BTTransport::ADAPTER_BREDR) {
             impl_->observers_.ForEach([this, transport, state](sptr<IBluetoothHostObserver> observer) {
-                int32_t uid = this->impl_->observersUid_[observer->AsObject()];
-                if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                    HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+                int32_t pid = this->impl_->observersPid_[observer->AsObject()];
+                if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                    HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                     return;
                 }
                 uint32_t tokenId = this->impl_->observersToken_[observer->AsObject()];
@@ -199,9 +199,9 @@ public:
             }
         } else if (transport == BTTransport::ADAPTER_BLE) {
             impl_->bleObservers_.ForEach([this, transport, state](sptr<IBluetoothHostObserver> observer) {
-                int32_t uid = this->impl_->bleObserversUid_[observer->AsObject()];
-                if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                    HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+                int32_t pid = this->impl_->bleObserversPid_[observer->AsObject()];
+                if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                    HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                     return;
                 }
                 uint32_t  tokenId = this->impl_->bleObserversToken_[observer->AsObject()];
@@ -233,9 +233,9 @@ public:
     {
         HILOGI("status: %{public}d", status);
         impl_->observers_.ForEach([this, status](sptr<IBluetoothHostObserver> observer) {
-            int32_t uid = this->impl_->observersUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->impl_->observersPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             observer->OnDiscoveryStateChanged(static_cast<int32_t>(status));
@@ -254,9 +254,9 @@ public:
         HILOGI("device: %{public}s, rssi: %{public}d, deviceName: %{pubiic}s, deviceClass: %{public}d",
             GET_ENCRYPT_ADDR(device), rssi, deviceName.c_str(), deviceClass);
         impl_->observers_.ForEach([this, device, rssi, deviceName, deviceClass](IBluetoothHostObserver *observer) {
-            int32_t uid = this->impl_->observersUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->impl_->observersPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             uint32_t tokenId = this->impl_->observersToken_[observer->AsObject()];
@@ -328,9 +328,9 @@ public:
     {
         HILOGI("device: %{public}s, status: %{public}d", GET_ENCRYPT_ADDR(device), status);
         impl_->remoteObservers_.ForEach([this, transport, device, status](IBluetoothRemoteDeviceObserver *observer) {
-            int32_t uid = this->impl_->remoteObserversUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             uint32_t tokenId = this->impl_->remoteObserversToken_[observer->AsObject()];
@@ -350,9 +350,9 @@ public:
             btUuids.push_back(val);
         }
         impl_->remoteObservers_.ForEach([this, device, btUuids](IBluetoothRemoteDeviceObserver *observer) {
-            int32_t uid = this->impl_->remoteObserversUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             observer->OnRemoteUuidChanged(device, btUuids);
@@ -363,9 +363,9 @@ public:
     {
         HILOGI("device: %{public}s, deviceName: %{public}s", GET_ENCRYPT_ADDR(device), deviceName.c_str());
         impl_->remoteObservers_.ForEach([this, device, deviceName](IBluetoothRemoteDeviceObserver *observer) {
-            int32_t uid = this->impl_->remoteObserversUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             observer->OnRemoteNameChanged(device, deviceName);
@@ -384,9 +384,9 @@ public:
     {
         HILOGI("device: %{public}s, cod: %{public}d", GET_ENCRYPT_ADDR(device), cod);
         impl_->remoteObservers_.ForEach([this, device, cod](IBluetoothRemoteDeviceObserver *observer) {
-            int32_t uid = this->impl_->remoteObserversUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             observer->OnRemoteCodChanged(device, cod);
@@ -397,9 +397,9 @@ public:
     {
         HILOGI("device: %{public}s, batteryLevel: %{public}d", GET_ENCRYPT_ADDR(device), batteryLevel);
         impl_->remoteObservers_.ForEach([this, device, batteryLevel](IBluetoothRemoteDeviceObserver *observer) {
-            int32_t uid = this->impl_->remoteObserversUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             observer->OnRemoteBatteryLevelChanged(device, batteryLevel);
@@ -420,9 +420,9 @@ public:
     {
         HILOGI("status: %{public}d", status);
         impl_->bleObservers_.ForEach([this, status](sptr<IBluetoothHostObserver> observer) {
-            int32_t uid = this->impl_->bleObserversUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->impl_->bleObserversPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             observer->OnDiscoveryStateChanged(static_cast<int32_t>(status));
@@ -435,9 +435,9 @@ public:
         HILOGI("device: %{public}s, rssi: %{public}d, deviceName: %{pubiic}s, deviceClass: %{public}d",
             GET_ENCRYPT_ADDR(device), rssi, deviceName.c_str(), deviceClass);
         impl_->bleObservers_.ForEach([this, device, rssi, deviceName, deviceClass](IBluetoothHostObserver *observer) {
-            int32_t uid = this->impl_->bleObserversUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->impl_->bleObserversPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             uint32_t tokenId = this->impl_->bleObserversToken_[observer->AsObject()];
@@ -462,9 +462,9 @@ public:
         HILOGI("device: %{public}s, reqType: %{public}d, number: %{public}d",
             GET_ENCRYPT_ADDR(device), reqType, number);
         impl_->bleObservers_.ForEach([this, transport, device, reqType, number](IBluetoothHostObserver *observer) {
-            int32_t uid = this->impl_->bleObserversUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->impl_->bleObserversPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             uint32_t tokenId = this->impl_->bleObserversToken_[observer->AsObject()];
@@ -754,7 +754,7 @@ void BluetoothHostServer::RegisterObserver(const sptr<IBluetoothHostObserver> &o
     }
 
     pimpl->observersToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
-    pimpl->observersUid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
+    pimpl->observersPid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
     auto func = std::bind(&BluetoothHostServer::DeregisterObserver, this, std::placeholders::_1);
     pimpl->observers_.Register(observer, func);
     pimpl->hostObservers_.push_back(observer);
@@ -780,9 +780,9 @@ void BluetoothHostServer::DeregisterObserver(const sptr<IBluetoothHostObserver> 
             break;
         }
     }
-    for (auto iter = pimpl->observersUid_.begin(); iter != pimpl->observersUid_.end(); ++iter) {
+    for (auto iter = pimpl->observersPid_.begin(); iter != pimpl->observersPid_.end(); ++iter) {
         if (iter->first != nullptr && iter->first == observer->AsObject()) {
-            pimpl->observersUid_.erase(iter);
+            pimpl->observersPid_.erase(iter);
             break;
         }
     }
@@ -1664,7 +1664,7 @@ void BluetoothHostServer::RegisterRemoteDeviceObserver(const sptr<IBluetoothRemo
         return;
     }
     pimpl->remoteObserversToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
-    pimpl->remoteObserversUid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
+    pimpl->remoteObserversPid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
     auto func = std::bind(&BluetoothHostServer::DeregisterRemoteDeviceObserver,
         this, std::placeholders::_1);
     pimpl->remoteObservers_.Register(observer, func);
@@ -1692,9 +1692,9 @@ void BluetoothHostServer::DeregisterRemoteDeviceObserver(const sptr<IBluetoothRe
             break;
         }
     }
-    for (auto iter = pimpl->remoteObserversUid_.begin(); iter != pimpl->remoteObserversUid_.end(); ++iter) {
+    for (auto iter = pimpl->remoteObserversPid_.begin(); iter != pimpl->remoteObserversPid_.end(); ++iter) {
         if (iter->first != nullptr && iter->first == observer->AsObject()) {
-            pimpl->remoteObserversUid_.erase(iter);
+            pimpl->remoteObserversPid_.erase(iter);
             break;
         }
     }
@@ -1718,7 +1718,7 @@ void BluetoothHostServer::RegisterBleAdapterObserver(const sptr<IBluetoothHostOb
         return;
     }
     pimpl->bleObserversToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
-    pimpl->bleObserversUid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
+    pimpl->bleObserversPid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
     auto func = std::bind(&BluetoothHostServer::DeregisterBleAdapterObserver, this, std::placeholders::_1);
     pimpl->bleObservers_.Register(observer, func);
     pimpl->bleAdapterObservers_.push_back(observer);
@@ -1745,9 +1745,9 @@ void BluetoothHostServer::DeregisterBleAdapterObserver(const sptr<IBluetoothHost
             break;
         }
     }
-    for (auto iter = pimpl->bleObserversUid_.begin(); iter != pimpl->bleObserversUid_.end(); ++iter) {
+    for (auto iter = pimpl->bleObserversPid_.begin(); iter != pimpl->bleObserversPid_.end(); ++iter) {
         if (iter->first != nullptr && iter->first == observer->AsObject()) {
-            pimpl->bleObserversUid_.erase(iter);
+            pimpl->bleObserversPid_.erase(iter);
             break;
         }
     }
