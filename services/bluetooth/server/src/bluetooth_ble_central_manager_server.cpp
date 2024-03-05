@@ -41,7 +41,7 @@ struct BluetoothBleCentralManagerServer::impl {
     std::unique_ptr<SystemStateObserver> systemStateObserver_ = nullptr;
     RemoteObserverList<IBluetoothBleCentralManagerCallback, int32_t> observers_;
     std::map<sptr<IRemoteObject>, uint32_t> observersToken_;
-    std::map<sptr<IRemoteObject>, int32_t> observersUid_;
+    std::map<sptr<IRemoteObject>, int32_t> observersPid_;
     std::map<sptr<IRemoteObject>, int32_t> observersScannerId_;
     std::map<int32_t, std::vector<bluetooth::BleScanFilterImpl>> observersBleScanFilters_;
     std::map<int32_t, bool> observersScanFiltersIsEnanled_;
@@ -88,9 +88,9 @@ public:
             GetEncryptAddr(result.GetPeripheralDevice().GetRawAddress().GetAddress()).c_str());
         observers_->ForEach([this, result](IBluetoothBleCentralManagerCallback *observer) {
             uint32_t tokenId = this->pimpl_->observersToken_[observer->AsObject()];
-            int32_t uid = this->pimpl_->observersUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGD("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->pimpl_->observersPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGD("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             if (PermissionUtils::VerifyUseBluetoothPermission(tokenId) == PERMISSION_DENIED) {
@@ -123,9 +123,9 @@ public:
         HILOGI("enter");
 
         observers_->ForEach([this, results](IBluetoothBleCentralManagerCallback *observer) {
-            int32_t uid = this->pimpl_->observersUid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
-                HILOGD("uid:%{public}d is proxy uid, not callback.", uid);
+            int32_t pid = this->pimpl_->observersPid_[observer->AsObject()];
+            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+                HILOGD("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
             std::vector<BluetoothBleScanResult> bleScanResults;
@@ -315,16 +315,18 @@ BluetoothBleCentralManagerServer::~BluetoothBleCentralManagerServer()
 }
 
 std::mutex BluetoothBleCentralManagerServer::proxyMutex_;
-std::set<int32_t> BluetoothBleCentralManagerServer::proxyUids_;
+std::set<int32_t> BluetoothBleCentralManagerServer::proxyPids_;
 
-bool BluetoothBleCentralManagerServer::FreezeByRss(int32_t uid, bool isProxy)
+bool BluetoothBleCentralManagerServer::FreezeByRss(std::set<int> pidSet, bool isProxy)
 {
-    HILOGD("Start bluetooth proxy, uid: %{public}d, isProxy: %{public}d", uid, isProxy);
+    HILOGD("bluetooth proxy, pid[%{public}s] isProxy: %{public}d", ToLogString(pidSet).c_str(), isProxy);
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    if (isProxy) {
-        proxyUids_.insert(uid);
-    } else {
-        proxyUids_.erase(uid);
+    for (int pid : pidSet) {
+        if (isProxy) {
+            proxyPids_.insert(pid);
+        } else {
+            proxyPids_.erase(pid);
+        }
     }
     return true;
 }
@@ -333,14 +335,14 @@ bool BluetoothBleCentralManagerServer::ResetAllProxy()
 {
     HILOGI("Start bluetooth ResetAllProxy");
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    proxyUids_.clear();
+    proxyPids_.clear();
     return true;
 }
 
-bool BluetoothBleCentralManagerServer::IsProxyUid(int32_t uid)
+bool BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(int32_t pid)
 {
     std::lock_guard<std::mutex> lock(proxyMutex_);
-    return proxyUids_.find(uid) != proxyUids_.end();
+    return proxyPids_.find(pid) != proxyPids_.end();
 }
 
 int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId, const BluetoothBleScanSettings &settings,
@@ -517,7 +519,7 @@ void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t
     pimpl->eventHandler_->PostSyncTask([&]() {
         if (pimpl != nullptr) {
             pimpl->observersToken_[callback->AsObject()] = IPCSkeleton::GetCallingTokenID();
-            pimpl->observersUid_[callback->AsObject()] = uid;
+            pimpl->observersPid_[callback->AsObject()] = pid;
             pimpl->observersScannerId_[callback->AsObject()] = scannerId;
             auto func = std::bind(&BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallbackInner,
                 this, std::placeholders::_1, std::placeholders::_2);
@@ -560,9 +562,9 @@ void BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallback(int32
                 break;
             }
         }
-        for (auto iter = pimpl->observersUid_.begin(); iter != pimpl->observersUid_.end(); ++iter) {
+        for (auto iter = pimpl->observersPid_.begin(); iter != pimpl->observersPid_.end(); ++iter) {
             if (iter->first == callback->AsObject()) {
-                pimpl->observersUid_.erase(iter);
+                pimpl->observersPid_.erase(iter);
                 break;
             }
         }
