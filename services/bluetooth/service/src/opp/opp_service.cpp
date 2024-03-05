@@ -17,6 +17,7 @@
 
 #include "../obex/obex_types.h"
 #include "adapter_config.h"
+#include "bluetooth_errorcode.h"
 #include "class_creator.h"
 #include "log.h"
 #include "log_util.h"
@@ -507,13 +508,27 @@ void OppService::LoadOppConfig()
 
 OppConfig &OppService::GetOppConfig()
 {
-    return oppConfig_;
+    return oppConfig_;s
 }
 
 int OppService::Connect(const RawAddress &device)
 {
-    HILOGI("[OPP Service] Enter");
-    // DO NOTHING
+    HILOGI("[OPP Service]%{public}s():===<start>===", __FUNCTION__);
+    std::lock_guard<std::recursive_mutex> lk(mutex_);
+    std::string address = device.GetAddress();
+    auto it = stateMachines_.find(address);
+    if (it == stateMachines_.end() || it->second == nullptr) {
+        return Bluetooth::BT_ERR_INTERNAL_ERROR;
+    }
+
+    int oppState = it->second->GetDeviceStateInt();
+    if ((oppState != OPP_STATE_CONNECTING) && (oppState < OPP_STATE_CONNECTED)) {
+        return Bluetooth::BT_ERR_INTERNAL_ERROR;
+    }
+
+    OppMessage event(OPP_DISCONNECTED_EVT);
+    event.dev_ = address;
+    PostEvent(event);
     return BT_SUCCESS;
 }
 
