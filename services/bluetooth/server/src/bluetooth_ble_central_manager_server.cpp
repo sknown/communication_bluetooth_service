@@ -43,7 +43,6 @@ struct BluetoothBleCentralManagerServer::impl {
     std::map<sptr<IRemoteObject>, int32_t> observersUid_;
     class BleCentralManagerCallback;
     std::unique_ptr<BleCentralManagerCallback> observerImp_ = std::make_unique<BleCentralManagerCallback>(this);
-    IAdapterBle *bleService_ = nullptr;
 
     struct ScanCallbackInfo;
     struct ScanSettingsParam;
@@ -178,10 +177,9 @@ public:
             if (resultCode != 0) {
                 pimpl_->isScanning = !pimpl_->isScanning;
             }
-            pimpl_->bleService_ =
-                static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-            if (pimpl_->bleService_ == nullptr) {
-                HILOGE("bleService_ is nullptr.");
+            auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+            if (bleService == nullptr) {
+                HILOGE("bleService is nullptr.");
                 return;
             }
 
@@ -189,7 +187,7 @@ public:
                 // When updating params the scanning is stopped successfully and the scanning will be restarted.
                 for (auto iter = pimpl_->scanCallbackInfo_.begin(); iter != pimpl_->scanCallbackInfo_.end(); ++iter) {
                     if (iter->isStart) {
-                        pimpl_->bleService_->StartScan(pimpl_->scanSettingImpl_);
+                        bleService->StartScan(pimpl_->scanSettingImpl_);
                         pimpl_->isScanning = true;
                         break;
                     }
@@ -239,16 +237,12 @@ public:
     explicit SystemStateObserver(BluetoothBleCentralManagerServer::impl *pimpl) : pimpl_(pimpl){};
     void OnSystemStateChange(const BTSystemState state) override
     {
-        pimpl_->bleService_ =
-            static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
+        auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
         switch (state) {
             case BTSystemState::ON:
-                if (pimpl_->bleService_ != nullptr) {
-                    pimpl_->bleService_->RegisterBleCentralManagerCallback(*pimpl_->observerImp_.get());
+                if (bleService != nullptr) {
+                    bleService->RegisterBleCentralManagerCallback(*pimpl_->observerImp_.get());
                 }
-                break;
-            case BTSystemState::OFF:
-                pimpl_->bleService_ = nullptr;
                 break;
             default:
                 break;
@@ -268,9 +262,9 @@ BluetoothBleCentralManagerServer::impl::impl()
 
 BluetoothBleCentralManagerServer::impl::~impl()
 {
-    bleService_ = static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-    if (bleService_ != nullptr) {
-        bleService_->DeregisterBleCentralManagerCallback();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService != nullptr) {
+        bleService->DeregisterBleCentralManagerCallback();
     }
 }
 
@@ -284,10 +278,9 @@ BluetoothBleCentralManagerServer::BluetoothBleCentralManagerServer()
             pimpl->systemStateObserver_ = std::make_unique<impl::SystemStateObserver>(pimpl.get());
             IAdapterManager::GetInstance()->RegisterSystemStateObserver(*(pimpl->systemStateObserver_));
 
-            pimpl->bleService_ =
-                static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-            if (pimpl->bleService_ != nullptr) {
-                pimpl->bleService_->RegisterBleCentralManagerCallback(*pimpl->observerImp_.get());
+            auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+            if (bleService != nullptr) {
+                bleService->RegisterBleCentralManagerCallback(*pimpl->observerImp_.get());
             }
         },
         AppExecFwk::EventQueue::Priority::HIGH);
@@ -346,10 +339,9 @@ int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId)
     }
 
     pimpl->eventHandler_->PostSyncTask([&]() {
-        pimpl->bleService_ =
-            static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-        if (pimpl->bleService_ == nullptr) {
-            HILOGE("bleService_ is nullptr.");
+        auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+        if (bleService == nullptr) {
+            HILOGE("bleService is nullptr.");
             return;
         }
 
@@ -368,7 +360,7 @@ int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId)
 
         if (!pimpl->isScanning) {
             HILOGI("start ble scan without params.");
-            pimpl->bleService_->StartScan();
+            bleService->StartScan();
             pimpl->isScanning = true;
             HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "BLE_SCAN_START",
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "PID", pid, "UID", uid, "TYPE", 0);
@@ -396,10 +388,9 @@ int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId, const Bluetoo
     }
 
     pimpl->eventHandler_->PostSyncTask([&]() {
-        pimpl->bleService_ =
-            static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-        if (pimpl->bleService_ == nullptr) {
-            HILOGE("bleService_ is nullptr.");
+        auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+        if (bleService == nullptr) {
+            HILOGE("bleService is nullptr.");
             return;
         }
 
@@ -418,7 +409,7 @@ int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId, const Bluetoo
         if (!pimpl->isScanning) {
             HILOGI("start ble scan.");
             SetScanParams(settings);
-            pimpl->bleService_->StartScan(pimpl->scanSettingImpl_);
+            bleService->StartScan(pimpl->scanSettingImpl_);
             pimpl->isScanning = true;
             HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "BLE_SCAN_START",
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "PID", pid, "UID", uid,
@@ -426,7 +417,7 @@ int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId, const Bluetoo
         } else if (IsNewScanParams()) {
             // Stop an ongoing ble scan, update parameters and restart the ble scan in OnStartOrStopScanEvent().
             HILOGI("restart ble scan.");
-            pimpl->bleService_->StopScan();
+            bleService->StopScan();
             pimpl->isScanning = false;
         } else {
             HILOGI("scan is already started and has the same params.");
@@ -451,10 +442,9 @@ int BluetoothBleCentralManagerServer::StopScan(int32_t scannerId)
             return;
         }
 
-        pimpl->bleService_ =
-            static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-        if (pimpl->bleService_ == nullptr) {
-            HILOGE("bleService_ is nullptr.");
+        auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+        if (bleService == nullptr) {
+            HILOGE("bleService is nullptr.");
             return;
         }
 
@@ -467,7 +457,7 @@ int BluetoothBleCentralManagerServer::StopScan(int32_t scannerId)
 
         if (IsAllStop() || IsNewScanParams()) {
             HILOGI("stop ble scan.");
-            pimpl->bleService_->StopScan();
+            bleService->StopScan();
             pimpl->isScanning = false;
             HiSysEventWrite(OHOS::HiviewDFX::HiSysEvent::Domain::BT_SERVICE, "BLE_SCAN_STOP",
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "PID", pid, "UID", uid);
@@ -481,10 +471,8 @@ int BluetoothBleCentralManagerServer::ConfigScanFilter(
 {
     HILOGI("enter, scannerId: %{public}d", scannerId);
 
-    pimpl->bleService_ =
-        static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-
-    if (pimpl->bleService_ != nullptr) {
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService != nullptr) {
         std::vector<BleScanFilterImpl> filterImpls {};
         for (auto filter : filters) {
             BleScanFilterImpl filterImpl;
@@ -509,7 +497,7 @@ int BluetoothBleCentralManagerServer::ConfigScanFilter(
             filterImpl.SetManufactureDataMask(filter.GetManufactureDataMask());
             filterImpls.push_back(filterImpl);
         }
-        return pimpl->bleService_->ConfigScanFilter(scannerId, filterImpls);
+        return bleService->ConfigScanFilter(scannerId, filterImpls);
     }
     return NO_ERROR;
 }
@@ -518,11 +506,9 @@ void BluetoothBleCentralManagerServer::RemoveScanFilter(int32_t scannerId)
 {
     HILOGI("enter, scannerId: %{public}d", scannerId);
 
-    pimpl->bleService_ =
-        static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-
-    if (pimpl->bleService_ != nullptr) {
-        pimpl->bleService_->RemoveScanFilter(scannerId);
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService != nullptr) {
+        bleService->RemoveScanFilter(scannerId);
     }
 }
 
@@ -537,14 +523,12 @@ void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t
         HILOGE("callback is null");
         return;
     }
-    pimpl->bleService_ =
-        static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-
-    if (pimpl->bleService_ == nullptr) {
-        HILOGE("bleService_ is null");
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService == nullptr) {
+        HILOGE("bleService is null");
         return;
     }
-    scannerId = pimpl->bleService_->AllocScannerId();
+    scannerId = bleService->AllocScannerId();
     if (scannerId == 0) {
         HILOGE("Alloc ScannerId fail.");
         return;
@@ -603,13 +587,12 @@ void BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallback(int32
         }
     });
 
-    pimpl->bleService_ =
-        static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-    if (pimpl->bleService_ == nullptr) {
-        HILOGE("bleService_ is null");
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService == nullptr) {
+        HILOGE("bleService is null");
         return;
     }
-    pimpl->bleService_->RemoveScannerId(scannerId);
+    bleService->RemoveScannerId(scannerId);
 }
 
 void BluetoothBleCentralManagerServer::SetScanParams(const BluetoothBleScanSettings &settings)

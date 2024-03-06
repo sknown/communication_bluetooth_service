@@ -63,9 +63,6 @@ struct BluetoothHostServer::impl {
     ~impl();
     void Init();
     void Clear();
-    /// service ptr
-    IAdapterClassic *classicService_ = nullptr;
-    IAdapterBle *bleService_ = nullptr;
 
     /// sys state observer
     class SystemStateObserver;
@@ -131,41 +128,39 @@ public:
             HILOGI("failed: impl_ is null");
             return;
         }
+        auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+        auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
         switch (state) {
             case BTSystemState::ON:
                 /// update service ptr
-                impl_->classicService_ = static_cast<IAdapterClassic *>(
-                    IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BREDR));
-                impl_->bleService_ =
-                    static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-                if (impl_->classicService_) {
-                    impl_->classicService_->RegisterClassicAdapterObserver(
+                if (classicService) {
+                    classicService->RegisterClassicAdapterObserver(
                         *(IAdapterClassicObserver *)impl_->classicObserverImp_.get());
-                    impl_->classicService_->RegisterRemoteDeviceObserver(
+                    classicService->RegisterRemoteDeviceObserver(
                         *(IClassicRemoteDeviceObserver *)impl_->remoteObserverImp_.get());
                 }
-                if (impl_->bleService_) {
-                    impl_->bleService_->RegisterBleAdapterObserver(
+                if (bleService) {
+                    bleService->RegisterBleAdapterObserver(
                         *(IAdapterBleObserver *)impl_->bleObserverImp_.get());
-                    impl_->bleService_->RegisterBlePeripheralCallback(
+                    bleService->RegisterBlePeripheralCallback(
                         *(IBlePeripheralCallback *)impl_->bleRemoteObserverImp_.get());
                 }
                 break;
 
             case BTSystemState::OFF:
-                if (impl_->classicService_) {
-                    impl_->classicService_->DeregisterClassicAdapterObserver(
+                if (classicService) {
+                    classicService->DeregisterClassicAdapterObserver(
                         *(IAdapterClassicObserver *)impl_->classicObserverImp_.get());
-                    impl_->classicService_->DeregisterRemoteDeviceObserver(
+                    classicService->DeregisterRemoteDeviceObserver(
                         *(IClassicRemoteDeviceObserver *)impl_->remoteObserverImp_.get());
-                    impl_->classicService_ = nullptr;
+                    classicService = nullptr;
                 }
-                if (impl_->bleService_) {
-                    impl_->bleService_->DeregisterBleAdapterObserver(
+                if (bleService) {
+                    bleService->DeregisterBleAdapterObserver(
                         *(IAdapterBleObserver *)impl_->bleObserverImp_.get());
-                    impl_->bleService_->DeregisterBlePeripheralCallback(
+                    bleService->DeregisterBlePeripheralCallback(
                         *(IBlePeripheralCallback *)impl_->bleRemoteObserverImp_.get());
-                    impl_->bleService_ = nullptr;
+                    bleService = nullptr;
                 }
                 break;
             default:
@@ -571,23 +566,20 @@ BluetoothHostServer::impl::~impl()
 void BluetoothHostServer::impl::Init()
 {
     HILOGI("starts");
-
-    classicService_ =
-        static_cast<IAdapterClassic *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BREDR));
-    bleService_ = static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-
     IAdapterManager::GetInstance()->RegisterSystemStateObserver(*systemStateObserver_);
 
     IAdapterManager::GetInstance()->Start();
     IAdapterManager::GetInstance()->RegisterStateObserver(*observerImp_);
-    if (classicService_) {
-        classicService_->RegisterClassicAdapterObserver(*classicObserverImp_.get());
-        classicService_->RegisterRemoteDeviceObserver(*remoteObserverImp_.get());
-    }
 
-    if (bleService_) {
-        bleService_->RegisterBleAdapterObserver(*bleObserverImp_.get());
-        bleService_->RegisterBlePeripheralCallback(*bleRemoteObserverImp_.get());
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (classicService) {
+        classicService->RegisterClassicAdapterObserver(*classicObserverImp_.get());
+        classicService->RegisterRemoteDeviceObserver(*remoteObserverImp_.get());
+    }
+    if (bleService) {
+        bleService->RegisterBleAdapterObserver(*bleObserverImp_.get());
+        bleService->RegisterBlePeripheralCallback(*bleRemoteObserverImp_.get());
     }
 
     createServers();
@@ -602,18 +594,20 @@ void BluetoothHostServer::impl::Clear()
     IAdapterManager::GetInstance()->Stop();
     IAdapterManager::GetInstance()->DeregisterStateObserver(*observerImp_);
 
-    if (classicService_) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (classicService) {
         /// classic observer
-        classicService_->DeregisterClassicAdapterObserver(*classicObserverImp_.get());
+        classicService->DeregisterClassicAdapterObserver(*classicObserverImp_.get());
         /// classic remote observer
-        classicService_->DeregisterRemoteDeviceObserver(*remoteObserverImp_.get());
+        classicService->DeregisterRemoteDeviceObserver(*remoteObserverImp_.get());
     }
 
-    if (bleService_) {
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService) {
         /// ble observer
-        bleService_->DeregisterBleAdapterObserver(*bleObserverImp_.get());
+        bleService->DeregisterBleAdapterObserver(*bleObserverImp_.get());
         /// ble remote observer
-        bleService_->DeregisterBlePeripheralCallback(*bleRemoteObserverImp_.get());
+        bleService->DeregisterBlePeripheralCallback(*bleRemoteObserverImp_.get());
     }
 }
 
@@ -867,11 +861,13 @@ bool BluetoothHostServer::BluetoothFactoryReset()
 int32_t BluetoothHostServer::GetDeviceType(int32_t transport, const std::string &address)
 {
     HILOGI("transport: %{public}d, address: %{public}s", transport, GetEncryptAddr(address).c_str());
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->GetDeviceType(addr);
-    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->GetDeviceType(addr);
+    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->GetDeviceType(addr);
+    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled() && bleService) {
+        return bleService->GetDeviceType(addr);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
     }
@@ -885,10 +881,12 @@ std::string BluetoothHostServer::GetLocalAddress()
         HILOGE("false, check permission failed");
         return INVALID_MAC_ADDRESS;
     }
-    if (IsBtEnabled()) {
-        return pimpl->classicService_->GetLocalAddress();
-    } else if (IsBleEnabled()) {
-        return pimpl->bleService_->GetLocalAddress();
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (IsBtEnabled() && classicService) {
+        return classicService->GetLocalAddress();
+    } else if (IsBleEnabled() && bleService) {
+        return bleService->GetLocalAddress();
     } else {
         HILOGE("GetLocalAddress failed");
     }
@@ -976,8 +974,9 @@ void BluetoothHostServer::GetLocalSupportedUuids(std::vector<std::string> &uuids
 int32_t BluetoothHostServer::GetLocalDeviceClass()
 {
     HILOGI("Enter!");
-    if (IsBtEnabled()) {
-        return pimpl->classicService_->GetLocalDeviceClass();
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
+        return classicService->GetLocalDeviceClass();
     } else {
         HILOGW("BT current state is not enabled!");
     }
@@ -987,8 +986,9 @@ int32_t BluetoothHostServer::GetLocalDeviceClass()
 bool BluetoothHostServer::SetLocalDeviceClass(const int32_t &deviceClass)
 {
     HILOGI("Enter!");
-    if (IsBtEnabled()) {
-        return pimpl->classicService_->SetLocalDeviceClass(deviceClass);
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
+        return classicService->SetLocalDeviceClass(deviceClass);
     } else {
         HILOGW("BT current state is not enabled!");
     }
@@ -1002,11 +1002,13 @@ int32_t BluetoothHostServer::GetLocalName(std::string &name)
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
-    if (IsBtEnabled()) {
-        name = pimpl->classicService_->GetLocalName();
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (IsBtEnabled() && classicService) {
+        name = classicService->GetLocalName();
         return NO_ERROR;
-    } else if (IsBleEnabled()) {
-        name = pimpl->bleService_->GetLocalName();
+    } else if (IsBleEnabled() && bleService) {
+        name = bleService->GetLocalName();
         return NO_ERROR;
     } else {
         HILOGW("BT current state is not enabled!");
@@ -1021,18 +1023,20 @@ int32_t BluetoothHostServer::SetLocalName(const std::string &name)
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
-    if (IsBtEnabled()) {
-        bool ret = pimpl->classicService_->SetLocalName(name);
-        if (ret && (IsBleEnabled())) {
-            if (pimpl->bleService_->SetLocalName(name)) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (IsBtEnabled() && classicService) {
+        bool ret = classicService->SetLocalName(name);
+        if (ret && (IsBleEnabled() && bleService)) {
+            if (bleService->SetLocalName(name)) {
                 return NO_ERROR;
             }
         } else {
             HILOGE("failed!");
             return BT_ERR_INTERNAL_ERROR;
         }
-    } else if (IsBleEnabled()) {
-        if (pimpl->bleService_->SetLocalName(name)) {
+    } else if (IsBleEnabled() && bleService) {
+        if (bleService->SetLocalName(name)) {
             return NO_ERROR;
         }
     } else {
@@ -1049,8 +1053,9 @@ int32_t BluetoothHostServer::GetBtScanMode(int32_t &scanMode)
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
-    if (IsBtEnabled()) {
-        scanMode = pimpl->classicService_->GetBtScanMode();
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
+        scanMode = classicService->GetBtScanMode();
         return NO_ERROR;
     } else {
         HILOGW("BT current state is not enabled!");
@@ -1065,8 +1070,9 @@ int32_t BluetoothHostServer::SetBtScanMode(int32_t mode, int32_t duration)
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
-    if (IsBtEnabled()) {
-        if (pimpl->classicService_->SetBtScanMode(mode, duration)) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
+        if (classicService->SetBtScanMode(mode, duration)) {
             return NO_ERROR;
         }
     } else {
@@ -1079,10 +1085,12 @@ int32_t BluetoothHostServer::SetBtScanMode(int32_t mode, int32_t duration)
 int32_t BluetoothHostServer::GetBondableMode(int32_t transport)
 {
     HILOGI("transport: %{public}d", transport);
-    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->GetBondableMode();
-    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->GetBondableMode();
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->GetBondableMode();
+    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled() && bleService) {
+        return bleService->GetBondableMode();
     } else {
         HILOGE("Parameter::transport invalid or BT current state is not enabled!");
     }
@@ -1092,10 +1100,12 @@ int32_t BluetoothHostServer::GetBondableMode(int32_t transport)
 bool BluetoothHostServer::SetBondableMode(int32_t transport, int32_t mode)
 {
     HILOGI("transport: %{public}d, mode: %{public}d", transport, mode);
-    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->SetBondableMode(mode);
-    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->SetBondableMode(mode);
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->SetBondableMode(mode);
+    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled() && bleService) {
+        return bleService->SetBondableMode(mode);
     } else {
         HILOGE("Parameter::transport invalid or BT current state is not enabled!");
     }
@@ -1114,8 +1124,9 @@ int32_t BluetoothHostServer::StartBtDiscovery()
         HILOGE("No location permission");
         return BT_ERR_PERMISSION_FAILED;
     }
-    if (IsBtEnabled()) {
-        if (pimpl->classicService_->StartBtDiscovery()) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
+        if (classicService->StartBtDiscovery()) {
             return NO_ERROR;
         }
     } else {
@@ -1132,8 +1143,9 @@ int32_t BluetoothHostServer::CancelBtDiscovery()
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
-    if (IsBtEnabled()) {
-        if (pimpl->classicService_->CancelBtDiscovery()) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
+        if (classicService->CancelBtDiscovery()) {
             return NO_ERROR;
         }
     } else {
@@ -1146,10 +1158,12 @@ int32_t BluetoothHostServer::CancelBtDiscovery()
 bool BluetoothHostServer::IsBtDiscovering(int32_t transport)
 {
     HILOGI("transport: %{public}d", transport);
-    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->IsBtDiscovering();
-    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->IsBtDiscovering();
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->IsBtDiscovering();
+    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled() && bleService) {
+        return bleService->IsBtDiscovering();
     } else {
         HILOGE("Parameter::transport invalid or BT current state is not enabled!");
     }
@@ -1159,8 +1173,9 @@ bool BluetoothHostServer::IsBtDiscovering(int32_t transport)
 long BluetoothHostServer::GetBtDiscoveryEndMillis()
 {
     HILOGI("Enter!");
-    if (IsBtEnabled()) {
-        return pimpl->classicService_->GetBtDiscoveryEndMillis();
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
+        return classicService->GetBtDiscoveryEndMillis();
     } else {
         HILOGW("BT current state is not enabled!");
     }
@@ -1174,11 +1189,13 @@ int32_t BluetoothHostServer::GetPairedDevices(const int32_t transport, std::vect
         HILOGE("false, check permission failed");
         return BT_ERR_SYSTEM_PERMISSION_FAILED;
     }
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     std::vector<RawAddress> rawAddrVec;
-    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled()) {
-        rawAddrVec = pimpl->classicService_->GetPairedDevices();
-    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled()) {
-        rawAddrVec = pimpl->bleService_->GetPairedDevices();
+    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
+        rawAddrVec = classicService->GetPairedDevices();
+    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled() && bleService) {
+        rawAddrVec = bleService->GetPairedDevices();
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
         return BT_ERR_INVALID_STATE;
@@ -1206,12 +1223,14 @@ int32_t BluetoothHostServer::RemovePair(int32_t transport, const sptr<BluetoothR
         HILOGE("check permission failed.");
         return BT_ERR_PERMISSION_FAILED;
     }
-    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled()) {
-        if (pimpl->classicService_->RemovePair(*device)) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
+        if (classicService->RemovePair(*device)) {
             return NO_ERROR;
         }
-    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled()) {
-        if (pimpl->bleService_->RemovePair(*device)) {
+    } else if ((transport == BTTransport::ADAPTER_BLE) && IsBleEnabled() && bleService) {
+        if (bleService->RemovePair(*device)) {
             return NO_ERROR;
         }
     } else {
@@ -1234,16 +1253,18 @@ bool BluetoothHostServer::RemoveAllPairs()
         return false;
     }
 
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     bool ret = true;
-    if (IsBtEnabled()) {
-        ret = pimpl->classicService_->RemoveAllPairs();
+    if (IsBtEnabled() && classicService) {
+        ret = classicService->RemoveAllPairs();
         if (!ret) {
             HILOGE("BREDR RemoveAllPairs failed");
         }
     }
 
-    if (IsBleEnabled()) {
-        ret &= pimpl->bleService_->RemoveAllPairs();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (IsBleEnabled() && bleService) {
+        ret &= bleService->RemoveAllPairs();
         if (!ret) {
             HILOGE("BLE RemoveAllPairs failed");
         }
@@ -1254,8 +1275,9 @@ bool BluetoothHostServer::RemoveAllPairs()
 int32_t BluetoothHostServer::GetBleMaxAdvertisingDataLength()
 {
     HILOGI("Enter!");
-    if (IsBleEnabled()) {
-        return pimpl->bleService_->GetBleMaxAdvertisingDataLength();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (IsBleEnabled() && bleService) {
+        return bleService->GetBleMaxAdvertisingDataLength();
     } else {
         HILOGW("BT current state is not enabled!");
     }
@@ -1298,12 +1320,14 @@ int32_t BluetoothHostServer::GetDeviceName(int32_t transport, const std::string 
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        name = pimpl->classicService_->GetDeviceName(addr);
+    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
+        name = classicService->GetDeviceName(addr);
         return NO_ERROR;
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        name = pimpl->bleService_->GetDeviceName(addr);
+    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
+        name = bleService->GetDeviceName(addr);
         return NO_ERROR;
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
@@ -1318,9 +1342,10 @@ std::string BluetoothHostServer::GetDeviceAlias(const std::string &address)
         HILOGE("false, check permission failed");
         return INVALID_NAME;
     }
-    if (IsBtEnabled()) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
         RawAddress addr(address);
-        return pimpl->classicService_->GetAliasName(addr);
+        return classicService->GetAliasName(addr);
     } else {
         HILOGE("BT current state is not enabled");
     }
@@ -1334,9 +1359,10 @@ bool BluetoothHostServer::SetDeviceAlias(const std::string &address, const std::
         HILOGE("false, check permission failed");
         return false;
     }
-    if (IsBtEnabled()) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
         RawAddress addr(address);
-        return pimpl->classicService_->SetAliasName(addr, aliasName);
+        return classicService->SetAliasName(addr, aliasName);
     } else {
         HILOGE("BT current state is not enabled");
     }
@@ -1346,9 +1372,10 @@ bool BluetoothHostServer::SetDeviceAlias(const std::string &address, const std::
 int32_t BluetoothHostServer::GetDeviceBatteryLevel(const std::string &address)
 {
     HILOGI("address: %{public}s", GetEncryptAddr(address).c_str());
-    if (IsBtEnabled()) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
         RawAddress addr(address);
-        return pimpl->classicService_->GetDeviceBatteryLevel(addr);
+        return classicService->GetDeviceBatteryLevel(addr);
     } else {
         HILOGE("BT current state is not enabled");
     }
@@ -1358,11 +1385,13 @@ int32_t BluetoothHostServer::GetDeviceBatteryLevel(const std::string &address)
 int32_t BluetoothHostServer::GetPairState(int32_t transport, const std::string &address)
 {
     HILOGI("transport: %{public}d, address: %{public}s", transport, GetEncryptAddr(address).c_str());
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->GetPairState(addr);
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->GetPairState(addr);
+    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->GetPairState(addr);
+    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
+        return bleService->GetPairState(addr);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
     }
@@ -1376,13 +1405,15 @@ int32_t BluetoothHostServer::StartPair(int32_t transport, const std::string &add
         HILOGE("StartPair false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        if (pimpl->classicService_->StartPair(addr)) {
+    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
+        if (classicService->StartPair(addr)) {
             return NO_ERROR;
         }
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        if (pimpl->bleService_->StartPair(addr)) {
+    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
+        if (bleService->StartPair(addr)) {
             return NO_ERROR;
         }
     } else {
@@ -1399,11 +1430,13 @@ bool BluetoothHostServer::CancelPairing(int32_t transport, const std::string &ad
         HILOGE("false, check permission failed");
         return false;
     }
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->CancelPairing(addr);
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->CancelPairing(addr);
+    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->CancelPairing(addr);
+    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
+        return bleService->CancelPairing(addr);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
     }
@@ -1413,11 +1446,13 @@ bool BluetoothHostServer::CancelPairing(int32_t transport, const std::string &ad
 bool BluetoothHostServer::IsBondedFromLocal(int32_t transport, const std::string &address)
 {
     HILOGI("transport: %{public}d, address: %{public}s", transport, GetEncryptAddr(address).c_str());
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->IsBondedFromLocal(addr);
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->IsBondedFromLocal(addr);
+    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->IsBondedFromLocal(addr);
+    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
+        return bleService->IsBondedFromLocal(addr);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
     }
@@ -1427,11 +1462,13 @@ bool BluetoothHostServer::IsBondedFromLocal(int32_t transport, const std::string
 bool BluetoothHostServer::IsAclConnected(int32_t transport, const std::string &address)
 {
     HILOGI("transport: %{public}d, address: %{public}s", transport, GetEncryptAddr(address).c_str());
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->IsAclConnected(addr);
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->IsAclConnected(addr);
+    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->IsAclConnected(addr);
+    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
+        return bleService->IsAclConnected(addr);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
     }
@@ -1441,11 +1478,13 @@ bool BluetoothHostServer::IsAclConnected(int32_t transport, const std::string &a
 bool BluetoothHostServer::IsAclEncrypted(int32_t transport, const std::string &address)
 {
     HILOGI("transport: %{public}d, address: %{public}s", transport, GetEncryptAddr(address).c_str());
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->IsAclEncrypted(addr);
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->IsAclEncrypted(addr);
+    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->IsAclEncrypted(addr);
+    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
+        return bleService->IsAclEncrypted(addr);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
     }
@@ -1459,9 +1498,10 @@ int32_t BluetoothHostServer::GetDeviceClass(const std::string &address, int32_t 
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
-    if (IsBtEnabled()) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
         RawAddress addr(address);
-        cod = pimpl->classicService_->GetDeviceClass(addr);
+        cod = classicService->GetDeviceClass(addr);
     } else {
         HILOGE("BT current state is not enabled!");
         return BT_ERR_INVALID_STATE;
@@ -1478,7 +1518,10 @@ int32_t BluetoothHostServer::GetDeviceUuids(const std::string &address, std::vec
         return BT_ERR_INVALID_STATE;
     }
 
-    parcelUuids = pimpl->classicService_->GetDeviceUuids(addr);
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (classicService) {
+        parcelUuids = classicService->GetDeviceUuids(addr);
+    }
     for (auto Uuid : parcelUuids) {
         uuids.push_back(Uuid.ToString());
     }
@@ -1497,9 +1540,10 @@ int32_t BluetoothHostServer::SetDevicePin(const std::string &address, const std:
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
-    if (IsBtEnabled()) {
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (IsBtEnabled() && classicService) {
         RawAddress addr(address);
-        if (pimpl->classicService_->SetDevicePin(addr, pin)) {
+        if (classicService->SetDevicePin(addr, pin)) {
             return NO_ERROR;
         }
     } else {
@@ -1517,13 +1561,15 @@ int32_t BluetoothHostServer::SetDevicePairingConfirmation(int32_t transport, con
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        if (pimpl->classicService_->SetDevicePairingConfirmation(addr, accept)) {
+    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
+        if (classicService->SetDevicePairingConfirmation(addr, accept)) {
             return NO_ERROR;
         }
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        if (pimpl->bleService_->SetDevicePairingConfirmation(addr, accept)) {
+    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
+        if (bleService->SetDevicePairingConfirmation(addr, accept)) {
             return NO_ERROR;
         }
     } else {
@@ -1541,11 +1587,13 @@ bool BluetoothHostServer::SetDevicePasskey(int32_t transport, const std::string 
         HILOGE("false, check permission failed");
         return false;
     }
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->SetDevicePasskey(addr, passkey, accept);
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->SetDevicePasskey(addr, passkey, accept);
+    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->SetDevicePasskey(addr, passkey, accept);
+    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
+        return bleService->SetDevicePasskey(addr, passkey, accept);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
     }
@@ -1556,11 +1604,13 @@ bool BluetoothHostServer::PairRequestReply(int32_t transport, const std::string 
 {
     HILOGI("transport: %{public}d, address: %{public}s, accept: %{public}d",
         transport, GetEncryptAddr(address).c_str(), accept);
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     RawAddress addr(address);
-    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled()) {
-        return pimpl->classicService_->PairRequestReply(addr, accept);
-    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled()) {
-        return pimpl->bleService_->PairRequestReply(addr, accept);
+    if ((transport == BT_TRANSPORT_BREDR) && IsBtEnabled() && classicService) {
+        return classicService->PairRequestReply(addr, accept);
+    } else if ((transport == BT_TRANSPORT_BLE) && IsBleEnabled() && bleService) {
+        return bleService->PairRequestReply(addr, accept);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
     }
@@ -1574,9 +1624,10 @@ bool BluetoothHostServer::ReadRemoteRssiValue(const std::string &address)
         HILOGE("false, check permission failed");
         return false;
     }
-    if (IsBleEnabled()) {
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (IsBleEnabled() && bleService) {
         RawAddress addr(address);
-        return pimpl->bleService_->ReadRemoteRssiValue(addr);
+        return bleService->ReadRemoteRssiValue(addr);
     } else {
         HILOGE("BT current state is not enabled!");
     }

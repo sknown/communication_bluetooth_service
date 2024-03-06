@@ -755,7 +755,7 @@ int GattConnectionManager::impl::DoConnect(GattConnectionManager::Device &device
         connectionParameter.bredrConnParaVar.flushTimeout = instance.pimpl->connectionParameter_.flushTimeout_;
         ATT_ConnectReq(ConvertTransport(GATT_TRANSPORT_TYPE_CLASSIC), &connectionParameter, &addr, &device.Handle());
     } else if (device.Info().transport_ == GATT_TRANSPORT_TYPE_LE) {
-        IAdapterBle *adapter = (IAdapterBle *)(IAdapterManager::GetInstance()->GetAdapter(ADAPTER_BLE));
+        auto adapter = IAdapterManager::GetInstance()->GetBleAdapterInterface();
         if (adapter != nullptr && adapter->GetPeerDeviceAddrType(device.Info().addr_) <= BLE_ADDR_TYPE_RANDOM) {
             device.Info().role_ = GATT_ROLE_MASTER;
             device.Info().addressType_ = addr.type = adapter->GetPeerDeviceAddrType(device.Info().addr_);
@@ -1163,7 +1163,7 @@ void GattConnectionManager::Device::CheckEncryption()
     BtAddr addr;
     uint8_t encKeySize = 0;
     GAP_LeSecurityStatus status = GAP_LE_NO_ENCRYPTION;
-    IAdapterBle *adapter = (IAdapterBle *)(IAdapterManager::GetInstance()->GetAdapter(ADAPTER_BLE));
+    auto adapter = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     if (adapter != nullptr) {
         (void)memcpy_s(addr.addr, RawAddress::BT_ADDRESS_BYTE_LEN, addr_, RawAddress::BT_ADDRESS_BYTE_LEN);
         addr.type = Info().addressType_;
