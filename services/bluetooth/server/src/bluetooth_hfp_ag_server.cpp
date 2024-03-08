@@ -216,6 +216,10 @@ int32_t BluetoothHfpAgServer::GetDeviceState(const BluetoothRawAddress &device, 
 int32_t BluetoothHfpAgServer::Connect(const BluetoothRawAddress &device)
 {
     HILOGI("target device:%{public}s()", GET_ENCRYPT_ADDR(device));
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("Connect error, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
@@ -233,6 +237,10 @@ int32_t BluetoothHfpAgServer::Connect(const BluetoothRawAddress &device)
 int32_t BluetoothHfpAgServer::Disconnect(const BluetoothRawAddress &device)
 {
     HILOGI("target device:%{public}s()", GET_ENCRYPT_ADDR(device));
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("Disconnect error, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
@@ -376,6 +384,10 @@ void BluetoothHfpAgServer::DeregisterObserver(const sptr<IBluetoothHfpAgObserver
 
 int BluetoothHfpAgServer::SetConnectStrategy(const BluetoothRawAddress &device, int strategy)
 {
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     return NO_ERROR;
 }
 
