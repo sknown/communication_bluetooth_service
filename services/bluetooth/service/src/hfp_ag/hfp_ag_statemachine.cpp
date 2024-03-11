@@ -117,15 +117,16 @@ void HfpAgStateMachine::NotifyStateTransitions()
     preState_ = toState;
 }
 
-void HfpAgStateMachine::NotifyChildStateToParentState(int fromState, int toState)
+void HfpAgStateMachine::NotifyChildStateToParentState(int fromState, int toState, int reason)
 {
-    LOG_INFO("[HFP AG]%{public}s(): fromState[%{public}d], toState[%{public}d]", __FUNCTION__, fromState, toState);
+    LOG_INFO("[HFP AG]%{public}s(): fromState[%{public}d], toState[%{public}d], reason[%{public}d]",
+        __FUNCTION__, fromState, toState, reason);
     HfpAgService *service = HfpAgService::GetService();
     if (service != nullptr) {
         if ((fromState != toState) && (fromState >= HFP_AG_AUDIO_STATE_DISCONNECTED) &&
             (toState >= HFP_AG_AUDIO_STATE_DISCONNECTED)) {
             RawAddress device(address_);
-            service->NotifyAudioStateChanged(device, toState);
+            service->NotifyAudioStateChanged(device, toState, reason);
         }
 
         if (((toState == HFP_AG_STATE_CONNECTED) && (fromState < toState)) ||
@@ -139,10 +140,10 @@ void HfpAgStateMachine::NotifyChildStateToParentState(int fromState, int toState
     ProcessDeferredMessage();
 }
 
-void HfpAgStateMachine::ProcessAudioDisconnected()
+void HfpAgStateMachine::ProcessAudioDisconnected(int reason)
 {
     IPowerManager::GetInstance().StatusUpdate(RequestStatus::SCO_OFF, PROFILE_NAME_HFP_AG, RawAddress(address_));
-    NotifyChildStateToParentState(HFP_AG_AUDIO_STATE_CONNECTED, HFP_AG_AUDIO_STATE_DISCONNECTED);
+    NotifyChildStateToParentState(HFP_AG_AUDIO_STATE_CONNECTED, HFP_AG_AUDIO_STATE_DISCONNECTED, reason);
 }
 
 void HfpAgStateMachine::StartConnectionTimer() const
@@ -624,7 +625,7 @@ bool HfpAgAudioDisconnecting::Dispatch(const utility::Message &msg)
         case HFP_AG_AUDIO_CONNECT_FAILED_EVT:
             break;
         case HFP_AG_AUDIO_DISCONNECTED_EVT:
-            stateMachine_.ProcessAudioDisconnected();
+            stateMachine_.ProcessAudioDisconnected(HFP_AG_SCO_LOCAL_USER_TERMINATED);
             Transition(HfpAgStateMachine::CONNECTED);
             break;
         case HFP_AG_AUDIO_DISCONNECT_FAILED_EVT:
@@ -666,7 +667,7 @@ bool HfpAgAudioConnected::Dispatch(const utility::Message &msg)
             profile_.ReleaseAudioConnection();
             break;
         case HFP_AG_AUDIO_DISCONNECTED_EVT:
-            stateMachine_.ProcessAudioDisconnected();
+            stateMachine_.ProcessAudioDisconnected(HFP_AG_SCO_REMOTE_USER_TERMINATED);
             Transition(HfpAgStateMachine::CONNECTED);
             break;
         case HFP_AG_AUDIO_DISCONNECTING_EVT:
