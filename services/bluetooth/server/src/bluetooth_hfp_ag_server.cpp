@@ -54,7 +54,7 @@ public:
     void OnScoStateChanged(const RawAddress& device, int state, int reason) override
     {
         HILOGI("device:%{public}s, state:%{public}d, reason:%{public}d", GET_ENCRYPT_ADDR(device), state, reason);
-        observers_->ForEach([device, state](IBluetoothHfpAgObserver* observer) {
+        observers_->ForEach([device, state, reason](IBluetoothHfpAgObserver* observer) {
             observer->OnScoStateChanged(device, state, reason);
         });
     }
