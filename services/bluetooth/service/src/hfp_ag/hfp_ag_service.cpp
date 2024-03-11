@@ -790,12 +790,12 @@ void HfpAgService::NotifySlcStateChanged(const RawAddress &device, int toState)
     }
 }
 
-void HfpAgService::NotifyAudioStateChanged(const RawAddress &device, int toState)
+void HfpAgService::NotifyAudioStateChanged(const RawAddress &device, int toState, int reason)
 {
-    HILOGI("[HFP AG] device:%{public}s, toState:%{public}d", GET_ENCRYPT_ADDR(device), toState);
+    HILOGI("[HFP AG] device:%{public}s, toState:%{public}d, reason:%{public}d", GET_ENCRYPT_ADDR(device), toState, reason);
     std::list<HfpAgServiceObserver *>::iterator iter;
     for (iter = observers_.begin(); iter != observers_.end(); ++iter) {
-        (*iter)->OnScoStateChanged(device, toState);
+        (*iter)->OnScoStateChanged(device, toState, reason);
     }
 }
 

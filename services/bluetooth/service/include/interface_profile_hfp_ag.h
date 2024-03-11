@@ -72,7 +72,7 @@ public:
      * @param state Audio connection state.
      * @since 6
      */
-    virtual void OnScoStateChanged(const RawAddress &device, int state)
+    virtual void OnScoStateChanged(const RawAddress &device, int state, int reason = 0)
     {}
 
     /**

@@ -502,6 +502,14 @@ struct BluetoothCall {
     int callid = 0;
 };
 
+enum HfpAgScoStateChangeReason {
+    HFP_AG_SCO_INVALID = 0,
+    HFP_AG_SCO_LOCAL_USER_TERMINATED = 1,
+    HFP_AG_SCO_REMOTE_USER_TERMINATED = 2,
+    HFP_AG_SCO_CONNECT_FAILED = 3,
+    HFP_AG_SCO_DISCONNECT_FAILED = 4,
+}
+
 constexpr int CALL_TYPE_DEFAULT = 129;
 constexpr int CALL_TYPE_VOIP = 225;
 

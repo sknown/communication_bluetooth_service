@@ -51,11 +51,11 @@ public:
         });
     }
 
-    void OnScoStateChanged(const RawAddress& device, int state) override
+    void OnScoStateChanged(const RawAddress& device, int state, int reason) override
     {
-        HILOGI("device:%{public}s, state:%{public}d", GET_ENCRYPT_ADDR(device), state);
+        HILOGI("device:%{public}s, state:%{public}d, reason:%{public}d", GET_ENCRYPT_ADDR(device), state, reason);
         observers_->ForEach([device, state](IBluetoothHfpAgObserver* observer) {
-            observer->OnScoStateChanged(device, state);
+            observer->OnScoStateChanged(device, state, reason);
         });
     }
 

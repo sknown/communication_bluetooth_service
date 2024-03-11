@@ -27,7 +27,7 @@ public:
     ~BluetoothHfpAgObserverProxy() {};
 
     void OnConnectionStateChanged(const BluetoothRawAddress &device, int state) override;
-    void OnScoStateChanged(const BluetoothRawAddress &device, int state) override;
+    void OnScoStateChanged(const BluetoothRawAddress &device, int state, int reason = 0) override;
     void OnActiveDeviceChanged(const BluetoothRawAddress &device) override;
     void OnHfEnhancedDriverSafetyChanged(const BluetoothRawAddress &device, int indValue) override;
     void OnHfpStackChanged(const BluetoothRawAddress &device, int action) override;
