@@ -19,7 +19,8 @@
 
 namespace OHOS {
 namespace Bluetooth {
-void BluetoothHfpAgObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int state) {
+void BluetoothHfpAgObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int state)
+{
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
         HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged WriteInterfaceToken error");
@@ -45,7 +46,8 @@ void BluetoothHfpAgObserverProxy::OnConnectionStateChanged(const BluetoothRawAdd
     }
 }
 
-void BluetoothHfpAgObserverProxy::OnScoStateChanged(const BluetoothRawAddress &device, int state) {
+void BluetoothHfpAgObserverProxy::OnScoStateChanged(const BluetoothRawAddress &device, int state, int reason)
+{
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
         HILOGE("BluetoothHfpAgObserverProxy::OnScoStateChanged WriteInterfaceToken error");
@@ -56,6 +58,10 @@ void BluetoothHfpAgObserverProxy::OnScoStateChanged(const BluetoothRawAddress &d
         return;
     }
     if (!data.WriteInt32(state)) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnScoStateChanged WriteInt32 error");
+        return;
+    }
+    if (!data.WriteInt32(reason)) {
         HILOGE("BluetoothHfpAgObserverProxy::OnScoStateChanged WriteInt32 error");
         return;
     }
@@ -70,7 +76,9 @@ void BluetoothHfpAgObserverProxy::OnScoStateChanged(const BluetoothRawAddress &d
         return;
     }
 }
-void BluetoothHfpAgObserverProxy::OnActiveDeviceChanged(const BluetoothRawAddress &device) {
+
+void BluetoothHfpAgObserverProxy::OnActiveDeviceChanged(const BluetoothRawAddress &device)
+{
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
         HILOGE("BluetoothHfpAgObserverProxy::OnActiveDeviceChanged WriteInterfaceToken error");
@@ -92,7 +100,8 @@ void BluetoothHfpAgObserverProxy::OnActiveDeviceChanged(const BluetoothRawAddres
     }
 }
 
-void BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged(const BluetoothRawAddress &device, int indValue) {
+void BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged(const BluetoothRawAddress &device, int indValue)
+{
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
         HILOGE("BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged WriteInterfaceToken error");

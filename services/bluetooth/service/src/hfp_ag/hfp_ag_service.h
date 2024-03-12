@@ -279,7 +279,7 @@ public:
      * @param toState The current state.
      * @since 6
      */
-    void NotifyAudioStateChanged(const RawAddress &device, int toState);
+    void NotifyAudioStateChanged(const RawAddress &device, int toState, int reason = 0);
 
     /**
      * @brief Notify the active device change.
