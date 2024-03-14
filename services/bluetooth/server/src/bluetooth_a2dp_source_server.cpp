@@ -275,6 +275,10 @@ int32_t BluetoothA2dpSourceServer::GetPlayingState(const RawAddress &device, int
 int BluetoothA2dpSourceServer::SetConnectStrategy(const RawAddress &device, int strategy)
 {
     HILOGI("addr: %{public}s, strategy: %{public}d", GET_ENCRYPT_ADDR(device), strategy);
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     return pimpl->a2dpSrcService_->SetConnectStrategy(device, strategy);
 }
 

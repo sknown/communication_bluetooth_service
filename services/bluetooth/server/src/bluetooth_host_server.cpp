@@ -1445,6 +1445,10 @@ int32_t BluetoothHostServer::StartPair(int32_t transport, const std::string &add
 bool BluetoothHostServer::CancelPairing(int32_t transport, const std::string &address)
 {
     HILOGI("transport: %{public}d, address: %{public}s", transport, GetEncryptAddr(address).c_str());
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
         return false;
@@ -1556,7 +1560,7 @@ int32_t BluetoothHostServer::GetLocalProfileUuids(std::vector<std::string> &uuid
 int32_t BluetoothHostServer::SetDevicePin(const std::string &address, const std::string &pin)
 {
     HILOGI("address: %{public}s, pin: %{public}s", GetEncryptAddr(address).c_str(), pin.c_str());
-    if (PermissionUtils::VerifyManageBluetoothPermission() == PERMISSION_DENIED) {
+    if (PermissionUtils::VerifyAccessBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
     }
@@ -1577,8 +1581,9 @@ int32_t BluetoothHostServer::SetDevicePairingConfirmation(int32_t transport, con
 {
     HILOGI("transport: %{public}d, address: %{public}s, accept: %{public}d",
         transport, GetEncryptAddr(address).c_str(), accept);
-    if (PermissionUtils::VerifyManageBluetoothPermission() == PERMISSION_DENIED) {
-        HILOGE("false, check permission failed");
+    if (PermissionUtils::VerifyAccessBluetoothPermission() == PERMISSION_DENIED ||
+        PermissionUtils::VerifyManageBluetoothPermission() == PERMISSION_DENIED) {
+        HILOGE("check permission failed.");
         return BT_ERR_PERMISSION_FAILED;
     }
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
@@ -1827,6 +1832,10 @@ int32_t BluetoothHostServer::SyncRandomAddress(const std::string &realAddr, cons
 
 int32_t BluetoothHostServer::StartCrediblePair(int32_t transport, const std::string &address)
 {
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     return BT_ERR_API_NOT_SUPPORT;
 }
 
