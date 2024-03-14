@@ -85,13 +85,14 @@ public:
      *
      * @param fromState The previous state.
      * @param toState The current state.
+     * @param reason Reason for change status.
      */
-    void NotifyChildStateToParentState(int fromState, int toState);
+    void NotifyChildStateToParentState(int fromState, int toState, int reason = 0);
 
     /**
      * @brief Process audio disconnected event.
      */
-    void ProcessAudioDisconnected();
+    void ProcessAudioDisconnected(int reason);
 
     /**
      * @brief Start the connection timer.
