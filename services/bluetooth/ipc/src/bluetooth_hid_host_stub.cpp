@@ -241,6 +241,14 @@ ErrCode BluetoothHidHostStub::HidHostGetReportInner(MessageParcel &data, Message
 
 ErrCode BluetoothHidHostStub::HidHostSetConnectStrategyInner(MessageParcel &data, MessageParcel &reply)
 {
+    std::string addr = data.ReadString();
+    int strategy = data.ReadInt32();
+
+    int result = SetConnectStrategy(RawAddress(addr), strategy);
+    if (!reply.WriteInt32(result)) {
+        HILOGE("BluetoothHidHostStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
     return NO_ERROR;
 }
 
