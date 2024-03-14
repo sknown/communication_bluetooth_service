@@ -343,6 +343,11 @@ ErrCode BluetoothHfpAgStub::DeregisterObserverInner(MessageParcel &data, Message
 
 ErrCode BluetoothHfpAgStub::SetConnectStrategyInner(MessageParcel &data, MessageParcel &reply)
 {
+    int result = BT_ERR_SYSTEM_PERMISSION_FAILED;
+    if (!reply.WriteInt32(result)) {
+        HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
     return NO_ERROR;
 }
 
