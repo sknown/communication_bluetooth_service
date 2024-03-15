@@ -316,6 +316,11 @@ ErrCode BluetoothHidHostServer::HidHostGetReport(std::string &device,
 
 int32_t BluetoothHidHostServer::SetConnectStrategy(const BluetoothRawAddress &device, int strategy)
 {
+    HILOGI("target device:%{public}s()", GET_ENCRYPT_ADDR(device));
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     return NO_ERROR;
 }
 

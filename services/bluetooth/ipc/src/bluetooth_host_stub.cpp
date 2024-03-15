@@ -1274,7 +1274,14 @@ ErrCode BluetoothHostStub::SyncRandomAddressInner(MessageParcel &data, MessagePa
 
 ErrCode BluetoothHostStub::StartCrediblePairInner(MessageParcel &data, MessageParcel &reply)
 {
-    return BT_ERR_API_NOT_SUPPORT;
+    std::string address = data.ReadString();
+    int32_t transport = data.ReadInt32();
+    int result = StartCrediblePair(transport, address);
+    bool ret = reply.WriteInt32(result);
+    if (!ret) {
+        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
+    }
+    return NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::CountEnableTimesInner(MessageParcel &data, MessageParcel &reply)
