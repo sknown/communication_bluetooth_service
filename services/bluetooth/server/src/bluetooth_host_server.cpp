@@ -1445,6 +1445,10 @@ int32_t BluetoothHostServer::StartPair(int32_t transport, const std::string &add
 bool BluetoothHostServer::CancelPairing(int32_t transport, const std::string &address)
 {
     HILOGI("transport: %{public}d, address: %{public}s", transport, GetEncryptAddr(address).c_str());
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
         return false;
@@ -1827,7 +1831,11 @@ int32_t BluetoothHostServer::SyncRandomAddress(const std::string &realAddr, cons
 
 int32_t BluetoothHostServer::StartCrediblePair(int32_t transport, const std::string &address)
 {
-    return BT_ERR_API_NOT_SUPPORT;
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostServer::CountEnableTimes(bool enable)
