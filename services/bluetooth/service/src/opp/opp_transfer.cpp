@@ -35,10 +35,9 @@ OppTransfer::OppTransfer(const std::string &address, const std::vector<std::stri
     incomingFileTimer_ = std::make_unique<utility::Timer>(
         std::bind(&bluetooth::OppTransfer::IncomingFileTimeout, this));
     time(&timeStamp_);
-    IAdapterClassic *adapterClassic = (IAdapterClassic *)(IAdapterManager::GetInstance()->
-        GetAdapter(ADAPTER_BREDR));
-    if (adapterClassic != nullptr) {
-        deviceName_ = adapterClassic->GetDeviceName(RawAddress(address));
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (classicService != nullptr) {
+        deviceName_ = classicService->GetDeviceName(RawAddress(address));
     }
     auto filePathItr = filePaths.begin();
     auto mimeTypeItr = mimeTypes.begin();

@@ -73,6 +73,11 @@ RfcommServerInfo *RfcommCreateServer(
 {
     LOG_INFO("%{public}s scn:%hhu, mtu:%hu", __func__, scn, mtu);
 
+    if (g_serverList == NULL) {
+        LOG_DEBUG("%{public}s Server list is NULL.", __func__);
+        return NULL;
+    }
+
     RfcommServerInfo *server = malloc(sizeof(RfcommServerInfo));
     if (server == NULL) {
         return NULL;
@@ -98,6 +103,11 @@ RfcommServerInfo *RfcommCreateServer(
 void RfcommRemoveServer(RfcommServerInfo *server)
 {
     LOG_INFO("%{public}s", __func__);
+
+    if (g_serverList == NULL) {
+        LOG_DEBUG("%{public}s Server list is NULL.", __func__);
+        return;
+    }
 
     ListRemoveNode(g_serverList, server);
 
