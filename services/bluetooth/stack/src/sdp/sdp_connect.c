@@ -1611,12 +1611,17 @@ int SdpClientConnect(SdpClientRequest *request)
         /// Use existed channel
         if ((connect->inConnState == SDP_STATE_CONNECTED) && (connect->outConnState == SDP_STATE_CONNECTED)) {
             /// Channel idle and send packet
-            if (connect->timer != NULL) {
-                AlarmCancel(connect->timer);
+            SdpClientRequest *tempRequest = SdpFindRequestByAddress(&connect->addr);
+            if (tempRequest == NULL) {
+                if (connect->timer != NULL) {
+                    AlarmCancel(connect->timer);
+                }
+                request->packetState = SDP_PACKET_SEND;
+                SdpAddRequest(request);
+                SdpSendRequest(connect->lcid, request->transactionId, 0, NULL, request->packet);
+            } else {
+                SdpAddRequest(request);
             }
-            request->packetState = SDP_PACKET_SEND;
-            SdpAddRequest(request);
-            SdpSendRequest(connect->lcid, request->transactionId, 0, NULL, request->packet);
         } else if ((connect->inConnState == SDP_STATE_DISCONNECT) && (connect->outConnState == SDP_STATE_DISCONNECT)) {
             /// Create new channel
             SdpAddRequest(request);
