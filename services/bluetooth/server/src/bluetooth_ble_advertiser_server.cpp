@@ -82,7 +82,6 @@ struct BluetoothBleAdvertiserServer::impl {
 
     RemoteObserverList<IBluetoothBleAdvertiseCallback> observers_;
     std::unique_ptr<BleAdvertiserCallback> observerImp_ = std::make_unique<BleAdvertiserCallback>();
-    IAdapterBle *bleService_ = nullptr;
     std::vector<sptr<IBluetoothBleAdvertiseCallback>> advCallBack_;
 };
 
@@ -91,16 +90,12 @@ public:
     explicit SystemStateObserver(BluetoothBleAdvertiserServer::impl *pimpl) : pimpl_(pimpl) {};
     void OnSystemStateChange(const BTSystemState state) override
     {
-        pimpl_->bleService_ =
-            static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
+        auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
         switch (state) {
             case BTSystemState::ON:
-                if (pimpl_->bleService_ != nullptr) {
-                    pimpl_->bleService_->RegisterBleAdvertiserCallback(*pimpl_->observerImp_.get());
+                if (bleService != nullptr) {
+                    bleService->RegisterBleAdvertiserCallback(*pimpl_->observerImp_.get());
                 }
-                break;
-            case BTSystemState::OFF:
-                pimpl_->bleService_ = nullptr;
                 break;
             default:
                 break;
@@ -116,9 +111,9 @@ BluetoothBleAdvertiserServer::impl::impl()
 
 BluetoothBleAdvertiserServer::impl::~impl()
 {
-    bleService_ = static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-    if (bleService_ != nullptr) {
-        bleService_->DeregisterBleAdvertiserCallback();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService != nullptr) {
+        bleService->DeregisterBleAdvertiserCallback();
     }
 }
 
@@ -129,10 +124,9 @@ BluetoothBleAdvertiserServer::BluetoothBleAdvertiserServer()
     pimpl->systemStateObserver_ = std::make_unique<impl::SystemStateObserver>(pimpl.get());
     IAdapterManager::GetInstance()->RegisterSystemStateObserver(*(pimpl->systemStateObserver_));
 
-    pimpl->bleService_ =
-        static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-    if (pimpl->bleService_ != nullptr) {
-        pimpl->bleService_->RegisterBleAdvertiserCallback(*pimpl->observerImp_.get());
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService != nullptr) {
+        bleService->RegisterBleAdvertiserCallback(*pimpl->observerImp_.get());
     }
 }
 
@@ -173,10 +167,8 @@ int BluetoothBleAdvertiserServer::StartAdvertising(const BluetoothBleAdvertiserS
         return BT_ERR_PERMISSION_FAILED;
     }
 
-    pimpl->bleService_ =
-        static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-
-    if (pimpl->bleService_ != nullptr) {
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService != nullptr) {
         BleAdvertiserSettingsImpl settingsImpl;
         settingsImpl.SetConnectable(settings.IsConnectable());
         settingsImpl.SetInterval(settings.GetInterval());
@@ -189,7 +181,7 @@ int BluetoothBleAdvertiserServer::StartAdvertising(const BluetoothBleAdvertiserS
         }
         BleAdvertiserDataImpl bleScanResponse = pimpl->ConvertAdvertisingData(scanResponse);
 
-        pimpl->bleService_->StartAdvertising(settingsImpl, bleAdvertiserData, bleScanResponse, advHandle);
+        bleService->StartAdvertising(settingsImpl, bleAdvertiserData, bleScanResponse, advHandle);
     }
     return NO_ERROR;
 }
@@ -202,11 +194,9 @@ int BluetoothBleAdvertiserServer::StopAdvertising(int32_t advHandle)
         return BT_ERR_PERMISSION_FAILED;
     }
 
-    pimpl->bleService_ =
-        static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-
-    if (pimpl->bleService_ != nullptr) {
-        pimpl->bleService_->StopAdvertising(advHandle);
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService != nullptr) {
+        bleService->StopAdvertising(advHandle);
     }
     return NO_ERROR;
 }
@@ -215,11 +205,9 @@ void BluetoothBleAdvertiserServer::Close(int32_t advHandle)
 {
     HILOGI("enter, advHandle: %{public}d", advHandle);
 
-    pimpl->bleService_ =
-        static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
-
-    if (pimpl->bleService_ != nullptr) {
-        pimpl->bleService_->Close(advHandle);
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService != nullptr) {
+        bleService->Close(advHandle);
     }
 }
 
@@ -270,13 +258,12 @@ void BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback(const sptr<IB
 int32_t BluetoothBleAdvertiserServer::GetAdvertiserHandle(int32_t &advHandle)
 {
     HILOGI("enter");
-    pimpl->bleService_ =
-        static_cast<IAdapterBle *>(IAdapterManager::GetInstance()->GetAdapter(BTTransport::ADAPTER_BLE));
 
-    if (pimpl->bleService_ == nullptr) {
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (bleService == nullptr) {
         return BT_ERR_INTERNAL_ERROR;
     }
-    advHandle = pimpl->bleService_->GetAdvertiserHandle();
+    advHandle = bleService->GetAdvertiserHandle();
     if (advHandle == BLE_INVALID_ADVERTISING_HANDLE) {
         return BT_ERR_INTERNAL_ERROR;
     }

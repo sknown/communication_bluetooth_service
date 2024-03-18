@@ -41,8 +41,10 @@ void ClassicBatteryObserverHf::OnBatteryLevelChanged(const RawAddress &device, i
 void ClassicBatteryObserverHf::SetBatteryLevel(const RawAddress &device, int batteryLevel) const
 {
     LOG_DEBUG("[ClassicBatteryObserverAg]::%{public}s", __func__);
-    IAdapterClassic *classicAdapter = (IAdapterClassic *)IAdapterManager::GetInstance()->GetAdapter(ADAPTER_BREDR);
-    classicAdapter->SetDeviceBatteryLevel(device, batteryLevel);
+    auto classicAdapter = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (classicAdapter) {
+        classicAdapter->SetDeviceBatteryLevel(device, batteryLevel);
+    }
 }
 
 ClassicBatteryObserverAg::ClassicBatteryObserverAg(utility::Dispatcher &dispatcher) : dispatcher_(&dispatcher)
@@ -64,8 +66,10 @@ void ClassicBatteryObserverAg::OnHfBatteryLevelChanged(const RawAddress &device,
 void ClassicBatteryObserverAg::SetBatteryLevel(const RawAddress &device, int batteryLevel) const
 {
     LOG_DEBUG("[ClassicBatteryObserverAg]::%{public}s", __func__);
-    IAdapterClassic *classicAdapter = (IAdapterClassic *)IAdapterManager::GetInstance()->GetAdapter(ADAPTER_BREDR);
-    classicAdapter->SetDeviceBatteryLevel(device, batteryLevel);
+    auto classicAdapter = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (classicAdapter) {
+        classicAdapter->SetDeviceBatteryLevel(device, batteryLevel);
+    }
 }
 }  // namespace bluetooth
 }  // namespace OHOS

@@ -160,7 +160,7 @@ GenericAccessService::~GenericAccessService()
 
 int GenericAccessService::RegisterService()
 {
-    IAdapterBle *adapterBle = (IAdapterBle *)(IAdapterManager::GetInstance()->GetAdapter(ADAPTER_BLE));
+    auto adapterBle = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     if (adapterBle != nullptr) {
         adapterBle->RegisterBleAdapterObserver(*adapterBleObserver_.get());
         auto state = adapterBle->GetAdvertisingStatus();
@@ -172,7 +172,7 @@ int GenericAccessService::RegisterService()
         central_addr_resolution_ = adapterBle->IsLlPrivacySupported() ? 1 : 0;
     }
 
-    IAdapterClassic *adapterClassic = (IAdapterClassic *)(IAdapterManager::GetInstance()->GetAdapter(ADAPTER_BREDR));
+    auto adapterClassic = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     if (adapterClassic != nullptr) {
         adapterClassic->RegisterClassicAdapterObserver(*adapterClassicObserver_.get());
         auto mode = adapterClassic->GetBtScanMode();
@@ -201,12 +201,12 @@ int GenericAccessService::RegisterService()
 void GenericAccessService::DeregisterService()
 {
     LOG_INFO("%{public}s:%{public}d:%{public}s", __FILE__, __LINE__, __FUNCTION__);
-    IAdapterBle *adapterBle = (IAdapterBle *)(IAdapterManager::GetInstance()->GetAdapter(ADAPTER_BLE));
+    auto adapterBle = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     if (adapterBle != nullptr) {
         adapterBle->DeregisterBleAdapterObserver(*adapterBleObserver_.get());
     }
 
-    IAdapterClassic *adapterClassic = (IAdapterClassic *)(IAdapterManager::GetInstance()->GetAdapter(ADAPTER_BREDR));
+    auto adapterClassic = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     if (adapterClassic != nullptr) {
         adapterClassic->DeregisterClassicAdapterObserver(*adapterClassicObserver_.get());
     }
