@@ -90,6 +90,15 @@ public:
     static void SdpHspHsCallback(const BtAddr *addr, const SdpService *serviceAry, uint16_t serviceNum, void *context);
 
     /**
+     * @brief Start a service discovery job for HFP.
+     *
+     * @param remoteAddr Remote device address.
+     * @param role Role in connection.
+     * @return Returns the error code of the discovery result.
+     */
+    int DoHfpDiscovery(const std::string &remoteAddr, int role);
+
+    /**
      * @brief Start a service discovery job for HSP HS.
      *
      * @param remoteAddr Remote device address.
