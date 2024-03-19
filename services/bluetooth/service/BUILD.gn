@@ -340,6 +340,8 @@ ohos_shared_library("btservice") {
     "//third_party/openssl:libcrypto_shared",
   ]
 
+  public_external_deps = [ "eventhandler:libeventhandler" ]
+
   external_deps = [
     "ability_base:want",
     "access_token:libaccesstoken_sdk",
