@@ -131,6 +131,7 @@ private:
     BLUETOOTH_DISALLOW_COPY_AND_ASSIGN(BluetoothHostServer);
     BLUETOOTH_DECLARE_IMPL();
     bool IsBtEnabled();
+    std::mutex oblock_ {};
 };
 }  // namespace Bluetooth
 }  // namespace OHOS
