@@ -58,6 +58,9 @@ public:
     int A2dpOffloadSessionPathRequest(const RawAddress &device,
         const std::vector<BluetoothA2dpStreamInfo> &info) override;
     BluetoothA2dpOffloadCodecStatus GetOffloadCodecStatus(const RawAddress &device) override;
+    int EnableAutoPlay(const RawAddress &device) override;
+    int DisableAutoPlay(const RawAddress &device, const int duration) override;
+    int GetAutoPlayDisabledDuration(const RawAddress &device, int &duration) override;
 
 private:
     BLUETOOTH_DECLARE_IMPL();

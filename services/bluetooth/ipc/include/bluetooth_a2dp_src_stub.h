@@ -56,6 +56,9 @@ private:
     ErrCode OffloadStopPlayingInner(MessageParcel &data, MessageParcel &reply);
     ErrCode A2dpOffloadSessionPathRequestInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetOffloadCodecStatusInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode EnableAutoPlayInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode DisableAutoPlayInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode GetAutoPlayDisabledDurationInner(MessageParcel &data, MessageParcel &reply);
 
     using BluetoothA2dpSrcServerFunc = ErrCode (BluetoothA2dpSrcStub::*)(MessageParcel &data, MessageParcel &reply);
     std::map<uint32_t, BluetoothA2dpSrcServerFunc> memberFuncMap_;
