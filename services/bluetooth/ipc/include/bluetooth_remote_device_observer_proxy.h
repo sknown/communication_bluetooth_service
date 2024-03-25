@@ -36,7 +36,9 @@ public:
     void OnRemoteCodChanged(const BluetoothRawAddress &device, int32_t cod) override;
     void OnRemoteBatteryLevelChanged(const BluetoothRawAddress &device, int32_t batteryLevel) override;
     void OnAclStateChanged(const BluetoothRawAddress &device, int state, unsigned int reason) override;
-
+    void OnRemoteBatteryChanged(const BluetoothRawAddress &device, const BluetoothBatteryInfo &batteryInfo) override;
+    void OnRemoteBatteryCommonInfoReport(const BluetoothRawAddress &device,
+        const std::vector<uint8_t> &value) override;
 private:
     ErrCode InnerTransact(uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply);
     static inline BrokerDelegator<BluetoothRemoteDeviceObserverproxy> delegator_;

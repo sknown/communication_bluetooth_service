@@ -324,6 +324,17 @@ public:
         return;
     }
 
+    void OnRemoteBatteryChanged(const RawAddress &device,
+        const BluetoothBatteryInfo &batteryInfo) override
+    {
+        return;
+    };
+    void OnRemoteBatteryCommonInfoReport(const RawAddress &device,
+        const std::vector<uint8_t> &value) override
+    {
+        return；
+    };
+
     void OnPairStatusChanged(const BTTransport transport, const RawAddress &device, const int32_t status) override
     {
         HILOGI("device: %{public}s, status: %{public}d", GET_ENCRYPT_ADDR(device), status);
@@ -535,6 +546,17 @@ public:
     {
         return;
     }
+
+    void OnRemoteBatteryChanged(const RawAddress &device,
+        const BluetoothBatteryInfo &batteryInfo) override
+    {
+        return;
+    };
+    void OnRemoteBatteryCommonInfoReport(const RawAddress &device,
+    const std::vector<uint8_t> &value) override
+    {
+        return；
+    };
 
 private:
     BluetoothHostServer::impl *impl_ = nullptr;

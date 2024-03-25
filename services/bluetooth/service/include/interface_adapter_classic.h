@@ -112,6 +112,26 @@ public:
      * @since 6
      */
     virtual void OnDeviceAddrChanged(const std::string &address) = 0;
+
+    /**
+     * @brief Remote device battery info observer.
+     *
+     * @param device Remote device.
+     * @param batteryInfo Remote device batteryInfo
+     * @since 12
+     */
+    virtual void OnRemoteBatteryChange(const RawAddress &device, const DeviceBatteryInfo &batteryInfo)
+    {};
+
+    /**
+     * @brief Remote device common value observer.
+     *
+     * @param device Remote device.
+     * @param value Remote device report info
+     * @since 12
+     */
+    virtual void OnRemoteDeviceCommonInfoReport(const RawAddress &device, const std::vector<uint8_t> &value)
+    {};
 };
 
 /**

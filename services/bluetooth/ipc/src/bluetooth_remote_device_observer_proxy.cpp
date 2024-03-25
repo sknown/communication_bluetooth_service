@@ -215,6 +215,17 @@ void BluetoothRemoteDeviceObserverproxy::OnAclStateChanged(const BluetoothRawAdd
     return;
 }
 
+void BluetoothRemoteDeviceObserverproxy:: OnRemoteBatteryChanged(const BluetoothRawAddress &device,
+    const BluetoothBatteryInfo &batteryInfo)
+{
+    return;
+};
+void BluetoothRemoteDeviceObserverproxy:: OnRemoteBatteryCommonInfoReport(const BluetoothRawAddress &device,
+    const std::vector<uint8_t> &value)
+{
+    return；
+};
+
 ErrCode BluetoothRemoteDeviceObserverproxy::InnerTransact(
     uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply)
 {
