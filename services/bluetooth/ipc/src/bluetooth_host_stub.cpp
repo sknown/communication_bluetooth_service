@@ -780,8 +780,8 @@ ErrCode BluetoothHostStub::SetDeviceAliasInner(MessageParcel &data, MessageParce
         HILOGE("BluetoothHostStub::SetDeviceAlias aliasName failed");
         return TRANSACTION_ERR;
     }
-    bool result = SetDeviceAlias(address, aliasName);
-    bool ret = reply.WriteBool(result);
+    int32_t res = SetDeviceAlias(address, aliasName);
+    bool ret = reply.WriteInt32(res);
     if (!ret) {
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;

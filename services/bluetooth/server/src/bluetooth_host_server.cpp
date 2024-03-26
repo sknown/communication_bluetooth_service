@@ -1369,7 +1369,7 @@ std::string BluetoothHostServer::GetDeviceAlias(const std::string &address)
     return INVALID_NAME;
 }
 
-bool BluetoothHostServer::SetDeviceAlias(const std::string &address, const std::string &aliasName)
+int32_t BluetoothHostServer::SetDeviceAlias(const std::string &address, const std::string &aliasName)
 {
     HILOGI("address: %{public}s, aliasName: %{public}s", GetEncryptAddr(address).c_str(), aliasName.c_str());
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
@@ -1379,11 +1379,11 @@ bool BluetoothHostServer::SetDeviceAlias(const std::string &address, const std::
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     if (IsBtEnabled() && classicService) {
         RawAddress addr(address);
-        return classicService->SetAliasName(addr, aliasName);
+        return classicService->SetAliasName(addr, aliasName) ? BT_NO_ERROR : BT_ERR_INTERNAL_ERROR;
     } else {
         HILOGE("BT current state is not enabled");
     }
-    return false;
+    return BT_ERR_INVALID_STATE;
 }
 
 int32_t BluetoothHostServer::GetDeviceBatteryLevel(const std::string &address)
