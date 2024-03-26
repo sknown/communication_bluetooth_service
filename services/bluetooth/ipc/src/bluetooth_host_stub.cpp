@@ -155,7 +155,7 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
             std::bind(&BluetoothHostStub::SetDeviceAliasInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
         {BluetoothHostInterfaceCode::GET_DEVICE_BATTERY_LEVEL,
-            std::bind(&BluetoothHostStub::GetDeviceBatteryLevelInner, std::placeholders::_1, std::placeholders::_2,
+            std::bind(&BluetoothHostStub::GetRemoteDeviceBatteryInfoInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
         {BluetoothHostInterfaceCode::GET_PAIR_STATE,
             std::bind(&BluetoothHostStub::GetPairStateInner, std::placeholders::_1, std::placeholders::_2,
@@ -789,19 +789,8 @@ ErrCode BluetoothHostStub::SetDeviceAliasInner(MessageParcel &data, MessageParce
     return NO_ERROR;
 }
 
-ErrCode BluetoothHostStub::GetDeviceBatteryLevelInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothHostStub::GetRemoteDeviceBatteryInfoInner(MessageParcel &data, MessageParcel &reply)
 {
-    std::string address;
-    if (!data.ReadString(address)) {
-        HILOGE("BluetoothHostStub::GetDeviceBatteryLevel address failed");
-        return TRANSACTION_ERR;
-    }
-    int result = GetDeviceBatteryLevel(address);
-    bool ret = reply.WriteInt32(result);
-    if (!ret) {
-        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
-    }
     return NO_ERROR;
 }
 
