@@ -324,6 +324,17 @@ public:
         return;
     }
 
+    void OnRemoteBatteryChanged(const RawAddress &device,
+        const BluetoothBatteryInfo &batteryInfo) override
+    {
+        return;
+    };
+    void OnRemoteDeviceCommonInfoReport(const RawAddress &device,
+        const std::vector<uint8_t> &value) override
+    {
+        return；
+    };
+
     void OnPairStatusChanged(const BTTransport transport, const RawAddress &device, const int32_t status) override
     {
         HILOGI("device: %{public}s, status: %{public}d", GET_ENCRYPT_ADDR(device), status);
@@ -393,18 +404,18 @@ public:
         });
     }
 
-    void OnRemoteBatteryLevelChanged(const RawAddress &device, const int32_t batteryLevel) override
-    {
-        HILOGI("device: %{public}s, batteryLevel: %{public}d", GET_ENCRYPT_ADDR(device), batteryLevel);
-        impl_->remoteObservers_.ForEach([this, device, batteryLevel](IBluetoothRemoteDeviceObserver *observer) {
-            int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
-            if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
-                HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
-                return;
-            }
-            observer->OnRemoteBatteryLevelChanged(device, batteryLevel);
-        });
-    }
+    // void OnRemoteBatteryLevelChanged(const RawAddress &device, const int32_t batteryLevel) override
+    // {
+    //     HILOGI("device: %{public}s, batteryLevel: %{public}d", GET_ENCRYPT_ADDR(device), batteryLevel);
+    //     impl_->remoteObservers_.ForEach([this, device, batteryLevel](IBluetoothRemoteDeviceObserver *observer) {
+    //         int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
+    //         if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
+    //             HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
+    //             return;
+    //         }
+    //         observer->OnRemoteBatteryLevelChanged(device, batteryLevel);
+    //     });
+    // }
 
 private:
     BluetoothHostServer::impl *impl_ = nullptr;
@@ -535,6 +546,17 @@ public:
     {
         return;
     }
+
+    void OnRemoteBatteryChanged(const RawAddress &device,
+        const BluetoothBatteryInfo &batteryInfo) override
+    {
+        return;
+    };
+    void OnRemoteDeviceCommonInfoReport(const RawAddress &device,
+    const std::vector<uint8_t> &value) override
+    {
+        return；
+    };
 
 private:
     BluetoothHostServer::impl *impl_ = nullptr;
@@ -1386,17 +1408,11 @@ bool BluetoothHostServer::SetDeviceAlias(const std::string &address, const std::
     return false;
 }
 
-int32_t BluetoothHostServer::GetDeviceBatteryLevel(const std::string &address)
+
+
+int32_t BluetoothHostServer::GetRemoteDeviceBatteryInfo(const std::string &address, BluetoothBatteryInfo &info)
 {
-    HILOGI("address: %{public}s", GetEncryptAddr(address).c_str());
-    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
-    if (IsBtEnabled() && classicService) {
-        RawAddress addr(address);
-        return classicService->GetDeviceBatteryLevel(addr);
-    } else {
-        HILOGE("BT current state is not enabled");
-    }
-    return INVALID_VALUE;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostServer::GetPairState(int32_t transport, const std::string &address, int32_t &pairState)

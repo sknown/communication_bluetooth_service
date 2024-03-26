@@ -34,6 +34,7 @@
 #define INTERFACE_ADAPTER_CLASSIC_H
 
 #include "interface_adapter.h"
+#include "../parcel/bluetooth_device_battery_info.h"
 
 namespace OHOS {
 namespace bluetooth {
@@ -182,7 +183,13 @@ public:
      * @param batteryLevel Remote device battery Level.
      * @since 6
      */
-    virtual void OnRemoteBatteryLevelChanged(const RawAddress &device, int batteryLevel) = 0;
+    // virtual void OnRemoteBatteryLevelChanged(const RawAddress &device, int batteryLevel) = 0;
+
+    virtual void OnRemoteBatteryChanged(const RawAddress &device, const BluetoothBatteryInfo &batteryInfo)
+    {};
+
+    virtual void OnRemoteDeviceCommonInfoReport(const RawAddress &device, const std::vector<uint8_t> &value)
+    {};
 };
 
 /**
@@ -235,7 +242,7 @@ public:
      * @return Returns remote device battery level.
      * @since 6
      */
-    virtual int GetDeviceBatteryLevel(const RawAddress &device) const = 0;
+    // virtual int GetRemoteDeviceBatteryInfo(const RawAddress &device, BluetoothBatteryInfo &info) const = 0;
 
     /**
      * @brief Set remote device battery level.
