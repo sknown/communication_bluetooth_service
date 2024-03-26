@@ -2419,9 +2419,9 @@ void ClassicAdapter::SendRemoteBatteryLevelChanged(const RawAddress &device, int
 {
     HILOGI("addr: %{public}s, batteryLevel: %{public}d", GetEncryptAddr(device.GetAddress()).c_str(), batteryLevel);
 
-    pimpl->remoteObservers_.ForEach([device, batteryLevel](IClassicRemoteDeviceObserver &observer) {
-        observer.OnRemoteBatteryLevelChanged(device, batteryLevel);
-    });
+    // pimpl->remoteObservers_.ForEach([device, batteryLevel](IClassicRemoteDeviceObserver &observer) {
+    //     observer.OnRemoteBatteryLevelChanged(device, batteryLevel);
+    // });
 }
 
 bool ClassicAdapter::IsHfpCodSupported(const RawAddress &device)
