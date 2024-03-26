@@ -400,7 +400,6 @@ public:
      * @return Returns device discovery end time.
      */
     long GetBtDiscoveryEndMillis() const override;
-    int GetRemoteDeviceBatteryInfo(const RawAddress &device, BluetoothBatteryInfo &info) const override;
     void SetDeviceBatteryLevel(const RawAddress &device, int batteryLevel) const override;
     bool IsHfpCodSupported(const RawAddress &device) override;
 
