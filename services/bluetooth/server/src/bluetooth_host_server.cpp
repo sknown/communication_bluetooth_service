@@ -329,7 +329,7 @@ public:
     {
         return;
     };
-    void OnRemoteBatteryCommonInfoReport(const RawAddress &device,
+    void OnRemoteDeviceCommonInfoReport(const RawAddress &device,
         const std::vector<uint8_t> &value) override
     {
         return；
@@ -552,7 +552,7 @@ public:
     {
         return;
     };
-    void OnRemoteBatteryCommonInfoReport(const RawAddress &device,
+    void OnRemoteDeviceCommonInfoReport(const RawAddress &device,
     const std::vector<uint8_t> &value) override
     {
         return；

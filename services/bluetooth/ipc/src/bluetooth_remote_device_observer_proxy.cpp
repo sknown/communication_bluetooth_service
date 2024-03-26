@@ -220,7 +220,7 @@ void BluetoothRemoteDeviceObserverproxy:: OnRemoteBatteryChanged(const Bluetooth
 {
     return;
 };
-void BluetoothRemoteDeviceObserverproxy:: OnRemoteBatteryCommonInfoReport(const BluetoothRawAddress &device,
+void BluetoothRemoteDeviceObserverproxy:: OnRemoteDeviceCommonInfoReport(const BluetoothRawAddress &device,
     const std::vector<uint8_t> &value)
 {
     return;

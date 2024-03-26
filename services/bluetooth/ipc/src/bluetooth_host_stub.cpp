@@ -154,7 +154,7 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SET_DEVICE_ALIAS,
             std::bind(&BluetoothHostStub::SetDeviceAliasInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::GET_DEVICE_BATTERY_LEVEL,
+        {BluetoothHostInterfaceCode::GET_DEVICE_BATTERY_INFO,
             std::bind(&BluetoothHostStub::GetRemoteDeviceBatteryInfoInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
         {BluetoothHostInterfaceCode::GET_PAIR_STATE,
