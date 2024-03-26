@@ -1408,17 +1408,11 @@ bool BluetoothHostServer::SetDeviceAlias(const std::string &address, const std::
     return false;
 }
 
-int32_t BluetoothHostServer::GetDeviceBatteryLevel(const std::string &address)
+
+
+int32_t BluetoothHostServer::GetRemoteDeviceBatteryInfo(const std::string &address, BluetoothBatteryInfo &info)
 {
-    HILOGI("address: %{public}s", GetEncryptAddr(address).c_str());
-    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
-    if (IsBtEnabled() && classicService) {
-        RawAddress addr(address);
-        return classicService->GetDeviceBatteryLevel(addr);
-    } else {
-        HILOGE("BT current state is not enabled");
-    }
-    return INVALID_VALUE;
+    return NO_ERROR;
 }
 
 int32_t BluetoothHostServer::GetPairState(int32_t transport, const std::string &address, int32_t &pairState)

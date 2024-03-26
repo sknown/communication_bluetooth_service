@@ -2390,16 +2390,20 @@ int ClassicAdapter::CheckSspConfirmType(int remoteIo, int type) const
     return confirmType;
 }
 
-int ClassicAdapter::GetDeviceBatteryLevel(const RawAddress &device) const
+// int ClassicAdapter::GetDeviceBatteryLevel(const RawAddress &device) const
+// {
+//     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+//     int batteryLevel = 0;
+//     auto it = devices_.find(device.GetAddress());
+//     if (it != devices_.end()) {
+//         batteryLevel = it->second->GetBatteryLevel();
+//     }
+//     HILOGI("batteryLevel: %{public}d", batteryLevel);
+//     return batteryLevel;
+// }
+int ClassicAdapter::GetRemoteDeviceBatteryInfo(const std::string &address, BluetoothBatteryInfo &info)
 {
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
-    int batteryLevel = 0;
-    auto it = devices_.find(device.GetAddress());
-    if (it != devices_.end()) {
-        batteryLevel = it->second->GetBatteryLevel();
-    }
-    HILOGI("batteryLevel: %{public}d", batteryLevel);
-    return batteryLevel;
+    return NO_ERROR;
 }
 
 void ClassicAdapter::SetDeviceBatteryLevel(const RawAddress &device, int batteryLevel) const

@@ -120,7 +120,7 @@ public:
      * @param batteryInfo Remote device batteryInfo
      * @since 12
      */
-    virtual void OnRemoteBatteryChange(const RawAddress &device, const DeviceBatteryInfo &batteryInfo)
+    virtual void OnRemoteBatteryChange(const RawAddress &device, const BluetoothBatteryInfo &batteryInfo)
     {};
 
     /**
@@ -207,8 +207,7 @@ public:
     virtual void OnRemoteBatteryChanged(const BluetoothRawAddress &device, const BluetoothBatteryInfo &batteryInfo)
     {};
 
-    virtual void OnRemoteDeviceCommonInfoReport(const BluetoothRawAddress &device,
-        const std::vector<uint8_t> &value)
+    virtual void OnRemoteDeviceCommonInfoReport(const RawAddress &device, const std::vector<uint8_t> &value)
     {};
 };
 
@@ -262,7 +261,7 @@ public:
      * @return Returns remote device battery level.
      * @since 6
      */
-    virtual int GetDeviceBatteryLevel(const RawAddress &device) const = 0;
+    virtual int GetRemoteDeviceBatteryInfo(const RawAddress &device, BluetoothBatteryInfo &info) const = 0;
 
     /**
      * @brief Set remote device battery level.
