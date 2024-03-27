@@ -14,10 +14,10 @@
  */
 import image from '@ohos.multimedia.image'
 import fileio from '@ohos.fileio'
-import prompt from '@ohos.prompt'
 import mediaLibrary from '@ohos.multimedia.mediaLibrary'
 import DateTimeUtil from './DateTimeUtil'
 import Logger from './Logger'
+import promptAction from '@ohos.promptAction';
 
 const TAG: string = '[MediaUtils]'
 
@@ -47,12 +47,12 @@ class MediaUtils {
     imagePackerApi.release()
     try {
       await fileio.write(fd, arrayBuffer)
-    } catch (err) {
+    } catch(err) {
       Logger.error(`write failed, code is ${err.code}, message is ${err.message}`)
     }
     await fileAsset.close(fd)
     Logger.info(TAG, `write done`)
-    prompt.showToast({
+    promptAction.showToast({
       message: '图片保存成功', duration: 1000
     })
   }
