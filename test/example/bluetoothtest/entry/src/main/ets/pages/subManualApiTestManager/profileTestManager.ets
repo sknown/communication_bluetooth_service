@@ -13,11 +13,10 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
-
-import router from '@system.router';
+import { myParams } from '../../Utils/common'
+import router from '@ohos.router';
 import { TestData } from '../../MainAbility/model/testData'
-import { initProfileManagerApiData } from '../../MainAbility/model/testDataModelsManager'
+import { initA2dpSourceProfileManagerApiData } from '../../MainAbility/model/testDataModelsManager'
 import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
 import { ContentTable } from '../../Component/contentTable';
@@ -30,24 +29,23 @@ import btmProfileModel from '../../MainAbility/model/btmProfileModel';
 @Entry
 @Component
 struct ProfileTestManager {
-  private deviceId = router.getParams().deviceId;
-  private testItem: TestData = router.getParams().testId;
+  private testItem: TestData = (router.getParams() as myParams).testItem
 
   aboutToAppear() {
-    btmProfileModel.initProfile()
+    // btmProfileModel.initProfile()
   }
 
   build() {
     Column() {
-      Stack( { alignContent : Alignment.TopStart } ) {
-        TestImageDisplay( { testItem : this.testItem } )
-        PageTitle( { testItem : this.testItem } )
+      Stack({ alignContent : Alignment.TopStart }) {
+        TestImageDisplay({ testItem : this.testItem })
+        PageTitle({ testItem : this.testItem })
       }
 
-      ContentTable( { testItem : this.testItem , apiItems : initProfileManagerApiData() } )
+      ContentTable({ testItem : this.testItem , apiItems : initA2dpSourceProfileManagerApiData() })
     }
-    .backgroundColor( $r( "sys.color.ohos_id_color_sub_background" ) )
-    .height( '100%' )
-    .alignItems( VerticalAlign.Top )
+    .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
+    .height('100%')
+    .alignItems(HorizontalAlign.Start)
   }
 }
