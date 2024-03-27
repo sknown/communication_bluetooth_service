@@ -12,10 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
 
-import Router from '@system.router';
-import prompt from '@system.prompt';
+import router from '@ohos.router';
+import promptAction from '@ohos.promptAction'
 
 const PAGE_URI_GET_A2DP_SOURCE_PROFILE_MANAGER = 'pages/subProfileTestManager/a2dpSourceProfileTestManager';
 const PAGE_URI_GET_HANDS_FREE_AUDIO_GATEWAY_PROFILE_MANAGER = 'pages/subProfileTestManager/handsFreeAudioGatewayProfileTestManager';
@@ -24,29 +23,29 @@ const PAGE_URI_GET_Pan_NETWORK_PROFILE_MANAGER = 'pages/subProfileTestManager/pa
 
 
 export function testA2dpSourceProfileManager(): string {
-  Router.push( { uri : PAGE_URI_GET_A2DP_SOURCE_PROFILE_MANAGER } )
+  router.pushUrl({ url : PAGE_URI_GET_A2DP_SOURCE_PROFILE_MANAGER })
   let message = "跳转成功"
-  prompt.showToast( { message : message } )
+  promptAction.showToast({ message : message })
   return message
 }
 
 export function testHandsFreeAudioGatewayProfileManager(): string {
-  Router.push( { uri : PAGE_URI_GET_HANDS_FREE_AUDIO_GATEWAY_PROFILE_MANAGER } )
+  router.pushUrl({ url : PAGE_URI_GET_HANDS_FREE_AUDIO_GATEWAY_PROFILE_MANAGER })
   let message = "跳转成功"
-  prompt.showToast( { message : message } )
+  promptAction.showToast({ message : message })
   return message
 }
 
 export function testHidHostProfileManager(): string {
-  Router.push( { uri : PAGE_URI_GET_HID_HOST_PROFILE_MANAGER } )
+  router.pushUrl({ url : PAGE_URI_GET_HID_HOST_PROFILE_MANAGER })
   let message = "跳转成功"
-  prompt.showToast( { message : message } )
+  promptAction.showToast({ message : message })
   return message
 }
 
 export function testPanNetworkProfileManager(): string {
-  Router.push( { uri : PAGE_URI_GET_Pan_NETWORK_PROFILE_MANAGER } )
+  router.pushUrl({ url : PAGE_URI_GET_Pan_NETWORK_PROFILE_MANAGER })
   let message = "跳转成功"
-  prompt.showToast( { message : message } )
+  promptAction.showToast({ message : message })
   return message
 }
