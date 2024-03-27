@@ -878,7 +878,7 @@ int BTSTACK_API BTM_WriteVoiceSetting(uint16_t voiceSetting);
  * @param maxSize The length of path.
  * @return Returns <b>BT_SUCCESS</b> if the operation is successful; returns others if the operation fails.
  */
-int BTSTACK_API BTM_SetSnoopOutputMaxsize(uint16_t maxSize);
+static int BTSTACK_API BTM_SetSnoopOutputMaxsize(uint16_t maxSize);
 
 /**
  * @brief Set snoop file output path.
