@@ -13,17 +13,15 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
-
+import { BTAutoArrayItem , myParams } from '../../Utils/common'
+import promptAction from '@ohos.promptAction';
 import ConfigData from '../../Utils/ConfigData';
-import router from '@system.router';
+import router from '@ohos.router';
 import { TestData } from '../../MainAbility/model/testData'
 import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
-import { initBleAutoData , BleAutoTestCase } from '../../MainAbility/model/autoTestDataModels'
+import { BleAutoTestCase , initBleAutoData } from '../../MainAbility/model/autoTestDataModels'
 import { AutoContentTable } from '../../Component/autoContentTable'
-import * as BLEInterface from '../../MainAbility/model/bleInterface'
-import prompt from '@system.prompt';
 
 /**
  *  BleAutoTest Page Of Bluetooth test
@@ -35,136 +33,145 @@ struct BleAutoTest {
   @State message: string = 'BleAutoTest';
   //  @State textMessage: string = 'null';
   @State testMessage: string = "";
-  private testItem: TestData = router.getParams().testId;
+  private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
-  @StorageLink( "bleAutoTestMessage" ) bleAutoTestMessage: string = ""
+  @StorageLink("bleAutoTestMessage") bleAutoTestMessage: string = ""
 
   aboutToAppear() {
-    AppStorage.SetOrCreate( 'txtScanFilterDeviceId' , "10:2C:6B:11:B3:17" ); // 6c:96:d7:3d:87:6f
-    AppStorage.SetOrCreate( 'txtScanFilterName' , "dudu-tiger" );
-    AppStorage.SetOrCreate( 'txtScanFilterServiceUuid' , "0000180A-0000-1000-8000-00805f9b34fb" );
-    AppStorage.SetOrCreate( 'txtScanOptions_interval' , "0" );
-    AppStorage.SetOrCreate( 'txtScanOptionsDutyMode' , '0' );
-    AppStorage.SetOrCreate( 'txtScanOptionsMatchMode' , '0' );
-    AppStorage.SetOrCreate( 'cbxBleScanFilter' , true );
-    AppStorage.SetOrCreate( 'cbxBleScanOptions' , true );
+    AppStorage.setOrCreate('txtScanFilterDeviceId' , "10:2C:6B:11:B3:17"); // 6c:96:d7:3d:87:6f
+    AppStorage.setOrCreate('txtScanFilterName' , "dudu-tiger");
+    AppStorage.setOrCreate('txtScanFilterServiceUuid' , "0000180A-0000-1000-8000-00805f9b34fb");
+    AppStorage.setOrCreate('txtScanOptions_interval' , "0");
+    AppStorage.setOrCreate('txtScanOptionsDutyMode' , '0');
+    AppStorage.setOrCreate('txtScanOptionsMatchMode' , '0');
+    AppStorage.setOrCreate('cbxBleScanFilter' , true);
+    AppStorage.setOrCreate('cbxBleScanOptions' , true);
   }
 
   build() {
     Column() {
-      Stack( { alignContent : Alignment.TopStart } ) {
-        TestImageDisplay( { testItem : this.testItem } )
-        PageTitle( { testItem : this.testItem } )
+      Stack({ alignContent : Alignment.TopStart }) {
+        TestImageDisplay({ testItem : this.testItem })
+        PageTitle({ testItem : this.testItem })
       }
 
-      Stack().height( "1vp" ).backgroundColor( "#000000" );
+      Stack().height("1vp").backgroundColor("#000000");
       Column() {
         Scroll() {
           Column() {
-            Text( "API验证:" )
-              .fontSize( "17vp" )
-              .margin( { top : "10vp" , bottom : "10vp" , left : "15vp" } )
-              .textAlign( TextAlign.Start )
-              .width( "100%" )
-            AutoContentTable( {
+            Text("API验证:")
+              .fontSize("17vp")
+              .margin({ top : "10vp" , bottom : "10vp" , left : "15vp" })
+              .textAlign(TextAlign.Start)
+              .width("100%")
+            AutoContentTable({
               testItem : this.testItem ,
               autoItems : initBleAutoData() ,
-              testMessage : this.testMessage ,
+              // testMessage : this.testMessage ,
               changeIndex : this.changeIndex
-            } )
+            })
           }
-          .width( "100%" )
-          .height( 280 )
+          .width("100%")
+          .height(280)
         }
-        .scrollBarWidth( 10 )
-        .scrollBar( BarState.Auto )
+        .scrollBarWidth(10)
+        .scrollBar(BarState.Auto)
 
-        Stack().height( "1vp" ).backgroundColor( "#000000" );
+        Stack().height("1vp").backgroundColor("#000000");
 
         Scroll() {
           Column() {
-            Text( "Debug日志:" )
-              .fontSize( "17vp" )
-              .margin( { top : "8vp" , bottom : "8vp" , left : "15vp" } )
-              .textAlign( TextAlign.Start )
-              .width( "100%" )
+            Text("Debug日志:")
+              .fontSize("17vp")
+              .margin({ top : "8vp" , bottom : "8vp" , left : "15vp" })
+              .textAlign(TextAlign.Start)
+              .width("100%")
             List() {
               ListItem() {
-                Text( "log:" + "\n" + this.bleAutoTestMessage )
-                  .fontSize( "17vp" )
-                  .margin( { top : "5vp" , left : "30vp" , right : "10vp" } )
-                  .textAlign( TextAlign.Start )
-                  .width( "90%" )
+                Text("log:" + "\n" + this.bleAutoTestMessage)
+                  .fontSize("17vp")
+                  .margin({ top : "5vp" , left : "30vp" , right : "10vp" })
+                  .textAlign(TextAlign.Start)
+                  .width("90%")
               }
             }
-            .height( "80%" )
-            .width( "90%" )
-            .backgroundColor( $r( "sys.color.ohos_id_color_foreground_contrary" ) )
+            .height("80%")
+            .width("90%")
+            .backgroundColor($r("sys.color.ohos_id_color_foreground_contrary"))
           }
-          .width( "100%" )
-          .height( 260 )
+          .width("100%")
+          .height(260)
         }
-        .scrollBarWidth( 10 )
-        .scrollBar( BarState.Auto )
+        .scrollBarWidth(10)
+        .scrollBar(BarState.Auto)
 
       }
-      .height( 500 )
-      .width( "100%" )
-      .backgroundColor( $r( "sys.color.ohos_id_color_sub_background" ) )
+      .height(500)
+      .width("100%")
+      .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
 
-      Stack().height( "1vp" ).backgroundColor( "#000000" );
+      Stack().height("1vp").backgroundColor("#000000");
       Column() {
-        Button( { type : ButtonType.Normal , stateEffect : true } ) {
+        Button({ type : ButtonType.Normal , stateEffect : true }) {
           Row() {
-            Text( '自动测试' ).fontSize( "24vp" ).fontColor( 0xffffff ).margin( { left : 5 , right : 5 } )
-          }.alignItems( VerticalAlign.Center )
+            Text('自动测试').fontSize("24vp").fontColor(0xffffff).margin({ left : 5 , right : 5 })
+          }.alignItems(VerticalAlign.Center)
         }
-        .borderRadius( 8 )
-        .backgroundColor( $r( "app.color.blue" ) )
-        .width( 180 )
-        .height( 50 )
-        .margin( { top : "15vp" } )
-        .onClick( async( event: ClickEvent ) => {
-          let self = this
-          let bleAutoTestMessage = ""
+        .borderRadius(8)
+        .backgroundColor($r("app.color.blue"))
+        .width(180)
+        .height(50)
+        .margin({ top : "15vp" })
+        .onClick(async(event: ClickEvent) => {
 
-          //拼装数组
-          var bleAutoArray = [ { name : "testSetLocalName" , para : [ "DaYuBlue" ] },
-                               { name : "testSetBluetoothScanMode" , para : [ 4, 0 ] } ]
-          let Interface = BleAutoTestCase.map( i => {
-            let para = bleAutoArray.some( itm => itm.name === i.api.name ) ? bleAutoArray.find( itm => itm.name === i.api.name ).para : []
-            return { name : i.api.name , para }
-          } )
-
-          //循环调用
-          async function forLoop() {
-            for ( let m = 0 ; m < Interface.length ; m ++ ) {
-              bleAutoTestMessage += BleAutoTestCase[m]["api"]( ... Interface[m].para ) + "\n"
-              self.changeIndex = m
-              await sleep( 1 )
-              AppStorage.SetOrCreate( "bleAutoTestMessage" , bleAutoTestMessage )
-            }
-          }
-
-          forLoop()
+          this.forLoop()
 
           let msg = ""
           msg = "测试"
-          console.log( msg )
-          prompt.showToast( { message : msg } )
-        } )
+          console.log(msg)
+          promptAction.showToast({ message : msg })
+        })
       }
-      .backgroundColor( $r( "sys.color.ohos_id_color_sub_background" ) )
-      .width( ConfigData.WH_100_100 )
-      .height( ConfigData.WH_100_100 );
+      .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
+      .width(ConfigData.WH_100_100)
+      .height(ConfigData.WH_100_100);
+    }
+  }
+
+  //循环调用
+  async forLoop() {
+    let bleAutoTestMessage = ""
+
+    //拼装数组
+    let bleAutoArray: Array<BTAutoArrayItem> = [
+      { name : "testSetLocalName" , para : [ "DaYuBlue" ] },
+      { name : "testSetBluetoothScanMode" , para : [ 4, 0 ] }
+    ]
+    let interfaces = BleAutoTestCase.map(i => {
+      let item = bleAutoArray.find(itm => itm.name === i.api.name);
+      let para = item ? item.para : []; // 确保 para 总是一个数组
+      return { name : i.api.name , para } as BTAutoArrayItem;
+    });
+
+    for ( let m = 0 ; m < interfaces.length ; m ++ ) {
+      // 检查 BleAutoTestCase 中对应的 api 是否是一个函数
+      if ( typeof BleAutoTestCase[ m ].api === "function" ) {
+        // 使用 TypeScript 的类型断言确保 para 是一个数组
+        bleAutoTestMessage += BleAutoTestCase[ m ].api(... interfaces[ m ].para) + "\n";
+      } else {
+        console.error(`在 BrAutoTestCase 中找不到方法: ${ BleAutoTestCase[ m ] }`);
+      }
+      this.changeIndex = m
+      await sleep(1)
+      AppStorage.setOrCreate("bleAutoTestMessage" , bleAutoTestMessage)
     }
   }
 }
 
-function sleep( time ) {
-  return new Promise(( resolve , reject ) => {
-    setTimeout( () => {
-      resolve()
-    } , time * 1000 )
-  })
+async function sleep(time: number): Promise<void> {
+  return new Promise<void>((resolve , reject) => {
+    setTimeout(() => {
+      resolve();
+    } , time * 1000);
+  });
 }
