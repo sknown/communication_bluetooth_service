@@ -25,41 +25,41 @@ struct profileConnState2 {
   @State currentClick: number = - 1;
   @State profileId: number = - 1;
   private stateProfile: string = ""
-  @State deviceId: string = AppStorage.Get( 'inputDeviceId' );
+  @State deviceId: string = AppStorage.get('inputDeviceId');
 
   build() {
     Row() {
       Column() {
         Row() {
-          Text( "目标设备MAC：" ).fontSize( "20vp" )
-          TextInput( { text : this.deviceId , placeholder : "请输入mac地址" } )
-            .fontSize( "20vp" )
-            .onChange( ( str ) => {
+          Text("目标设备MAC：").fontSize("20vp")
+          TextInput({ text : this.deviceId , placeholder : "请输入mac地址" })
+            .fontSize("20vp")
+            .onChange((str) => {
               this.deviceId = str;
-              AppStorage.SetOrCreate( 'inputDeviceId' , str )
-            } )
-            .width( '70%' )
+              AppStorage.setOrCreate('inputDeviceId' , str)
+            })
+            .width('70%')
         }
-        .backgroundColor( $r( "app.color.moon" ) )
-        .margin( { top : "20vp" , left : "20vp" , right : "20vp" } )
-        .alignItems( VerticalAlign.Center )
+        .backgroundColor($r("app.color.moon"))
+        .margin({ top : "20vp" , left : "20vp" , right : "20vp" })
+        .alignItems(VerticalAlign.Center)
 
         List() {
           ListItem() {
-            TitleComponent( {
+            TitleComponent({
               title : "A2DP_SOURCE" ,
               fontSize : '15vp' ,
-              bgColor : this.currentClick === 0 ? $r( 'app.color.font_color_007DFF' ) : $r( 'app.color.white_bg_color' )
-            } );
+              bgColor : this.currentClick === 0 ? $r('app.color.font_color_007DFF') : $r('app.color.white_bg_color')
+            });
           }
-          .padding( { top : 20 } )
-          .height( 80 )
-          .borderRadius( 10 )
-          .onClick( () => {
+          .padding({ top : 20 })
+          .height(80)
+          .borderRadius(10)
+          .onClick(() => {
             this.currentClick = 0;
             this.profileId = 1;
-            let ret = bt.getProfile( this.profileId ).getDeviceState( this.deviceId );
-            console.log( 'A2DP state is -' + ret );
+            let ret = bt.getProfile(this.profileId).getDeviceState(this.deviceId);
+            console.log('A2DP state is -' + ret);
             switch ( ret ) {
               case 0:
                 this.stateProfile = 'STATE_DISCONNECTED';
@@ -78,23 +78,23 @@ struct profileConnState2 {
                 break;
             }
             this.message = "当前A2DP的状态是：" + this.stateProfile;
-          } )
+          })
 
           ListItem() {
-            TitleComponent( {
+            TitleComponent({
               title : "HANDS_FREE_AUDIO_GATEWAY" ,
               fontSize : '15vp' ,
-              bgColor : this.currentClick === 1 ? $r( 'app.color.font_color_007DFF' ) : $r( 'app.color.white_bg_color' )
-            } );
+              bgColor : this.currentClick === 1 ? $r('app.color.font_color_007DFF') : $r('app.color.white_bg_color')
+            });
           }
-          .padding( { top : 20 } )
-          .height( 80 )
-          .borderRadius( 10 )
-          .onClick( () => {
+          .padding({ top : 20 })
+          .height(80)
+          .borderRadius(10)
+          .onClick(() => {
             this.currentClick = 1;
             this.profileId = 4;
-            let ret = bt.getProfile( this.profileId ).getDeviceState( this.deviceId );
-            console.log( 'HFP state is -' + ret );
+            let ret = bt.getProfile(this.profileId).getDeviceState(this.deviceId);
+            console.log('HFP state is -' + ret);
             switch ( ret ) {
               case 0:
                 this.stateProfile = 'STATE_DISCONNECTED';
@@ -113,23 +113,23 @@ struct profileConnState2 {
                 break;
             }
             this.message = "当前HFP的状态是：" + this.stateProfile;
-          } )
+          })
 
           ListItem() {
-            TitleComponent( {
+            TitleComponent({
               title : "HID_HOST" ,
               fontSize : '15vp' ,
-              bgColor : this.currentClick === 2 ? $r( 'app.color.font_color_007DFF' ) : $r( 'app.color.white_bg_color' )
-            } );
+              bgColor : this.currentClick === 2 ? $r('app.color.font_color_007DFF') : $r('app.color.white_bg_color')
+            });
           }
-          .padding( { top : 20 } )
-          .height( 80 )
-          .borderRadius( 10 )
-          .onClick( () => {
+          .padding({ top : 20 })
+          .height(80)
+          .borderRadius(10)
+          .onClick(() => {
             this.currentClick = 2;
             this.profileId = 6;
-            let ret = bt.getProfile( this.profileId ).getDeviceState( this.deviceId );
-            console.log( 'HID state is -' + ret );
+            let ret = bt.getProfile(this.profileId).getDeviceState(this.deviceId);
+            console.log('HID state is -' + ret);
             switch ( ret ) {
               case 0:
                 this.stateProfile = 'STATE_DISCONNECTED';
@@ -148,19 +148,19 @@ struct profileConnState2 {
                 break;
             }
             this.message = "当前HID的状态是：" + this.stateProfile;
-          } )
+          })
         }
-        .height( 300 )
-        .margin( 20 );
+        .height(300)
+        .margin(20);
 
-        Text( "接口调用结果：" + this.message )
-          .textAlign( TextAlign.Start )
-          .fontSize( '17fp' )
-          .backgroundColor( $r( "app.color.white" ) )
-      }.width( '100%' )
+        Text("接口调用结果：" + this.message)
+          .textAlign(TextAlign.Start)
+          .fontSize('17fp')
+          .backgroundColor($r("app.color.white"))
+      }.width('100%')
     }
-    .height( '100%' )
-    .alignItems( VerticalAlign.Top )
-    .backgroundColor( $r( "app.color.lead" ) )
+    .height('100%')
+    .alignItems(VerticalAlign.Top)
+    .backgroundColor($r("app.color.lead"))
   }
 }
