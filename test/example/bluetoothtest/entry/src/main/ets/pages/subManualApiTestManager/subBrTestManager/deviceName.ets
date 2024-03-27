@@ -14,7 +14,7 @@
  */
 import ConfigData from '../../../Utils/ConfigData';
 import BluetoothModel from '../../../MainAbility/model/BluetoothModel';
-import Router from '@system.router';
+import router from '@ohos.router';
 import InputMethod from '@ohos.inputmethod';
 import { PageTitle } from '../../../Component/pageTitle';
 /**
@@ -25,112 +25,111 @@ import { PageTitle } from '../../../Component/pageTitle';
 struct DeviceNameCard {
   private deviceName: string = BluetoothModel.getLocalName();
   private deviceInfo: any = ''
-  private aboutDeviceList: any[] = []
 
   build() {
     Column() {
-      GridContainer( {
+      GridContainer({
         columns : 12 ,
         sizeType : SizeType.Auto ,
-        gutter : vp2px( 1 ) === 2 ? '12vp' : '0vp' ,
-        margin : vp2px( 1 ) === 2 ? '24vp' : '0vp'
-      } ) {
-        Row( {} ) {
+        gutter : vp2px(1) === 2 ? '12vp' : '0vp' ,
+        margin : vp2px(1) === 2 ? '24vp' : '0vp'
+      }) {
+        Row({}) {
           Column() {
           }
-          .width( ConfigData.WH_100_100 )
-          .height( ConfigData.WH_100_100 )
-          .useSizeType( {
+          .width(ConfigData.WH_100_100)
+          .height(ConfigData.WH_100_100)
+          .useSizeType({
             xs : { span : 0 , offset : 0 } , sm : { span : 0 , offset : 0 } ,
             md : { span : 0 , offset : 0 } , lg : { span : 2 , offset : 0 }
-          } );
+          });
 
           Column() {
-            PageTitle( { detail : '设备名称' } )
+            PageTitle({ detail : '设备名称' })
 
-            TextInput( { text : this.deviceName } )
-              .placeholderFont( {
-                size : $r( "app.float.font_18" ) ,
+            TextInput({ text : this.deviceName })
+              .placeholderFont({
+                size : $r("app.float.font_18") ,
                 weight : FontWeight.Normal ,
                 style : FontStyle.Normal
-              } )
-              .type( InputType.Normal )
-              .enterKeyType( EnterKeyType.Done )
-              .caretColor( Color.Blue )
-              .padding( {
-                left : $r( 'sys.float.ohos_id_card_margin_start' ) ,
-                right : $r( 'sys.float.ohos_id_card_margin_end' )
-              } )
-              .height( $r( "app.float.wh_value_40" ) )
-              .borderRadius( 0 )
-              .backgroundColor( $r( 'app.color.color_00000000_transparent' ) )
-              .onChange( ( value: string ) => {
-                console.log( ConfigData.TAG + 'device name changed to: ' + JSON.stringify( value ) );
+              })
+              .type(InputType.Normal)
+              .enterKeyType(EnterKeyType.Done)
+              .caretColor(Color.Blue)
+              .padding({
+                left : $r('sys.float.ohos_id_card_margin_start') ,
+                right : $r('sys.float.ohos_id_card_margin_end')
+              })
+              .height($r("app.float.wh_value_40"))
+              .borderRadius(0)
+              .backgroundColor($r('app.color.color_00000000_transparent'))
+              .onChange((value: string) => {
+                console.log(ConfigData.TAG + 'device name changed to: ' + JSON.stringify(value));
                 this.deviceName = value;
-              } )
-              .onSubmit( ( enterKey ) => {
-                InputMethod.getInputMethodController().stopInput().then( ( ret ) => {
-                  console.log( `${ ConfigData.TAG }, enterType: ${ enterKey }, stopInput: ${ ret }` );
-                } );
-              } )
+              })
+              .onSubmit((enterKey) => {
+                InputMethod.getInputMethodController().stopInput().then((ret) => {
+                  console.log(`${ ConfigData.TAG }, enterType: ${ enterKey }, stopInput: ${ ret }`);
+                });
+              })
             Divider()
-              .padding( {
-                left : $r( 'sys.float.ohos_id_card_margin_start' ) ,
-                right : $r( 'sys.float.ohos_id_card_margin_end' )
-              } )
+              .padding({
+                left : $r('sys.float.ohos_id_card_margin_start') ,
+                right : $r('sys.float.ohos_id_card_margin_end')
+              })
 
             Column() {
               Blank()
-            }.height( ConfigData.WH_25_100 )
+            }.height(ConfigData.WH_25_100)
 
-            Flex( {
+            Flex({
               direction : FlexDirection.Row ,
               justifyContent : FlexAlign.Center ,
               alignItems : ItemAlign.Center
-            } ) {
+            }) {
               Row() {
-                ButtonComponent( { text : $r( "app.string.cancel" ) , isOnClick : () => {
-                  Router.back();
-                } } )
+                ButtonComponent({ text : $r("app.string.cancel") , isOnClick : () => {
+                  router.back();
+                } })
               }
-              .width( $r( "app.float.deviceName_button_width" ) )
-              .margin( { right : $r( "app.float.distance_12" ) } )
+              .width($r("app.float.deviceName_button_width"))
+              .margin({ right : $r("app.float.distance_12") })
 
               Row() {
-                ButtonComponent( { text : $r( "app.string.confirm" ) , isOnClick : () => {
-                  let ret = BluetoothModel.setLocalName( this.deviceName );
-                  AppStorage.SetOrCreate( 'setLocalNameRet' , ret );
-                  Router.back();
-                } } )
-              }.width( $r( "app.float.deviceName_button_width" ) )
+                ButtonComponent({ text : $r("app.string.confirm") , isOnClick : () => {
+                  let ret = BluetoothModel.setLocalName(this.deviceName);
+                  AppStorage.setOrCreate('setLocalNameRet' , ret);
+                  router.back();
+                } })
+              }.width($r("app.float.deviceName_button_width"))
             }
           }
-          .padding( { left : $r( 'app.float.distance_24' ) , right : $r( 'app.float.distance_24' ) } )
-          .width( ConfigData.WH_100_100 )
-          .height( ConfigData.WH_100_100 )
-          .useSizeType( {
+          .padding({ left : $r('app.float.distance_24') , right : $r('app.float.distance_24') })
+          .width(ConfigData.WH_100_100)
+          .height(ConfigData.WH_100_100)
+          .useSizeType({
             xs : { span : 12 , offset : 0 } , sm : { span : 12 , offset : 0 } ,
             md : { span : 12 , offset : 0 } , lg : { span : 8 , offset : 2 }
-          } );
+          });
 
           Column() {
           }
-          .width( ConfigData.WH_100_100 )
-          .height( ConfigData.WH_100_100 )
-          .useSizeType( {
+          .width(ConfigData.WH_100_100)
+          .height(ConfigData.WH_100_100)
+          .useSizeType({
             xs : { span : 0 , offset : 12 } , sm : { span : 0 , offset : 12 } ,
             md : { span : 0 , offset : 12 } , lg : { span : 2 , offset : 10 }
-          } )
+          })
         }
-        .width( ConfigData.WH_100_100 )
-        .height( ConfigData.WH_100_100 );
+        .width(ConfigData.WH_100_100)
+        .height(ConfigData.WH_100_100);
       }
-      .width( ConfigData.WH_100_100 )
-      .height( ConfigData.WH_100_100 );
+      .width(ConfigData.WH_100_100)
+      .height(ConfigData.WH_100_100);
     }
-    .backgroundColor( $r( "sys.color.ohos_id_color_sub_background" ) )
-    .width( ConfigData.WH_100_100 )
-    .height( ConfigData.WH_100_100 );
+    .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
+    .width(ConfigData.WH_100_100)
+    .height(ConfigData.WH_100_100);
   }
 }
 
@@ -144,29 +143,29 @@ struct ButtonComponent {
 
   build() {
     Column() {
-      Text( this.text )
-        .fontSize( $r( 'app.float.font_16' ) )
-        .fontWeight( FontWeight.Medium )
-        .lineHeight( $r( 'app.float.wh_value_22' ) )
-        .fontColor( $r( 'app.color.font_color_007DFF' ) )
-        .textAlign( TextAlign.Center )
-        .width( $r( 'app.float.deviceName_button_width' ) )
-        .height( $r( "app.float.wh_value_40" ) )
-        .borderRadius( $r( 'app.float.radius_20' ) )
-        .backgroundColor( !this.isTouched ? $r( "app.color.color_button_grey" ) : $r( "sys.color.ohos_id_color_foreground_contrary" ) )
-        .onTouch( ( event: TouchEvent ) => {
+      Text(this.text)
+        .fontSize($r('app.float.font_16'))
+        .fontWeight(FontWeight.Medium)
+        .lineHeight($r('app.float.wh_value_22'))
+        .fontColor($r('app.color.font_color_007DFF'))
+        .textAlign(TextAlign.Center)
+        .width($r('app.float.deviceName_button_width'))
+        .height($r("app.float.wh_value_40"))
+        .borderRadius($r('app.float.radius_20'))
+        .backgroundColor(!this.isTouched ? $r("app.color.color_button_grey") : $r("sys.color.ohos_id_color_foreground_contrary"))
+        .onTouch((event: TouchEvent) => {
           if ( event.type === TouchType.Down ) {
             this.isTouched = true;
           }
           if ( event.type === TouchType.Up ) {
             this.isTouched = false;
           }
-        } )
-        .onClick( () => {
+        })
+        .onClick(() => {
           this.isOnClick();
-        } )
+        })
     }
-    .width( ConfigData.WH_100_100 )
-    .align( Alignment.Center );
+    .width(ConfigData.WH_100_100)
+    .align(Alignment.Center);
   }
 }
