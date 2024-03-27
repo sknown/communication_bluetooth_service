@@ -13,10 +13,9 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
-
+import { myParams } from '../../Utils/common'
 import ConfigData from '../../Utils/ConfigData';
-import Router from '@system.router';
+import router from '@ohos.router';
 import { TestData } from '../../MainAbility/model/testData'
 import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
@@ -31,30 +30,30 @@ import { TestListItem } from '../../Component/testListItems';
 @Component
 struct GattTest {
   @State message: string = 'GattTest'
-  private testItem: TestData = Router.getParams().testId;
+  private testItem: TestData = (router.getParams() as myParams).testItem;
   private gattApiTestItems: TestData[] = initGattApiTestData();
 
   build() {
     Column() {
-      Stack( { alignContent : Alignment.TopStart } ) {
-        TestImageDisplay( { testItem : this.testItem } )
-        PageTitle( { testItem : this.testItem } )
+      Stack({ alignContent : Alignment.TopStart }) {
+        TestImageDisplay({ testItem : this.testItem })
+        PageTitle({ testItem : this.testItem })
       }
 
       List() {
-        ForEach( this.gattApiTestItems , item => {
+        ForEach(this.gattApiTestItems , (item: TestData) => {
           ListItem() {
-            TestListItem( {
+            TestListItem({
               testItem : item
-            } )
+            })
           }
-        } , item => item.id.toString() )
+        } , (item: TestData) => item.id)
       }
-      .height( '93%' )
-      .backgroundColor( $r( "app.color.lead" ) )
+      .height('93%')
+      .backgroundColor($r("app.color.lead"))
     }
-    .backgroundColor( $r( "sys.color.ohos_id_color_sub_background" ) )
-    .width( ConfigData.WH_100_100 )
-    .height( ConfigData.WH_100_100 );
+    .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
+    .width(ConfigData.WH_100_100)
+    .height(ConfigData.WH_100_100);
   }
 }
