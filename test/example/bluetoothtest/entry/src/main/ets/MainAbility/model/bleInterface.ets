@@ -13,17 +13,17 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
 
 /**
  * BLE Test interface Of Bluetooth test
  */
 
-import prompt from '@system.prompt';
 import BluetoothModel from './BluetoothModel'
 import bluetooth from '@ohos.bluetooth';
+import promptAction from '@ohos.promptAction';
+import { BleScanFilter , CurScanOptions } from '../../Utils/common'
 
-let gattServerInstance = null;
+let gattServerInstance: bluetooth.GattServer;
 
 export function testCreateGattServerDevice(): string {
   try {
@@ -42,27 +42,27 @@ export function testCreateGattServerDevice(): string {
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testCreateGattServerDevice. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testCreateGattServerDevice. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testCreateGattServerDevice. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-let gattClientDeviceInstance = null
+let gattClientDeviceInstance: bluetooth.GattClientDevice
 
 export function testCreateGattClientDevice(): string {
   try {
     let message = "test createGattClientDevice"
     let btState = bluetooth.getState();
-    let peripheralDeviceId = AppStorage.Get( 'peripheralDeviceId' );
+    let peripheralDeviceId: string = AppStorage.get('peripheralDeviceId') !;
     if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       message = "createGattClient start"
       if ( !gattClientDeviceInstance ) {
-        gattClientDeviceInstance = BluetoothModel.createGattClient( peripheralDeviceId );
+        gattClientDeviceInstance = BluetoothModel.createGattClient(peripheralDeviceId);
         message = "createGattClient:succeeds.";
       } else {
         message = "gattClient existed!";
@@ -72,12 +72,12 @@ export function testCreateGattClientDevice(): string {
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testCreateGattClientDevice. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testCreateGattClientDevice. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testCreateGattClientDevice. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -85,69 +85,69 @@ export function testCreateGattClientDevice(): string {
 export function testGetConnectedBLEDevices(): string {
   try {
     let connectedBleDevices = BluetoothModel.getConnectedBLEDevices();
-    let message = "getConnectedBLEDevices" + JSON.stringify( connectedBleDevices );
-    console.log( "getConnectedBLEDevices" + JSON.stringify( connectedBleDevices ) )
-    prompt.showToast( { message : message } )
+    let message = "getConnectedBLEDevices" + JSON.stringify(connectedBleDevices);
+    console.log("getConnectedBLEDevices" + JSON.stringify(connectedBleDevices))
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGetConnectedBLEDevices. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGetConnectedBLEDevices. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGetConnectedBLEDevices. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
 export function testStartBLEScan(): string {
   try {
-    console.log( "StartBLEScan -------------------------------" )
+    console.log("StartBLEScan -------------------------------")
     let btState = bluetooth.getState();
     let message = "test startBLEScan"
     if ( btState == bluetooth.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
       return message;
     }
-    let txtScanFilter_deviceId = AppStorage.Get( 'txtScanFilterDeviceId' );
-    let txtScanFilter_name = AppStorage.Get( 'txtScanFilterName' );
-    let txtScanFilter_serviceUuid = AppStorage.Get( 'txtScanFilterServiceUuid' );
-    let txtScanOptions_interval = AppStorage.Get( 'txtScanOptions_interval' );
-    let txtScanOptions_dutyMode = AppStorage.Get( 'txtScanOptionsDutyMode' );
-    let txtScanOptions_matchMode = AppStorage.Get( 'txtScanOptionsMatchMode' );
-    let cbxBleScanFilter = AppStorage.Get( 'cbxBleScanFilter' );
-    let cbxBleScanOptions = AppStorage.Get( 'cbxBleScanOptions' );
-    let curScanFilters = [];
-    let bleScanFilter = {
+    let txtScanFilter_deviceId: string = AppStorage.get('txtScanFilterDeviceId') !;
+    let txtScanFilter_name: string = AppStorage.get('txtScanFilterName') !;
+    let txtScanFilter_serviceUuid: string = AppStorage.get('txtScanFilterServiceUuid') !;
+    let txtScanOptions_interval: string = AppStorage.get('txtScanOptions_interval') !;
+    let txtScanOptions_dutyMode: string = AppStorage.get('txtScanOptionsDutyMode') !;
+    let txtScanOptions_matchMode: string = AppStorage.get('txtScanOptionsMatchMode') !;
+    let cbxBleScanFilter: boolean = AppStorage.get('cbxBleScanFilter') !;
+    let cbxBleScanOptions: boolean = AppStorage.get('cbxBleScanOptions') !;
+    let curScanFilters: Array<bluetooth.ScanFilter> = [];
+    let bleScanFilter: BleScanFilter = {
       deviceId : txtScanFilter_deviceId ,
       name : txtScanFilter_name ,
       serviceUuid : txtScanFilter_serviceUuid
     }
-    let curScanOptions = {
-      interval : parseInt( txtScanOptions_interval ) ,
-      dutyMode : parseInt( txtScanOptions_dutyMode ) ,
-      matchMode : parseInt( txtScanOptions_matchMode )
+    let curScanOptions: CurScanOptions = {
+      interval : parseInt(txtScanOptions_interval) ,
+      dutyMode : parseInt(txtScanOptions_dutyMode) ,
+      matchMode : parseInt(txtScanOptions_matchMode)
     }
     if ( cbxBleScanFilter ) {
-      curScanFilters.push( bleScanFilter );
+      curScanFilters.push(bleScanFilter);
     }
 
     if ( !cbxBleScanOptions ) {
       if ( cbxBleScanFilter ) {
-        BluetoothModel.startBLEScan( curScanFilters );
-        message = "startBLEScan Filters:" + JSON.stringify( curScanFilters );
+        BluetoothModel.startBLEScan(curScanFilters);
+        message = "startBLEScan Filters:" + JSON.stringify(curScanFilters);
       } else {
-        BluetoothModel.startBLEScan( null );
+        BluetoothModel.startBLEScan(null);
         message = "startBLEScan(null)";
       }
     } else {
-      BluetoothModel.startBLEScan( curScanFilters , curScanOptions );
-      message = "startBLEScan Filters:" + JSON.stringify( curScanFilters ) + "\n" + "Options:" + JSON.stringify( curScanOptions );
+      BluetoothModel.startBLEScan(curScanFilters , curScanOptions);
+      message = "startBLEScan Filters:" + JSON.stringify(curScanFilters) + "\n" + "Options:" + JSON.stringify(curScanOptions);
     }
-    console.log( "StartBLEScan end-------------------------------" )
-    prompt.showToast( { message : message } )
+    console.log("StartBLEScan end-------------------------------")
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testStartBLEScan. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testStartBLEScan. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testStartBLEScan. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -156,12 +156,12 @@ export function testStopBLEScan(): string {
   try {
     BluetoothModel.stopBLEScan();
     let message = "stopBLEScan OK!";
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testStopBLEScan. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testStopBLEScan. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testStopBLEScan. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -174,30 +174,30 @@ export function testOnBLEDeviceFind(): string {
     if ( bleDeviceFind ) {
       BluetoothModel.unsubscribeBLEDeviceFind();
       message = '关闭BLE查找状态变化'
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
     } else {
-      BluetoothModel.subscribeBLEDeviceFind( ( deviceItems: Array<bluetooth.ScanResult> ) => {
-        console.log( "BLE Test:" + 'available ble devices changed.' );
+      BluetoothModel.subscribeBLEDeviceFind((deviceItems: Array<bluetooth.ScanResult>) => {
+        console.log("BLE Test:" + 'available ble devices changed.');
         let message = ""
-        let availBleDeviceIds = []
-        deviceItems?.forEach( deviceItem => {
+        let availBleDeviceIds: Array<string> = []
+        deviceItems?.forEach(deviceItem => {
           let newDevice = deviceItem.deviceId;
           message += "mac:" + newDevice;
-          console.log( "BLE Test:" + 'available bluetooth new device : ' + newDevice );
-          availBleDeviceIds.push( newDevice );
-        } )
-        AppStorage.SetOrCreate( 'bluetoothAvailableDevices' , availBleDeviceIds );
-        prompt.showToast( { message : message } )
-      } )
+          console.log("BLE Test:" + 'available bluetooth new device : ' + newDevice);
+          availBleDeviceIds.push(newDevice);
+        })
+        AppStorage.setOrCreate('bluetoothAvailableDevices' , availBleDeviceIds);
+        promptAction.showToast({ message : message })
+      })
       message = "打开BLE查找状态变化"
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
     }
     bleDeviceFind = !bleDeviceFind
     return message
   } catch( e ) {
-    console.log( `Failed to testOnBLEDeviceFind. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testOnBLEDeviceFind. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testOnBLEDeviceFind. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
