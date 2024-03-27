@@ -12,84 +12,93 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
-import { TestScenarioManager , ScenarioCategoryManager } from './testDataManager'
+
+import { ScenarioCategory , TestScenario } from './testData'
 import {
-  testOnStateChangeManager ,
-  testEnableBluetoothManager ,
-  testGetStateManager ,
-  testSetLocalNameManager ,
-  testGetLocalNameManager ,
-  testSetBluetoothScanModeManager ,
-  testGetBluetoothScanModeManager ,
   subscribeBluetoothDeviceFindManager ,
-  testStopBluetoothDiscoveryManager ,
   testDisableBluetoothManager ,
+  testEnableBluetoothManager ,
+  testGetBluetoothScanModeManager ,
   testGetBtConnectionStateManager ,
+  testGetLocalNameManager ,
+  testGetStateManager ,
   testOnPinRequiredManager ,
-  testPairDeviceManager
+  testOnStateChangeManager ,
+  testPairDeviceManager ,
+  testSetBluetoothScanModeManager ,
+  testSetLocalNameManager ,
+  testStopBluetoothDiscoveryManager
 } from './brManagerInterface'
 import {
   testGetConnectedBLEDevicesManager ,
+  testOnBLEDeviceFindManager ,
   testStartBLEScanManager ,
-  testStopBLEScanManager ,
-  testOnBLEDeviceFindManager
+  testStopBLEScanManager
 } from './bleManagerInterface'
 import {
-  testCreateGattClientManager ,
   testConnectManager ,
+  testCreateGattClientManager ,
   testDisconnectManager ,
-  testOnBLEConnectionStateChangeManager ,
   testGattClientCloseManager ,
+  testGetDeviceNameCallbackManager ,
+  testGetRssiValueCallbackManager ,
   testGetServicesCallbackManager ,
+  testOnBLECharacteristicChangeManager ,
+  testOnBLEConnectionStateChangeManager ,
   testReadCharacteristicValueCallbackManager ,
   testReadDescriptorValueCallbackManager ,
-  testWriteCharacteristicValueManager ,
-  testWriteDescriptorValueManager ,
-  testOnBLECharacteristicChangeManager ,
   testSetNotifyCharacteristicChangedManager ,
-  testGetDeviceNameCallbackManager ,
-  testGetRssiValueCallbackManager
+  testWriteCharacteristicValueManager ,
+  testWriteDescriptorValueManager
 } from './gattClientManagerInterface'
 import {
-  testCreateGattServerManager ,
-  testStartAdvertisingManager ,
-  testStopAdvertisingManager ,
   testAddServiceManager ,
-  testRemoveServiceManager ,
+  testCreateGattServerManager ,
   testGattServerCloseManager ,
-  testOnConnectStateChangeManager ,
   testOnCharacteristicReadManager ,
   testOnCharacteristicWriteManager ,
+  testOnConnectStateChangeManager ,
   testOnDescriptorReadManager ,
-  testOnDescriptorWriteManager
+  testOnDescriptorWriteManager ,
+  testRemoveServiceManager ,
+  testStartAdvertisingManager ,
+  testStopAdvertisingManager
 } from './gattServerManagerInterface'
 import {
+  testSppClientCloseManager ,
   testSppClientConnectSafeManager ,
-  testSppClientWriteManager ,
-  testSppClientReadOnManager ,
   testSppClientReadOffManager ,
-  testSppClientCloseManager
+  testSppClientReadOnManager ,
+  testSppClientWriteManager
 } from './sppClientManagerInterface'
 import {
-  testSppServerCreateSafeManager ,
-  testSppServerAcceptManager ,
-  testSppServerWriteManager ,
-  testSppServerReadOnManager ,
-  testSppServerReadOffManager ,
+  testSppCloseClientSocketManager ,
   testSppCloseServerSocketManager ,
-  testSppCloseClientSocketManager
+  testSppServerAcceptManager ,
+  testSppServerCreateSafeManager ,
+  testSppServerReadOffManager ,
+  testSppServerReadOnManager ,
+  testSppServerWriteManager
 } from './sppServerManagerInterface'
 import BluetoothModelManager from './BluetoothModelManager'
 
-export const BrFoundManagerScenarioTestCase: [] = [
+interface ScenarioManagerTest {
+  name: string;
+  detail: string;
+  method: string;
+  api: Function;
+  result: string;
+  category: ScenarioCategory;
+}
+
+export const BrFoundManagerScenarioTestCase: ScenarioManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '1' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BrFoundScenarioManager
+    'category' : ScenarioCategory.BrFoundScenarioManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -97,7 +106,7 @@ export const BrFoundManagerScenarioTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BrFoundScenarioManager
+    'category' : ScenarioCategory.BrFoundScenarioManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -105,7 +114,7 @@ export const BrFoundManagerScenarioTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BrFoundScenarioManager
+    'category' : ScenarioCategory.BrFoundScenarioManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -113,7 +122,7 @@ export const BrFoundManagerScenarioTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BrFoundScenarioManager
+    'category' : ScenarioCategory.BrFoundScenarioManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -121,7 +130,7 @@ export const BrFoundManagerScenarioTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BrFoundScenarioManager
+    'category' : ScenarioCategory.BrFoundScenarioManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -129,7 +138,7 @@ export const BrFoundManagerScenarioTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BrFoundScenarioManager
+    'category' : ScenarioCategory.BrFoundScenarioManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -137,7 +146,7 @@ export const BrFoundManagerScenarioTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BrFoundScenarioManager
+    'category' : ScenarioCategory.BrFoundScenarioManager
   },
   {
     'name' : '订阅蓝牙发现Manager' ,
@@ -145,7 +154,7 @@ export const BrFoundManagerScenarioTestCase: [] = [
     'method' : 'subscribeBluetoothDeviceFindManager' ,
     'api' : subscribeBluetoothDeviceFindManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BrFoundScenarioManager
+    'category' : ScenarioCategory.BrFoundScenarioManager
   },
   {
     'name' : '开始蓝牙发现Manager' ,
@@ -153,18 +162,18 @@ export const BrFoundManagerScenarioTestCase: [] = [
     'method' : 'startBluetoothDiscoveryManager' ,
     'api' : BluetoothModelManager.startBluetoothDiscovery ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BrFoundScenarioManager
+    'category' : ScenarioCategory.BrFoundScenarioManager
   },
 ]
 
-export const BleFoundManagerScenarioTestCase: [] = [
+export const BleFoundManagerScenarioTestCase: ScenarioManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '1' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BleFoundScenarioManager
+    'category' : ScenarioCategory.BleFoundScenarioManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -172,7 +181,7 @@ export const BleFoundManagerScenarioTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BleFoundScenarioManager
+    'category' : ScenarioCategory.BleFoundScenarioManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -180,7 +189,7 @@ export const BleFoundManagerScenarioTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BleFoundScenarioManager
+    'category' : ScenarioCategory.BleFoundScenarioManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -188,7 +197,7 @@ export const BleFoundManagerScenarioTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BleFoundScenarioManager
+    'category' : ScenarioCategory.BleFoundScenarioManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -196,7 +205,7 @@ export const BleFoundManagerScenarioTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BleFoundScenarioManager
+    'category' : ScenarioCategory.BleFoundScenarioManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -204,7 +213,7 @@ export const BleFoundManagerScenarioTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BleFoundScenarioManager
+    'category' : ScenarioCategory.BleFoundScenarioManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -212,7 +221,7 @@ export const BleFoundManagerScenarioTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BleFoundScenarioManager
+    'category' : ScenarioCategory.BleFoundScenarioManager
   },
   {
     'name' : '注册Ble查找状态变化Manager' ,
@@ -220,7 +229,7 @@ export const BleFoundManagerScenarioTestCase: [] = [
     'method' : 'on.BleDeviceFindManager' ,
     'api' : testOnBLEDeviceFindManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BleFoundScenarioManager
+    'category' : ScenarioCategory.BleFoundScenarioManager
   },
   {
     'name' : '开始Ble扫描Manager' ,
@@ -228,7 +237,7 @@ export const BleFoundManagerScenarioTestCase: [] = [
     'method' : 'startBleScanManager' ,
     'api' : testStartBLEScanManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BleFoundScenarioManager
+    'category' : ScenarioCategory.BleFoundScenarioManager
   },
   {
     'name' : '获取连接的Ble设备Manager' ,
@@ -236,18 +245,18 @@ export const BleFoundManagerScenarioTestCase: [] = [
     'method' : 'getConnectedBleDevicesManager' ,
     'api' : testGetConnectedBLEDevicesManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.BleFoundScenarioManager
+    'category' : ScenarioCategory.BleFoundScenarioManager
   },
 ]
 
-export const GattClientManagerScenarioTestCase: [] = [
+export const GattClientManagerScenarioTestCase: ScenarioManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '1' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -255,7 +264,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -263,7 +272,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '创建Gatt客户端Manager' ,
@@ -271,7 +280,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'createGattClientManager' ,
     'api' : testCreateGattClientManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : 'Ble连接状态Manager' ,
@@ -279,7 +288,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'on.BleConnectionStateChangeManager' ,
     'api' : testOnBLEConnectionStateChangeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '连接Manager' ,
@@ -287,7 +296,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'connectManager' ,
     'api' : testConnectManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '设置通知特性更改Manager' ,
@@ -295,7 +304,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'setNotifyCharacteristicChangedManager' ,
     'api' : testSetNotifyCharacteristicChangedManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : 'Ble特征值变化Manager' ,
@@ -303,7 +312,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'on.BleCharacteristicChangeManager' ,
     'api' : testOnBLECharacteristicChangeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '获取服务callbackManager' ,
@@ -311,7 +320,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'getServices(Callback)Manager' ,
     'api' : testGetServicesCallbackManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '读取特征值callbackManager' ,
@@ -319,7 +328,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'readCharacteristicValue(callback)Manager' ,
     'api' : testReadCharacteristicValueCallbackManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '读取描述符值callbackManager' ,
@@ -327,7 +336,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'readDescriptorValue(callback)Manager' ,
     'api' : testReadDescriptorValueCallbackManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '获取设备名称callbackManager' ,
@@ -335,7 +344,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'getDeviceName(callback)Manager' ,
     'api' : testGetDeviceNameCallbackManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '获取Rssi值callbackManager' ,
@@ -343,7 +352,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'getRssiValue(Callback)Manager' ,
     'api' : testGetRssiValueCallbackManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '取消连接Manager' ,
@@ -351,7 +360,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'disconnectManager' ,
     'api' : testDisconnectManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '关闭Manager' ,
@@ -359,7 +368,7 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'closeManager' ,
     'api' : testGattClientCloseManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -367,18 +376,18 @@ export const GattClientManagerScenarioTestCase: [] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattClientScenarioManager
+    'category' : ScenarioCategory.GattClientScenarioManager
   }
 ]
 
-export const GattServerManagerScenarioTestCase: [] = [
+export const GattServerManagerScenarioTestCase: ScenarioManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '1' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -386,7 +395,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -394,7 +403,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '创建Gatt服务器Manager' ,
@@ -402,7 +411,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'createGattServerManager' ,
     'api' : testCreateGattServerManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '添加服务Manager' ,
@@ -410,7 +419,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'addServiceManager' ,
     'api' : testAddServiceManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '连接状态Manager' ,
@@ -418,7 +427,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'on.connectStateChangeManager' ,
     'api' : testOnConnectStateChangeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '开始广播Manager' ,
@@ -426,7 +435,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'startAdvertisingManager' ,
     'api' : testStartAdvertisingManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '读取特征值Manager' ,
@@ -434,7 +443,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'on.characteristicReadManager' ,
     'api' : testOnCharacteristicReadManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '写入特征值Manager' ,
@@ -442,7 +451,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'on.characteristicWriteManager' ,
     'api' : testOnCharacteristicWriteManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '读取描述符Manager' ,
@@ -450,7 +459,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'on.descriptorReadManager' ,
     'api' : testOnDescriptorReadManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '写入描述符Manager' ,
@@ -458,7 +467,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'on.descriptorWriteManager' ,
     'api' : testOnDescriptorWriteManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '停止广播Manager' ,
@@ -466,7 +475,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'stopAdvertisingManager' ,
     'api' : testStopAdvertisingManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '删除服务Manager' ,
@@ -474,7 +483,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'removeServiceManager' ,
     'api' : testRemoveServiceManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '关闭Manager' ,
@@ -482,7 +491,7 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'closeManager' ,
     'api' : testGattServerCloseManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -490,18 +499,18 @@ export const GattServerManagerScenarioTestCase: [] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.GattServerScenarioManager
+    'category' : ScenarioCategory.GattServerScenarioManager
   }
 ]
 
-export const SppClientManagerScenarioTestCase: [] = [
+export const SppClientManagerScenarioTestCase: ScenarioManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '1' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -509,7 +518,7 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -517,7 +526,7 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : '设置SPP扫描模式Manager' ,
@@ -525,7 +534,7 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -533,7 +542,7 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : 'Spp客户端连接(安全模式)Manager' ,
@@ -541,7 +550,7 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'sppConnectManager' ,
     'api' : testSppClientConnectSafeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : '获取当前连接状态Manager' ,
@@ -549,7 +558,7 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'getBtConnectionStateManager' ,
     'api' : testGetBtConnectionStateManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : 'Spp客户端读取打开Manager' ,
@@ -557,7 +566,7 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'on.sppReadManager' ,
     'api' : testSppClientReadOnManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : 'Spp客户端写入Manager' ,
@@ -565,7 +574,7 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'sppWriteManager' ,
     'api' : testSppClientWriteManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : 'Spp客户端读取关闭Manager' ,
@@ -573,7 +582,7 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'off.sppReadManager' ,
     'api' : testSppClientReadOffManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : 'Spp客户端关闭Manager' ,
@@ -581,7 +590,7 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'sppCloseClientSocketManager' ,
     'api' : testSppClientCloseManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -589,18 +598,18 @@ export const SppClientManagerScenarioTestCase: [] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppClientScenarioManager
+    'category' : ScenarioCategory.SppClientScenarioManager
   },
 ]
 
-export const SppServerManagerScenarioTestCase: [] = [
+export const SppServerManagerScenarioTestCase: ScenarioManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '1' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -608,7 +617,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -616,7 +625,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : '设置SPP扫描模式Manager' ,
@@ -624,7 +633,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -632,7 +641,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : '注册pin码变化Manager' ,
@@ -640,7 +649,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'on.pinRequiredManager' ,
     'api' : testOnPinRequiredManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : 'Spp服务器创建(安全模式)Manager' ,
@@ -648,7 +657,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'sppListenManager' ,
     'api' : testSppServerCreateSafeManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : '获取当前连接状态Manager' ,
@@ -656,7 +665,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'getBtConnectionStateManager' ,
     'api' : testGetBtConnectionStateManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : 'Spp服务器写入Manager' ,
@@ -664,7 +673,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'sppWriteManager' ,
     'api' : testSppServerWriteManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : 'Spp服务器接受Manager' ,
@@ -672,7 +681,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'sppAcceptManager' ,
     'api' : testSppServerAcceptManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : 'Spp服务器读取打开Manager' ,
@@ -680,7 +689,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'on.sppReadManager' ,
     'api' : testSppServerReadOnManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : 'Spp服务器读取关闭Manager' ,
@@ -688,7 +697,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'off.sppReadManager' ,
     'api' : testSppServerReadOffManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : 'Spp服务器关闭Manager' ,
@@ -696,7 +705,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'sppCloseServerSocketManager' ,
     'api' : testSppCloseServerSocketManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : 'Spp客户端关闭Manager' ,
@@ -704,7 +713,7 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'sppCloseClientSocketManager' ,
     'api' : testSppCloseClientSocketManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -712,55 +721,54 @@ export const SppServerManagerScenarioTestCase: [] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : ScenarioCategoryManager.SppServerScenarioManager
+    'category' : ScenarioCategory.SppServerScenarioManager
   },
 ]
 
-
-export function initBRFoundManagerScenarioData(): Array<TestScenarioManager> {
-  let TestScenarioArray: Array<TestScenarioManager> = []
-  BrFoundManagerScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenarioManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initBRFoundManagerScenarioData(): Array<TestScenario> {
+  let TestScenarioArray: Array<TestScenario> = []
+  BrFoundManagerScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
 
-export function initBleFoundManagerScenarioData(): Array<TestScenarioManager> {
-  let TestScenarioArray: Array<TestScenarioManager> = []
-  BleFoundManagerScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenarioManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initBleFoundManagerScenarioData(): Array<TestScenario> {
+  let TestScenarioArray: Array<TestScenario> = []
+  BleFoundManagerScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
 
-export function initGattClientManagerScenarioData(): Array<TestScenarioManager> {
-  let TestScenarioArray: Array<TestScenarioManager> = []
-  GattClientManagerScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenarioManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initGattClientManagerScenarioData(): Array<TestScenario> {
+  let TestScenarioArray: Array<TestScenario> = []
+  GattClientManagerScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
 
-export function initGattServerManagerScenarioData(): Array<TestScenarioManager> {
-  let TestScenarioArray: Array<TestScenarioManager> = []
-  GattServerManagerScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenarioManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initGattServerManagerScenarioData(): Array<TestScenario> {
+  let TestScenarioArray: Array<TestScenario> = []
+  GattServerManagerScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
 
-export function initSppClientManagerScenarioData(): Array<TestScenarioManager> {
-  let TestScenarioArray: Array<TestScenarioManager> = []
-  SppClientManagerScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenarioManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initSppClientManagerScenarioData(): Array<TestScenario> {
+  let TestScenarioArray: Array<TestScenario> = []
+  SppClientManagerScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
 
-export function initSppServerManagerScenarioData(): Array<TestScenarioManager> {
-  let TestScenarioArray: Array<TestScenarioManager> = []
-  SppServerManagerScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenarioManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initSppServerManagerScenarioData(): Array<TestScenario> {
+  let TestScenarioArray: Array<TestScenario> = []
+  SppServerManagerScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
