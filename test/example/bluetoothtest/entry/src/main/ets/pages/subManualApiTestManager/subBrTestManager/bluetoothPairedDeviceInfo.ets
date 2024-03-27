@@ -15,7 +15,7 @@
 
 import ConfigData from '../../../Utils/ConfigData';
 import HeadTableComponent from '../../../Component/headerComponent';
-import Router from '@system.router';
+import router from '@ohos.router';
 import LogUtil from '../../../Utils/LogUtil';
 import BluetoothDevice from '../../../MainAbility/model/BluetoothDevice';
 import BluetoothDeviceController from '../../../MainAbility/controller/BluetoothDeviceController'
@@ -32,24 +32,30 @@ struct BluetoothPairedDeviceInfo {
   @State isTouched: boolean = false;
 
   aboutToAppear() {
-    param = Router.getParams();
+    param = router.getParams();
     this.bluetoothDevice = JSON.parse(param.bluetoothDevice);
     LogUtil.log(ConfigData.TAG + "aboutToAppear bluetoothDevice: " + JSON.stringify(this.bluetoothDevice));
   }
 
   build() {
     Column() {
-      GridContainer({ columns: 12, sizeType: SizeType.Auto, gutter: vp2px(1) === 2 ? '12vp' : '0vp', margin: vp2px(1) === 2 ? '24vp' : '0vp' }) {
+      GridContainer({
+        columns : 12 ,
+        sizeType : SizeType.Auto ,
+        gutter : vp2px(1) === 2 ? '12vp' : '0vp' ,
+        margin : vp2px(1) === 2 ? '24vp' : '0vp'
+      }) {
         Row({}) {
-          Column() {}
+          Column() {
+          }
           .width(ConfigData.WH_100_100)
           .height(ConfigData.WH_100_100)
           .useSizeType({
-            xs: { span: 0, offset: 0 }, sm: { span: 0, offset: 0 },
-            md: { span: 0, offset: 0 }, lg: { span: 2, offset: 0 }
+            xs : { span : 0 , offset : 0 } , sm : { span : 0 , offset : 0 } ,
+            md : { span : 0 , offset : 0 } , lg : { span : 2 , offset : 0 }
           });
           Column() {
-            HeadTableComponent({ headName: this.bluetoothDevice.deviceName, isActive: true });
+            HeadTableComponent({ headName : this.bluetoothDevice.deviceName , isActive : true });
             Blank()
             Row() {
               Button() {
@@ -62,35 +68,36 @@ struct BluetoothPairedDeviceInfo {
               .height($r("app.float.wh_value_40"))
               .align(Alignment.Center)
               .onTouch((event: TouchEvent) => {
-                if (event.type === TouchType.Down) {
+                if ( event.type === TouchType.Down ) {
                   this.isTouched = true;
                 }
-                if (event.type === TouchType.Up) {
+                if ( event.type === TouchType.Up ) {
                   this.isTouched = false;
                 }
               })
               .onClick(() => {
                 LogUtil.log(ConfigData.TAG + "unpair onClick");
-                if (this.controller.unpair(this.bluetoothDevice.deviceId)) {
-                  Router.back();
+                if ( this.controller.unpair(this.bluetoothDevice.deviceId) ) {
+                  router.back();
                 }
               })
-            }.margin({ bottom: $r('app.float.distance_24') });
+            }.margin({ bottom : $r('app.float.distance_24') });
           }
-          .padding({ left: $r('app.float.distance_24'), right: $r('app.float.distance_24') })
+          .padding({ left : $r('app.float.distance_24') , right : $r('app.float.distance_24') })
           .height(ConfigData.WH_100_100)
           .width(ConfigData.WH_100_100)
           .useSizeType({
-            xs: { span: 12, offset: 0 }, sm: { span: 12, offset: 0 },
-            md: { span: 12, offset: 0 }, lg: { span: 8, offset: 2 }
+            xs : { span : 12 , offset : 0 } , sm : { span : 12 , offset : 0 } ,
+            md : { span : 12 , offset : 0 } , lg : { span : 8 , offset : 2 }
           });
 
-          Column() {}
+          Column() {
+          }
           .width(ConfigData.WH_100_100)
           .height(ConfigData.WH_100_100)
           .useSizeType({
-            xs: { span: 0, offset: 12 }, sm: { span: 0, offset: 12 },
-            md: { span: 0, offset: 12 }, lg: { span: 2, offset: 10 }
+            xs : { span : 0 , offset : 12 } , sm : { span : 0 , offset : 12 } ,
+            md : { span : 0 , offset : 12 } , lg : { span : 2 , offset : 10 }
           })
         }
         .width(ConfigData.WH_100_100)
