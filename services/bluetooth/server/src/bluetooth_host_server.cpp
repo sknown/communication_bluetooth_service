@@ -1858,5 +1858,11 @@ int32_t BluetoothHostServer::GetDeviceProductId(const std::string &address, std:
     return BT_ERR_API_NOT_SUPPORT;
 }
 
+int32_t BluetoothHostServer::GetRemoteDeviceBatteryInfo(const std::string &address,
+    BluetoothBatteryInfo &batteryInfo)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
 }  // namespace Bluetooth
 }  // namespace OHOS

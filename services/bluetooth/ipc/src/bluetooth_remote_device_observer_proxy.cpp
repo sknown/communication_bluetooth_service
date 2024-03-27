@@ -238,5 +238,18 @@ ErrCode BluetoothRemoteDeviceObserverproxy::InnerTransact(
         }
     }
 }
+
+void BluetoothRemoteDeviceObserverproxy::OnRemoteBatteryChanged(const BluetoothRawAddress &device,
+        const BluetoothBatteryInfo &batteryInfo)
+{
+    return;
+}
+
+void BluetoothRemoteDeviceObserverproxy::OnRemoteDeviceCommonInfoReport(const BluetoothRawAddress &device,
+        const std::vector<uint8_t> &value)
+{
+    return;
+}
+
 }  // namespace Bluetooth
 }  // namespace OHOS
