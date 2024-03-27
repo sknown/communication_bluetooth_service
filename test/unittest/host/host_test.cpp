@@ -556,7 +556,7 @@ HWTEST_F(HostTest, Host_ModuleTest_GetRemoteDeviceBatteryInfo_00100, TestSize.Le
     GTEST_LOG_(INFO) << "Host_ModuleTest_GetRemoteDeviceBatteryInfo_00100 start";
 
     DeviceBatteryInfo batteryInfo;
-    BluetoothRemoteDevice device_("00:00:00:00:00:00", BT_TRANSPORT_BREDR);
+    BluetoothRemoteDevice device_("00:00:00:00:00:00", INVALID_TYPE);
     EXPECT_EQ(device_.GetRemoteDeviceBatteryInfo(batteryInfo), BT_ERR_INTERNAL_ERROR);
 
     GTEST_LOG_(INFO) << "Host_ModuleTest_GetRemoteDeviceBatteryInfo_00100 end";
