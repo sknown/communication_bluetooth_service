@@ -235,7 +235,7 @@ public:
      * @return Returns remote device battery level.
      * @since 6
      */
-    virtual int GetDeviceBatteryLevel(const RawAddress &device) const = 0;
+    // virtual int GetDeviceBatteryLevel(const RawAddress &device) const = 0;
 
     /**
      * @brief Set remote device battery level.

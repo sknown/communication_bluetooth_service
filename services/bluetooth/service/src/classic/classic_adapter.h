@@ -400,7 +400,7 @@ public:
      * @return Returns device discovery end time.
      */
     long GetBtDiscoveryEndMillis() const override;
-    int GetDeviceBatteryLevel(const RawAddress &device) const override;
+    // int GetDeviceBatteryLevel(const RawAddress &device) const override;
     void SetDeviceBatteryLevel(const RawAddress &device, int batteryLevel) const override;
     bool IsHfpCodSupported(const RawAddress &device) override;
 
