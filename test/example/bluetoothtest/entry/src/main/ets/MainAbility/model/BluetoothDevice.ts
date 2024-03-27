@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
+
 /**
  * BT Device Page Of Bluetooth test
  */
@@ -60,7 +60,7 @@ export default class BluetoothDevice {
     deviceId: string;
     profileConnectionState: number;
   }): void {
-    if (this.deviceId !== data.deviceId) {
+    if(this.deviceId !== data.deviceId) {
       return;
     }
     this.profiles.set(data.profileId, data)
@@ -69,24 +69,24 @@ export default class BluetoothDevice {
     let countStateConnected = 0;
     let countStateDisconnecting = 0;
     this.profiles.forEach((profile, key) => {
-      if (profile.profileConnectionState == 0) {
+      if(profile.profileConnectionState == 0) {
         // 0:the current profile is disconnected
         countStateDisconnect++;
-      } else if (profile.profileConnectionState == 1) {
+      } else if(profile.profileConnectionState == 1) {
         // 1:the current profile is being connected
         countStateConnecting++;
-      } else if (profile.profileConnectionState == 2) {
+      } else if(profile.profileConnectionState == 2) {
         // 2:the current profile is connected
         countStateConnected++;
-      } else if (profile.profileConnectionState == 3) {
+      } else if(profile.profileConnectionState == 3) {
         // 3:the current profile is being disconnected
         countStateDisconnecting++;
       }
     });
 
-    if (countStateConnected > 0 || countStateDisconnecting > 0) {
+    if(countStateConnected > 0 || countStateDisconnecting > 0) {
       this.connectionState = DeviceState.STATE_CONNECTED;
-    } else if (countStateConnecting > 0) {
+    } else if(countStateConnecting > 0) {
       this.connectionState = DeviceState.STATE_CONNECTING;
     } else {
       this.connectionState = DeviceState.STATE_DISCONNECTED;
