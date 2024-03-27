@@ -13,9 +13,8 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
-
-import router from '@system.router';
+import { myParams } from '../../Utils/common'
+import router from '@ohos.router';
 import ConfigData from '../../Utils/ConfigData';
 import { TestData } from '../../MainAbility/model/testData'
 import { PageTitle } from '../../Component/pageTitle';
@@ -33,30 +32,30 @@ struct SppAutoTest {
   @State message: string = 'SppAutoTest';
   @State textMessage: string = 'null';
   private sppAutoTestItems: TestData[] = initSppAutoTestData();
-  private testItem: TestData = router.getParams().testId;
-  @StorageLink( "autoTestMessage" ) autoTestMessage: string = ""
+  private testItem: TestData = (router.getParams() as myParams).testItem
+  @StorageLink("autoTestMessage") autoTestMessage: string = ""
 
   build() {
     Column() {
-      Stack( { alignContent : Alignment.TopStart } ) {
-        TestImageDisplay( { testItem : this.testItem } )
-        PageTitle( { testItem : this.testItem } )
+      Stack({ alignContent : Alignment.TopStart }) {
+        TestImageDisplay({ testItem : this.testItem })
+        PageTitle({ testItem : this.testItem })
       }
 
       List() {
-        ForEach( this.sppAutoTestItems , item => {
+        ForEach(this.sppAutoTestItems , (item: TestData) => {
           ListItem() {
-            TestListItem( {
+            TestListItem({
               testItem : item
-            } )
+            })
           }
-        } , item => item.id.toString() )
+        } , (item: TestData) => item.id)
       }
-      .height( '93%' )
-      .backgroundColor( $r( "app.color.lead" ) )
+      .height('93%')
+      .backgroundColor($r("app.color.lead"))
     }
-    .backgroundColor( $r( "sys.color.ohos_id_color_sub_background" ) )
-    .width( ConfigData.WH_100_100 )
-    .height( ConfigData.WH_100_100 );
+    .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
+    .width(ConfigData.WH_100_100)
+    .height(ConfigData.WH_100_100);
   }
 }
