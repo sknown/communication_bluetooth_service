@@ -20,7 +20,6 @@ import { TestImageDisplay } from '../../Component/testImageDisplay';
 import { TestData } from '../../MainAbility/model/testData'
 import { ScenarioContentTable } from '../../Component/scenarioContentTable'
 import { initSppClientScenarioData } from '../../MainAbility/model/scenarioTestDataModel'
-import * as BLEInterface from '../../MainAbility/model/bleInterface'
 import * as BrInterface from '../../MainAbility/model/brInterface'
 import * as SPPClientInterface from '../../MainAbility/model/sppClientInterface'
 import bluetooth from '@ohos.bluetooth';
@@ -33,7 +32,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct SppClientScenarioTest {
-  @State message: string = 'SppClientScenarioTest';
   @State changeIndex: number = - 1;
   @State writeClientData: string = '11';
   private uuid: string = "00001101-0000-1000-8000-00805f9b34fb";
@@ -76,7 +74,6 @@ struct SppClientScenarioTest {
               .width("100%")
             ScenarioContentTable({
               scenarioItems : initSppClientScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
@@ -132,8 +129,6 @@ struct SppClientScenarioTest {
           .margin({ top : "15vp" , left : "20vp" })
           .align(Alignment.Start)
           .onClick(async(event: ClickEvent) => {
-            //  AlertDialog.show({ message: '开始SppClient场景测试' })
-
             let self = this
             const arr = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]
             let sppClientScenarioMessage = ""
