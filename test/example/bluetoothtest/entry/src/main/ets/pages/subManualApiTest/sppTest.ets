@@ -29,7 +29,6 @@ import { myParams } from '../../Utils/common'
 @Entry
 @Component
 struct SppTest {
-  @State message: string = 'SppTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   private sppApiTestItems: TestData[] = initSppApiTestData();
 
