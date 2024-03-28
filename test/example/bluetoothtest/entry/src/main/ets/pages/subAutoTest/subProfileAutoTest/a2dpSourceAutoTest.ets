@@ -14,7 +14,6 @@
  */
 
 import { BTAutoArrayItem , myParams } from '../../../Utils/common'
-import promptAction from '@ohos.promptAction';
 import ConfigData from '../../../Utils/ConfigData';
 import router from '@ohos.router';
 import { TestData } from '../../../MainAbility/model/testData'
@@ -34,9 +33,6 @@ import btProfileModel from '../../../MainAbility/model/btProfileModel'
 @Entry
 @Component
 struct A2dpSourceAutoTest {
-  @State message: string = 'A2dpSourceAutoTest';
-  //  @State textMessage: string = 'null';
-  @State testMessage: string = "";
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1;
   @State profileType: number = 1;
@@ -68,7 +64,6 @@ struct A2dpSourceAutoTest {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initA2dpSourceProfileAutoData() ,
               changeIndex : this.changeIndex
             })
@@ -124,13 +119,7 @@ struct A2dpSourceAutoTest {
         .height(50)
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
-
           this.forLoop()
-
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
