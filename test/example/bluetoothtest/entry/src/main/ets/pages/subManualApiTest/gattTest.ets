@@ -29,7 +29,6 @@ import { TestListItem } from '../../Component/testListItems';
 @Entry
 @Component
 struct GattTest {
-  @State message: string = 'GattTest'
   private testItem: TestData = (router.getParams() as myParams).testItem;
   private gattApiTestItems: TestData[] = initGattApiTestData();
 
