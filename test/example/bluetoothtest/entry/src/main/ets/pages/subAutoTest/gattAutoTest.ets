@@ -29,8 +29,6 @@ import { TestListItem } from '../../Component/testListItems';
 @Entry
 @Component
 struct GattAutoTest {
-  @State message: string = 'GattAutoTest';
-  @State textMessage: string = 'null';
   private gattAutoTestItems: TestData[] = initGattAutoTestData();
   private testItem: TestData = (router.getParams() as myParams).testItem
   @StorageLink("autoTestMessage") autoTestMessage: string = ""
