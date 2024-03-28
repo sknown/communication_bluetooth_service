@@ -24,7 +24,6 @@ import {
   initSppServerManagerAutoData ,
   SppServerManagerAutoTestCase
 } from '../../../MainAbility/model/autoTestDataModelsManager';
-import promptAction from '@ohos.promptAction';
 
 /**
  *  SppServerAutoTest Manager Page Of Bluetooth test
@@ -34,7 +33,6 @@ import promptAction from '@ohos.promptAction';
 @Component
 struct SppServerAutoTestManager {
   @State message: string = 'SppServerAutoTestManager';
-  //  @State textMessage: string = 'null';
   @State testMessage: string = "";
   @State changeIndex: number = - 1
   private testItem: TestData = (router.getParams() as myParams).testItem
@@ -72,9 +70,7 @@ struct SppServerAutoTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initSppServerManagerAutoData() ,
-              // testMessage : this.testMessage ,
               changeIndex : this.changeIndex
             })
           }
@@ -132,10 +128,6 @@ struct SppServerAutoTestManager {
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
           this.forLoop()
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
