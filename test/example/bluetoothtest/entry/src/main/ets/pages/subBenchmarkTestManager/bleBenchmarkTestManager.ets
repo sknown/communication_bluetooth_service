@@ -34,7 +34,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct BleBenchmarkTestManager {
-  @State message: string = 'BleBenchmarkTestManager';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("bleBenchmarkTestMessage") bleBenchmarkTestMessage: string = ""
@@ -62,7 +61,6 @@ struct BleBenchmarkTestManager {
           }
           .width("100%")
           .height(100)
-
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.Auto)
@@ -94,7 +92,6 @@ struct BleBenchmarkTestManager {
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.On)
-
       }
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
@@ -132,10 +129,6 @@ struct BleBenchmarkTestManager {
             await sleep(1)
             bleBenchmarkTestMessage += "startBleScan" + testFunc(BluetoothModelManager.startBLEScan) + "\n"
             AppStorage.setOrCreate("bleBenchmarkTestMessage" , bleBenchmarkTestMessage)
-            //            await sleep(1)
-            //            BleManagerInterface.testOnBLEDeviceFind() +"\n"
-            //            await sleep(5)
-            //            subscribeBLEDeviceFind() + "\n"
             await sleep(10)
             bleBenchmarkTestMessage += "testStopBLEScanManager 执行：" + testFunc(BleManagerInterface.testStopBLEScanManager) + "\n"
             AppStorage.setOrCreate("bleBenchmarkTestMessage" , bleBenchmarkTestMessage)
@@ -189,7 +182,6 @@ struct BleBenchmarkTestManager {
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
-              //              Text('清空').fontSize("24vp").fontColor(0xffffff).margin({ left: 5, right: 10 })
             }.alignItems(VerticalAlign.Center)
           }
           .borderRadius(8)
@@ -242,15 +234,8 @@ export function test(func: Function) {
   return (end - start) + "ms"; //返回函数执行需要时间
 }
 
-
-let arr = []
-
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do b
-  //  }
   switch ( func ) {
     case BluetoothModelManager.startBLEScan: {
       func(null)
