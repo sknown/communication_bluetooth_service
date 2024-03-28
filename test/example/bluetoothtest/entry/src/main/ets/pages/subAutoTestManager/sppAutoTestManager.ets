@@ -28,8 +28,6 @@ import { TestListItem } from '../../Component/testListItems';
 @Entry
 @Component
 struct SppAutoTestManager {
-  @State message: string = 'SppAutoTestManager';
-  @State textMessage: string = 'null';
   private sppAutoTestItems: TestData[] = initSppManagerAutoTestData();
   private testItem: TestData = (router.getParams() as myParams).testItem
   @StorageLink("autoTestMessage") autoTestMessage: string = ""
