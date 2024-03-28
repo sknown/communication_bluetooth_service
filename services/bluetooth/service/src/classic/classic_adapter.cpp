@@ -2390,17 +2390,17 @@ int ClassicAdapter::CheckSspConfirmType(int remoteIo, int type) const
     return confirmType;
 }
 
-int ClassicAdapter::GetDeviceBatteryLevel(const RawAddress &device) const
-{
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
-    int batteryLevel = 0;
-    auto it = devices_.find(device.GetAddress());
-    if (it != devices_.end()) {
-        batteryLevel = it->second->GetBatteryLevel();
-    }
-    HILOGI("batteryLevel: %{public}d", batteryLevel);
-    return batteryLevel;
-}
+//int ClassicAdapter::GetDeviceBatteryLevel(const RawAddress &device) const
+//{
+//    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+//    int batteryLevel = 0;
+//    auto it = devices_.find(device.GetAddress());
+//    if (it != devices_.end()) {
+//        batteryLevel = it->second->GetBatteryLevel();
+//    }
+//    HILOGI("batteryLevel: %{public}d", batteryLevel);
+//    return batteryLevel;
+//}
 
 void ClassicAdapter::SetDeviceBatteryLevel(const RawAddress &device, int batteryLevel) const
 {
@@ -2419,9 +2419,9 @@ void ClassicAdapter::SendRemoteBatteryLevelChanged(const RawAddress &device, int
 {
     HILOGI("addr: %{public}s, batteryLevel: %{public}d", GetEncryptAddr(device.GetAddress()).c_str(), batteryLevel);
 
-    pimpl->remoteObservers_.ForEach([device, batteryLevel](IClassicRemoteDeviceObserver &observer) {
-        observer.OnRemoteBatteryLevelChanged(device, batteryLevel);
-    });
+//    pimpl->remoteObservers_.ForEach([device, batteryLevel](IClassicRemoteDeviceObserver &observer) {
+//        observer.OnRemoteBatteryLevelChanged(device, batteryLevel);
+//    });
 }
 
 bool ClassicAdapter::IsHfpCodSupported(const RawAddress &device)

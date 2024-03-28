@@ -182,7 +182,7 @@ public:
      * @param batteryLevel Remote device battery Level.
      * @since 6
      */
-    virtual void OnRemoteBatteryLevelChanged(const RawAddress &device, int batteryLevel) = 0;
+//    virtual void OnRemoteBatteryLevelChanged(const RawAddress &device, int batteryLevel) = 0;
 };
 
 /**
@@ -235,7 +235,7 @@ public:
      * @return Returns remote device battery level.
      * @since 6
      */
-    virtual int GetDeviceBatteryLevel(const RawAddress &device) const = 0;
+//    virtual int GetDeviceBatteryLevel(const RawAddress &device) const = 0;
 
     /**
      * @brief Set remote device battery level.

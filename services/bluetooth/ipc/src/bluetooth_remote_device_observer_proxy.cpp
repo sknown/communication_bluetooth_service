@@ -181,32 +181,44 @@ void BluetoothRemoteDeviceObserverproxy::OnRemoteCodChanged(const BluetoothRawAd
     }
 }
 
-void BluetoothRemoteDeviceObserverproxy::OnRemoteBatteryLevelChanged(
-    const BluetoothRawAddress &device, int32_t batteryLevel)
-{
-    MessageParcel data;
-    if (!data.WriteInterfaceToken(BluetoothRemoteDeviceObserverproxy::GetDescriptor())) {
-        HILOGE("[OnRemoteBatteryLevelChanged] fail: write interface token failed.");
-        return;
-    }
-    if (!data.WriteParcelable(&device)) {
-        HILOGE("[OnRemoteBatteryLevelChanged] fail: write device failed");
-        return;
-    }
-    if (!data.WriteInt32(batteryLevel)) {
-        HILOGE("[OnRemoteBatteryLevelChanged] fail: write status failed.");
-        return;
-    }
+//void BluetoothRemoteDeviceObserverproxy::OnRemoteBatteryLevelChanged(
+//    const BluetoothRawAddress &device, int32_t batteryLevel)
+//{
+  //  MessageParcel data;
+  //  if (!data.WriteInterfaceToken(BluetoothRemoteDeviceObserverproxy::GetDescriptor())) {
+  //      HILOGE("[OnRemoteBatteryLevelChanged] fail: write interface token failed.");
+  //      return;
+  //  }
+  //  if (!data.WriteParcelable(&device)) {
+  //      HILOGE("[OnRemoteBatteryLevelChanged] fail: write device failed");
+  //      return;
+  //  }
+  //  if (!data.WriteInt32(batteryLevel)) {
+  //      HILOGE("[OnRemoteBatteryLevelChanged] fail: write status failed.");
+ //       return;
+ //   }
 
-    MessageParcel reply;
-    MessageOption option = {MessageOption::TF_ASYNC};
-    int32_t error = InnerTransact(
-        BluetoothRemoteDeviceObserverInterfaceCode::BT_REMOTE_DEVICE_OBSERVER_REMOTE_BATTERY_LEVEL,
-        option, data, reply);
-    if (error != NO_ERROR) {
-        HILOGE("BluetoothRemoteDeviceObserverproxy::OnRemoteBatteryLevelChanged done fail, error: %{public}d", error);
-        return;
-    }
+ //   MessageParcel reply;
+ //   MessageOption option = {MessageOption::TF_ASYNC};
+//    int32_t error = InnerTransact(
+ //       BluetoothRemoteDeviceObserverInterfaceCode::BT_REMOTE_DEVICE_OBSERVER_REMOTE_BATTERY_LEVEL,
+ //       option, data, reply);
+ //   if (error != NO_ERROR) {
+ //       HILOGE("BluetoothRemoteDeviceObserverproxy::OnRemoteBatteryLevelChanged done fail, error: %{public}d", error);
+//        return;
+//    }
+//}
+
+void BluetoothRemoteDeviceObserverproxy::OnRemoteBatteryChanged(const BluetoothRawAddress &device,
+    const BluetoothBatteryInfo &batteryInfo)
+{
+    return;
+}
+
+void BluetoothRemoteDeviceObserverproxy::OnRemoteDeviceCommonInfoReport(const BluetoothRawAddress &device,
+    const std::vector<uint8_t> &value)
+{
+    return;
 }
 
 void BluetoothRemoteDeviceObserverproxy::OnAclStateChanged(const BluetoothRawAddress &device,
