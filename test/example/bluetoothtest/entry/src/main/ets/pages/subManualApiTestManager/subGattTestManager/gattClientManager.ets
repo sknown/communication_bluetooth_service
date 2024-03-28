@@ -26,9 +26,7 @@ const G_MAC = '6c:96:d7:3d:87:6f'
 
 @Component
 struct GattClientSetting {
-  private gattClientInstance = null;
   private peripheralDeviceId = G_MAC; // '10:2C:6B:11:B3:17';DaYu200//
-  private gattClientExist = false;
   @State isOnBLECharacteristicChangeClick: boolean = false;
   @State bleCharacteristicChangeInfo: string = '';
   @State serviceUUID: string = '00001801-0000-1000-8000-00805f9b34fb';
@@ -196,10 +194,7 @@ struct GattClientManager {
   @State mtuSize: number = 128;
 
   //------------@State->private------------------------------
-  // @State  gattClientInstance:bluetooth.GattClientDevice = null;
-  private gattClientInstance = null;
   private peripheralDeviceId = G_MAC; // '6c:96:d7:3d:87:6f';PC//
-  private gattClientExist = false;
   private testItem: TestData = (router.getParams() as myParams).testItem;
 
   aboutToAppear() {
@@ -232,7 +227,8 @@ struct GattClientManager {
           .onClick(() => {
             this.showList = !this.showList;
           })
-      }.width("100%")
+      }
+      .width("100%")
 
       Column() {
         if ( this.showList ) {
@@ -304,10 +300,7 @@ struct GattClientManager {
               .fontSize("18vp")
               .width("100%")
             Scroll() {
-              ContentTable({
-                // testItem : this.testItemManager ,
-                apiItems : initGattClientManagerApiData()
-              })
+              ContentTable({ apiItems : initGattClientManagerApiData() })
             }
             .width(ConfigData.WH_100_100)
             .align(Alignment.TopStart)
