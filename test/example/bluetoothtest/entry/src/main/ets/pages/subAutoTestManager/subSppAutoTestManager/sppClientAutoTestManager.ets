@@ -14,7 +14,6 @@
  */
 
 import { BTAutoArrayItem , myParams } from '../../../Utils/common'
-import promptAction from '@ohos.promptAction';
 import ConfigData from '../../../Utils/ConfigData';
 import router from '@ohos.router';
 import { TestData } from '../../../MainAbility/model/testData'
@@ -33,14 +32,11 @@ import {
 @Entry
 @Component
 struct SppClientAutoTestManager {
-  @State message: string = 'SppClientAutoTestManager';
-  @State testMessage: string = "";
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("sppClientAutoTestMessage") sppClientAutoTestMessage: string = ""
 
   aboutToAppear() {
-
     AppStorage.setOrCreate('txtScanFilterDeviceId' , "10:2C:6B:11:B3:17");
     AppStorage.setOrCreate('txtScanFilterName' , "dudu-tiger");
     AppStorage.setOrCreate('txtScanFilterServiceUuid' , "0000180A-0000-1000-8000-00805f9b34fb");
@@ -49,7 +45,6 @@ struct SppClientAutoTestManager {
     AppStorage.setOrCreate('txtScanOptionsMatchMode' , '0');
     AppStorage.setOrCreate('cbxBleScanFilter' , true);
     AppStorage.setOrCreate('cbxBleScanOptions' , true);
-
     AppStorage.setOrCreate('inputDeviceId' , "10:2C:6B:11:B3:17");
     AppStorage.setOrCreate('inputUuid' , "00001101-0000-1000-8000-00805f9b34fb");
     AppStorage.setOrCreate('writeClientData' , '11');
@@ -72,9 +67,7 @@ struct SppClientAutoTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initSppClientManagerAutoData() ,
-              // testMessage : this.testMessage ,
               changeIndex : this.changeIndex ,
             })
           }
@@ -132,11 +125,6 @@ struct SppClientAutoTestManager {
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
           this.forLoop()
-
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
