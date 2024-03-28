@@ -34,7 +34,6 @@ import * as BrManagerInterface from '../../MainAbility/model/brManagerInterface'
 @Entry
 @Component
 struct BleFoundScenarioTestManager {
-  @State message: string = 'BleFoundScenarioTestManager';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("bleFoundScenarioMessage") bleFoundScenarioMessage: string = ""
@@ -67,9 +66,7 @@ struct BleFoundScenarioTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             ScenarioContentTable({
-              // testItem : this.testItem ,
               scenarioItems : initBleFoundManagerScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
