@@ -36,9 +36,7 @@ import bluetoothManager from '@ohos.bluetoothManager';
 struct OppProfileTest {
   @State hasProfile: boolean = false;
   @StorageLink('textMessage') oppMessage: string = "";
-  @State isConnection: boolean = false;
   @State connectionStateInfo: string = "";
-  //  @State deviceId: string = "F0:5C:D5:8B:A5:8A";
   @State serverMac: string = "00:00:00:00:00:00";
   @State title: Resource = $r('app.string.opp_profile_test_title');
   @State profileExist: string = ""
