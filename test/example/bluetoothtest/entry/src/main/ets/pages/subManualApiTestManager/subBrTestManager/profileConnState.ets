@@ -98,7 +98,6 @@ struct profileConnState {
         .width("100%")
         .backgroundColor($r("app.color.moon"))
 
-
       Row() {
         Column() {
           Text("取消")
@@ -123,7 +122,6 @@ struct profileConnState {
             .backgroundColor($r("app.color.white"))
         }
         .padding({ left : 50 })
-
       }
       .width("80%")
     }
@@ -139,8 +137,7 @@ struct profileConnState {
 struct ButtonComponent {
   @State isTouched: boolean = false;
   private text;
-  private isOnClick = () => {
-  };
+  private isOnClick = () => {};
 
   build() {
     Column() {
