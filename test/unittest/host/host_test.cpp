@@ -551,16 +551,16 @@ HWTEST_F(HostTest, Host_ModuleTest_GetDeviceType_00100, TestSize.Level1)
  * @tc.name:
  * @tc.desc:
  */
-// HWTEST_F(HostTest, Host_ModuleTest_GetRemoteDeviceBatteryInfo_00100, TestSize.Level1)
-// {
-//     GTEST_LOG_(INFO) << "Host_ModuleTest_GetRemoteDeviceBatteryInfo_00100 start";
+HWTEST_F(HostTest, Host_ModuleTest_GetRemoteDeviceBatteryInfo_00100, TestSize.Level1)
+{
+    GTEST_LOG_(INFO) << "Host_ModuleTest_GetRemoteDeviceBatteryInfo_00100 start";
 
-//     DeviceBatteryInfo batteryInfo;
-//     BluetoothRemoteDevice device_("00:00:00:00:00:00", INVALID_TYPE);
-//     EXPECT_EQ(device_.GetRemoteDeviceBatteryInfo(batteryInfo), BT_ERR_INTERNAL_ERROR);
+    DeviceBatteryInfo batteryInfo;
+    BluetoothRemoteDevice device_("00:00:00:00:00:00", INVALID_TYPE);
+    EXPECT_EQ(device_.GetRemoteDeviceBatteryInfo(batteryInfo), BT_ERR_INTERNAL_ERROR);
 
-//     GTEST_LOG_(INFO) << "Host_ModuleTest_GetRemoteDeviceBatteryInfo_00100 end";
-// }
+    GTEST_LOG_(INFO) << "Host_ModuleTest_GetRemoteDeviceBatteryInfo_00100 end";
+}
 
 /**
  * @tc.number: Host_ModuleTest_GetPairState_00100
