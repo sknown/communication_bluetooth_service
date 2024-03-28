@@ -30,9 +30,7 @@ const G_MAC = '6c:96:d7:3d:87:6f'
 
 @Component
 struct GattClientSetting {
-  private gattClientInstance = null;
   private peripheralDeviceId = G_MAC; // '10:2C:6B:11:B3:17';DaYu200//
-  private gattClientExist = false;
   @State isOnBLECharacteristicChangeClick: boolean = false;
   @State bleCharacteristicChangeInfo: string = '';
   @State serviceUUID: string = '00001801-0000-1000-8000-00805f9b34fb';
@@ -48,7 +46,6 @@ struct GattClientSetting {
     AppStorage.setOrCreate('characteristicValue' , this.characteristicValue);
     AppStorage.setOrCreate('descriptorUUID' , this.descriptorUUID);
     AppStorage.setOrCreate('descriptorValue' , this.descriptorValue);
-
   }
 
   build() {
@@ -165,7 +162,6 @@ struct GattClientSetting {
           .justifyContent(FlexAlign.Start)
           .alignItems(VerticalAlign.Center)
         }
-
         Stack().height("0.25vp").backgroundColor("#000000");
       }
     }
@@ -199,9 +195,7 @@ struct GattClient {
 
   //------------@State->private------------------------------
   // @State  gattClientInstance:bluetooth.GattClientDevice = null;
-  private gattClientInstance = null;
   private peripheralDeviceId = G_MAC; // '6c:96:d7:3d:87:6f';PC//
-  private gattClientExist = false;
   private testItem: TestData = (router.getParams() as myParams).testItem;
 
   aboutToAppear() {
