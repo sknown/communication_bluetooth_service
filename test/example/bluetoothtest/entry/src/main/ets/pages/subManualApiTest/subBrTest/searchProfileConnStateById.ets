@@ -15,7 +15,6 @@
 
 import { TitleComponent } from '../../../Component/titleComponent';
 import bt from '@ohos.bluetooth';
-import defaultAppManager from '@ohos.bundle.defaultAppManager';
 
 /**
  * profileConnState2 page of bluetooth test
