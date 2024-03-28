@@ -242,7 +242,7 @@ static void BtmPrepareSnoopFile(void)
     }
 }
 
-static int BTM_SetSnoopOutputMaxsize(uint16_t maxSize)
+int BTM_SetSnoopOutputMaxsize(uint16_t maxSize)
 {
     g_outputMaxsize = maxSize * KILOBYTES * KILOBYTES;
     return BT_SUCCESS;
