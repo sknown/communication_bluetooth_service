@@ -21,7 +21,6 @@ import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
 import { BrManagerAutoTestCase , initBrManagerAutoData } from '../../MainAbility/model/autoTestDataModelsManager'
 import { AutoContentTable } from '../../Component/autoContentTable'
-import promptAction from '@ohos.promptAction';
 
 /**
  *  BrAutoTest Manager Page Of Bluetooth test
@@ -30,8 +29,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct BrAutoTestManager {
-  @State message: string = 'BrAutoTestManager';
-  //  @State testState: boolean = false;
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("brAutoTestMessage") brAutoTestMessage: string = ""
@@ -53,9 +50,7 @@ struct BrAutoTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initBrManagerAutoData() ,
-              //             testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
@@ -112,11 +107,6 @@ struct BrAutoTestManager {
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
           this.forLoop()
-
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
