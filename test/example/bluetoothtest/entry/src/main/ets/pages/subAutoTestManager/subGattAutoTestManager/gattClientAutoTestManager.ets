@@ -24,7 +24,6 @@ import {
   GattClientManagerAutoTestCase ,
   initGattClientManagerAutoData
 } from '../../../MainAbility/model/autoTestDataModelsManager';
-import promptAction from '@ohos.promptAction';
 
 /**
  *  GattClientAutoTest Manager Page Of Bluetooth test
@@ -33,9 +32,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct GattClientAutoTestManager {
-  @State message: string = 'GattClientAutoTestManager';
-  //  @State textMessage: string = 'null';
-  @State testMessage: string = "";
   @State changeIndex: number = - 1
   private testItem: TestData = (router.getParams() as myParams).testItem
   @StorageLink("gattClientAutoTestMessage") gattClientAutoTestMessage: string = ""
@@ -66,9 +62,7 @@ struct GattClientAutoTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initGattClientManagerAutoData() ,
-              // testMessage : this.testMessage ,
               changeIndex : this.changeIndex
             })
           }
@@ -110,7 +104,6 @@ struct GattClientAutoTestManager {
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
 
-
       Stack().height("1vp").backgroundColor("#000000");
       Column() {
         Button({ type : ButtonType.Normal , stateEffect : true }) {
@@ -125,11 +118,6 @@ struct GattClientAutoTestManager {
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
           this.forLoop()
-
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
