@@ -18,7 +18,7 @@ import LogUtil from '../../../Utils/LogUtil';
 import BluetoothDeviceController from '../../../MainAbility/controller/BluetoothDeviceController';
 import BluetoothDevice from '../../../MainAbility/model/BluetoothDevice'
 import router from '@ohos.router';
-import { BluetoothModel , DeviceState , DeviceType } from '../../../MainAbility/model/BluetoothModel';
+import { DeviceState , DeviceType } from '../../../MainAbility/model/BluetoothModel';
 import ImageAnimatorComponent from '../../../Component/imageAnimatorComponent';
 import { PageTitle } from '../../../Component/pageTitle';
 import bluetooth from '@ohos.bluetooth';
@@ -344,8 +344,6 @@ export struct AvailableItem {
         Text(this.state)
           .fontSize(17.4)
           .flexGrow(1)
-        //        Text(value)
-        //          .fontSize(17.4)
       }
       .width("10%")
       .padding({ left : 10 })
@@ -396,8 +394,6 @@ export struct PairedItem {
         Text(this.state)
           .fontSize(17.4)
           .flexGrow(1)
-        //        Text(value)
-        //          .fontSize(17.4)
       }
       .width("10%")
       .padding({ left : 10 })
@@ -406,8 +402,6 @@ export struct PairedItem {
         Text("取消")
           .fontSize(17.4)
           .flexGrow(1)
-        //        Text(value)
-        //          .fontSize(17.4)
       }
       .width("10%")
       .padding({ left : 10 })
@@ -449,7 +443,6 @@ export struct AvailableDeviceComponent {
 
   aboutToAppear(): void {
     if ( this.controller ) {
-
       // bind component and initialize
       this.controller.bindComponent(this)
         .bindProperties([ "isDeviceDiscovering", "availableDevices", "pairPinCode" ])
@@ -502,7 +495,6 @@ export struct AvailableDeviceComponent {
                 .onClick(() => {
                   LogUtil.info(this.TAG_PAGE + 'item on click : ' + JSON.stringify(item));
                   AppStorage.setOrCreate('pairedMac' , item.deviceId);
-                  //                AppStorage.setOrCreate('pairedName', item.deviceName);
                   this.pairDevice(item)
                 })
               }
