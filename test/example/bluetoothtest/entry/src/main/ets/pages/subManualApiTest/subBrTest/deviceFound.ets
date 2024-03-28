@@ -18,12 +18,11 @@ import LogUtil from '../../../Utils/LogUtil';
 import BluetoothDeviceController from '../../../MainAbility/controller/BluetoothDeviceController';
 import BluetoothDevice from '../../../MainAbility/model/BluetoothDevice'
 import router from '@ohos.router';
-import { BluetoothModel , DeviceState , DeviceType } from '../../../MainAbility/model/BluetoothModel';
+import { DeviceState , DeviceType } from '../../../MainAbility/model/BluetoothModel';
 import ImageAnimatorComponent from '../../../Component/imageAnimatorComponent';
 import { PageTitle } from '../../../Component/pageTitle';
 import bluetooth from '@ohos.bluetooth';
 import promptAction from '@ohos.promptAction';
-import { Callback } from '@ohos.base';
 
 interface BluetoothDeviceParam {
   bluetoothDevice: string;
@@ -353,8 +352,6 @@ export struct AvailableItem {
         Text(this.state)
           .fontSize(17.4)
           .flexGrow(1)
-        //        Text(value)
-        //          .fontSize(17.4)
       }
       .width("10%")
       .padding({ left : 10 })
