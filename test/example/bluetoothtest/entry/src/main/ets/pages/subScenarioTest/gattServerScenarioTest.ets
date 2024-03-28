@@ -21,7 +21,6 @@ import { TestData } from '../../MainAbility/model/testData'
 import { ScenarioContentTable } from '../../Component/scenarioContentTable'
 import { initGattServerScenarioData } from '../../MainAbility/model/scenarioTestDataModel'
 import * as GattServerInterface from '../../MainAbility/model/gattServerInterface'
-import * as BLEInterface from '../../MainAbility/model/bleInterface'
 import * as BrInterface from '../../MainAbility/model/brInterface'
 
 /**
@@ -31,7 +30,6 @@ import * as BrInterface from '../../MainAbility/model/brInterface'
 @Entry
 @Component
 struct GattServerScenarioTest {
-  @State message: string = 'GattServerScenarioTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("gattServerScenarioMessage") gattServerScenarioMessage: string = ""
@@ -93,7 +91,6 @@ struct GattServerScenarioTest {
               .width("100%")
             ScenarioContentTable({
               scenarioItems : initGattServerScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
@@ -151,7 +148,6 @@ struct GattServerScenarioTest {
           .margin({ top : "15vp" , left : "10vp" , right : "10vp" })
           .align(Alignment.Start)
           .onClick(async(event: ClickEvent) => {
-            //            AlertDialog.show({ message: '开始GattServer场景测试' })
             let self = this
             const arr = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
 
