@@ -25,7 +25,6 @@ import {
   initHitHostProfileManagerAutoData
 } from '../../../MainAbility/model/autoTestDataModelsManager';
 import btmProfileModel from '../../../MainAbility/model/btmProfileModel'
-import promptAction from '@ohos.promptAction';
 
 /**
  *  HitHostAutoTest Manager Page Of Bluetooth test
@@ -34,9 +33,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct HitHostAutoTestManager {
-  @State message: string = 'HitHostAutoTestManager';
-  //  @State textMessage: string = 'null';
-  @State testMessage: string = "";
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1;
   @State profileType: number = 6;
@@ -69,9 +65,7 @@ struct HitHostAutoTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initHitHostProfileManagerAutoData() ,
-              // testMessage : this.testMessage ,
               changeIndex : this.changeIndex
             })
 
@@ -129,13 +123,7 @@ struct HitHostAutoTestManager {
         .height(50)
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
-
           this.forLoop()
-
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
