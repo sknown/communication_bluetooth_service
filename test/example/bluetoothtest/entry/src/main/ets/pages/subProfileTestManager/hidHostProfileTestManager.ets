@@ -35,9 +35,7 @@ import promptAction from '@ohos.promptAction';
 struct HidHostProfileManagerTest {
   @State hasProfile: boolean = false;
   @StorageLink('textMessage') hidHostMessage: string = "";
-  @State isConnection: boolean = false;
   @State connectionStateInfo: string = "";
-  //  @State deviceId: string = "F0:5C:D5:8B:A5:8A";
   @State title: Resource = $r('app.string.hid_host_profile_test_title');
   @State profileExist: string = ""
   @State profileNotExist: string = ""
