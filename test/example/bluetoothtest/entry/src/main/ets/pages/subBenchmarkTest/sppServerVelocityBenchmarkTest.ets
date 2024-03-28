@@ -30,7 +30,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct SppServerVelocityBenchmarkTest {
-  @State message: string = 'SppServerBenchmarkTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("sppServerVelocityBenchmarkTestMessage") sppServerVelocityBenchmarkTestMessage: string = ""
@@ -109,7 +108,6 @@ struct SppServerVelocityBenchmarkTest {
                 .width("50%")
                 .borderRadius(10)
                 .height(32)
-
             }
             .padding(2)
             .justifyContent(FlexAlign.Start)
@@ -182,7 +180,6 @@ struct SppServerVelocityBenchmarkTest {
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.On)
-
       }
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
@@ -247,7 +244,6 @@ struct SppServerVelocityBenchmarkTest {
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
-              //              Text('清空').fontSize("24vp").fontColor(0xffffff).margin({ left: 5, right: 10 })
             }.alignItems(VerticalAlign.Center)
           }
           .borderRadius(8)
@@ -281,14 +277,9 @@ struct SppServerVelocityBenchmarkTest {
   }
 }
 
-let arr = []
 
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do something
-  //  }
   switch ( func ) {
     case testSetLocalName: {
       func("DaYuBlue")
@@ -365,8 +356,6 @@ function sppServerCreateSafe(): string {
       serverNumber = serverSocketID;
       message = "创建server成功";
       promptAction.showToast({ message : message })
-      //      AppStorage.setOrCreate("serverNumber", serverNumber)
-      //      serverNumber = AppStorage.get("serverNumber")
       console.log('testSppServerAccept test')
       console.log('testSppServerAccept serverNumber ' + serverNumber)
     }
@@ -379,7 +368,6 @@ function sppServerCreateSafe(): string {
 function sppServerAccept(): string {
   let message = "testSppServerAccept test"
   let serverReadMessage = ""
-  //  serverNumber = AppStorage.get("serverNumber")
   console.log('testSppServerAccept test')
   console.log('testSppServerAccept serverNumber ' + serverNumber)
   let i = 1
