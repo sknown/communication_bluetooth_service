@@ -16,7 +16,6 @@
 import { BleScanFilter , myParams } from '../../Utils/common'
 import BluetoothModel from '../../MainAbility/model/BluetoothModel';
 import router from '@ohos.router';
-import LogUtil from '../../Utils/LogUtil';
 import bluetooth from '@ohos.bluetooth';
 import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
@@ -34,7 +33,6 @@ import { BleFilterTable } from '../../Component/bleFilterTable';
 struct BleTest {
   private testItem: TestData = (router.getParams() as myParams).testItem;
   @State showList: boolean = true;
-  @State message: string = 'BleTest Result';
   @State peripheralDeviceId: string = '6c:96:d7:3d:87:6f'; // 88:36:CF:09:C1:90
   @State currentClick: number = - 1;
   @State btOnBLEDeviceFind: string = 'on("BLEDeviceFind"): void';
@@ -65,8 +63,6 @@ struct BleTest {
   }
   @StorageLink('bleAvailableDevices') availBleDeviceIds: string[] = [];
   @StorageLink('OnBLEDeviceFind') On_off_BLEDeviceFind: boolean = false;
-  private gattServerInstance = null;
-  private gattClientDeviceInstance = null;
 
   aboutToAppear() {
     AppStorage.setOrCreate("peripheralDeviceId" , this.peripheralDeviceId)
@@ -117,7 +113,7 @@ struct BleTest {
       .align(Alignment.TopStart)
 
       if ( this.showList ) {
-        ContentTable({ testItem : this.testItem , apiItems : initBleApiData() })
+        ContentTable({ apiItems : initBleApiData() })
       } else {
         BleFilterTable({ testItem : this.testItem })
       }
