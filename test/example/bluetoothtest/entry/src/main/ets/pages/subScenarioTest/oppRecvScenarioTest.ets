@@ -28,7 +28,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct OppRecvScenarioTest {
-  @State message: string = 'OppRecvScenarioTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1;
   @StorageLink("oppRecvScenarioMessage") oppRecvScenarioMessage: string = ""
@@ -87,20 +86,20 @@ struct OppRecvScenarioTest {
   }
 
   onTransferStateChange() {
-    // try {
-    //   this.oppProfile.on("transferStateChange" , (stateInformation) => {
-    //     console.log("transferStateChange enter");
-    //     this.showProgress = true;
-    //     this.curProgress = (stateInformation.currentBytes * 100) / stateInformation.totalBytes;
-    //     if ( this.curProgress === 100 ) {
-    //       this.showProgress = false;
-    //       this.oppRecvScenarioMessage = "接收文件成功，文件存放路径：" + JSON.stringify(stateInformation.filePath) + "\n"
-    //       testLog(this.oppRecvScenarioMessage);
-    //     }
-    //   })
-    // } catch( error ) {
-    //   console.log("on transferStateChange fail, err: " + JSON.stringify(error));
-    // }
+    try {
+      this.oppProfile.on("transferStateChange" , (stateInformation) => {
+        console.log("transferStateChange enter");
+        this.showProgress = true;
+        this.curProgress = (stateInformation.currentBytes * 100) / stateInformation.totalBytes;
+        if ( this.curProgress === 100 ) {
+          this.showProgress = false;
+          this.oppRecvScenarioMessage = "接收文件成功，文件存放路径：" + JSON.stringify(stateInformation.filePath) + "\n"
+          testLog(this.oppRecvScenarioMessage);
+        }
+      })
+    } catch( error ) {
+      console.log("on transferStateChange fail, err: " + JSON.stringify(error));
+    }
   }
 
   build() {
@@ -206,20 +205,20 @@ struct OppRecvScenarioTest {
               .align(Alignment.Center)
               .alignSelf(ItemAlign.Center)
               .onClick(() => {
-                // try {
-                //   this.oppProfile.on("receiveIncomingFile" , ( information) => {
-                //     testLog("opp开启接收文件")
-                //     this.deviceName = information.deviceName;
-                //     this.fileName = information.fileName;
-                //     this.oppRecvScenarioMessage = "发送端为：" + this.deviceName + ";文件名为：" + this.fileName + "\n"
-                //     testLog(this.oppRecvScenarioMessage);
-                //     console.log(JSON.stringify(information));
-                //     this.receiveDialogController.open();
-                //   })
-                // } catch( error ) {
-                //   this.oppRecvScenarioMessage = "opp开启接收文件失败，err: " + JSON.stringify(error)
-                //   testLog(this.oppRecvScenarioMessage);
-                // }
+                try {
+                  this.oppProfile.on("receiveIncomingFile" , ( information) => {
+                    testLog("opp开启接收文件")
+                    this.deviceName = information.deviceName;
+                    this.fileName = information.fileName;
+                    this.oppRecvScenarioMessage = "发送端为：" + this.deviceName + ";文件名为：" + this.fileName + "\n"
+                    testLog(this.oppRecvScenarioMessage);
+                    console.log(JSON.stringify(information));
+                    this.receiveDialogController.open();
+                  })
+                } catch( error ) {
+                  this.oppRecvScenarioMessage = "opp开启接收文件失败，err: " + JSON.stringify(error)
+                  testLog(this.oppRecvScenarioMessage);
+                }
               })
               .width('60%')
           }
