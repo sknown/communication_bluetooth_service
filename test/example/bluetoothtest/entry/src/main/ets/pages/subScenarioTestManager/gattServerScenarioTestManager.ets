@@ -30,7 +30,6 @@ import * as BrManagerInterface from '../../MainAbility/model/brManagerInterface'
 @Entry
 @Component
 struct GattServerScenarioTestManager {
-  @State message: string = 'GattServerScenarioTestManager';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("gattServerScenarioMessage") gattServerScenarioMessage: string = ""
@@ -91,9 +90,7 @@ struct GattServerScenarioTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             ScenarioContentTable({
-              // testItem : this.testItem ,
               scenarioItems : initGattServerManagerScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
@@ -151,7 +148,6 @@ struct GattServerScenarioTestManager {
           .margin({ top : "15vp" , left : "10vp" , right : "10vp" })
           .align(Alignment.Start)
           .onClick(async(event: ClickEvent) => {
-            //            AlertDialog.show({ message: '开始GattServer场景测试' })
             let self = this
             const arr = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
 
