@@ -36,16 +36,9 @@ const TAG = "[Bluetooth]"
 struct BrTest {
   private TAG_PAGE = ConfigData.TAG + 'Paired_Device ';
   private testItem: TestData = (router.getParams() as myParams).testItem;
-  @State message: string = "";
-  @State btStateMessage: string = "";
-  @State pinMessage: string = "";
-  @State bondStateMessage: string = "";
   @State btEnable: boolean = false;
-  @State isConnection: boolean = false;
   @StorageLink('setLocalNameRet') setLocalNameRet: boolean = false;
   @StorageLink('setScanModeRet') setScanModeRet: boolean = false;
-  private stateProfile: string = ""
-  private stateBT: string = "";
   @State deviceId: string = '';
   @State currentClick: number = - 1;
   @StorageLink('pairedDeviceInfo') pairingDevice: BluetoothDevice = new BluetoothDevice;
@@ -117,8 +110,7 @@ struct BrTest {
         }
       }
       .align(Alignment.TopStart)
-
-      ContentTable({ testItem : this.testItem , apiItems : initBRApiData() })
+      ContentTable({ apiItems : initBRApiData() })
     }
     .alignItems(HorizontalAlign.Center)
     .backgroundColor($r("app.color.lead"))
