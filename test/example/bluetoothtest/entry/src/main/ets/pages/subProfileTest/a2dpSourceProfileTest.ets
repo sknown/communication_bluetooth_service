@@ -35,9 +35,7 @@ import bluetooth from '@ohos.bluetooth';
 struct A2dpSourceProfileTest {
   @State hasProfile: boolean = false;
   @StorageLink('textMessage') a2dpMessage: string = "";
-  @State isConnection: boolean = false;
   @State connectionStateInfo: string = "";
-  //  @State deviceId: string = "F0:5C:D5:8B:A5:8A";
   @State title: Resource = $r('app.string.a2dp_sour_profile_test_title');
   @State profileExist: string = ""
   @State profileNotExist: string = ""
