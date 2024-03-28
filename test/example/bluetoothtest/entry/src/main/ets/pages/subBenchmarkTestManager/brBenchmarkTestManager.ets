@@ -31,7 +31,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct BrBenchmarkTestManager {
-  @State message: string = 'BrBenchmarkTestManager';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("brBenchmarkTestMessage") brBenchmarkTestMessage: string = ""
@@ -59,7 +58,6 @@ struct BrBenchmarkTestManager {
           }
           .width("100%")
           .height(100)
-
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.Auto)
@@ -91,7 +89,6 @@ struct BrBenchmarkTestManager {
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.On)
-
       }
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
@@ -108,10 +105,7 @@ struct BrBenchmarkTestManager {
           .margin({ top : "15vp" , left : "5vp" })
           .align(Alignment.Start)
           .onClick(async(event: ClickEvent) => {
-
-
             this.forLoop()
-
           })
 
           Button({ type : ButtonType.Normal , stateEffect : true }) {
@@ -181,7 +175,6 @@ struct BrBenchmarkTestManager {
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
-              //              Text('清空').fontSize("24vp").fontColor(0xffffff).margin({ left: 5, right: 10 })
             }.alignItems(VerticalAlign.Center)
           }
           .borderRadius(8)
@@ -232,14 +225,8 @@ export function test(func: Function) {
   return (end - start) + "ms"; //返回函数执行需要时间
 }
 
-
-//let arr = []
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do something
-  //  }
   switch ( func ) {
     case testSetLocalNameManager: {
       func("DaYuBlue")
