@@ -32,7 +32,6 @@ import * as SPPClientManagerInterface from '../../MainAbility/model/sppClientMan
 @Entry
 @Component
 struct SppClientScenarioTestManager {
-  @State message: string = 'SppClientScenarioTestManager';
   @State changeIndex: number = - 1;
   @State writeClientData: string = '11';
   private uuid: string = "00001101-0000-1000-8000-00805f9b34fb";
@@ -74,9 +73,7 @@ struct SppClientScenarioTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             ScenarioContentTable({
-              // testItem : this.testItem ,
               scenarioItems : initSppClientManagerScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
