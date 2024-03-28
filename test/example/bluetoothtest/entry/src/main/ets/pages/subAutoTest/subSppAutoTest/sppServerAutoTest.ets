@@ -21,7 +21,6 @@ import { PageTitle } from '../../../Component/pageTitle';
 import { TestImageDisplay } from '../../../Component/testImageDisplay';
 import { AutoContentTable } from '../../../Component/autoContentTable';
 import { initSppServerAutoData , SppServerAutoTestCase } from '../../../MainAbility/model/autoTestDataModels';
-import promptAction from '@ohos.promptAction';
 
 /**
  *  SppServerAutoTest Page Of Bluetooth test
@@ -30,9 +29,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct SppServerAutoTest {
-  @State message: string = 'SppServerAutoTest';
-  //  @State textMessage: string = 'null';
-  @State testMessage: string = "";
   @State changeIndex: number = - 1
   private testItem: TestData = (router.getParams() as myParams).testItem
   @StorageLink("sppServerAutoTestMessage") sppServerAutoTestMessage: string = ""
@@ -69,7 +65,6 @@ struct SppServerAutoTest {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initSppServerAutoData() ,
               changeIndex : this.changeIndex
             })
@@ -127,13 +122,7 @@ struct SppServerAutoTest {
         .height(50)
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
-
           this.forLoop()
-
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
