@@ -30,7 +30,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct SppServerBandWidthBenchmarkTest {
-  @State message: string = 'SppServerBenchmarkTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("sppServerBandWidthBenchmarkTestMessage") sppServerBandWidthBenchmarkTestMessage: string = ""
@@ -151,7 +150,6 @@ struct SppServerBandWidthBenchmarkTest {
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.On)
-
       }
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
@@ -216,7 +214,6 @@ struct SppServerBandWidthBenchmarkTest {
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
-              //              Text('清空').fontSize("24vp").fontColor(0xffffff).margin({ left: 5, right: 10 })
             }.alignItems(VerticalAlign.Center)
           }
           .borderRadius(8)
@@ -250,14 +247,8 @@ struct SppServerBandWidthBenchmarkTest {
   }
 }
 
-let arr = []
-
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do something
-  //  }
   switch ( func ) {
     case testSetLocalName: {
       func("DaYuBlue")
@@ -272,7 +263,6 @@ export function testFunc(func: Function) {
     }
       break;
   }
-
   let end = new Date().getTime()
   console.log("开始:" + Number(start) + "ms")
   console.log("结束:" + Number(end) + "ms")
@@ -310,8 +300,6 @@ function sppServerCreateSafe(): string {
       serverNumber = serverSocketID;
       message = "创建server成功";
       promptAction.showToast({ message : message })
-      //      AppStorage.setOrCreate("serverNumber", serverNumber)
-      //      serverNumber = AppStorage.get("serverNumber")
       console.log('testSppServerAccept test')
       console.log('testSppServerAccept serverNumber ' + serverNumber)
     }
@@ -319,7 +307,6 @@ function sppServerCreateSafe(): string {
   promptAction.showToast({ message : message })
   return message
 }
-
 
 function sppServerAccept(): string {
   let message = "testSppServerAccept test"
@@ -362,7 +349,6 @@ function sppServerAccept(): string {
         } else {
           message = "读取失败";
         }
-        //        AppStorage.setOrCreate("dataServerReadMessageBW", message)
         promptAction.showToast({ message : message })
         return message
       })
