@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 
-
 import ConfigData from '../../../Utils/ConfigData';
 import HeadTableComponent from '../../../Component/headerComponent';
 import router from '@ohos.router';
