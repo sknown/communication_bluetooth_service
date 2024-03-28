@@ -25,7 +25,6 @@ import {
   PanNetworkProfileManagerAutoTestCase
 } from '../../../MainAbility/model/autoTestDataModelsManager';
 import btmProfileModel from '../../../MainAbility/model/btmProfileModel'
-import promptAction from '@ohos.promptAction';
 
 /**
  *  PanNetworkAutoTest Page Of Bluetooth test
@@ -34,9 +33,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct PanNetworkAutoTestManager {
-  @State message: string = 'PanNetworkAutoTestManager';
-  //  @State textMessage: string = 'null';
-  @State testMessage: string = "";
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1;
   @State profileType: number = 7;
@@ -68,9 +64,7 @@ struct PanNetworkAutoTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initPanNetworkProfileManagerAutoData() ,
-              // testMessage : this.testMessage ,
               changeIndex : this.changeIndex
             })
 
@@ -129,10 +123,6 @@ struct PanNetworkAutoTestManager {
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
           this.forLoop()
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
