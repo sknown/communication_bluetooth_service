@@ -31,7 +31,6 @@ import { BrBenchmarkTestCase } from '../../MainAbility/model/benchmarkTestDataMo
 @Entry
 @Component
 struct BrBenchmarkTest {
-  @State message: string = 'BrBenchmarkTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("brBenchmarkTestMessage") brBenchmarkTestMessage: string = ""
@@ -59,7 +58,6 @@ struct BrBenchmarkTest {
           }
           .width("100%")
           .height(100)
-
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.Auto)
@@ -91,7 +89,6 @@ struct BrBenchmarkTest {
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.On)
-
       }
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
@@ -178,7 +175,6 @@ struct BrBenchmarkTest {
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
-              //              Text('清空').fontSize("24vp").fontColor(0xffffff).margin({ left: 5, right: 10 })
             }.alignItems(VerticalAlign.Center)
           }
           .borderRadius(8)
@@ -230,14 +226,8 @@ export function test(func: Function) {
   return (end - start) + "ms"; //返回函数执行需要时间
 }
 
-
-//let arr = []
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do something
-  //  }
   switch ( func ) {
     case testSetLocalName: {
       func("DaYuBlue")
@@ -255,7 +245,6 @@ export function testFunc(func: Function) {
   let end = new Date().getTime()
   console.log("开始:" + Number(start) + "ms")
   console.log("结束:" + Number(end) + "ms")
-
   console.log("花费:" + Number(end - start) + "ms")
   let message = ""
   message += "花费:" + Number(end - start) + "ms" + "\n"
@@ -284,13 +273,10 @@ function subscribeBluetoothDeviceFind() {
       promptAction.showToast({ message : message })
       brRunMessage += "\n" + "花费:" + Number(end1 - start1) + "ms;" + "Mac为：[" + deviceItemInfo + "]" + "\n"
       brRunMessage += "开始:" + Number(start1) + "ms; " + "结束:" + Number(end1) + "ms" + "\n"
-
       console.log("花费:" + Number(end1 - start1) + "ms;" + "Mac为：[" + deviceItemInfo + "]" + "\n")
       console.log("开始:" + Number(start1) + "ms; " + "结束:" + Number(end1) + "ms" + "\n")
-
       AppStorage.setOrCreate('brRunMessage' , brRunMessage);
       await sleep(1)
-
       AppStorage.setOrCreate("brBenchmarkTestMessage" , brRunMessage)
       await sleep(1)
       return brRunMessage
