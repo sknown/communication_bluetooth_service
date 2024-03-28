@@ -18,20 +18,16 @@ import router from '@ohos.router';
 import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
 import { TestData } from '../../MainAbility/model/testData'
-import { ScenarioContentTable } from '../../Component/scenarioContentTable'
-import { initBRFoundScenarioData } from '../../MainAbility/model/scenarioTestDataModel'
 import * as GattServerInterface from '../../MainAbility/model/gattServerInterface'
-import { GattServerBenchmarkTestCase } from '../../MainAbility/model/benchmarkTestDataModels'
 import { testSetBluetoothScanMode , testSetLocalName } from '../../MainAbility/model/brInterface'
 
 /**
- *  Bluetooth GattServer Velocity Benchmark Test Page Of Bluetooth test
+ *  Bluetooth GattServer Velocity  Benchmark Test Page Of Bluetooth test
  */
 
 @Entry
 @Component
 struct GattServerVelocityBenchmarkTest {
-  @State message: string = 'GattServerBenchmarkTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @State gatt_Cycle_index: number = 10
@@ -46,7 +42,6 @@ struct GattServerVelocityBenchmarkTest {
     AppStorage.setOrCreate('txtScanOptionsMatchMode' , '0');
     AppStorage.setOrCreate('cbxBleScanFilter' , false);
     AppStorage.setOrCreate('cbxBleScanOptions' , false);
-
     AppStorage.setOrCreate('curServiceUUID' , '00001877-0000-1000-8000-00805F9B34FB');
     AppStorage.setOrCreate('curCharacteristicUUID' , '00002BE0-0000-1000-8000-00805F9B34FB');
     AppStorage.setOrCreate('curDescriptorUUID' , '00002902-0000-1000-8000-00805F9B34FB');
@@ -116,7 +111,6 @@ struct GattServerVelocityBenchmarkTest {
                   })
               }
               .width("90%")
-
             }
             .padding(3)
             .justifyContent(FlexAlign.Start)
@@ -124,7 +118,6 @@ struct GattServerVelocityBenchmarkTest {
           }
           .width("100%")
           .height(130)
-
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.Auto)
@@ -156,14 +149,12 @@ struct GattServerVelocityBenchmarkTest {
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.On)
-
       }
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
 
       Column() {
         Flex({ alignItems : ItemAlign.Center , justifyContent : FlexAlign.SpaceBetween }) {
-
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Text('速率性能测试').fontSize("24vp").fontColor(0xffffff).margin({ left : 5 , right : 5 })
@@ -233,7 +224,6 @@ struct GattServerVelocityBenchmarkTest {
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
-              //              Text('清空').fontSize("24vp").fontColor(0xffffff).margin({ left: 5, right: 10 })
             }.alignItems(VerticalAlign.Center)
           }
           .borderRadius(8)
@@ -265,15 +255,8 @@ export function test(func: Function) {
   return (end - start) + "ms"; //返回函数执行需要时间
 }
 
-
-let arr = []
-
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do something
-  //  }
   switch ( func ) {
     case testSetLocalName: {
       func("DaYuBlue")
