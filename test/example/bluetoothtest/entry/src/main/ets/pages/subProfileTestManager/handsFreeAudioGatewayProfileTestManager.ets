@@ -35,9 +35,7 @@ import bluetoothManager from '@ohos.bluetoothManager';
 struct HandsFreeAudioGatewayProfileManagerTest {
   @State hasProfile: boolean = false;
   @StorageLink('textMessage') hfpMessage: string = "";
-  @State isConnection: boolean = false;
   @State connectionStateInfo: string = "";
-  //  @State deviceId: string = "F0:5C:D5:8B:A5:8A";
   @State title: Resource = $r('app.string.hands_free_audio_gateway_profile_test_title');
   @State profileExist: string = ""
   @State profileNotExist: string = ""
