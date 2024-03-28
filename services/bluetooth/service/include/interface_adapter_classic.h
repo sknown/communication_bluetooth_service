@@ -174,15 +174,6 @@ public:
      * @since 6
      */
     virtual void OnRemoteCodChanged(const RawAddress &device, int cod) = 0;
-
-    /**
-     * @brief Remote battery level changed observer.
-     *
-     * @param device Remote device.
-     * @param batteryLevel Remote device battery Level.
-     * @since 6
-     */
-    virtual void OnRemoteBatteryLevelChanged(const RawAddress &device, int batteryLevel) = 0;
 };
 
 /**
