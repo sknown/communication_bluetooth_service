@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import { TestData , TestAuto } from '../MainAbility/model/testData'
+import { TestAuto } from '../MainAbility/model/testData'
 
 /**
  *  Auto Test ContentTable Component Page Of Bluetooth test
@@ -21,7 +21,6 @@ import { TestData , TestAuto } from '../MainAbility/model/testData'
 
 @Component
 export struct AutoContentTable {
-  private testItem!: TestData
   @State autoItems: TestAuto[] = [];
   @State localName: string = 'DaYuBlue'
   @Prop changeIndex: number;
