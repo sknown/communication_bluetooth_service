@@ -24,7 +24,6 @@ import {
   GattServerManagerAutoTestCase ,
   initGattServerManagerAutoData
 } from '../../../MainAbility/model/autoTestDataModelsManager';
-import promptAction from '@ohos.promptAction';
 
 /**
  *  GattServerAutoTest Manager Page Of Bluetooth test
@@ -33,9 +32,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct GattServerAutoTestManager {
-  @State message: string = 'GattServerAutoTestManager';
-  //  @State textMessage: string = 'null';
-  @State testMessage: string = "";
   @State changeIndex: number = - 1
   private testItem: TestData = (router.getParams() as myParams).testItem
   @StorageLink("gattServerAutoTestMessage") gattServerAutoTestMessage: string = ""
@@ -92,9 +88,7 @@ struct GattServerAutoTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initGattServerManagerAutoData() ,
-              // testMessage : this.testMessage ,
               changeIndex : this.changeIndex
             })
           }
@@ -150,13 +144,7 @@ struct GattServerAutoTestManager {
         .height(50)
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
-
           this.forLoop()
-
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
