@@ -36,9 +36,7 @@ import btm from '@ohos.bluetoothManager'
 struct PanNetWorkTest {
   @State hasProfile: boolean = false;
   @StorageLink('textMessage') panMessage: string = "";
-  @State isConnection: boolean = false;
   @State connectionStateInfo: string = "";
-  //  @State deviceId: string = "F0:5C:D5:8B:A5:8A";
   @State title: Resource = $r('app.string.pan_network_profile_test_title');
   @State profileExist: string = ""
   @State profileNotExist: string = ""
