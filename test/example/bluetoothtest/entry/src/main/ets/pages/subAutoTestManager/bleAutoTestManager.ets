@@ -20,7 +20,6 @@ import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
 import { BleManagerAutoTestCase , initBleManagerAutoData } from '../../MainAbility/model/autoTestDataModelsManager'
 import { AutoContentTable } from '../../Component/autoContentTable'
-import promptAction from '@ohos.promptAction';
 import { BTAutoArrayItem , myParams } from '../../Utils/common'
 
 /**
@@ -30,9 +29,6 @@ import { BTAutoArrayItem , myParams } from '../../Utils/common'
 @Entry
 @Component
 struct BleAutoTestManager {
-  @State message: string = 'BleAutoTestManager';
-  //  @State textMessage: string = 'null';
-  @State testMessage: string = "";
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("bleAutoTestMessage") bleAutoTestMessage: string = ""
@@ -65,9 +61,7 @@ struct BleAutoTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initBleManagerAutoData() ,
-              // testMessage : this.testMessage ,
               changeIndex : this.changeIndex
             })
           }
@@ -124,11 +118,6 @@ struct BleAutoTestManager {
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
           this.forLoop()
-
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
