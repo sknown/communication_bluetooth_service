@@ -41,8 +41,7 @@ struct ProfileTest {
         TestImageDisplay({ testItem : this.testItem })
         PageTitle({ testItem : this.testItem })
       }
-
-      ContentTable({ testItem : this.testItem , apiItems : initA2dpSourceProfileApiData() })
+      ContentTable({ apiItems : initA2dpSourceProfileApiData() })
     }
     .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
     .height('100%')
