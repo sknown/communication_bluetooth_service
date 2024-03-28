@@ -28,7 +28,6 @@ import bluetooth from '@ohos.bluetooth';
 @Entry
 @Component
 struct oppSendScenarioTest {
-  @State message: string = 'oppSendScenarioTest';
   @State changeIndex: number = - 1;
   private testItem: TestData = (router.getParams() as myParams).testItem
   @StorageLink("oppSendScenarioMessage") oppSendScenarioMessage: string = ""
