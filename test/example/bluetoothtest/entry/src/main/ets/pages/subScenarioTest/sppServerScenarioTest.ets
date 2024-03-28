@@ -21,7 +21,6 @@ import { TestData } from '../../MainAbility/model/testData'
 import { ScenarioContentTable } from '../../Component/scenarioContentTable'
 import { initSppServerScenarioData } from '../../MainAbility/model/scenarioTestDataModel'
 import * as SPPServerInterface from '../../MainAbility/model/sppServerInterface'
-import * as BLEInterface from '../../MainAbility/model/bleInterface'
 import * as BrInterface from '../../MainAbility/model/brInterface'
 
 /**
@@ -31,7 +30,6 @@ import * as BrInterface from '../../MainAbility/model/brInterface'
 @Entry
 @Component
 struct SppServerScenarioTest {
-  @State message: string = 'SppServerScenarioTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1;
   @State writeServerData: string = '11111';
@@ -40,7 +38,6 @@ struct SppServerScenarioTest {
   @StorageLink('dataReadMessage') dataReadMessage: string = "";
 
   aboutToAppear() {
-
     AppStorage.setOrCreate('txtScanFilterDeviceId' , "10:2C:6B:11:B3:17");
     AppStorage.setOrCreate('txtScanFilterName' , "dudu-tiger");
     AppStorage.setOrCreate('txtScanFilterServiceUuid' , "0000180A-0000-1000-8000-00805f9b34fb");
@@ -49,7 +46,6 @@ struct SppServerScenarioTest {
     AppStorage.setOrCreate('txtScanOptionsMatchMode' , '0');
     AppStorage.setOrCreate('cbxBleScanFilter' , true);
     AppStorage.setOrCreate('cbxBleScanOptions' , true);
-
     AppStorage.setOrCreate('inputUuid' , this.uuid);
     AppStorage.setOrCreate('writeServerData' , this.writeServerData);
   }
@@ -72,7 +68,6 @@ struct SppServerScenarioTest {
               .width("100%")
             ScenarioContentTable({
               scenarioItems : initSppServerScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
@@ -114,7 +109,6 @@ struct SppServerScenarioTest {
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
 
-
       Stack().height("1vp").backgroundColor("#000000");
       Column() {
         Flex({ alignItems : ItemAlign.Center , justifyContent : FlexAlign.SpaceBetween }) {
@@ -128,7 +122,6 @@ struct SppServerScenarioTest {
           .margin({ top : "15vp" , left : "20vp" })
           .align(Alignment.Start)
           .onClick(async(event: ClickEvent) => {
-            //AlertDialog.show({ message: '开始SppServer场景测试' })
             let sppServerScenarioMessage = ""
             let self = this
             const arr = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 ]
