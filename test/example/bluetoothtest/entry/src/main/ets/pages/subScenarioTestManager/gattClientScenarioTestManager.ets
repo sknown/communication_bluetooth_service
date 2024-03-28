@@ -30,7 +30,6 @@ import * as BrManagerInterface from '../../MainAbility/model/brManagerInterface'
 @Entry
 @Component
 struct GattClientScenarioTestManager {
-  @State message: string = 'GattClientScenarioTestManager';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("gattClientScenarioMessage") gattClientScenarioMessage: string = ""
@@ -71,9 +70,7 @@ struct GattClientScenarioTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             ScenarioContentTable({
-              // testItem : this.testItem ,
               scenarioItems : initGattClientManagerScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
@@ -131,7 +128,6 @@ struct GattClientScenarioTestManager {
           .onClick(async(event: ClickEvent) => {
             let self = this
             const arr = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ]
-            //            AlertDialog.show({ message: '开始GattClient场景测试' })
             let gattClientScenarioMessage = ""
 
             // 开启注册状态变化
