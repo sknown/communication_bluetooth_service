@@ -29,8 +29,6 @@ import { TestListItem } from '../../Component/testListItems';
 @Entry
 @Component
 struct ProfileAutoTestManager {
-  @State message: string = 'ProfileAutoTestManager';
-  @State textMessage: string = 'null';
   private profileAutoTestItems: TestData[] = initProfileManagerAutoTestData();
   private testItem: TestData = (router.getParams() as myParams).testItem
   @StorageLink("autoTestMessage") autoTestMessage: string = ""
