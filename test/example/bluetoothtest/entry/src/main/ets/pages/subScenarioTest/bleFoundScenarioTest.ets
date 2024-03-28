@@ -30,7 +30,6 @@ import { BTAutoArrayItem , myParams } from '../../Utils/common'
 @Entry
 @Component
 struct BleFoundScenarioTest {
-  @State message: string = 'BleFoundScenarioTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("bleFoundScenarioMessage") bleFoundScenarioMessage: string = ""
@@ -64,7 +63,6 @@ struct BleFoundScenarioTest {
               .width("100%")
             ScenarioContentTable({
               scenarioItems : initBleFoundScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
@@ -135,8 +133,6 @@ struct BleFoundScenarioTest {
           .margin({ top : "15vp" , left : "10vp" , right : "10vp" })
           .align(Alignment.Start)
           .onClick(async(event: ClickEvent) => {
-            let self = this
-            const arr = [ 0, 1, 2, 3, 4, 5, 6, 7 ]
             let bleFoundScenarioMessage = ""
             // 停止BLE扫描
             bleFoundScenarioMessage += BLEInterface.testStopBLEScan() + "\n"
