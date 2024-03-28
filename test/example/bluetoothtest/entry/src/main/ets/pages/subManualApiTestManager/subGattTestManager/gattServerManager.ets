@@ -32,7 +32,6 @@ import bluetooth from '@ohos.bluetooth'
 struct GattServerSetting {
   // GATT service
   private curServiceUUID: string = '00001877-0000-1000-8000-00805F9B34FB';
-  private curServiceIsPrimary: boolean = true;
   private curCharacteristicUUID: string = '00002BE0-0000-1000-8000-00805F9B34FB';
   private curCharacteristicValue: string = 'DaYuBlue'; //OHOS:BLE NANJING CHINA
   private curDescriptorUUID: string = '00002902-0000-1000-8000-00805F9B34FB';
@@ -65,41 +64,6 @@ struct GattServerSetting {
   private advResponseManufactureData_manufactureValue: string = "CHN";
   private advResponseServiceData_serviceUuid: string = "000054F6-0000-1000-8000-00805f9b34fb";
   private advResponseServiceData_serviceValue: string = "AdvValue";
-  private testItemManager: TestData = (router.getParams() as myParams).testItem;
-  private curAdvSettings: bluetoothManager.AdvertiseSetting = {
-    interval : 800 , //500ms
-    txPower : - 7 ,
-    connectable : true
-  };
-  private curAdvData: bluetoothManager.AdvertiseData = {
-    serviceUuids : [ "00003344-0000-1000-8000-00805f9b34fb", "00008899-0000-1000-8000-00805f9b34fb" ] ,
-    manufactureData : [ {
-      manufactureId : 7456 ,
-      manufactureValue : string2ArrayBuffer("OHOS CHN")
-    } ] ,
-    serviceData : [ {
-      serviceUuid : "000054F6-0000-1000-8000-00805f9b34fb" ,
-      serviceValue : string2ArrayBuffer("OhosBle!")
-    }, {
-      serviceUuid : "00009999-0000-1000-8000-00805f9b34fb" ,
-      serviceValue : string2ArrayBuffer("dudu_tiger")
-    } ]
-  };
-  private curAdvResponse: bluetoothManager.AdvertiseData = {
-    serviceUuids : [ //"000054F6-0000-1000-8000-00805f9b34fb",
-      "00009999-0000-1000-8000-00805f9b34fb" ] ,
-    manufactureData : [ {
-      manufactureId : 6547 ,
-      manufactureValue : string2ArrayBuffer("OHOS CHN")
-    } ] ,
-    serviceData : [ {
-      serviceUuid : "000054F6-0000-1000-8000-00805f9b34fb" ,
-      serviceValue : string2ArrayBuffer("OhosBle!")
-    }, {
-      serviceUuid : "00007456-0000-1000-8000-00805f9b34fb" ,
-      serviceValue : string2ArrayBuffer("OhosBle")
-    } ]
-  };
 
   build() {
     Column() {
@@ -534,20 +498,6 @@ struct GattServerManager {
   @StorageLink("descriptorReadMsg") descriptorReadMsg: string = "initial";
   @StorageLink("descriptorWriteMsg") descriptorWriteMsg: string = "initial";
   private testItem: TestData = (router.getParams() as myParams).testItem;
-  private btOnConnectState: string = 'on:connectStateChange';
-  private isConnectStateChangeClick: boolean = false;
-  // private characteristicReadMsg: string = 'initial';
-  private btOnCharacteristicRead: string = 'on:characteristicRead';
-  private isCharacteristicReadClick: boolean = false;
-  // private characteristicWriteMsg: string = 'initial';
-  private btOnCharacteristicWrite: string = 'on:characteristicWrite';
-  private isCharacteristicWriteClick: boolean = false;
-  // private descriptorReadMsg: string = 'initial';
-  private btOnDescriptorRead: string = 'on:descriptorRead';
-  private isDescriptorReadClick: boolean = false;
-  // private descriptorWriteMsg: string = 'initial';
-  private btOnDescriptorWrite: string = 'on:descriptorWrite';
-  private isDescriptorWriteClick: boolean = false;
 
   //----------all @state -> private-------------------
 
@@ -570,7 +520,6 @@ struct GattServerManager {
   private notifyCharacteristic_characteristicUuid: string = '00001821-0000-1000-8000-00805F9B34FB';
   private notifyCharacteristic_characteristicValue: string = 'test';
   private notifyCharacteristic_confirm: boolean = false;
-  private notifyCharacteristicDeviceId: string = '10:2C:6B:11:B3:17'; //'88:36:CF:09:C1:90'
   private notifyCharacteristic_notifyCharacteristic: bluetoothManager.NotifyCharacteristic = {
     serviceUuid : '00001810-0000-1000-8000-00805F9B34FB' ,
     characteristicUuid : '00001821-0000-1000-8000-00805F9B34FB' ,
@@ -654,8 +603,6 @@ struct GattServerManager {
   };
 
   //------------@State->private------------------------------
-  private gattServerInstance = null;
-  private gattServerExist = false;
 
   aboutToAppear() {
     AppStorage.setOrCreate('curServiceUUID' , this.curServiceUUID);
@@ -761,10 +708,7 @@ struct GattServerManager {
                 .fontSize("18vp")
                 .width("100%")
               Scroll() {
-                ContentTable({
-                  testItem : this.testItem ,
-                  apiItems : initGattServerManagerApiData()
-                }) //子层调用
+                ContentTable({ apiItems : initGattServerManagerApiData() }) //子层调用
               }
               .width(ConfigData.WH_100_100)
               .align(Alignment.TopStart)
