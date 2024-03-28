@@ -65,41 +65,6 @@ struct GattServerSetting {
   private advResponseManufactureData_manufactureValue: string = "CHN";
   private advResponseServiceData_serviceUuid: string = "000054F6-0000-1000-8000-00805f9b34fb";
   private advResponseServiceData_serviceValue: string = "AdvValue";
-  private testItem: TestData = (router.getParams() as myParams).testItem;
-  private curAdvSettings: bluetooth.AdvertiseSetting = {
-    interval : 800 , //500ms
-    txPower : - 7 ,
-    connectable : true
-  };
-  private curAdvData: bluetooth.AdvertiseData = {
-    serviceUuids : [ "00003344-0000-1000-8000-00805f9b34fb", "00008899-0000-1000-8000-00805f9b34fb" ] ,
-    manufactureData : [ {
-      manufactureId : 7456 ,
-      manufactureValue : string2ArrayBuffer("OHOS CHN")
-    } ] ,
-    serviceData : [ {
-      serviceUuid : "000054F6-0000-1000-8000-00805f9b34fb" ,
-      serviceValue : string2ArrayBuffer("OhosBle!")
-    }, {
-      serviceUuid : "00009999-0000-1000-8000-00805f9b34fb" ,
-      serviceValue : string2ArrayBuffer("dudu_tiger")
-    } ]
-  };
-  private curAdvResponse: bluetooth.AdvertiseData = {
-    serviceUuids : [ //"000054F6-0000-1000-8000-00805f9b34fb",
-      "00009999-0000-1000-8000-00805f9b34fb" ] ,
-    manufactureData : [ {
-      manufactureId : 6547 ,
-      manufactureValue : string2ArrayBuffer("OHOS CHN")
-    } ] ,
-    serviceData : [ {
-      serviceUuid : "000054F6-0000-1000-8000-00805f9b34fb" ,
-      serviceValue : string2ArrayBuffer("OhosBle!")
-    }, {
-      serviceUuid : "00007456-0000-1000-8000-00805f9b34fb" ,
-      serviceValue : string2ArrayBuffer("OhosBle")
-    } ]
-  };
 
   build() {
     Column() {
@@ -378,7 +343,8 @@ struct GattServerSetting {
                       .onChange((strInput) => {
                         this.advDataServiceData_serviceUuid = strInput;
                         AppStorage.setOrCreate('advDataServiceData_serviceUuid' , strInput)
-                      }).width("80%")
+                      })
+                      .width("80%")
                   }
 
                   Row() {
@@ -534,20 +500,6 @@ struct GattServer {
   @StorageLink("descriptorReadMsg") descriptorReadMsg: string = "initial";
   @StorageLink("descriptorWriteMsg") descriptorWriteMsg: string = "initial";
   private testItem: TestData = (router.getParams() as myParams).testItem;
-  private btOnConnectState: string = 'on:connectStateChange';
-  private isConnectStateChangeClick: boolean = false;
-  // private characteristicReadMsg: string = 'initial';
-  private btOnCharacteristicRead: string = 'on:characteristicRead';
-  private isCharacteristicReadClick: boolean = false;
-  // private characteristicWriteMsg: string = 'initial';
-  private btOnCharacteristicWrite: string = 'on:characteristicWrite';
-  private isCharacteristicWriteClick: boolean = false;
-  // private descriptorReadMsg: string = 'initial';
-  private btOnDescriptorRead: string = 'on:descriptorRead';
-  private isDescriptorReadClick: boolean = false;
-  // private descriptorWriteMsg: string = 'initial';
-  private btOnDescriptorWrite: string = 'on:descriptorWrite';
-  private isDescriptorWriteClick: boolean = false;
 
   //----------all @state -> private-------------------
 
@@ -570,7 +522,6 @@ struct GattServer {
   private notifyCharacteristic_characteristicUuid: string = '00001821-0000-1000-8000-00805F9B34FB';
   private notifyCharacteristic_characteristicValue: string = 'test';
   private notifyCharacteristic_confirm: boolean = false;
-  private notifyCharacteristicDeviceId: string = '10:2C:6B:11:B3:17'; //'88:36:CF:09:C1:90'
   private notifyCharacteristic_notifyCharacteristic: bluetooth.NotifyCharacteristic = {
     serviceUuid : '00001810-0000-1000-8000-00805F9B34FB' ,
     characteristicUuid : '00001821-0000-1000-8000-00805F9B34FB' ,
@@ -654,9 +605,6 @@ struct GattServer {
   };
 
   //------------@State->private------------------------------
-  private gattServerInstance = null;
-  private gattServerExist = false;
-
   aboutToAppear() {
     AppStorage.setOrCreate('curServiceUUID' , this.curServiceUUID);
     AppStorage.setOrCreate('curCharacteristicUUID' , this.curCharacteristicUUID);
@@ -839,7 +787,6 @@ struct GattServer {
       serviceUuid : serviceUuid4Service ,
       serviceValue : string2ArrayBuffer(serviceValue4Service)
     };
-
     this.curAdvResponse.serviceData.length = 0;
     this.curAdvResponse.serviceData.push(serviceDataInstance);
   }
