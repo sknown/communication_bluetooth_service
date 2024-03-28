@@ -13,10 +13,9 @@
  * limitations under the License.
  */
 
-import { BleScanFilter , myParams } from '../../Utils/common'
+import { myParams } from '../../Utils/common'
 import BluetoothModel from '../../MainAbility/model/BluetoothModel';
 import router from '@ohos.router';
-import LogUtil from '../../Utils/LogUtil';
 import bluetoothManager from '@ohos.bluetoothManager';
 import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
@@ -65,8 +64,6 @@ struct BleTestManager {
   }
   @StorageLink('bleAvailableDevices') availBleDeviceIds: string[] = [];
   @StorageLink('OnBLEDeviceFind') On_off_BLEDeviceFind: boolean = false;
-  private gattServerInstance = null;
-  private gattClientDeviceInstance = null;
 
   aboutToAppear() {
     AppStorage.setOrCreate("peripheralDeviceId" , this.peripheralDeviceId)
@@ -76,7 +73,6 @@ struct BleTestManager {
     AppStorage.setOrCreate('txtScanOptions_interval' , this.txtScanOptions_interval);
     AppStorage.setOrCreate('txtScanOptionsDutyMode' , '0');
     AppStorage.setOrCreate('txtScanOptionsMatchMode' , '0');
-
   }
 
   build() {
@@ -118,11 +114,10 @@ struct BleTestManager {
       .align(Alignment.TopStart)
 
       if ( this.showList ) {
-        ContentTable({ testItem : this.testItem , apiItems : initBleManagerApiData() })
+        ContentTable({ apiItems : initBleManagerApiData() })
       } else {
         BleFilterTable({ testItem : this.testItem })
       }
-
     }
     .alignItems(HorizontalAlign.Center)
     .backgroundColor($r("app.color.lead"))
