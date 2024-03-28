@@ -51,6 +51,7 @@ public:
     int SetConnectStrategy(const BluetoothRawAddress &device, int strategy) override;
     int GetConnectStrategy(const BluetoothRawAddress &device, int &strategy) override;
     int IsInbandRingingEnabled(bool &isEnabled) override;
+    void CallDetailsChanged(int callId, int callState) override;
     int32_t ConnectSco(uint8_t callType) override;
     int32_t DisconnectSco(uint8_t callType) override;
 
