@@ -35,7 +35,6 @@ import BluetoothDevice from '../../MainAbility/model/BluetoothDevice'
 @Entry
 @Component
 struct BrFoundScenarioTestManager {
-  @State message: string = 'BrFoundScenarioTestManager';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("brFoundScenarioMessage") brFoundScenarioMessage: string = ""
@@ -57,9 +56,7 @@ struct BrFoundScenarioTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             ScenarioContentTable({
-              // testItem : this.testItem ,
               scenarioItems : initBRFoundManagerScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
