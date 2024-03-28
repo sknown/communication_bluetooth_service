@@ -17,17 +17,14 @@ import { myParams } from '../../../Utils/common'
 import { TestData } from '../../../MainAbility/model/testData'
 import LogUtil from '../../../Utils/LogUtil';
 import ConfigData from '../../../Utils/ConfigData';
-import bluetoothManager from '@ohos.bluetoothManager';
 import BluetoothModelManager from '../../../MainAbility/model/BluetoothModelManager';
 import BluetoothDevice from '../../../MainAbility/model/BluetoothDevice'
 import BluetoothDeviceController from '../../../MainAbility/controller/BluetoothDeviceController';
-
 import { PageTitle } from '../../../Component/pageTitle';
 import { ContentTable } from '../../../Component/contentTable';
 import { initSppServerManagerApiData } from '../../../MainAbility/model/testDataModelsManager'
 import { TestImageDisplay } from '../../../Component/testImageDisplay';
 import router from '@ohos.router';
-import promptAction from '@ohos.promptAction';
 
 interface PinRequiredData {
   deviceId: string;
@@ -38,19 +35,14 @@ interface PinRequiredData {
  * SPPServer Manager Test Page Of Bluetooth test
  */
 
-let MODEL = "bluetoothModel:";
-
 @Entry
 @Component
 struct SppServerManager {
   @State message: string = "";
   @State deviceId: string = AppStorage.get('inputDeviceId') !;
   @StorageLink('dataReadMessage') dataReadMessage: string = "";
-  private stateBT: string = "";
   @State writeServerData: string = '1';
   private uuid: string = "00001101-0000-1000-8000-00805f9b34fb";
-  private serverNumber: number = - 1;
-  private clientNumber: number = - 1;
   private pinCode: string = '';
   @State pairPinCode: string = '';
   private TAG_PAGE = ConfigData.TAG + 'Paired_Device ';
@@ -82,7 +74,6 @@ struct SppServerManager {
     AppStorage.setOrCreate('bluetoothIsOn' , this.btEnable);
     AppStorage.setOrCreate('inputUuid' , this.uuid);
     AppStorage.setOrCreate("writeServerData" , this.writeServerData);
-
   }
 
   build() {
@@ -289,7 +280,6 @@ struct PairDialog {
               top : $r('app.float.item_common_horizontal_margin') ,
               bottom : $r('app.float.item_common_horizontal_margin')
             })
-
         } else {
           Text($r('app.string.bluetooth_pairing_media_device_hit'))
             .fontSize($r('app.float.font_16'))
@@ -306,7 +296,6 @@ struct PairDialog {
 
         // button
         Flex({ justifyContent : FlexAlign.Center , alignItems : ItemAlign.Center }) {
-
           Button() {
             Text($r('app.string.cancel'))
               .fontSize($r('app.float.font_16'))
