@@ -26,9 +26,6 @@ void BtmStopSnoopOutput();
 void BtmInitSnoop();
 void BtmCloseSnoop();
 
-int BTSTACK_API BTM_SetSnoopOutputMaxsize(uint16_t maxSize);
-
-
 #ifdef __cplusplus
 }
 #endif
