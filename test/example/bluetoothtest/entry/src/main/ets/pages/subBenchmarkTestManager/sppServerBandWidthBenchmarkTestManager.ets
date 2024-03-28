@@ -30,7 +30,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct SppServerBandWidthBenchmarkTestManager {
-  @State message: string = 'SppServerBenchmarkTestManager';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("sppServerBandWidthBenchmarkTestMessage") sppServerBandWidthBenchmarkTestMessage: string = ""
@@ -151,7 +150,6 @@ struct SppServerBandWidthBenchmarkTestManager {
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.On)
-
       }
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
@@ -216,7 +214,6 @@ struct SppServerBandWidthBenchmarkTestManager {
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
-              //              Text('清空').fontSize("24vp").fontColor(0xffffff).margin({ left: 5, right: 10 })
             }.alignItems(VerticalAlign.Center)
           }
           .borderRadius(8)
@@ -250,14 +247,8 @@ struct SppServerBandWidthBenchmarkTestManager {
   }
 }
 
-let arr = []
-
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do something
-  //  }
   switch ( func ) {
     case testSetLocalNameManager: {
       func("DaYuBlue")
@@ -362,7 +353,6 @@ function sppServerAccept(): string {
         } else {
           message = "读取失败";
         }
-        //        AppStorage.setOrCreate("dataServerReadMessageBW", message)
         promptAction.showToast({ message : message })
       })
       promptAction.showToast({ message : message })
@@ -375,7 +365,6 @@ function sppServerAccept(): string {
   promptAction.showToast({ message : message })
   return message
 }
-
 
 function sppServerWrite(): string {
   let message = "sppServerWrite test"
