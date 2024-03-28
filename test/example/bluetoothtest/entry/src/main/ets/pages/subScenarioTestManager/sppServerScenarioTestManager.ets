@@ -30,7 +30,6 @@ import * as BrManagerInterface from '../../MainAbility/model/brManagerInterface'
 @Entry
 @Component
 struct SppServerScenarioTestManager {
-  @State message: string = 'SppServerScenarioTestManager';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1;
   @State writeServerData: string = '11111';
@@ -70,9 +69,7 @@ struct SppServerScenarioTestManager {
               .textAlign(TextAlign.Start)
               .width("100%")
             ScenarioContentTable({
-              // testItem : this.testItem ,
               scenarioItems : initSppServerManagerScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
@@ -113,7 +110,6 @@ struct SppServerScenarioTestManager {
       .height(500)
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
-
 
       Stack().height("1vp").backgroundColor("#000000");
       Column() {
