@@ -14,7 +14,6 @@
  */
 
 import { BTAutoArrayItem , myParams } from '../../../Utils/common'
-import promptAction from '@ohos.promptAction';
 import ConfigData from '../../../Utils/ConfigData';
 import router from '@ohos.router';
 import { TestData } from '../../../MainAbility/model/testData'
@@ -30,9 +29,6 @@ import { GattServerAutoTestCase , initGattServerAutoData } from '../../../MainAb
 @Entry
 @Component
 struct GattServerAutoTest {
-  @State message: string = 'GattServerAutoTest';
-  //  @State textMessage: string = 'null';
-  @State testMessage: string = "";
   @State changeIndex: number = - 1
   private testItem: TestData = (router.getParams() as myParams).testItem
   @StorageLink("gattServerAutoTestMessage") gattServerAutoTestMessage: string = ""
@@ -89,7 +85,6 @@ struct GattServerAutoTest {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initGattServerAutoData() ,
               changeIndex : this.changeIndex
             })
@@ -132,7 +127,6 @@ struct GattServerAutoTest {
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
 
-
       Stack().height("1vp").backgroundColor("#000000");
       Column() {
         Button({ type : ButtonType.Normal , stateEffect : true }) {
@@ -146,13 +140,7 @@ struct GattServerAutoTest {
         .height(50)
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
-
           this.forLoop()
-
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
