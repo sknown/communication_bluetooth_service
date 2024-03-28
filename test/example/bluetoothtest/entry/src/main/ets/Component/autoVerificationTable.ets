@@ -22,8 +22,6 @@ import promptAction from '@ohos.promptAction'
 
 @Component
 export struct AutoVerificationTable {
-  private testItem: TestData
-  private currentApiItem: TestApi
   @State apiItems: TestApi[] = [];
   @State changeIndex: number = - 1
   @State localName: string = 'DaYuBlue'
