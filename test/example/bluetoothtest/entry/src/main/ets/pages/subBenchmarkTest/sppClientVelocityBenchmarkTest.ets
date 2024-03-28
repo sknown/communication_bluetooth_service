@@ -86,7 +86,6 @@ struct SppClientVelocityBenchmarkTest {
                 .backgroundColor($r("app.color.white"))
                 .height(30)
             }
-
             .padding(5)
             .justifyContent(FlexAlign.Start)
             .alignItems(VerticalAlign.Center)
@@ -115,7 +114,6 @@ struct SppClientVelocityBenchmarkTest {
                   })
               }
               .width("90%")
-
             }
             .padding(2)
             .justifyContent(FlexAlign.Start)
@@ -207,7 +205,6 @@ struct SppClientVelocityBenchmarkTest {
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.On)
-
       }
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
@@ -264,7 +261,6 @@ struct SppClientVelocityBenchmarkTest {
 
           })
 
-
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
@@ -310,10 +306,6 @@ struct SppClientVelocityBenchmarkTest {
 
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do something
-  //  }
   switch ( func ) {
     case testSetLocalName: {
       func("DaYuBlue")
@@ -487,7 +479,6 @@ function sppClientReadOn(): string {
     } else {
       message = "读取失败";
     }
-    //    AppStorage.setOrCreate("dataClientReadMessage",message)
     promptAction.showToast({ message : message })
     return message
   });
