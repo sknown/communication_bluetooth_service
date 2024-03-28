@@ -21,7 +21,6 @@ import { TestData } from '../../MainAbility/model/testData'
 import { ScenarioContentTable } from '../../Component/scenarioContentTable'
 import { initGattClientScenarioData } from '../../MainAbility/model/scenarioTestDataModel'
 import * as GattClientInterface from '../../MainAbility/model/gattClientInterface'
-import * as BLEInterface from '../../MainAbility/model/bleInterface'
 import * as BrInterface from '../../MainAbility/model/brInterface'
 
 /**
@@ -31,7 +30,6 @@ import * as BrInterface from '../../MainAbility/model/brInterface'
 @Entry
 @Component
 struct GattClientScenarioTest {
-  @State message: string = 'GattClientScenarioTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("gattClientScenarioMessage") gattClientScenarioMessage: string = ""
@@ -73,7 +71,6 @@ struct GattClientScenarioTest {
               .width("100%")
             ScenarioContentTable({
               scenarioItems : initGattClientScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
@@ -114,7 +111,6 @@ struct GattClientScenarioTest {
       .height(500)
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
-
 
       Stack().height("1vp").backgroundColor("#000000");
       Column() {
