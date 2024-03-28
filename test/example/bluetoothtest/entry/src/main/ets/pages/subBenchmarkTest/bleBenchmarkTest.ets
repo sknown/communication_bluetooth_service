@@ -34,7 +34,6 @@ import promptAction from '@ohos.promptAction';
 @Entry
 @Component
 struct BleBenchmarkTest {
-  @State message: string = 'BleBenchmarkTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("bleBenchmarkTestMessage") bleBenchmarkTestMessage: string = ""
@@ -62,7 +61,6 @@ struct BleBenchmarkTest {
           }
           .width("100%")
           .height(100)
-
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.Auto)
@@ -94,7 +92,6 @@ struct BleBenchmarkTest {
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.On)
-
       }
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
@@ -185,7 +182,6 @@ struct BleBenchmarkTest {
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
-              //              Text('清空').fontSize("24vp").fontColor(0xffffff).margin({ left: 5, right: 10 })
             }.alignItems(VerticalAlign.Center)
           }
           .borderRadius(8)
@@ -237,15 +233,8 @@ export function test(func: Function) {
   return (end - start) + "ms"; //返回函数执行需要时间
 }
 
-
-let arr = []
-
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do b
-  //  }
   switch ( func ) {
     case BluetoothModel.startBLEScan: {
       func(null)
@@ -305,16 +294,12 @@ function subscribeBLEDeviceFind() {
       let message = ('available ble find [' + JSON.stringify(obj2) + ']  ')
       promptAction.showToast({ message : message })
       bleRunMessage += "\n" + "花费:" + Number(end2 - start2) + "ms;" + "Mac为：[" + JSON.stringify(obj2) + ",{dis：" + btRssi.toFixed(2) + "}.]" + "\n"
-
       bleRunMessage += "开始:" + Number(start2) + "ms; " + "结束:" + Number(end2) + "ms" + "\n"
-
       console.log("花费:" + Number(end2 - start2) + "ms;" + "Mac为：[" + JSON.stringify(obj2) + "]" + "\n")
       console.log("开始:" + Number(start2) + "ms; " + "结束:" + Number(end2) + "ms" + "\n")
       await sleep(1)
       AppStorage.setOrCreate('bleRunMessage' , bleRunMessage);
       await sleep(1)
-      //      AppStorage.Set('bluetoothAvailableDevices', deviceIds);
-      //      await sleep(1/5)
       AppStorage.setOrCreate("bleBenchmarkTestMessage" , bleRunMessage)
       await sleep(1)
       promptAction.showToast({ message : bleRunMessage })
