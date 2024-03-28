@@ -35,16 +35,9 @@ import { TestData } from '../../MainAbility/model/testData'
 struct brTestManager {
   private TAG_PAGE = ConfigData.TAG + 'Paired_Device ';
   private testItem: TestData = (router.getParams() as myParams).testItem;
-  @State message: string = "";
-  @State btStateMessage: string = "";
-  @State pinMessage: string = "";
-  @State bondStateMessage: string = "";
   @State btEnable: boolean = false;
-  @State isConnection: boolean = false;
   @StorageLink('setLocalNameRet') setLocalNameRet: boolean = false;
   @StorageLink('setScanModeRet') setScanModeRet: boolean = false;
-  private stateProfile: string = ""
-  private stateBT: string = "";
   @State deviceId: string = '';
   @State currentClick: number = - 1;
   @StorageLink('pairedDeviceInfo') pairingDevice: BluetoothDevice = new BluetoothDevice;
@@ -113,8 +106,7 @@ struct brTestManager {
           .padding({ top : 10 , left : 10 })
       }
       .align(Alignment.TopStart)
-
-      ContentTable({ testItem : this.testItem , apiItems : initBRManagerApiData() })
+      ContentTable({ apiItems : initBRManagerApiData() })
     }
     .alignItems(HorizontalAlign.Center)
     .backgroundColor($r("app.color.lead"))
@@ -241,7 +233,6 @@ struct PairDialog {
 
         // button
         Flex({ justifyContent : FlexAlign.Center , alignItems : ItemAlign.Center }) {
-
           Button() {
             Text($r('app.string.cancel'))
               .fontSize($r('app.float.font_16'))
