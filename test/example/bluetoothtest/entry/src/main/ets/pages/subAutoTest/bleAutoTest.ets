@@ -14,7 +14,6 @@
  */
 
 import { BTAutoArrayItem , myParams } from '../../Utils/common'
-import promptAction from '@ohos.promptAction';
 import ConfigData from '../../Utils/ConfigData';
 import router from '@ohos.router';
 import { TestData } from '../../MainAbility/model/testData'
@@ -30,9 +29,6 @@ import { AutoContentTable } from '../../Component/autoContentTable'
 @Entry
 @Component
 struct BleAutoTest {
-  @State message: string = 'BleAutoTest';
-  //  @State textMessage: string = 'null';
-  @State testMessage: string = "";
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("bleAutoTestMessage") bleAutoTestMessage: string = ""
@@ -65,9 +61,7 @@ struct BleAutoTest {
               .textAlign(TextAlign.Start)
               .width("100%")
             AutoContentTable({
-              testItem : this.testItem ,
               autoItems : initBleAutoData() ,
-              // testMessage : this.testMessage ,
               changeIndex : this.changeIndex
             })
           }
@@ -123,13 +117,7 @@ struct BleAutoTest {
         .height(50)
         .margin({ top : "15vp" })
         .onClick(async(event: ClickEvent) => {
-
           this.forLoop()
-
-          let msg = ""
-          msg = "测试"
-          console.log(msg)
-          promptAction.showToast({ message : msg })
         })
       }
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
