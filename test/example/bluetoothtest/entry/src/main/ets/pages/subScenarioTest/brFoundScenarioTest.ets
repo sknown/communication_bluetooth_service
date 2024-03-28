@@ -31,7 +31,6 @@ import { BTAutoArrayItem , myParams } from '../../Utils/common'
 @Entry
 @Component
 struct BrFoundScenarioTest {
-  @State message: string = 'BrFoundScenarioTest';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("brFoundScenarioMessage") brFoundScenarioMessage: string = ""
@@ -54,7 +53,6 @@ struct BrFoundScenarioTest {
               .width("100%")
             ScenarioContentTable({
               scenarioItems : initBRFoundScenarioData() ,
-              //            testMessage: this.testMessage,  优化时修改
               changeIndex : this.changeIndex
             })
           }
@@ -111,9 +109,7 @@ struct BrFoundScenarioTest {
           .align(Alignment.Start)
           .onClick(async(event: ClickEvent) => {
             promptAction.showToast({ message : '开始Br蓝牙发现场景测试' })
-
             this.forLoop()
-
           })
 
           Button({ type : ButtonType.Normal , stateEffect : true }) {
@@ -128,8 +124,6 @@ struct BrFoundScenarioTest {
           .margin({ top : "15vp" , left : "10vp" , right : "10vp" })
           .align(Alignment.Start)
           .onClick(async(event: ClickEvent) => {
-            let self = this
-            //            const arr = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
             let brFoundScenarioMessage = ""
             // 停止蓝牙发现
             brFoundScenarioMessage += BrInterface.testStopBluetoothDiscovery() + "\n"
