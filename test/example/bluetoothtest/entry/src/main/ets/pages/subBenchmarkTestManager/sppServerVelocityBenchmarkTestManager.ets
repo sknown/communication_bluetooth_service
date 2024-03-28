@@ -30,7 +30,6 @@ import { myParams } from '../../Utils/common'
 @Entry
 @Component
 struct SppServerVelocityBenchmarkTestManager {
-  @State message: string = 'SppServerBenchmarkTestManager';
   private testItem: TestData = (router.getParams() as myParams).testItem
   @State changeIndex: number = - 1
   @StorageLink("sppServerVelocityBenchmarkTestMessage") sppServerVelocityBenchmarkTestMessage: string = ""
@@ -91,7 +90,6 @@ struct SppServerVelocityBenchmarkTestManager {
                   })
               }
               .width("90%")
-
             }
             .padding(3)
             .justifyContent(FlexAlign.Start)
@@ -109,7 +107,6 @@ struct SppServerVelocityBenchmarkTestManager {
                 .width("50%")
                 .borderRadius(10)
                 .height(32)
-
             }
             .padding(2)
             .justifyContent(FlexAlign.Start)
@@ -247,7 +244,6 @@ struct SppServerVelocityBenchmarkTestManager {
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
-              //              Text('清空').fontSize("24vp").fontColor(0xffffff).margin({ left: 5, right: 10 })
             }.alignItems(VerticalAlign.Center)
           }
           .borderRadius(8)
@@ -281,14 +277,8 @@ struct SppServerVelocityBenchmarkTestManager {
   }
 }
 
-let arr = []
-
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do something
-  //  }
   switch ( func ) {
     case testSetLocalNameManager: {
       func("DaYuBlue")
