@@ -85,7 +85,6 @@ struct SppClientBandWidthBenchmarkTest {
                 .backgroundColor($r("app.color.white"))
                 .height(30)
             }
-
             .padding(5)
             .justifyContent(FlexAlign.Start)
             .alignItems(VerticalAlign.Center)
@@ -139,7 +138,6 @@ struct SppClientBandWidthBenchmarkTest {
             }
             .scrollBarWidth(10)
             .scrollBar(BarState.On)
-
           }
           .width("100%")
           .height(360)
@@ -176,7 +174,6 @@ struct SppClientBandWidthBenchmarkTest {
         }
         .scrollBarWidth(10)
         .scrollBar(BarState.On)
-
       }
       .width("100%")
       .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
@@ -230,14 +227,11 @@ struct SppClientBandWidthBenchmarkTest {
             sppClientBandWidthBenchmarkTestMessage += "testSppClientClose 执行：" + testFunc(SppClientInterface.testSppClientClose) + "\n"
             AppStorage.setOrCreate("sppClientBandWidthBenchmarkTestMessage" , sppClientBandWidthBenchmarkTestMessage)
             await sleep(1)
-
           })
-
 
           Button({ type : ButtonType.Normal , stateEffect : true }) {
             Row() {
               Image($r('app.media.ic_public_delete_filled')).width(30).height(40).margin({ left : 5 })
-              //              Text('清空').fontSize("24vp").fontColor(0xffffff).margin({ left: 5, right: 10 })
             }.alignItems(VerticalAlign.Center)
           }
           .borderRadius(8)
@@ -279,10 +273,6 @@ struct SppClientBandWidthBenchmarkTest {
 
 export function testFunc(func: Function) {
   let start = new Date().getTime()
-  //  for (let index = 0; index < 10000; index++) {
-  //    arr.push(index)
-  //    // ...Do something
-  //  }
   switch ( func ) {
     case testSetLocalName: {
       func("DaYuBlue")
@@ -402,7 +392,6 @@ function sppClientReadOn(): string {
     } else {
       message = "读取失败";
     }
-    //    AppStorage.setOrCreate("dataClientReadMessageBW",message)
     promptAction.showToast({ message : message })
     return message
   });
