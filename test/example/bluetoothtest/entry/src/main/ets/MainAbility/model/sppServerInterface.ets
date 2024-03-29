@@ -15,6 +15,7 @@
 
 import bluetooth from '@ohos.bluetooth';
 import promptAction from '@ohos.promptAction';
+import { BusinessError } from '@ohos.base';
 
 let serverNumber: number = - 1;
 
@@ -29,13 +30,18 @@ export function testSppServerCreateSafe(): string {
       return message
     }
     // 创建蓝牙服务器侦听套接字, 返回服务端ID
-    bluetooth.sppListen('BluetoothDevice' , { uuid : uuid , secure : true , type : 0 } , (code , serverSocketID) => {
-      console.log('bluetooth error code: ' + code.code);
-      if ( code.code == 0 ) {
+    bluetooth.sppListen('BluetoothDevice' , {
+      uuid : uuid ,
+      secure : true ,
+      type : 0
+    } , (code: BusinessError , serverSocketID) => {
+      console.log('bluetooth error code: ' + typeof code + " ; " + JSON.stringify(code));
+      if ( !code || code.code == 0 ) {
         console.log('spp server: serverSocketID(safe mode) - ' + serverSocketID);
         serverNumber = serverSocketID;
         message = "创建server成功";
-        //      AppStorage.setOrCreate("serverNumber",serverNumber)
+        AppStorage.setOrCreate("serverNumber" , serverNumber)
+        console.log('spp server: serverNumber： ' + serverNumber);
         promptAction.showToast({ message : message })
       }
     });
@@ -64,8 +70,8 @@ export function testSppServerCreateUnSafe(): string {
       secure : false ,
       type : 0
     } , (code , serverSocketID) => {
-      console.log('bluetooth error code: ' + code.code);
-      if ( code.code == 0 ) {
+      console.log('bluetooth error code: ' + typeof code + " ; " + JSON.stringify(code));
+      if ( !code || code.code == 0 ) {
         console.log('spp server: serverSocketID(non-safe mode) ' + serverSocketID);
         serverNumber = serverSocketID;
         message = "创建server成功";
@@ -91,7 +97,7 @@ export function testSppServerAccept(): string {
     console.log('testSppServerAccept test')
     console.log('testSppServerAccept serverNumber ' + serverNumber)
     bluetooth.sppAccept(serverNumber , (code , clientSocketID) => {
-      if ( code.code == 0 ) {
+      if ( !code || code.code == 0 ) {
         console.log('spp server: clientSocketID - ' + clientSocketID);
         console.log('test serverNumber ' + serverNumber);
         clientNumber = clientSocketID;
