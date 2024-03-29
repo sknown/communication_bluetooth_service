@@ -35,7 +35,7 @@ struct BleFoundScenarioTest {
   @StorageLink("bleFoundScenarioMessage") bleFoundScenarioMessage: string = ""
 
   aboutToAppear() {
-    AppStorage.setOrCreate('txtScanFilterDeviceId' , "10:2C:6B:11:B3:17"); // 6c:96:d7:3d:87:6f
+    AppStorage.setOrCreate('txtScanFilterDeviceId' , "08:FB:EA:1B:3C:63"); // 6c:96:d7:3d:87:6f
     AppStorage.setOrCreate('txtScanFilterName' , "dudu-tiger");
     AppStorage.setOrCreate('txtScanFilterServiceUuid' , "0000180A-0000-1000-8000-00805f9b34fb");
     AppStorage.setOrCreate('txtScanOptions_interval' , "0");
