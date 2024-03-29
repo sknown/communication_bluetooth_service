@@ -528,13 +528,13 @@ struct GattServerManager {
   }
 
   // ServerResponse
-  private serverResponse_deviceId: string = '10:2C:6B:11:B3:17'; //'88:36:CF:09:C1:90'
+  private serverResponse_deviceId: string = '08:FB:EA:1B:3C:63'; //'88:36:CF:09:C1:90'
   private serverResponse_transId: string = '1';
   private serverResponse_status: string = '0';
   private serverResponse_offset: string = '0';
   private serverResponse_value: string = 'respond value';
   private serverResponse: bluetoothManager.ServerResponse = {
-    deviceId : '10:2C:6B:11:B3:17' , //'88:36:CF:09:C1:90'
+    deviceId : '08:FB:EA:1B:3C:63' , //'88:36:CF:09:C1:90'
     transId : 1 ,
     status : 0 ,
     offset : 0 ,
