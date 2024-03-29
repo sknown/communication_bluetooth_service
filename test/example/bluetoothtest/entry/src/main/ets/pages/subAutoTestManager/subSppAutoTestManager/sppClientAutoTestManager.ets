@@ -37,7 +37,7 @@ struct SppClientAutoTestManager {
   @StorageLink("sppClientAutoTestMessage") sppClientAutoTestMessage: string = ""
 
   aboutToAppear() {
-    AppStorage.setOrCreate('txtScanFilterDeviceId' , "10:2C:6B:11:B3:17");
+    AppStorage.setOrCreate('txtScanFilterDeviceId' , "08:FB:EA:1B:3C:63");
     AppStorage.setOrCreate('txtScanFilterName' , "dudu-tiger");
     AppStorage.setOrCreate('txtScanFilterServiceUuid' , "0000180A-0000-1000-8000-00805f9b34fb");
     AppStorage.setOrCreate('txtScanOptions_interval' , "0");
@@ -45,7 +45,7 @@ struct SppClientAutoTestManager {
     AppStorage.setOrCreate('txtScanOptionsMatchMode' , '0');
     AppStorage.setOrCreate('cbxBleScanFilter' , true);
     AppStorage.setOrCreate('cbxBleScanOptions' , true);
-    AppStorage.setOrCreate('inputDeviceId' , "10:2C:6B:11:B3:17");
+    AppStorage.setOrCreate('inputDeviceId' , "08:FB:EA:1B:3C:63");
     AppStorage.setOrCreate('inputUuid' , "00001101-0000-1000-8000-00805f9b34fb");
     AppStorage.setOrCreate('writeClientData' , '11');
   }
