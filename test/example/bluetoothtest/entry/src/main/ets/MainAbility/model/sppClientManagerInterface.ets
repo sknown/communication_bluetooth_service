@@ -30,10 +30,10 @@ export function testSppClientConnectSafeManager(): string {
       secure : true ,
       type : 0
     } , (code , socketID) => {
-      console.log("spp client code:" + code.code)
-      if ( code.code != 0 ) {
+      console.log("spp client code:" + JSON.stringify(code))
+      if ( code.code != 0  ) {
         message = "客户端连接失败!";
-        console.log('bluetoothManager sppConnect callback socketNumber(safe mode): ' + code.code);
+        console.log('bluetoothManager sppConnect callback socketNumber(safe mode): ' + JSON.stringify(code));
         promptAction.showToast({ message : message })
         return message;
       }
@@ -66,7 +66,7 @@ export function testSppClientConnectUnSafeManager(): string {
       secure : false ,
       type : 0
     } , (code , socketID) => {
-      if ( code.code != 0 ) {
+      if ( code ) {
         message = "客户端连接失败!";
         console.log('bluetoothManager sppConnect callback socketNumber(non-safe mode): ' + socketID);
         promptAction.showToast({ message : message })
