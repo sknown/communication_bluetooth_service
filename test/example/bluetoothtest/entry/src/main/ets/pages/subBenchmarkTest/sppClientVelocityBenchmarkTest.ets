@@ -39,7 +39,7 @@ struct SppClientVelocityBenchmarkTest {
   @State writeClientData: string = '1';
   private clientNumber: number = - 1;
   private uuid: string = "00001101-0000-1000-8000-00805f9b34fb";
-  @State deviceId: string = "10:2C:6B:11:B3:17"; //10:2C:6B:11:B3:17
+  @State deviceId: string = "08:FB:EA:1B:3C:63"; //08:FB:EA:1B:3C:63
 
   aboutToAppear() {
 
@@ -81,17 +81,18 @@ struct SppClientVelocityBenchmarkTest {
                   this.deviceId = str;
                   AppStorage.setOrCreate('inputDeviceId' , str)
                 })
-                .width("80%")
+                .width("70%")
                 .borderRadius(1)
                 .backgroundColor($r("app.color.white"))
-                .height(30)
+                .height(35)
             }
             .padding(5)
+            .width("96%")
             .justifyContent(FlexAlign.Start)
             .alignItems(VerticalAlign.Center)
 
             Row() {
-              Text("clientV_Cycle_index:").fontSize(17).width(180).padding({ left : "5vp" })
+              Text("clientV_Cycle_index:").fontSize(17).width(200)
               Column() {
                 Select([
                   { value : "100" },
@@ -106,21 +107,22 @@ struct SppClientVelocityBenchmarkTest {
                   .margin({ right : 160 })
                   .selectedOptionFont({ size : 17 })
                   .optionFont({ size : 15 })
-                  .width("90%")
+                  .width("80%")
                   .height(40)
                   .onSelect((index: number) => {
                     console.log("index Select:" + index)
                     AppStorage.setOrCreate('clientV_Cycle_index' , index);
                   })
               }
-              .width("90%")
+              .width("70%")
             }
             .padding(2)
+            .width("96%")
             .justifyContent(FlexAlign.Start)
             .alignItems(VerticalAlign.Center)
 
             Row() {
-              Text("写入目标设备数据：").fontSize(17).width(160).padding({ left : "5vp" });
+              Text("写入目标设备数据：").fontSize(17).width(170)
               TextInput({ text : this.writeClientData , placeholder : "请输入写入的数据" })
                 .align(Alignment.Center)
                 .fontSize("15vp")
@@ -129,11 +131,12 @@ struct SppClientVelocityBenchmarkTest {
                   this.writeClientData = str;
                   AppStorage.setOrCreate("writeClientData" , str);
                 })
-                .width("50%")
+                .width("60%")
                 .borderRadius(10)
                 .height(32)
             }
             .padding(2)
+            .width("96%")
             .justifyContent(FlexAlign.Start)
             .alignItems(VerticalAlign.Center)
 
@@ -229,7 +232,7 @@ struct SppClientVelocityBenchmarkTest {
             await sleep(2)
             sppClientVelocityBenchmarkTestMessage += "sppClientConnectSafe" + testFunc(sppClientConnectSafe)
             AppStorage.setOrCreate("sppClientVelocityBenchmarkTestMessage" , sppClientVelocityBenchmarkTestMessage)
-            await sleep(5)
+            await sleep(10)
 
             sppClientVelocityBenchmarkTestMessage += "sppClientWrite" + testFunc(sppClientWrite)
             AppStorage.setOrCreate("sppClientVelocityBenchmarkTestMessage" , sppClientVelocityBenchmarkTestMessage)
@@ -366,7 +369,7 @@ function choose(index: number) {
 
 let clientNumber = - 1
 
-function sppClientConnectSafe(): string {
+function sppClientConnectSafe(): void {
   let message = "sppClientConnectSafe test"
   console.log('testSppClientConnectSafe create! ');
   let uuid: string = AppStorage.get('inputUuid') !
@@ -377,21 +380,19 @@ function sppClientConnectSafe(): string {
     secure : true ,
     type : 0
   } , (code , socketID) => {
-    console.log("spp client code:" + code.code)
-    if ( code.code != 0 ) {
-      message = "客户端连接失败!";
-      console.log('bluetoothModel sppConnect callback socketNumber(safe mode): ' + code.code);
+    console.log("spp client code:" + JSON.stringify(code))
+    if ( !code || code.code == 0 ) {
+      acceptClientSocket(socketID);
+      console.log('bluetoothModel sppConnect success socketNumber(safe mode): ' + socketID);
+      message = "客户端连接成功!";
       promptAction.showToast({ message : message })
-      return message;
+    } else {
+      message = "客户端连接失败!";
+      console.log('bluetoothModel sppConnect fail code: ' + JSON.stringify(code));
+      promptAction.showToast({ message : message })
     }
-    acceptClientSocket(socketID);
-    console.log('bluetoothModel sppConnect callback socketNumber(safe mode): ' + socketID);
-    message = "客户端连接成功!";
-    promptAction.showToast({ message : message })
-    return message
   })
-  promptAction.showToast({ message : message })
-  return message
+  return
 }
 
 function acceptClientSocket(number: number) {
