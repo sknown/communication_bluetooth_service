@@ -40,7 +40,7 @@ struct SppClientBandWidthBenchmarkTestManager {
   @State writeClientDataBW: string = '1';
   private clientNumber: number = - 1;
   private uuid: string = "00001101-0000-1000-8000-00805f9b34fb";
-  @State deviceId: string = "10:2C:6B:11:B3:17"; //10:2C:6B:11:B3:17
+  @State deviceId: string = "08:FB:EA:1B:3C:63"; //08:FB:EA:1B:3C:63
 
   aboutToAppear() {
 
@@ -322,10 +322,10 @@ function sppClientConnectSafe(): string {
     secure : true ,
     type : 0
   } , (code , socketID) => {
-    console.log("spp client code:" + code.code)
-    if ( code.code != 0 ) {
+    console.log("spp client code:" + JSON.stringify(code))
+    if ( code.code != 0  ) {
       message = "客户端连接失败!";
-      console.log('bluetoothModelManager sppConnect callback socketNumber(safe mode): ' + code.code);
+      console.log('bluetoothModelManager sppConnect callback socketNumber(safe mode): ' + JSON.stringify(code));
       promptAction.showToast({ message : message })
       return message;
     }
