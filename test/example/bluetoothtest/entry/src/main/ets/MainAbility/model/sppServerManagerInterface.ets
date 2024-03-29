@@ -34,8 +34,8 @@ export function testSppServerCreateSafeManager(): string {
       secure : true ,
       type : 0
     } , (code , serverSocketID) => {
-      console.log('bluetoothManager error code: ' + code.code);
-      if ( code.code == 0 ) {
+      console.log('bluetooth error code: ' + typeof code + " ; " + JSON.stringify(code));
+      if ( !code || code.code == 0 ) {
         console.log('spp server: serverSocketID(safe mode) - ' + serverSocketID);
         serverNumber = serverSocketID;
         message = "创建server成功";
@@ -69,8 +69,8 @@ export function testSppServerCreateUnSafeManager(): string {
       secure : false ,
       type : 0
     } , (code , serverSocketID) => {
-      console.log('bluetoothManager error code: ' + code.code);
-      if ( code.code == 0 ) {
+      console.log('bluetooth error code: ' + typeof code + " ; " + JSON.stringify(code));
+      if ( !code || code.code == 0 ) {
         console.log('spp server: serverSocketID(non-safe mode) ' + serverSocketID);
         serverNumber = serverSocketID;
         message = "创建server成功";
@@ -96,7 +96,8 @@ export function testSppServerAcceptManager(): string {
     console.log('testSppServerAccept test')
     console.log('testSppServerAccept serverNumber ' + serverNumber)
     bluetoothManager.sppAccept(serverNumber , (code , clientSocketID) => {
-      if ( code.code == 0 ) {
+      console.log('bluetooth error code: ' + typeof code + " ; " + JSON.stringify(code));
+      if ( !code || code.code == 0 ) {
         console.log('spp server: clientSocketID - ' + clientSocketID);
         console.log('test serverNumber ' + serverNumber);
         clientNumber = clientSocketID;
