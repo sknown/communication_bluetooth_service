@@ -2429,8 +2429,14 @@ bool ClassicAdapter::IsHfpCodSupported(const RawAddress &device)
         return false;
     }
     int cod = remoteDevice->GetDeviceClass();
-    if ((cod & CLASS_OF_DEVICE_MASK) == CLASS_OF_DEVICE_AV_HEADSETS ||
-        (cod & CLASS_OF_DEVICE_MASK) == CLASS_OF_DEVICE_AV_HANDSFREE) {
+    /// Referenced from Assigned NUmbers,Class of Device format : 
+    /// 23-13 bit  Major Service Classes
+    /// 12-8 bit Major Device Class
+    /// 7-2 bit Minor Device Class
+    /// 1-0 bit 0b00
+    /// The 21st bit indicates Audio.
+    const int audioSerClassMask = 0x200000; 
+    if (cod & audioSerClassMask) {
             return true;
     }
     return false;
