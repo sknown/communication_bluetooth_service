@@ -43,7 +43,7 @@ struct SppClientManager {
   @State connectionStateInfo: string = "";
   private uuid: string = "00001101-0000-1000-8000-00805f9b34fb";
   private clientNumber: number = - 1;
-  @State deviceId: string = "10:2C:6B:11:B3:17"; //10:2C:6B:11:B3:17
+  @State deviceId: string = "08:FB:EA:1B:3C:63"; //08:FB:EA:1B:3C:63
   @State writeClientData: string = '11';
   private TAG_PAGE = ConfigData.TAG + 'Paired_Device ';
   @StorageLink('bluetoothIsOn') btEnable: boolean = false;
