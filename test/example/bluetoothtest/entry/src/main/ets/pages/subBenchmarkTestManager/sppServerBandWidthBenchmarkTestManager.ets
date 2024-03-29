@@ -300,14 +300,13 @@ function sppServerCreateSafe(): string {
     secure : true ,
     type : 0
   } , (code , serverSocketID) => {
-    console.log('bluetooth error code: ' + code.code);
-    if ( code.code == 0 ) {
+    console.log('bluetooth error code: ' + JSON.stringify(code));
+    if ( !code || code.code == 0 ) {
       console.log('spp server: serverSocketID(safe mode) - ' + serverSocketID);
       serverNumber = serverSocketID;
       message = "创建server成功";
       promptAction.showToast({ message : message })
-      //      AppStorage.setOrCreate("serverNumber", serverNumber)
-      //      serverNumber = AppStorage.get("serverNumber")
+      AppStorage.setOrCreate("serverNumber" , serverNumber)
       console.log('testSppServerAccept test')
       console.log('testSppServerAccept serverNumber ' + serverNumber)
     }
@@ -325,7 +324,7 @@ function sppServerAccept(): string {
   console.log('testSppServerAccept serverNumber ' + serverNumber)
 
   bluetoothManager.sppAccept(serverNumber , (code , clientSocketID) => {
-    if ( code.code == 0 ) {
+    if ( !code || code.code == 0 ) {
       console.log('spp server: clientSocketID - ' + clientSocketID);
       console.log('test serverNumber ' + serverNumber);
       clientNumber = clientSocketID;
@@ -358,7 +357,7 @@ function sppServerAccept(): string {
       promptAction.showToast({ message : message })
     } else {
       message = "接受客户端失败";
-      console.log("code.code:" + code.code)
+      console.log("code.code:" + JSON.stringify(code))
       promptAction.showToast({ message : message })
     }
   })
