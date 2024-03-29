@@ -39,7 +39,7 @@ struct SppClientBandWidthBenchmarkTest {
   @State writeClientDataBW: string = '1';
   private clientNumber: number = - 1;
   private uuid: string = "00001101-0000-1000-8000-00805f9b34fb";
-  @State deviceId: string = "10:2C:6B:11:B3:17"; //10:2C:6B:11:B3:17
+  @State deviceId: string = "08:FB:EA:1B:3C:63"; //08:FB:EA:1B:3C:63
 
   aboutToAppear() {
 
@@ -80,30 +80,32 @@ struct SppClientBandWidthBenchmarkTest {
                   this.deviceId = str;
                   AppStorage.setOrCreate('inputDeviceId' , str)
                 })
-                .width("80%")
+                .width("70%")
                 .borderRadius(1)
                 .backgroundColor($r("app.color.white"))
-                .height(30)
+                .height(40)
             }
             .padding(5)
+            .width("96%")
             .justifyContent(FlexAlign.Start)
             .alignItems(VerticalAlign.Center)
 
             Row() {
-              Text("写入目标设备数据：").fontSize(17).width(160).padding({ left : "5vp" });
+              Text("写入目标设备数据：").fontSize(17).width(170)
               TextInput({ text : this.writeClientDataBW , placeholder : "请输入写入的数据" })
-                .align(Alignment.Center)
+                .align(Alignment.Start)
                 .fontSize("15vp")
                 .backgroundColor($r("app.color.white"))
                 .onChange((str) => {
                   this.writeClientDataBW = str;
                   AppStorage.setOrCreate("writeClientDataBW" , str);
                 })
-                .width("50%")
-                .borderRadius(10)
-                .height(32)
+                .width("70%")
+                .borderRadius(1)
+                .height(35)
             }
-            .padding(2)
+            .padding(5)
+            .width("96%")
             .justifyContent(FlexAlign.Start)
             .alignItems(VerticalAlign.Center)
 
@@ -320,10 +322,10 @@ function sppClientConnectSafe(): string {
     secure : true ,
     type : 0
   } , (code , socketID) => {
-    console.log("spp client code:" + code.code)
-    if ( code.code != 0 ) {
+    console.log("spp client code:" + JSON.stringify(code))
+    if ( code.code != 0  ) {
       message = "客户端连接失败!";
-      console.log('bluetoothModel sppConnect callback socketNumber(safe mode): ' + code.code);
+      console.log('bluetoothModel sppConnect callback socketNumber(safe mode): ' + JSON.stringify(code));
       promptAction.showToast({ message : message })
       return message;
     }
