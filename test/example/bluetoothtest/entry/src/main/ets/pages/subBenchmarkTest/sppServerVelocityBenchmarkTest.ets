@@ -67,7 +67,7 @@ struct SppServerVelocityBenchmarkTest {
             Stack().height("1vp").backgroundColor("#000000")
 
             Row() {
-              Text("serverV_Cycle_index:").fontSize(17).width(180).padding({ left : "15vp" })
+              Text("serverV_Cycle_index:").fontSize(17).width(200)
               Column() {
                 Select([
                   { value : "100" },
@@ -89,10 +89,10 @@ struct SppServerVelocityBenchmarkTest {
                     AppStorage.setOrCreate('serverV_Cycle_index' , index);
                   })
               }
-              .width("90%")
-
+              .width("80%")
             }
             .padding(3)
+            .width("96%")
             .justifyContent(FlexAlign.Start)
             .alignItems(VerticalAlign.Center)
 
@@ -110,6 +110,7 @@ struct SppServerVelocityBenchmarkTest {
                 .height(32)
             }
             .padding(2)
+            .width("96%")
             .justifyContent(FlexAlign.Start)
             .alignItems(VerticalAlign.Center)
 
@@ -350,8 +351,8 @@ function sppServerCreateSafe(): string {
   }
   // 创建蓝牙服务器侦听套接字, 返回服务端ID
   bluetooth.sppListen('BluetoothDevice' , { uuid : uuid , secure : true , type : 0 } , (code , serverSocketID) => {
-    console.log('bluetooth error code: ' + code.code);
-    if ( code.code == 0 ) {
+    console.log('bluetooth error code: ' + typeof code + " ; " + JSON.stringify(code));
+    if ( !code || code.code == 0 ) {
       console.log('spp server: serverSocketID(safe mode) - ' + serverSocketID);
       serverNumber = serverSocketID;
       message = "创建server成功";
@@ -377,7 +378,7 @@ function sppServerAccept(): string {
   console.log("循环数为:" + indexNumber)
 
   bluetooth.sppAccept(serverNumber , (code , clientSocketID) => {
-    if ( code.code == 0 ) {
+    if ( !code || code.code == 0 ) {
       console.log('spp server: clientSocketID - ' + clientSocketID);
       console.log('test serverNumber ' + serverNumber);
       clientNumber = clientSocketID;
@@ -424,7 +425,7 @@ function sppServerAccept(): string {
       promptAction.showToast({ message : message })
     } else {
       message = "接受客户端失败";
-      console.log("code.code:" + code.code)
+      console.log("code.code:" + JSON.stringify(code))
       promptAction.showToast({ message : message })
     }
   })
