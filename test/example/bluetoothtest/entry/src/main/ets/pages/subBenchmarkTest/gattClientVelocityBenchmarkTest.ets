@@ -38,7 +38,7 @@ struct GattClientVelocityBenchmarkTest {
   @State changeIndex: number = - 1
   @State gatt_Cycle_index: number = 10
   @StorageLink("gattClientBenchmarkTestMessage") gattClientBenchmarkTestMessage: string = ""
-  private peripheralDeviceId = "10:2C:6B:11:B3:17"
+  private peripheralDeviceId = "08:FB:EA:1B:3C:63"
   @State serviceUUID: string = "00001801-0000-1000-8000-00805f9b34fb";
   @State characteristicUUID: string = "00002b29-0000-1000-8000-00805f9b34fb";
   @State characteristicValue: string = "CccValue";
