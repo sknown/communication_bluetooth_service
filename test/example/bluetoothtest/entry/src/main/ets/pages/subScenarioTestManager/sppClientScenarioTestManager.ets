@@ -35,14 +35,14 @@ struct SppClientScenarioTestManager {
   @State changeIndex: number = - 1;
   @State writeClientData: string = '11';
   private uuid: string = "00001101-0000-1000-8000-00805f9b34fb";
-  @State deviceId: string = "10:2C:6B:11:B3:17"; //10:2C:6B:11:B3:17
+  @State deviceId: string = "08:FB:EA:1B:3C:63"; //08:FB:EA:1B:3C:63
   private testItem: TestData = (router.getParams() as myParams).testItem
   @StorageLink("sppClientScenarioMessage") sppClientScenarioMessage: string = ""
   @StorageLink('dataReadMessage') dataReadMessage: string = "";
 
   aboutToAppear() {
 
-    AppStorage.setOrCreate('txtScanFilterDeviceId' , "10:2C:6B:11:B3:17");
+    AppStorage.setOrCreate('txtScanFilterDeviceId' , "08:FB:EA:1B:3C:63");
     AppStorage.setOrCreate('txtScanFilterName' , "dudu-tiger");
     AppStorage.setOrCreate('txtScanFilterServiceUuid' , "0000180A-0000-1000-8000-00805f9b34fb");
     AppStorage.setOrCreate('txtScanOptions_interval' , "0");
