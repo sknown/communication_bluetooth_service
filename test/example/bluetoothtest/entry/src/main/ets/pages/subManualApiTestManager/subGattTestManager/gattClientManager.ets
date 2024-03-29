@@ -26,7 +26,7 @@ const G_MAC = '6c:96:d7:3d:87:6f'
 
 @Component
 struct GattClientSetting {
-  private peripheralDeviceId = G_MAC; // '10:2C:6B:11:B3:17';DaYu200//
+  private peripheralDeviceId = G_MAC; // '08:FB:EA:1B:3C:63';DaYu200//
   @State isOnBLECharacteristicChangeClick: boolean = false;
   @State bleCharacteristicChangeInfo: string = '';
   @State serviceUUID: string = '00001801-0000-1000-8000-00805f9b34fb';
