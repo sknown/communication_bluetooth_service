@@ -369,7 +369,7 @@ int BluetoothHfpAgServer::IsInbandRingingEnabled(bool &isEnabled)
     return true;
 }
 
-void CallDetailsChanged(int callId, int callState)
+void BluetoothHfpAgServer::CallDetailsChanged(int callId, int callState)
 {
     HILOGI("enter");
 }
