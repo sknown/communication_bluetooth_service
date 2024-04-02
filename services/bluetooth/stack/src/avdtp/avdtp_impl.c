@@ -392,6 +392,11 @@ uint16_t AvdtActSetConfigReq(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     uint16_t Ret = AVDT_SUCCESS;
     /* disable call discover seps API continually */
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtTransChannel *transTbl = AvdtGetTransChTabByHandle(AVDT_CH_TYPE_SIG, sigCtrl->handle);
     if (transTbl == NULL) {
         /* Trace no resources parameter */
@@ -423,6 +428,11 @@ uint16_t AvdtActSetConfigRsp(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     LOG_DEBUG("[AVDT]%{public}s: errorcode(%hhu)", __func__, data->msg.configureCmd.hdr.errCode);
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     if (data->msg.configureCmd.hdr.errCode == AVDT_SUCCESS) {
         AvdtMsgSendRsp(sigCtrl, NULL, AVDT_SIG_SETCONFIG, NULL);
         (void)memcpy_s(&streamCtrl->currCfg, sizeof(AvdtSepConfig), &streamCtrl->reqCfg, sizeof(AvdtSepConfig));
@@ -458,6 +468,11 @@ uint16_t AvdtActSetConfigInd(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
         return Ret;
     }
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     transTbl->streamHandle = streamCtrl->handle;
     sigCtrl->streamHandle = streamCtrl->handle;
     LOG_DEBUG("[AVDT]%{public}s: transTbl->streamHandle(%hu)", __func__, transTbl->streamHandle);
@@ -501,6 +516,11 @@ uint16_t AvdtActSetConfigCfm(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     streamCtrl->isUsed = true;
     (void)memcpy_s(&streamCtrl->currCfg, sizeof(AvdtSepConfig), &streamCtrl->reqCfg, sizeof(AvdtSepConfig));
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtCtrlEvtCallback(
         sigCtrl, streamCtrl->handle, &(sigCtrl->peerAddress), AVDT_CONFIG_CFM_EVT, &data->ctrlData, sigCtrl->role);
     return Ret;
@@ -523,6 +543,11 @@ uint16_t AvdtActGetConfigReq(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtMsg message = {0};
     /* disable call discover seps API continually */
     message.configureCmd.acpSeid = data->msg.single.seid;
@@ -547,6 +572,11 @@ uint16_t AvdtActGetConfigRsp(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     if (data->msg.configureCmd.hdr.errCode == AVDT_SUCCESS) {
         AvdtMsgSendRsp(sigCtrl, streamCtrl, AVDT_SIG_GETCONFIG, &(data->msg));
     } else {
@@ -573,6 +603,11 @@ uint16_t AvdtActGetConfigInd(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtSepConfig capability = {0};
     AvdtEventData event = {0};
     uint8_t seid = data->msg.single.seid;
@@ -631,6 +666,11 @@ uint16_t AvdtActGetConfigCfm(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtCtrlEvtCallback(
         sigCtrl, streamCtrl->handle, &(sigCtrl->peerAddress), AVDT_GETCONFIG_CFM_EVT, &data->ctrlData, sigCtrl->role);
     return Ret;
@@ -654,6 +694,11 @@ uint16_t AvdtActReconfigReq(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     /* disable call discover seps API continually */
     (void)memcpy_s(&streamCtrl->currCfg, sizeof(AvdtSepConfig), &data->msg.reconfigureCmd.cfg, sizeof(AvdtSepConfig));
     AvdtMsgSendCmd(sigCtrl, streamCtrl, AVDT_SIG_RECONFIG, &data->msg);
@@ -677,6 +722,11 @@ uint16_t AvdtActReconfigRsp(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     if (data->msg.configureCmd.hdr.errCode == AVDT_SUCCESS) {
         AvdtMsgSendRsp(sigCtrl, NULL, AVDT_SIG_RECONFIG, NULL);
     } else {
@@ -703,6 +753,11 @@ uint16_t AvdtActReconfigInd(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtCtrlData confirmData = {0};
     confirmData.reconfigInd.hdr.seid = data->msg.reconfigureCmd.hdr.seid;
     (void)memcpy_s(&confirmData.reconfigInd.cfg, sizeof(AvdtSepConfig), &(streamCtrl->reqCfg), sizeof(AvdtSepConfig));
@@ -729,6 +784,11 @@ uint16_t AvdtActReconfigCfm(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     uint16_t Ret = AVDT_SUCCESS;
     (void)memcpy_s(&streamCtrl->currCfg, sizeof(AvdtSepConfig), &streamCtrl->reqCfg, sizeof(AvdtSepConfig));
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtCtrlEvtCallback(
         sigCtrl, streamCtrl->handle, &(sigCtrl->peerAddress), AVDT_RECONFIG_CFM_EVT, &data->ctrlData, sigCtrl->role);
     return Ret;
@@ -751,6 +811,11 @@ uint16_t AvdtActOpenReq(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtMsg message = {0};
     sigCtrl->ia = AVDT_INT;
     message.single.seid = data->msg.single.seid;
@@ -775,6 +840,11 @@ uint16_t AvdtActOpenRsp(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     if (data->msg.single.errCode == AVDT_SUCCESS) {
         AvdtMsgSendRsp(sigCtrl, streamCtrl, AVDT_SIG_OPEN, &data->msg);
     } else {
@@ -801,6 +871,11 @@ uint16_t AvdtActOpenInd(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     uint8_t seid = data->msg.single.seid;
     if (AVDT_SEID_INVLID <= seid || seid == AVDT_SEID_FORBID) {
         data->msg.single.errCode = AVDT_ERR_BAD_ACP_SEID;
@@ -830,6 +905,11 @@ uint16_t AvdtActOpenCfm(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
         return AVDT_SUCCESS;
     }
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtStreamProcEvent(streamCtrl, AVDT_STREAM_OPEN_CMD_REQ_EVENT, data);
     sigCtrl->streamHandle = streamCtrl->handle;
     return Ret;
@@ -852,6 +932,11 @@ uint16_t AvdtActSuspendReq(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtMsg message = {0};
     message.single.seid = data->msg.single.seid;
     AvdtMsgSendCmd(sigCtrl, streamCtrl, AVDT_SIG_SUSPEND, &message);
@@ -875,6 +960,11 @@ uint16_t AvdtActSuspendRsp(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     if (data->msg.single.errCode == AVDT_SUCCESS) {
         AvdtMsgSendRsp(sigCtrl, NULL, AVDT_SIG_SUSPEND, NULL);
     } else {
@@ -901,6 +991,11 @@ uint16_t AvdtActSuspendInd(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtCtrlData confirmData = {0};
     uint8_t seid = data->msg.single.seid;
     if (AVDT_SEID_INVLID <= seid || seid == AVDT_SEID_FORBID) {
@@ -933,6 +1028,11 @@ uint16_t AvdtActSuspendCfm(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtCtrlEvtCallback(
         sigCtrl, streamCtrl->handle, &(sigCtrl->peerAddress), AVDT_SUSPEND_CFM_EVT, &data->ctrlData, sigCtrl->role);
     return Ret;
@@ -955,6 +1055,11 @@ uint16_t AvdtActStartReq(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtMsg message = {0};
     message.single.seid = data->msg.single.seid;
     AvdtMsgSendCmd(sigCtrl, streamCtrl, AVDT_SIG_START, &message);
@@ -978,6 +1083,11 @@ uint16_t AvdtActStartRsp(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     if (data->msg.single.errCode == AVDT_SUCCESS) {
         AvdtMsgSendRsp(sigCtrl, NULL, AVDT_SIG_START, NULL);
     } else {
@@ -1004,6 +1114,11 @@ uint16_t AvdtActStartInd(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+
     AvdtCtrlData confirmData = {0};
     confirmData.startInd.seid = (uint16_t)data->msg.single.seid;
     confirmData.startInd.label = data->msg.single.label;
@@ -1030,6 +1145,11 @@ uint16_t AvdtActStartCfm(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
+    
     data->ctrlData.startCfm.mtu = sigCtrl->edr;
     AvdtCtrlEvtCallback(
         sigCtrl, streamCtrl->handle, &(sigCtrl->peerAddress), AVDT_START_CFM_EVT, &data->ctrlData, sigCtrl->role);
@@ -1053,6 +1173,10 @@ uint16_t AvdtActCloseReq(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtMsg message = {0};
     message.single.seid = data->msg.single.seid;
     AvdtMsgSendCmd(sigCtrl, streamCtrl, AVDT_SIG_CLOSE, &message);
@@ -1076,6 +1200,10 @@ uint16_t AvdtActCloseRsp(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     if (data->msg.single.errCode == AVDT_SUCCESS) {
         AvdtMsgSendRsp(sigCtrl, NULL, AVDT_SIG_CLOSE, NULL);
     } else {
@@ -1102,6 +1230,10 @@ uint16_t AvdtActCloseInd(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     LOG_DEBUG("[AVDT]%{public}s: streamCtrl->state(%hhu)", __func__, streamCtrl->state);
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtCtrlData confirmData = {0};
     confirmData.closeInd.seid = (uint16_t)data->msg.single.seid;
     AvdtCtrlEvtCallback(
@@ -1152,6 +1284,10 @@ uint16_t AvdtActDelayRptReq(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtMsg message = {0};
     message.delayRptCmd.delay = data->apiDelay.delay;
     message.delayRptCmd.hdr.seid = data->apiDelay.hdr.seid;
@@ -1177,6 +1313,10 @@ uint16_t AvdtActDelayRptRsp(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
         return AVDT_SUCCESS;
     }
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     if (data->msg.single.errCode == AVDT_SUCCESS) {
         AvdtMsgSendRsp(sigCtrl, NULL, AVDT_SIG_DELAY_RPT, &data->msg);
     } else {
@@ -1204,6 +1344,10 @@ uint16_t AvdtActDelayRptInd(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     LOG_INFO("[AVDT]%{public}s: delay value is %{public}d ", __func__, data->msg.delayRptCmd.delay);
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtCtrlData confirmData = {0};
     confirmData.delayRptInd.delay = data->msg.delayRptCmd.delay;
     confirmData.delayRptInd.hdr.seid = data->msg.delayRptCmd.hdr.seid;
@@ -1230,6 +1374,10 @@ uint16_t AvdtActDelayRptCfm(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtCtrlEvtCallback(sigCtrl,
         streamCtrl->handle,
         &(sigCtrl->peerAddress),
@@ -1256,6 +1404,10 @@ uint16_t AvdtActAbortReq(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtMsg message = {0};
     message.single.seid = data->msg.single.seid;
     AvdtMsgSendCmd(sigCtrl, streamCtrl, AVDT_SIG_ABORT, &message);
@@ -1279,6 +1431,10 @@ uint16_t AvdtActAbortRsp(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtMsgSendRsp(sigCtrl, NULL, AVDT_SIG_ABORT, NULL);
     return Ret;
 }
@@ -1301,6 +1457,10 @@ uint16_t AvdtActAbortInd(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     /* notify the application indication */
     AvdtCtrlEvtCallback(sigCtrl, streamCtrl->handle, &(sigCtrl->peerAddress), AVDT_ABORT_IND_EVT, NULL, sigCtrl->role);
     AvdtStreamProcEvent(streamCtrl, AVDT_ABORT_CMD_RSP_EVENT, NULL);
@@ -1324,6 +1484,10 @@ uint16_t AvdtActAbortCfm(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtCtrlEvtCallback(
         sigCtrl, streamCtrl->handle, &(sigCtrl->peerAddress), AVDT_ABORT_CFM_EVT, &data->ctrlData, sigCtrl->role);
     return Ret;
@@ -1428,6 +1592,10 @@ uint16_t AvdtActStreamOpenReq(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtTransChannel *transTbl = AvdtTransChTabAllocate(AVDT_CH_TYPE_STREAM, sigCtrl, streamCtrl);
     if (transTbl == NULL) {
         /* Trace no resources parameter */
@@ -1548,6 +1716,10 @@ uint16_t AvdtActStreamCloseInd(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     LOG_DEBUG("[AVDT]%{public}s:Current state(%hhu)", __func__, streamCtrl->state);
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtCtrlData confirmData = {0};
     confirmData.hdr.errCode = AVDT_SUCCESS;
     AvdtCtrlEvtCallback(
@@ -1574,6 +1746,10 @@ uint16_t AvdtActStreamCloseCfm(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
     }
     uint16_t Ret = AVDT_SUCCESS;
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     AvdtCtrlData confirmData = {0};
     confirmData.hdr.errCode = AVDT_SUCCESS;
     AvdtCtrlEvtCallback(
@@ -1802,6 +1978,10 @@ uint16_t AvdtActBadStateRej(AvdtStreamCtrl *streamCtrl, AvdtEventData *data)
         return AVDT_SUCCESS;
     }
     AvdtSigCtrl *sigCtrl = AvdtGetSigCtrlByHandle(streamCtrl->sigHandle);
+    if (sigCtrl == NULL) {
+        LOG_ERROR("[AVDT]%{public}s: AvdtGetSigCtrlByHandle(%hu) Failed!", __func__, streamCtrl->sigHandle);
+        return Ret;
+    }
     LOG_DEBUG("[AVDT]%{public}s:singalId(0x%x)", __func__, sigCtrl->rcvSignal);
     AvdtIndReject(sigCtrl, sigCtrl->rcvSignal, AVDT_ERR_BAD_STATE, 0);
     return Ret;
