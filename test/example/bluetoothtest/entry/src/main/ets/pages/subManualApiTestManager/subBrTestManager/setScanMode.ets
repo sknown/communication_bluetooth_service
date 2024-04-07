@@ -14,9 +14,9 @@
  */
 import ConfigData from '../../../Utils/ConfigData';
 import BluetoothModel from '../../../MainAbility/model/BluetoothModel';
-import Router from '@system.router'
+import router from '@ohos.router'
 import { TitleComponent } from '../../../Component/titleComponent';
-import InputMethod from '@ohos.inputmethod';
+import InputMethod from '@ohos.inputMethod';
 import bluetooth from '@ohos.bluetooth';
 
 import { PageTitle } from '../../../Component/pageTitle';
@@ -28,8 +28,6 @@ import { PageTitle } from '../../../Component/pageTitle';
 struct setScanMode {
   @State message: string = "请点击选择SCAN MODE";
   private duration: string = '0';
-  private deviceInfo: any = '';
-  private aboutDeviceList: any[] = [];
   private scanMode: number = 0;
   @State currentClick: number = - 1;
 
@@ -39,183 +37,183 @@ struct setScanMode {
 
   build() {
     Column() {
-      PageTitle( { detail : '设置扫描类型' } )
+      PageTitle({ detail : '设置扫描类型' })
       Scroll() {
         Column() {
           List() {
             ListItem() {
-              TitleComponent( {
+              TitleComponent({
                 title : "SCAN_MODE_SELECT" ,
-                bgColor : $r( 'app.color.moon' ) ,
+                bgColor : $r('app.color.moon') ,
                 fontSize : '17vp' ,
-              } );
+              });
             }
-            .height( 80 )
-            .borderRadius( 10 )
+            .height(80)
+            .borderRadius(10)
 
             ListItem() {
-              TitleComponent( {
+              TitleComponent({
                 title : "SCAN_MODE_NONE" ,
                 fontSize : '15vp' ,
-                bgColor : this.currentClick === 0 ? $r( 'app.color.font_color_007DFF' ) : $r( 'app.color.white_bg_color' )
-              } );
+                bgColor : this.currentClick === 0 ? $r('app.color.font_color_007DFF') : $r('app.color.white_bg_color')
+              });
             }
-            .padding( { top : 10 } )
-            .height( 80 )
-            .borderRadius( 10 )
-            .onClick( () => {
+            .padding({ top : 10 })
+            .height(80)
+            .borderRadius(10)
+            .onClick(() => {
               this.currentClick = 0;
-            } )
+            })
 
             ListItem() {
-              TitleComponent( {
+              TitleComponent({
                 title : "CONNECTABLE" ,
                 fontSize : '15vp' ,
-                bgColor : this.currentClick === 1 ? $r( 'app.color.font_color_007DFF' ) : $r( 'app.color.white_bg_color' )
-              } );
+                bgColor : this.currentClick === 1 ? $r('app.color.font_color_007DFF') : $r('app.color.white_bg_color')
+              });
             }
-            .padding( { top : 10 } )
-            .height( 80 )
-            .borderRadius( 10 )
-            .onClick( () => {
+            .padding({ top : 10 })
+            .height(80)
+            .borderRadius(10)
+            .onClick(() => {
               this.currentClick = 1;
-            } )
+            })
 
             ListItem() {
-              TitleComponent( {
+              TitleComponent({
                 title : "GENERAL_DISCOVERABLE" ,
                 fontSize : '15vp' ,
-                bgColor : this.currentClick === 2 ? $r( 'app.color.font_color_007DFF' ) : $r( 'app.color.white_bg_color' )
-              } );
+                bgColor : this.currentClick === 2 ? $r('app.color.font_color_007DFF') : $r('app.color.white_bg_color')
+              });
             }
-            .padding( { top : 10 } )
-            .height( 80 )
-            .borderRadius( 10 )
-            .onClick( () => {
+            .padding({ top : 10 })
+            .height(80)
+            .borderRadius(10)
+            .onClick(() => {
               this.currentClick = 2;
-            } )
+            })
 
             ListItem() {
-              TitleComponent( {
+              TitleComponent({
                 title : "LIMITED_DISCOVERABLE" ,
                 fontSize : '15vp' ,
-                bgColor : this.currentClick === 3 ? $r( 'app.color.font_color_007DFF' ) : $r( 'app.color.white_bg_color' )
-              } );
+                bgColor : this.currentClick === 3 ? $r('app.color.font_color_007DFF') : $r('app.color.white_bg_color')
+              });
             }
-            .padding( { top : 10 } )
-            .height( 80 )
-            .borderRadius( 10 )
-            .onClick( () => {
+            .padding({ top : 10 })
+            .height(80)
+            .borderRadius(10)
+            .onClick(() => {
               this.currentClick = 3;
-            } )
+            })
 
             ListItem() {
-              TitleComponent( {
+              TitleComponent({
                 title : "CONNECTABLE_GENERAL_DISCOVERABLE" ,
                 fontSize : '15vp' ,
-                bgColor : this.currentClick === 4 ? $r( 'app.color.font_color_007DFF' ) : $r( 'app.color.white_bg_color' )
-              } );
+                bgColor : this.currentClick === 4 ? $r('app.color.font_color_007DFF') : $r('app.color.white_bg_color')
+              });
             }
-            .padding( { top : 10 } )
-            .height( 80 )
-            .borderRadius( 10 )
-            .onClick( () => {
+            .padding({ top : 10 })
+            .height(80)
+            .borderRadius(10)
+            .onClick(() => {
               this.currentClick = 4;
-            } )
+            })
 
             ListItem() {
-              TitleComponent( {
+              TitleComponent({
                 title : "CONNECTABLE_LIMITED_DISCOVERABLE" ,
                 fontSize : '15vp' ,
-                bgColor : this.currentClick === 5 ? $r( 'app.color.font_color_007DFF' ) : $r( 'app.color.white_bg_color' )
-              } );
+                bgColor : this.currentClick === 5 ? $r('app.color.font_color_007DFF') : $r('app.color.white_bg_color')
+              });
             }
-            .padding( { top : 10 } )
-            .height( 80 )
-            .borderRadius( 10 )
-            .onClick( () => {
+            .padding({ top : 10 })
+            .height(80)
+            .borderRadius(10)
+            .onClick(() => {
               this.currentClick = 5;
-            } )
+            })
           }
 
           Blank()
         }
       }
-      .height( '50%' )
-      .scrollable( ScrollDirection.Vertical )
-      .scrollBar( BarState.On )
-      .scrollBarColor( Color.Gray )
-      .scrollBarWidth( 30 )
+      .height('50%')
+      .scrollable(ScrollDirection.Vertical)
+      .scrollBar(BarState.On)
+      .scrollBarColor(Color.Gray)
+      .scrollBarWidth(30)
 
       Row() {
-        Text( 'duration' )
-          .textAlign( TextAlign.Center )
-          .fontSize( '20fp' )
-          .fontColor( $r( 'app.color.font_color_182431' ) )
-          .fontWeight( FontWeight.Medium )
-        TextInput( { text : this.duration } )
-          .placeholderFont( {
-            size : $r( "app.float.font_18" ) ,
+        Text('duration')
+          .textAlign(TextAlign.Center)
+          .fontSize('20fp')
+          .fontColor($r('app.color.font_color_182431'))
+          .fontWeight(FontWeight.Medium)
+        TextInput({ text : this.duration })
+          .placeholderFont({
+            size : $r("app.float.font_18") ,
             weight : FontWeight.Normal ,
             style : FontStyle.Normal
-          } )
-          .type( InputType.Normal )
-          .enterKeyType( EnterKeyType.Done )
-          .caretColor( Color.Blue )
-          .height( $r( "app.float.wh_value_40" ) )
-          .borderRadius( 0 )
-          .backgroundColor( $r( 'app.color.color_00000000_transparent' ) )
-          .onChange( ( value: string ) => {
-            console.log( ConfigData.TAG + 'device name changed to: ' + JSON.stringify( value ) );
+          })
+          .type(InputType.Normal)
+          .enterKeyType(EnterKeyType.Done)
+          .caretColor(Color.Blue)
+          .height($r("app.float.wh_value_40"))
+          .borderRadius(0)
+          .backgroundColor($r('app.color.color_00000000_transparent'))
+          .onChange((value: string) => {
+            console.log(ConfigData.TAG + 'device name changed to: ' + JSON.stringify(value));
             this.duration = value;
-          } )
-          .onSubmit( ( enterKey ) => {
-            InputMethod.getInputMethodController().stopInput().then( ( ret ) => {
-              console.log( `${ ConfigData.TAG }, enterType: ${ enterKey }, stopInput: ${ ret }` );
-            } );
-          } )
+          })
+          .onSubmit((enterKey) => {
+            InputMethod.getInputMethodController().stopInput().then((ret) => {
+              console.log(`${ ConfigData.TAG }, enterType: ${ enterKey }, stopInput: ${ ret }`);
+            });
+          })
       }
-      .padding( $r( 'app.float.distance_15' ) )
-      .width( '100%' )
+      .padding($r('app.float.distance_15'))
+      .width('100%')
 
-      Text( this.message )
-        .textAlign( TextAlign.Center )
-        .fontSize( '17fp' )
-        .height( 50 )
-        .width( "100%" )
-        .fontWeight( FontWeight.Medium )
-        .backgroundColor( $r( "app.color.moon" ) )
+      Text(this.message)
+        .textAlign(TextAlign.Center)
+        .fontSize('17fp')
+        .height(50)
+        .width("100%")
+        .fontWeight(FontWeight.Medium)
+        .backgroundColor($r("app.color.moon"))
 
-      Flex( { direction : FlexDirection.Row , justifyContent : FlexAlign.Center , alignItems : ItemAlign.Center } ) {
+      Flex({ direction : FlexDirection.Row , justifyContent : FlexAlign.Center , alignItems : ItemAlign.Center }) {
         Row() {
-          ButtonComponent( { text : $r( "app.string.cancel" ) , isOnClick : () => {
-            Router.back();
-          } } )
+          ButtonComponent({ text : $r("app.string.cancel") , isOnClick : () => {
+            router.back();
+          } })
         }
-        .width( $r( "app.float.deviceName_button_width" ) )
-        .margin( { right : $r( "app.float.distance_12" ) } )
+        .width($r("app.float.deviceName_button_width"))
+        .margin({ right : $r("app.float.distance_12") })
 
         Row() {
-          ButtonComponent( { text : $r( "app.string.confirm" ) , isOnClick : () => {
+          ButtonComponent({ text : $r("app.string.confirm") , isOnClick : () => {
             if ( this.currentClick === - 1 ) {
               this.message = '请点击选择SCAN MODE';
               return;
             }
             this.message = '';
-            let dur = parseInt( this.duration );
-            let parseRet = isNaN( dur );
-            let ret = BluetoothModel.setBluetoothScanMode( this.currentClick , !parseRet ? dur : 0 );
-            AppStorage.SetOrCreate( 'setScanModeRet' , ret );
-            Router.back();
-          } } )
-        }.width( $r( "app.float.deviceName_button_width" ) )
+            let dur = parseInt(this.duration);
+            let parseRet = isNaN(dur);
+            let ret = BluetoothModel.setBluetoothScanMode(this.currentClick , !parseRet ? dur : 0);
+            AppStorage.setOrCreate('setScanModeRet' , ret);
+            router.back();
+          } })
+        }.width($r("app.float.deviceName_button_width"))
 
       }
     }
-    .padding( { left : $r( 'app.float.distance_24' ) , right : $r( 'app.float.distance_24' ) } )
-    .width( "100%" )
-    .height( ConfigData.WH_100_100 )
-    .backgroundColor( $r( "app.color.lead" ) )
+    .padding({ left : $r('app.float.distance_24') , right : $r('app.float.distance_24') })
+    .width("100%")
+    .height(ConfigData.WH_100_100)
+    .backgroundColor($r("app.color.lead"))
   }
 }
 
@@ -229,29 +227,29 @@ struct ButtonComponent {
 
   build() {
     Column() {
-      Text( this.text )
-        .fontSize( $r( 'app.float.font_16' ) )
-        .fontWeight( FontWeight.Medium )
-        .lineHeight( $r( 'app.float.wh_value_22' ) )
-        .fontColor( $r( 'app.color.font_color_007DFF' ) )
-        .textAlign( TextAlign.Center )
-        .width( $r( 'app.float.deviceName_button_width' ) )
-        .height( $r( "app.float.wh_value_40" ) )
-        .borderRadius( $r( 'app.float.radius_20' ) )
-        .backgroundColor( !this.isTouched ? $r( "app.color.color_button_grey" ) : $r( "sys.color.ohos_id_color_foreground_contrary" ) )
-        .onTouch( ( event: TouchEvent ) => {
+      Text(this.text)
+        .fontSize($r('app.float.font_16'))
+        .fontWeight(FontWeight.Medium)
+        .lineHeight($r('app.float.wh_value_22'))
+        .fontColor($r('app.color.font_color_007DFF'))
+        .textAlign(TextAlign.Center)
+        .width($r('app.float.deviceName_button_width'))
+        .height($r("app.float.wh_value_40"))
+        .borderRadius($r('app.float.radius_20'))
+        .backgroundColor(!this.isTouched ? $r("app.color.color_button_grey") : $r("sys.color.ohos_id_color_foreground_contrary"))
+        .onTouch((event: TouchEvent) => {
           if ( event.type === TouchType.Down ) {
             this.isTouched = true;
           }
           if ( event.type === TouchType.Up ) {
             this.isTouched = false;
           }
-        } )
-        .onClick( () => {
+        })
+        .onClick(() => {
           this.isOnClick();
-        } )
+        })
     }
-    .width( ConfigData.WH_100_100 )
-    .align( Alignment.Center );
+    .width(ConfigData.WH_100_100)
+    .align(Alignment.Center);
   }
 }

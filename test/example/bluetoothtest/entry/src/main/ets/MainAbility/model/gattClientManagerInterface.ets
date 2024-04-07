@@ -12,88 +12,91 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
+
 
 /**
  * GattClient Test Of Bluetooth test
  */
 
-import prompt from '@system.prompt';
 import bluetoothManager from '@ohos.bluetoothManager';
 import BluetoothModelManager from './BluetoothModelManager'
+import { BusinessError } from '@ohos.base';
+import bluetooth from '@ohos.bluetooth';
+import promptAction from '@ohos.promptAction';
+import { BleCharacteristicDataIn , Descriptor } from '../../Utils/common'
 
-let gattClientInstance = null
+let gattClientInstance: bluetoothManager.GattClientDevice
 
-export function testCreateGattClientManager(): String {
+export function testCreateGattClientManager(): string {
   try {
     let message = "createGattClient test "
-    let peripheralDeviceId = AppStorage.Get( 'peripheralDeviceId' );
+    let peripheralDeviceId: string = AppStorage.get('peripheralDeviceId') !;
     let btState = bluetoothManager.getState();
     if ( btState === bluetoothManager.BluetoothState.STATE_ON ) {
       if ( gattClientInstance ) {
         message = "GattClient exists!";
-        prompt.showToast( { message : message } )
+        promptAction.showToast({ message : message })
         return message;
       }
       //注册回调
-      bluetoothManager.BLE.on( "BLEDeviceFind" , ( scanResult ) => {
-        scanResult.forEach( device => {
-          var devId = device.deviceId; //6c:96:d7:3d:87:6f
-          var rssi = device.rssi;
-          var data = device.data;
-          prompt.showToast( { message : "findDevice:" + devId } )
+      bluetoothManager.BLE.on("BLEDeviceFind" , (scanResult) => {
+        scanResult.forEach(device => {
+          let devId = device.deviceId; //6c:96:d7:3d:87:6f
+          let rssi = device.rssi;
+          let data = device.data;
+          promptAction.showToast({ message : "findDevice:" + devId })
           if ( devId == peripheralDeviceId ) {
             bluetoothManager.BLE.stopBLEScan();
             // create ble client instance
             if ( !gattClientInstance ) {
-              gattClientInstance = BluetoothModelManager.createGattClient( devId );
+              gattClientInstance = BluetoothModelManager.createGattClient(devId);
               message = "createGattClient succeeds ";
-              console.log( "createGattClient succeeds----------" )
+              console.log("createGattClient succeeds----------")
             }
           }
-        } )
-      } )
+        })
+      })
       if ( peripheralDeviceId && peripheralDeviceId.length > 15 ) {
-        gattClientInstance = BluetoothModelManager.createGattClient( peripheralDeviceId.toUpperCase() );
+        gattClientInstance = BluetoothModelManager.createGattClient(peripheralDeviceId.toUpperCase());
         if ( gattClientInstance ) {
           message = "createGattClient: " + peripheralDeviceId;
-          console.log( "createGattClient peripheralDeviceId succeeds----------" )
+          console.log("createGattClient peripheralDeviceId succeeds----------")
         } else {
           message = "createGattClient:fail ";
         }
       } else {
         message = "peripheralDeviceId invalid! ";
       }
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
     } else if ( btState === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
     } else {
       message = "switching,please wait"
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
     }
     return message
   } catch( e ) {
-    console.log( `Failed to testCreateGattClientManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testCreateGattClientManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testCreateGattClientManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
 let bleConnectionState = 0;
 
-export function testConnectManager(): String {
+export function testConnectManager(): string {
   try {
     let message = "connect test";
     let btState = bluetoothManager.getState();
     if ( btState === bluetoothManager.BluetoothState.STATE_ON ) {
       if ( gattClientInstance ) {
         if ( bleConnectionState == 0 ) {
-          console.log( "GattClient.connect: start----------------" )
-          let ret = gattClientInstance.connect();
-          message = "GattClient.connect: " + ret;
-          console.log( "GattClient.connect: end----------------" + ret )
+          console.log("GattClient.connect: start----------------")
+          gattClientInstance.connect();
+          message = "GattClient.connect ";
+          console.log("GattClient.connect: end----------------")
           bleConnectionState = 2
         } else {
           message = "this device is not disconnected!";
@@ -106,29 +109,29 @@ export function testConnectManager(): String {
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testConnectManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testConnectManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testConnectManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testDisconnectManager(): String {
+export function testDisconnectManager(): string {
   try {
     let message = "test disconnect";
     let btState = bluetoothManager.getState();
     if ( btState == bluetoothManager.BluetoothState.STATE_ON ) {
       if ( !gattClientInstance ) {
         message = "NO_GATT_CLIENT_OBJECT";
-        prompt.showToast( { message : message } )
+        promptAction.showToast({ message : message })
         return message;
       }
       if ( bleConnectionState == 2 ) {
-        let ret = gattClientInstance.disconnect();
-        message = "GattClient.disconnect: " + ret;
+        gattClientInstance.disconnect();
+        message = "GattClient.disconnect: ";
       } else {
         message = " BLE is not connected and no need to disconnect it ";
       }
@@ -137,41 +140,41 @@ export function testDisconnectManager(): String {
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testDisconnectManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testDisconnectManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testDisconnectManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
 let BLEConnectionStateChange = false
 
-export function testOnBLEConnectionStateChangeManager(): String {
+export function testOnBLEConnectionStateChangeManager(): string {
   try {
     let message = "onBLEConnectionStateChange test";
     let btStatus = bluetoothManager.getState();
     if ( btStatus === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     message = " HAVE_GATT_CLIENT_OBJECT "
     if ( BLEConnectionStateChange ) {
-      gattClientInstance.off( 'BLEConnectionStateChange' , () => {
-        prompt.showToast( { message : "off:BLEConnectionStateChange" } )
-      } )
+      gattClientInstance.off('BLEConnectionStateChange' , () => {
+        promptAction.showToast({ message : "off:BLEConnectionStateChange" })
+      })
       message = "关闭BLE连接状态变化"
     } else {
       let bleConnectionStateInfo = "xxxx"
-      gattClientInstance.on( 'BLEConnectionStateChange' , ( bleConnectionState ) => {
+      gattClientInstance.on('BLEConnectionStateChange' , (bleConnectionState: bluetooth.BLEConnectChangedState) => {
         switch ( bleConnectionState.state ) {
           case bluetoothManager.ProfileConnectionState.STATE_DISCONNECTED:
             bleConnectionStateInfo = "DISCONNECTED";
@@ -189,460 +192,459 @@ export function testOnBLEConnectionStateChangeManager(): String {
             bleConnectionStateInfo = "UNDEFINED!";
             break;
         }
-        console.log( "gattClientInstance.onBLEConnectionStateChange is ------- " + JSON.stringify( bleConnectionState ) )
-        AppStorage.SetOrCreate( 'bleConnectionStateInfo' , bleConnectionStateInfo );
-        prompt.showToast( { message : "状态:" + bleConnectionStateInfo } )
-      } )
+        console.log("gattClientInstance.onBLEConnectionStateChange is ------- " + JSON.stringify(bleConnectionState))
+        AppStorage.setOrCreate('bleConnectionStateInfo' , bleConnectionStateInfo);
+        promptAction.showToast({ message : "状态:" + bleConnectionStateInfo })
+      })
       message = "打开BLE连接状态变化"
     }
     BLEConnectionStateChange = !BLEConnectionStateChange
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testOnBLEConnectionStateChangeManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testOnBLEConnectionStateChangeManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testOnBLEConnectionStateChangeManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testGattClientCloseManager(): String {
+export function testGattClientCloseManager(): string {
   try {
     let message = "gattClientClose test"
     let btState = bluetoothManager.getState();
     if ( btState == bluetoothManager.BluetoothState.STATE_ON ) {
       if ( !gattClientInstance ) {
         message = "NO_GATT_CLIENT_OBJECT";
-        prompt.showToast( { message : message } )
+        promptAction.showToast({ message : message })
         return message;
       }
-      let ret = gattClientInstance.close();
-      if ( ret ) {
-        gattClientInstance = null;
-      }
-      message = "GattClient.close:" + ret;
+      gattClientInstance.close();
+      message = "GattClient.close:";
     } else if ( btState == bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGattClientCloseManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGattClientCloseManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGattClientCloseManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testGetServicesCallbackManager(): String {
+export function testGetServicesCallbackManager(): string {
   try {
     let message = "getServicesCallback test"
     let btState = bluetoothManager.getState();
     if ( btState == bluetoothManager.BluetoothState.STATE_ON ) {
       if ( !gattClientInstance ) {
         message = "NO_GATT_CLIENT_OBJECT";
-        prompt.showToast( { message : message } )
+        promptAction.showToast({ message : message })
         return message;
       }
-      console.log( "connectState " )
-      console.log( "getServices(call back) start-----------------" )
-      gattClientInstance.getServices( ( err , gattServices ) => {
+      console.log("connectState ")
+      console.log("getServices(call back) start-----------------")
+      gattClientInstance.getServices((err , gattServices) => {
         if ( err.code != 0 ) {
           message = "getServices(call back) error code:" + err.code + ",services :" + gattServices;
-          console.log( "getServices(call back) error code:-----------------" + err.code + ",services :" + gattServices )
-          prompt.showToast( { message : message } )
+          console.log("getServices(call back) error code:-----------------" + err.code + ",services :" + gattServices)
+          promptAction.showToast({ message : message })
           //        return message;
         } else {
           message = "getServices(Callback):invoke succeeds! " + "\n"
           message += "bluetoothManager services size is " + gattServices.length + '\n';
           for ( let i = 0 ; i < gattServices.length ; i ++ ) {
-            message += 'serviceUuid is ' + gattServices[i].serviceUuid + '\n';
+            message += 'serviceUuid is ' + gattServices[ i ].serviceUuid + '\n';
           }
-          prompt.showToast( { message : message } )
-          AppStorage.SetOrCreate( "getServices" , message )
-          console.log( "getServices(Callback)----------" + message )
+          promptAction.showToast({ message : message })
+          AppStorage.setOrCreate("getServices" , message)
+          console.log("getServices(Callback)----------" + message)
         }
-      } )
-      console.log( "getServices(call back) end-----------------" )
+      })
+      console.log("getServices(call back) end-----------------")
     } else if ( btState == bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGetServicesCallbackManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGetServicesCallbackManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGetServicesCallbackManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testGetServicesPromiseManager(): String {
+export function testGetServicesPromiseManager(): string {
   try {
     let message = "getServicesPromise test"
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     message = "getServices promise:starts";
     let btState = bluetoothManager.getState();
     if ( btState == bluetoothManager.BluetoothState.STATE_ON ) {
-      console.log( "gattClientInstance.getServices,promise start----------" )
-      gattClientInstance.getServices().then( gattServices => {
-        console.log( "getServices(): Promise<Array<GattService>> start --------------" )
+      console.log("gattClientInstance.getServices,promise start----------")
+      gattClientInstance.getServices().then(gattServices => {
+        console.log("getServices(): Promise<Array<GattService>> start --------------")
         message = "getServicesPromise successfully:\n"
         message = "bluetoothManager services size is " + gattServices.length + "\n";
-        console.log( "bluetoothManager services size is " + gattServices.length )
+        console.log("bluetoothManager services size is " + gattServices.length)
         for ( let i = 0 ; i < gattServices.length ; i ++ ) {
-          message += 'serviceUuid is ' + gattServices[i].serviceUuid + '\n';
+          message += 'serviceUuid is ' + gattServices[ i ].serviceUuid + '\n';
         }
-        console.log( "getServices(): Promise<Array<GattService>> end --------------" )
-        prompt.showToast( { message : message } )
-      } ).catch( err => {
-        console.log( "testGetServicesPromiseManager err:" + err )
-      } )
-      console.log( "gattClientInstance.getServices,promise end----------" )
+        console.log("getServices(): Promise<Array<GattService>> end --------------")
+        promptAction.showToast({ message : message })
+      }).catch((err: BusinessError) => {
+        console.log("testGetServicesPromiseManager err:" + err)
+      })
+      console.log("gattClientInstance.getServices,promise end----------")
       message = "getServices(promise):invoke succeeds!";
     } else if ( btState == bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGetServicesPromiseManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGetServicesPromiseManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGetServicesPromiseManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testReadCharacteristicValueCallbackManager(): String {
+export function testReadCharacteristicValueCallbackManager(): string {
   try {
-    let serviceUUID = AppStorage.Get( 'serviceUUID' );
-    let characteristicUUID = AppStorage.Get( 'characteristicUUID' );
-    let descriptorUUID = AppStorage.Get( 'descriptorUUID' );
-    let descriptorValue = AppStorage.Get( 'descriptorValue' );
+    let serviceUUID: string = AppStorage.get('serviceUUID') !;
+    let characteristicUUID: string = AppStorage.get('characteristicUUID') !;
+    let descriptorUUID: string = AppStorage.get('descriptorUUID') !;
+    let descriptorValue: string = AppStorage.get('descriptorValue') !;
     let message = "readCharacteristicValueCallback test"
     let btState = bluetoothManager.getState();
     if ( btState === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
-    let descriptors = [];
+    let descriptors: Array<bluetooth.BLEDescriptor> = [];
     let bufferCCC = new ArrayBuffer(8);
     let cccV = new Uint8Array(bufferCCC);
-    cccV[0] = 66;
-    let descriptor = {
+    cccV[ 0 ] = 66;
+    let descriptor: bluetooth.BLEDescriptor = {
       serviceUuid : serviceUUID ,
       characteristicUuid : characteristicUUID ,
       descriptorUuid : descriptorUUID ,
-      descriptorValue : string2ArrayBuffer( descriptorValue )
+      descriptorValue : string2ArrayBuffer(descriptorValue)
     }
-    descriptors.push( descriptor );
-    let bleCharacteristicDataIn = {
+    descriptors.push(descriptor);
+    let bleCharacteristicDataIn: bluetooth.BLECharacteristic = {
       serviceUuid : serviceUUID ,
       characteristicUuid : characteristicUUID ,
       characteristicValue : bufferCCC ,
       descriptors : descriptors
     };
-    console.log( "gattClientInstance.readCharacteristicValue ,callback start--------------" )
-    gattClientInstance.readCharacteristicValue( bleCharacteristicDataIn , ( err , bleCharacteristicDataOut ) => {
+    console.log("gattClientInstance.readCharacteristicValue ,callback start--------------")
+    gattClientInstance.readCharacteristicValue(bleCharacteristicDataIn , (err , bleCharacteristicDataOut) => {
       if ( err.code != 0 ) {
         message = "readCharacteristicValue error code:" + err.code + ",id:" + serviceUUID;
-        console.log( message )
-        prompt.showToast( { message : message } )
-        return message;
+        console.log(message)
+        promptAction.showToast({ message : message })
       }
       message = "callback success!:" + "\n";
       message += 'characteristic uuid:' + bleCharacteristicDataOut.characteristicUuid + "\n";
-      console.log( message )
+      console.log(message)
       let value = new Uint8Array(bleCharacteristicDataOut.characteristicValue);
       for ( let i = 0 ; i < bleCharacteristicDataOut.characteristicValue.byteLength ; i ++ ) {
-        message += 'characteristic value: ' + value[i] + "\n";
+        message += 'characteristic value: ' + value[ i ] + "\n";
       }
-      AppStorage.SetOrCreate( "read_CharacteristicValue" , message )
-      prompt.showToast( { message : message } )
-    } );
-    console.log( "gattClientInstance.readCharacteristicValue ,callback end--------------" )
+      AppStorage.setOrCreate("read_CharacteristicValue" , message)
+      promptAction.showToast({ message : message })
+    });
+    console.log("gattClientInstance.readCharacteristicValue ,callback end--------------")
     message = 'readCharacteristicValue(callback):invoke succeeds!';
-    console.log( message )
-    prompt.showToast( { message : message } )
+    console.log(message)
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testReadCharacteristicValueCallbackManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testReadCharacteristicValueCallbackManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testReadCharacteristicValueCallbackManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testReadCharacteristicValuePromiseManager(): String {
+export function testReadCharacteristicValuePromiseManager(): string {
   try {
-    let serviceUUID = AppStorage.Get( 'serviceUUID' );
-    let characteristicUUID = AppStorage.Get( 'characteristicUUID' );
-    let descriptorUUID = AppStorage.Get( 'descriptorUUID' );
-    let descriptorValue = AppStorage.Get( 'descriptorValue' );
+    let serviceUUID: string = AppStorage.get('serviceUUID') !;
+    let characteristicUUID: string = AppStorage.get('characteristicUUID') !;
+    let descriptorUUID: string = AppStorage.get('descriptorUUID') !;
+    let descriptorValue: string = AppStorage.get('descriptorValue') !;
     let message = "readCharacteristicValuePromise test"
     let btState = bluetoothManager.getState();
     if ( btState === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
-    let descriptors = [];
+    let descriptors: Array<bluetooth.BLEDescriptor> = [];
     let bufferCCC = new ArrayBuffer(8);
     let cccV = new Uint8Array(bufferCCC);
-    cccV[0] = 66;
-    let descriptor = {
+    cccV[ 0 ] = 66;
+    let descriptor: bluetoothManager.BLEDescriptor = {
       serviceUuid : serviceUUID ,
       characteristicUuid : characteristicUUID ,
       descriptorUuid : descriptorUUID ,
-      descriptorValue : string2ArrayBuffer( descriptorValue )
+      descriptorValue : string2ArrayBuffer(descriptorValue)
     }
-    descriptors.push( descriptor );
-    let bleCharacteristicDataIn = {
+    descriptors.push(descriptor);
+    let bleCharacteristicDataIn: bluetoothManager.BLECharacteristic = {
       serviceUuid : serviceUUID ,
       characteristicUuid : characteristicUUID ,
       characteristicValue : bufferCCC ,
       descriptors : descriptors
     };
-    console.log( "gattClientInstance.readCharacteristicValue ,promise start--------------" )
-    gattClientInstance.readCharacteristicValue( bleCharacteristicDataIn ).then( ( bleCharacteristicDataOut ) => {
+    console.log("gattClientInstance.readCharacteristicValue ,promise start--------------")
+    gattClientInstance.readCharacteristicValue(bleCharacteristicDataIn).then((bleCharacteristicDataOut) => {
       message = "promise success!:\n"
       message += 'characteristic uuid:' + bleCharacteristicDataOut.characteristicUuid + "\n";
-      console.log( message )
+      console.log(message)
       let value = new Uint8Array(bleCharacteristicDataOut.characteristicValue);
       for ( let i = 0 ; i < bleCharacteristicDataOut.characteristicValue.byteLength ; i ++ ) {
-        message += 'characteristic value: ' + value[i] + "\n";
+        message += 'characteristic value: ' + value[ i ] + "\n";
       }
-      prompt.showToast( { message : message } )
-    } ).catch( err => {
-      console.log( "testReadCharacteristicValuePromiseManager err:" + err )
-    } );
-    console.log( "gattClientInstance.readCharacteristicValue ,promise end--------------" )
+      promptAction.showToast({ message : message })
+    }).catch((err: BusinessError) => {
+      console.log("testReadCharacteristicValuePromiseManager err:" + err)
+    });
+    console.log("gattClientInstance.readCharacteristicValue ,promise end--------------")
     message = 'readCharacteristicValue(promise):invoke succeeds!';
-    console.log( message )
-    prompt.showToast( { message : message } )
+    console.log(message)
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testReadCharacteristicValuePromiseManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testReadCharacteristicValuePromiseManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testReadCharacteristicValuePromiseManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testReadDescriptorValueCallbackManager(): String {
+export function testReadDescriptorValueCallbackManager(): string {
   try {
-    let serviceUUID = AppStorage.Get( 'serviceUUID' );
-    let characteristicUUID = AppStorage.Get( 'characteristicUUID' );
-    let descriptorUUID = AppStorage.Get( 'descriptorUUID' );
-    let descriptorValue = AppStorage.Get( 'descriptorValue' );
+    let serviceUUID: string = AppStorage.get('serviceUUID') !;
+    let characteristicUUID: string = AppStorage.get('characteristicUUID') !;
+    let descriptorUUID: string = AppStorage.get('descriptorUUID') !;
+    let descriptorValue: string = AppStorage.get('descriptorValue') !;
     let message = "readDescriptorValueCallback test"
     let btState = bluetoothManager.getState();
     if ( btState === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     let bufferDesc = new ArrayBuffer(8);
     let descV = new Uint8Array(bufferDesc);
-    descV[0] = 88;
-    let descriptorIn = {
+    descV[ 0 ] = 88;
+    let descriptorIn: Descriptor = {
       serviceUuid : serviceUUID ,
       characteristicUuid : characteristicUUID ,
       descriptorUuid : descriptorUUID ,
       //    descriptorValue: bufferDesc
-      descriptorValue : string2ArrayBuffer( descriptorValue )
+      descriptorValue : string2ArrayBuffer(descriptorValue)
     };
-    console.log( "gattClientInstance.readDescriptorValue,callback start--------------" )
-    gattClientInstance.readDescriptorValue( descriptorIn , ( err , descriptorOut ) => {
+    console.log("gattClientInstance.readDescriptorValue,callback start--------------")
+    gattClientInstance.readDescriptorValue(descriptorIn , (err: BusinessError , descriptorOut: bluetooth.BLEDescriptor) => {
       let message = ""
       if ( err.code != 0 ) {
         message = "readDescriptorValue error:" + err.code.toString()
-        console.log( message )
-        prompt.showToast( { message : message } )
-        return message;
+        console.log(message)
+        promptAction.showToast({ message : message })
       }
       message = "\n" + "callback:descriptor uuid=" + descriptorOut.descriptorUuid + "\n";
       let value = new Uint8Array(descriptorOut.descriptorValue);
       for ( let i = 0 ; i < descriptorOut.descriptorValue.byteLength ; i ++ ) {
-        message += 'descriptor value: ' + value[i] + "\n";
+        message += 'descriptor value: ' + value[ i ] + "\n";
       }
-      AppStorage.SetOrCreate( "read_DescriptorValue" , message )
-      prompt.showToast( { message : message } )
-    } );
-    console.log( "gattClientInstance.readDescriptorValue ,callback end--------------" )
+      AppStorage.setOrCreate("read_DescriptorValue" , message)
+      promptAction.showToast({ message : message })
+    });
+    console.log("gattClientInstance.readDescriptorValue ,callback end--------------")
     message = 'readDescriptorValue(callback):invoke succeeds!';
-    console.log( message )
-    prompt.showToast( { message : message } )
+    console.log(message)
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testReadDescriptorValueCallbackManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testReadDescriptorValueCallbackManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testReadDescriptorValueCallbackManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testReadDescriptorValuePromiseManager(): String {
+export function testReadDescriptorValuePromiseManager(): string {
   try {
-    let serviceUUID = AppStorage.Get( 'serviceUUID' );
-    let characteristicUUID = AppStorage.Get( 'characteristicUUID' );
-    let descriptorUUID = AppStorage.Get( 'descriptorUUID' );
-    let descriptorValue = AppStorage.Get( 'descriptorValue' );
+    let serviceUUID: string = AppStorage.get('serviceUUID') !;
+    let characteristicUUID: string = AppStorage.get('characteristicUUID') !;
+    let descriptorUUID: string = AppStorage.get('descriptorUUID') !;
+    let descriptorValue: string = AppStorage.get('descriptorValue') !;
     let message = "readDescriptorValuePromise test "
     let btState = bluetoothManager.getState();
     if ( btState === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     let bufferDesc = new ArrayBuffer(8);
     let descV = new Uint8Array(bufferDesc);
-    descV[0] = 99;
-    let descriptorIn = {
+    descV[ 0 ] = 99;
+    let descriptorIn: bluetoothManager.BLEDescriptor = {
       serviceUuid : serviceUUID ,
       characteristicUuid : characteristicUUID ,
       descriptorUuid : descriptorUUID ,
-      //    descriptorValue: bufferDesc
-      descriptorValue : string2ArrayBuffer( descriptorValue )
+      descriptorValue : string2ArrayBuffer(descriptorValue)
     };
-    console.log( "gattClientInstance.readDescriptorValue,promise start--------------" )
-    gattClientInstance.readDescriptorValue( descriptorIn ).then( ( descriptorOut ) => {
+    console.log("gattClientInstance.readDescriptorValue,promise start--------------")
+    gattClientInstance.readDescriptorValue(descriptorIn).then((descriptorOut) => {
       message = "\n" + 'promise:descriptor uuid=' + descriptorOut.descriptorUuid + "\n";
       let value = new Uint8Array(descriptorOut.descriptorValue);
       for ( let i = 0 ; i < descriptorOut.descriptorValue.byteLength ; i ++ ) {
-        message += 'descriptor value: ' + value[i] + "\n";
+        message += 'descriptor value: ' + value[ i ] + "\n";
       }
-      AppStorage.SetOrCreate( "read_DescriptorValue" , message )
-      prompt.showToast( { message : message } )
-    } ).catch( err => {
-      console.log( "testReadDescriptorValuePromiseManager err:" + err )
-    } );
-    console.log( "gattClientInstance.readDescriptorValue,promise end--------------" )
+      AppStorage.setOrCreate("read_DescriptorValue" , message)
+      promptAction.showToast({ message : message })
+    }).catch((err: BusinessError) => {
+      console.log("testReadDescriptorValuePromiseManager err:" + err)
+    });
+    console.log("gattClientInstance.readDescriptorValue,promise end--------------")
     message = 'readDescriptorValue(promise):invoke succeeds!';
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testReadDescriptorValuePromiseManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testReadDescriptorValuePromiseManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testReadDescriptorValuePromiseManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testWriteCharacteristicValueManager(): String {
+export function testWriteCharacteristicValueManager(): string {
   try {
-    let serviceUUID = AppStorage.Get( 'serviceUUID' );
-    let characteristicUUID = AppStorage.Get( 'characteristicUUID' );
-    let characteristicValue = AppStorage.Get( 'characteristicValue' );
+    let serviceUUID: string = AppStorage.get('serviceUUID') !;
+    let characteristicUUID: string = AppStorage.get('characteristicUUID') !;
+    let descriptorUUID: string = AppStorage.get('descriptorUUID') !;
+    let descriptorValue: string = AppStorage.get('descriptorValue') !;
     let message = "writeCharacteristicValue test"
     let btState = bluetoothManager.getState();
     if ( btState === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
-    let bufferCCC = string2ArrayBuffer( characteristicValue );
-    let characteristic = {
+    let descriptors: Array<bluetooth.BLEDescriptor> = [];
+    let bufferCCC = new ArrayBuffer(8);
+    let cccV = new Uint8Array(bufferCCC);
+    cccV[ 0 ] = 66;
+    let descriptor: Descriptor = {
       serviceUuid : serviceUUID ,
       characteristicUuid : characteristicUUID ,
-      characteristicValue : bufferCCC
-    };
-    if ( gattClientInstance.writeCharacteristicValue( characteristic ) ) {
-      message = 'writeCharacteristicValue succeeds.';
-    } else {
-      message = 'writeCharacteristicValue failed!';
+      descriptorUuid : descriptorUUID ,
+      descriptorValue : string2ArrayBuffer(descriptorValue)
     }
-    prompt.showToast( { message : message } )
+    descriptors.push(descriptor);
+    let bleCharacteristicDataIn: BleCharacteristicDataIn = {
+      serviceUuid : serviceUUID ,
+      characteristicUuid : characteristicUUID ,
+      characteristicValue : bufferCCC ,
+      descriptors : descriptors
+    };
+    gattClientInstance.writeCharacteristicValue(bleCharacteristicDataIn)
+    message = 'writeCharacteristicValue succeeds.';
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testWriteCharacteristicValueManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testWriteCharacteristicValueManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testWriteCharacteristicValueManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function string2ArrayBuffer( str ) {
+export function string2ArrayBuffer(str: string) {
   let array = new Uint8Array(str.length);
-  for ( var i = 0 ; i < str.length ; i ++ ) {
-    array[i] = str.charCodeAt( i );
+  for ( let i = 0 ; i < str.length ; i ++ ) {
+    array[ i ] = str.charCodeAt(i);
   }
   return array.buffer
 }
 
-export function testWriteDescriptorValueManager(): String {
+export function testWriteDescriptorValueManager(): string {
   try {
-    let serviceUUID = AppStorage.Get( 'serviceUUID' );
-    let characteristicUUID = AppStorage.Get( 'characteristicUUID' );
-    let descriptorUUID = AppStorage.Get( 'descriptorUUID' );
-    let descriptorValue = AppStorage.Get( 'descriptorValue' );
-    let message = "writeDescriptorValue test"
+    let serviceUUID: string = AppStorage.get('serviceUUID') !;
+    let characteristicUUID: string = AppStorage.get('characteristicUUID') !;
+    let descriptorUUID: string = AppStorage.get('descriptorUUID') !;
+    let descriptorValue: string = AppStorage.get('descriptorValue') !;
+    let message: string = "writeDescriptorValue test"
     let btState = bluetoothManager.getState();
     if ( btState === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
-    let bufferDesc = string2ArrayBuffer( descriptorValue );
-    let descriptor = {
+    let bufferDesc = string2ArrayBuffer(descriptorValue);
+    let descriptor: Descriptor = {
       serviceUuid : serviceUUID ,
       characteristicUuid : characteristicUUID ,
       descriptorUuid : descriptorUUID ,
       descriptorValue : bufferDesc
     };
-    if ( gattClientInstance.writeDescriptorValue( descriptor ) ) {
-      message = 'writeDescriptorValue succeeds.';
-    }
-    else {
-      message = 'writeDescriptorValue,failed!';
-    }
-    prompt.showToast( { message : message } )
+    gattClientInstance.writeDescriptorValue(descriptor)
+    message = 'writeDescriptorValue succeeds.';
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testWriteDescriptorValueManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testWriteDescriptorValueManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testWriteDescriptorValueManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -650,133 +652,135 @@ export function testWriteDescriptorValueManager(): String {
 //回调函数
 let BLECharacteristicChange = false
 
-export function testOnBLECharacteristicChangeManager(): String {
+export function testOnBLECharacteristicChangeManager(): string {
   try {
     let message = "onBLECharacteristicChange test"
     let btStatus = bluetoothManager.getState();
     if ( btStatus === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
 
     if ( BLECharacteristicChange ) {
-      gattClientInstance.off( 'BLECharacteristicChange' , () => {
+      gattClientInstance.off('BLECharacteristicChange' , () => {
         message = "off BLECharacteristicChange"
-        prompt.showToast( { message : message } )
-      } )
+        promptAction.showToast({ message : message })
+      })
     } else {
-      gattClientInstance.on( 'BLECharacteristicChange' , ( data ) => {
+      gattClientInstance.on('BLECharacteristicChange' , (data) => {
         let serviceUuid = data.serviceUuid;
         let characteristicUuid = data.characteristicUuid;
         let bleCharacteristicChangeInfo = "serviceUuid:" + serviceUuid + "\n";
         bleCharacteristicChangeInfo += "characteristicUuid:" + characteristicUuid + "\n";
         let value = new Uint8Array(data.characteristicValue);
         for ( let i = 0 ; i < data.characteristicValue.byteLength ; i ++ ) {
-          bleCharacteristicChangeInfo += "\n" + 'value:' + value[i]
+          bleCharacteristicChangeInfo += "\n" + 'value:' + value[ i ]
         }
-        AppStorage.SetOrCreate( "bleCharacteristicChangeInfo" , bleCharacteristicChangeInfo )
-        prompt.showToast( { message : "on:BLECharacteristicChange" } )
-      } )
+        AppStorage.setOrCreate("bleCharacteristicChangeInfo" , bleCharacteristicChangeInfo)
+        promptAction.showToast({ message : "on:BLECharacteristicChange" })
+      })
       message = "On BLECharacteristicChange"
     }
     BLECharacteristicChange = !BLECharacteristicChange
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testOnBLECharacteristicChangeManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testOnBLECharacteristicChangeManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testOnBLECharacteristicChangeManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testSetBLEMtuSizeManager(): String {
+export function testSetBLEMtuSizeManager(): string {
   try {
     let message = "setBLEMtuSize test"
     let btStatus = bluetoothManager.getState();
     if ( btStatus === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
 
     message = 'setBLEMtuSize: \n';
     let mtuSize = 256;
-    let ret = gattClientInstance.setBLEMtuSize( mtuSize );
+    let ret = gattClientInstance.setBLEMtuSize(mtuSize);
     message += "result : " + ret;
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testSetBLEMtuSizeManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testSetBLEMtuSizeManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testSetBLEMtuSizeManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testSetNotifyCharacteristicChangedManager(): String {
+export function testSetNotifyCharacteristicChangedManager(): string {
   try {
-    let serviceUUID = AppStorage.Get( 'serviceUUID' );
-    let characteristicUUID = AppStorage.Get( 'characteristicUUID' );
-    let descriptorUUID = AppStorage.Get( 'descriptorUUID' );
-    let descriptorValue = AppStorage.Get( 'descriptorValue' );
+    let serviceUUID: string = AppStorage.get('serviceUUID') !;
+    let characteristicUUID: string = AppStorage.get('characteristicUUID') !;
+    let descriptorUUID: string = AppStorage.get('descriptorUUID') !;
+    let descriptorValue: string = AppStorage.get('descriptorValue') !;
     let message = "setNotifyCharacteristicChanged test"
     let btStatus = bluetoothManager.getState();
     if ( btStatus === bluetoothManager.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
 
-    let descriptors = [];
+    let descriptors: Array<bluetoothManager.BLEDescriptor> = [];
     let bufferCCC = new ArrayBuffer(8);
     let cccV = new Uint8Array(bufferCCC);
-    cccV[0] = 66;
-    let descriptor = {
+    cccV[ 0 ] = 66;
+    let descriptor: bluetoothManager.BLEDescriptor = {
       serviceUuid : serviceUUID ,
       characteristicUuid : characteristicUUID ,
       descriptorUuid : descriptorUUID ,
-      descriptorValue : string2ArrayBuffer( descriptorValue )
+      descriptorValue : string2ArrayBuffer(descriptorValue)
     }
-    descriptors.push( descriptor );
-    let characteristicIn = {
+    descriptors.push(descriptor);
+    let characteristicIn: bluetoothManager.BLECharacteristic = {
       serviceUuid : serviceUUID ,
       characteristicUuid : characteristicUUID ,
       characteristicValue : bufferCCC ,
       descriptors : descriptors
     };
-    if ( gattClientInstance.setNotifyCharacteristicChanged( characteristicIn , true ) ) {
+    if ( true ) {
+      gattClientInstance.setNotifyCharacteristicChanged(characteristicIn , true)
       message = "setNotifyCharacteristicChanged(true):succeeds."
     } else {
       message = "setNotifyCharacteristicChanged(true):failed!"
-      if ( gattClientInstance.setNotifyCharacteristicChanged( characteristicIn , false ) ) {
+      if ( false ) {
+        gattClientInstance.setNotifyCharacteristicChanged(characteristicIn , false)
         message = "setNotifyCharacteristicChanged(false):true!"
       } else {
         message = "setNotifyCharacteristicChanged(false):false!"
       }
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testSetNotifyCharacteristicChangedManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testSetNotifyCharacteristicChangedManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testSetNotifyCharacteristicChangedManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -787,27 +791,27 @@ export function testGetDeviceNameCallbackManager(): String {
     let message = "getDeviceNameCallback test"
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     //currentClick = 15;
-    console.log( "gattClientInstance.getDeviceName,callback start-----------------" )
-    gattClientInstance.getDeviceName( ( err , asyncRemoteDeviceName ) => {
+    console.log("gattClientInstance.getDeviceName,callback start-----------------")
+    gattClientInstance.getDeviceName((err: BusinessError , asyncRemoteDeviceName) => {
       message = "return code:"
-      message += JSON.stringify( err );
+      message += JSON.stringify(err);
       message += ",and DeviceName is: "
-      message += JSON.stringify( asyncRemoteDeviceName );
-      deviceName = JSON.stringify( asyncRemoteDeviceName )
-      AppStorage.SetOrCreate( "deviceName" , deviceName )
-      prompt.showToast( { message : message } )
-    } );
-    console.log( "gattClientInstance.getDeviceName,callback end-----------------" )
-    prompt.showToast( { message : message } )
+      message += JSON.stringify(asyncRemoteDeviceName);
+      deviceName = JSON.stringify(asyncRemoteDeviceName)
+      AppStorage.setOrCreate("deviceName" , deviceName)
+      promptAction.showToast({ message : message })
+    });
+    console.log("gattClientInstance.getDeviceName,callback end-----------------")
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGetDeviceNameCallbackManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGetDeviceNameCallbackManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGetDeviceNameCallbackManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -818,25 +822,25 @@ export function testGetDeviceNamePromiseManager(): String {
     let message = "getDeviceNamePromise test"
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
-    console.log( "gattClientInstance.getDeviceName,promise start-----------------" )
-    gattClientInstance.getDeviceName().then( ( peripheralDeviceName ) => {
+    console.log("gattClientInstance.getDeviceName,promise start-----------------")
+    gattClientInstance.getDeviceName().then((peripheralDeviceName) => {
       message = "getDeviceName()Promise:" + peripheralDeviceName;
       deviceName = peripheralDeviceName
-      AppStorage.SetOrCreate( "deviceName" , deviceName )
-      prompt.showToast( { message : message } )
-    } ).catch( err => {
-      console.log( "testGetDeviceNamePromiseManager err:" + err )
-    } );
-    console.log( "gattClientInstance.getDeviceName,promise end-----------------" )
-    prompt.showToast( { message : message } )
+      AppStorage.setOrCreate("deviceName" , deviceName)
+      promptAction.showToast({ message : message })
+    }).catch((err: BusinessError) => {
+      console.log("testGetDeviceNamePromiseManager err:" + err)
+    });
+    console.log("gattClientInstance.getDeviceName,promise end-----------------")
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGetDeviceNamePromiseManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGetDeviceNamePromiseManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGetDeviceNamePromiseManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -847,28 +851,28 @@ export function testGetRssiValueCallbackManager(): String {
     let message = "getRssiValueCallback test"
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
 
     message = "getRssiValue callback";
-    console.log( "gattClientInstance.getRssiValue,callback start-----------------" )
-    gattClientInstance.getRssiValue( ( err , cbRssi ) => {
+    console.log("gattClientInstance.getRssiValue,callback start-----------------")
+    gattClientInstance.getRssiValue((err , cbRssi) => {
       message = "return code:"
-      message += JSON.stringify( err );
+      message += JSON.stringify(err);
       message += ",and RSSI="
-      message += JSON.stringify( cbRssi );
-      Rssi = JSON.stringify( cbRssi );
-      AppStorage.SetOrCreate( "Rssi" , Rssi )
-      prompt.showToast( { message : message } )
-    } );
-    console.log( "gattClientInstance.getRssiValue,callback end-----------------" )
-    prompt.showToast( { message : message } )
+      message += JSON.stringify(cbRssi);
+      Rssi = JSON.stringify(cbRssi);
+      AppStorage.setOrCreate("Rssi" , Rssi)
+      promptAction.showToast({ message : message })
+    });
+    console.log("gattClientInstance.getRssiValue,callback end-----------------")
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGetRssiValueCallbackManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGetRssiValueCallbackManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGetRssiValueCallbackManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -879,26 +883,26 @@ export function testGetRssiValuePromiseManager(): String {
     let message = "getRssiValuePromise test"
     if ( !gattClientInstance ) {
       message = "NO_GATT_CLIENT_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message;
     }
     message = "getRssiValue promise:";
-    console.log( "gattClientInstance.getRssiValue,promise start-----------------" )
-    gattClientInstance.getRssiValue().then( ( rssiValue ) => {
-      message += 'rssi' + JSON.stringify( rssiValue )
-      Rssi = JSON.stringify( rssiValue )
-      AppStorage.SetOrCreate( "Rssi" , Rssi )
-      prompt.showToast( { message : message } )
-    } ).catch( err => {
-      console.log( "testGetRssiValuePromiseManager err:" + err )
-    } );
-    console.log( "gattClientInstance.getRssiValue,promise  end-----------------" )
-    prompt.showToast( { message : message } )
+    console.log("gattClientInstance.getRssiValue,promise start-----------------")
+    gattClientInstance.getRssiValue().then((rssiValue) => {
+      message += 'rssi' + JSON.stringify(rssiValue)
+      Rssi = JSON.stringify(rssiValue)
+      AppStorage.setOrCreate("Rssi" , Rssi)
+      promptAction.showToast({ message : message })
+    }).catch((err: BusinessError) => {
+      console.log("testGetRssiValuePromiseManager err:" + err)
+    });
+    console.log("gattClientInstance.getRssiValue,promise  end-----------------")
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGetRssiValuePromiseManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGetRssiValuePromiseManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGetRssiValuePromiseManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }

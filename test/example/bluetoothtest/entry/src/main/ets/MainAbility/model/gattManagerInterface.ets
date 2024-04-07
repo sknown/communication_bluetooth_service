@@ -12,41 +12,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
 
 /**
  * Gatt Page Of Bluetooth test
  */
-import Router from '@system.router';
-import prompt from '@system.prompt';
+
+import router from '@ohos.router';
+import promptAction from '@ohos.promptAction';
 
 const PAGE_URI_GET_GATT_CLIENT_MANAGER = 'pages/subManualApiTestManager/subGattTestManager/gattClientManager';
 const PAGE_URI_GET_GATT_SERVER_MANAGER = 'pages/subManualApiTestManager/subGattTestManager/gattServerManager';
 
-export function testGattClientManager(): String {
+export function testGattClientManager(): string {
   try {
-    Router.push( { uri : PAGE_URI_GET_GATT_CLIENT_MANAGER } )
+    router.pushUrl({ url : PAGE_URI_GET_GATT_CLIENT_MANAGER })
     let message = "跳转成功"
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGattClientManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGattClientManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGattClientManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testGattServerManager(): String {
+export function testGattServerManager(): string {
   try {
-    Router.push( { uri : PAGE_URI_GET_GATT_SERVER_MANAGER } )
+    router.pushUrl({ url : PAGE_URI_GET_GATT_SERVER_MANAGER })
     let message = "跳转成功"
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGattServerManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGattServerManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGattServerManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }

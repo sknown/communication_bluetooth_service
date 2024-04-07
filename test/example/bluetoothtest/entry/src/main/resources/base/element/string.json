@@ -332,6 +332,14 @@
       "value": "正在断开"
     },
     {
+      "name": "bluetooth_state_disconnected",
+      "value": "未连接"
+    },
+    {
+      "name": "bluetooth_state_unknown",
+      "value": "未知状态"
+    },
+    {
       "name": "bluetooth_visible_to_nearby",
       "value": "当前可被附近的蓝牙设备发现"
     },

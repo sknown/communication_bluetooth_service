@@ -12,126 +12,127 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
+
+import { CaseCategory , Category , TestApi , TestData } from './testData'
 import {
-  TestData ,
-  TestApi ,
-  Category ,
-  CaseCategory
-} from './testData'
-import {
-  testEnableBluetooth ,
   testDisableBluetooth ,
-  testGetState ,
-  testGetBtConnectionState ,
-  testSetLocalName ,
-  testGetLocalName ,
-  testSetBluetoothScanMode ,
+  testEnableBluetooth ,
   testGetBluetoothScanMode ,
-  testStartBluetoothDiscovery ,
-  testStopBluetoothDiscovery ,
-  testPairDevice ,
-  testGetRemoteDeviceName ,
-  testGetRemoteDeviceClass ,
+  testGetBtConnectionState ,
+  testGetConnectionStrategy ,
+  testGetLocalName ,
   testGetPairedDevices ,
-  testUnPairedDevice ,
-  testSetConnectionStrategy,
-  testGetConnectionStrategy,
   testGetProfileConnState1 ,
   testGetProfileConnState2 ,
-  testOnStateChange ,
+  testGetRemoteDeviceClass ,
+  testGetRemoteDeviceName ,
+  testGetState ,
+  testOnBondStateChange ,
   testOnPinRequired ,
-  testOnBondStateChange
+  testOnStateChange ,
+  testPairDevice ,
+  testSetBluetoothScanMode ,
+  testSetConnectionStrategy ,
+  testSetLocalName ,
+  testStartBluetoothDiscovery ,
+  testStopBluetoothDiscovery ,
+  testUnPairedDevice
 } from './brInterface'
 import {
-  testCreateGattServerDevice ,
   testCreateGattClientDevice ,
+  testCreateGattServerDevice ,
   testGetConnectedBLEDevices ,
+  testOnBLEDeviceFind ,
   testStartBLEScan ,
-  testStopBLEScan ,
-  testOnBLEDeviceFind
+  testStopBLEScan
 } from './bleInterface'
-
-import { testGattClient , testGattServer } from './gattInterface'
-import { testSppClient , testSppServer } from './sppInterface'
 import {
-  testA2dpSourceProfile ,
-  testHandsFreeAudioGatewayProfile ,
-  testHidHostProfile ,
-  testPanNetworkProfile ,
-} from './profileInterface'
-
-import {
-  testCreateGattClient ,
   testConnect ,
+  testCreateGattClient ,
   testDisconnect ,
-  testOnBLEConnectionStateChange ,
   testGattClientClose ,
+  testGetDeviceNameCallback ,
+  testGetDeviceNamePromise ,
+  testGetRssiValueCallback ,
+  testGetRssiValuePromise ,
   testGetServicesCallback ,
   testGetServicesPromise ,
+  testOnBLECharacteristicChange ,
+  testOnBLEConnectionStateChange ,
   testReadCharacteristicValueCallback ,
   testReadCharacteristicValuePromise ,
   testReadDescriptorValueCallback ,
   testReadDescriptorValuePromise ,
-  testWriteCharacteristicValue ,
-  testWriteDescriptorValue ,
-  testOnBLECharacteristicChange ,
   testSetBLEMtuSize ,
   testSetNotifyCharacteristicChanged ,
-  testGetDeviceNameCallback ,
-  testGetDeviceNamePromise ,
-  testGetRssiValueCallback ,
-  testGetRssiValuePromise
+  testWriteCharacteristicValue ,
+  testWriteDescriptorValue
 } from './gattClientInterface'
 import {
-  testCreateGattServer ,
-  testStartAdvertising ,
-  testStopAdvertising ,
   testAddService ,
-  testRemoveService ,
+  testCreateGattServer ,
   testGattServerClose ,
-  testOnConnectStateChange ,
   testOnCharacteristicRead ,
   testOnCharacteristicWrite ,
+  testOnConnectStateChange ,
   testOnDescriptorRead ,
-  testOnDescriptorWrite
+  testOnDescriptorWrite ,
+  testRemoveService ,
+  testStartAdvertising ,
+  testStopAdvertising
 } from './gattServerInterface'
 import {
+  testSppClientClose ,
   testSppClientConnectSafe ,
   testSppClientConnectUnSafe ,
-  testSppClientWrite ,
-  testSppClientReadOn ,
   testSppClientReadOff ,
-  testSppClientClose
+  testSppClientReadOn ,
+  testSppClientWrite
 } from './sppClientInterface'
 import {
+  testSppCloseClientSocket ,
+  testSppCloseServerSocket ,
+  testSppServerAccept ,
   testSppServerCreateSafe ,
   testSppServerCreateUnSafe ,
-  testSppServerAccept ,
-  testSppServerWrite ,
-  testSppServerReadOn ,
   testSppServerReadOff ,
-  testSppCloseServerSocket ,
-  testSppCloseClientSocket
+  testSppServerReadOn ,
+  testSppServerWrite
 } from './sppServerInterface'
 
 import {
+  testCancelTransfer ,
+  testGetCurrentTransferInformation ,
+  testOnReceiveIncomingFile ,
+  testOnTransferStateChange ,
   testProfileConnect ,
   testProfileDisConnect ,
-  testProfileGetPlayingState ,
   testProfileGetConnectionDevices ,
-  testProfileGetDeviceState,
-  testOnTransferStateChange,
-  testOnReceiveIncomingFile,
-  testSendFile,
-  testSetIncomingFileConfirmation,
-  testGetCurrentTransferInformation,
-  testCancelTransfer
+  testProfileGetDeviceState ,
+  testProfileGetPlayingState ,
+  testSetIncomingFileConfirmation
 } from './a2dpSinkProfileInterface'
 
 import bluetooth from '@ohos.bluetooth';
 
-const BRTestCase: [] = [
+interface BRTest {
+  name: string;
+  detail: string;
+  method: string;
+  api: Function;
+  result: string;
+  category: CaseCategory;
+}
+
+interface BRTestComposition {
+  name: string;
+  detail: string;
+  url: string;
+  image: Resource;
+  category: Category;
+}
+
+const BRTestCase: BRTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -310,7 +311,7 @@ const BRTestCase: [] = [
   }
 ]
 
-const BleTestCase: any[] = [
+const BleTestCase: BRTest[] = [
   {
     'name' : '创建Gatt服务器' ,
     'detail' : '创建Gatt服务器' ,
@@ -361,41 +362,41 @@ const BleTestCase: any[] = [
   }
 ]
 
-const GattTestComposition: any[] = [
+const GattTestComposition: BRTestComposition[] = [
   {
     'name' : 'GattClient' ,
     'detail' : 'Gatt客户端测试' ,
     'url' : 'pages/subManualApiTest/subGattTest/gattClient' ,
-    'image' : $r( 'app.media.Gatt' ) ,
+    'image' : $r('app.media.Gatt') ,
     'category' : Category.Gatt
   },
   {
     'name' : 'GattServer' ,
     'detail' : 'Gatt服务器测试' ,
     'url' : 'pages/subManualApiTest/subGattTest/gattServer' ,
-    'image' : $r( 'app.media.Gatt' ) ,
+    'image' : $r('app.media.Gatt') ,
     'category' : Category.Gatt
   },
 ]
 
-const SppTestComposition: any[] = [
+const SppTestComposition: BRTestComposition[] = [
   {
     'name' : 'SppClient' ,
     'detail' : 'Spp客户端测试' ,
     'url' : 'pages/subManualApiTest/subSppTest/sppClientTest' ,
-    'image' : $r( 'app.media.spp' ) ,
+    'image' : $r('app.media.spp') ,
     'category' : Category.SPP
   },
   {
     'name' : 'SppServer' ,
     'detail' : 'Spp服务器测试' ,
     'url' : 'pages/subManualApiTest/subSppTest/sppServerTest' ,
-    'image' : $r( 'app.media.spp' ) ,
+    'image' : $r('app.media.spp') ,
     'category' : Category.SPP
   },
 ]
 
-const GattClientTestCase: any[] = [
+const GattClientTestCase: BRTest[] = [
   {
     'name' : '创造Gatt客户端' ,
     'detail' : '创造Gatt客户端' ,
@@ -558,7 +559,7 @@ const GattClientTestCase: any[] = [
   },
 ]
 
-const GattServerTestCase: any[] = [
+const GattServerTestCase: BRTest[] = [
   {
     'name' : '创建Gatt服务器' ,
     'detail' : '创建Gatt服务器' ,
@@ -649,7 +650,7 @@ const GattServerTestCase: any[] = [
   },
 ]
 
-const SppClientTestCase: any[] = [
+const SppClientTestCase: BRTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -756,7 +757,7 @@ const SppClientTestCase: any[] = [
   },
 ]
 
-const SppServerTestCase: any[] = [
+const SppServerTestCase: BRTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -880,7 +881,7 @@ const SppServerTestCase: any[] = [
   },
 ]
 
-const A2dpSourceProfileTestCase: any [] = [
+const A2dpSourceProfileTestCase: BRTest[] = [
   {
     'name' : '连接' ,
     'detail' : 'Profile连接' ,
@@ -923,7 +924,7 @@ const A2dpSourceProfileTestCase: any [] = [
   },
 ]
 
-const HandsFreeAudioGatewayProfileTestCase: any[] = [
+const HandsFreeAudioGatewayProfileTestCase: BRTest[] = [
   {
     'name' : '连接' ,
     'detail' : 'Profile连接' ,
@@ -958,7 +959,7 @@ const HandsFreeAudioGatewayProfileTestCase: any[] = [
   },
 ]
 
-const HitHostProfileTestCase: any[] = [
+const HitHostProfileTestCase: BRTest[] = [
   {
     'name' : '连接' ,
     'detail' : 'Profile连接' ,
@@ -993,7 +994,7 @@ const HitHostProfileTestCase: any[] = [
   },
 ]
 
-const PanNetworkProfileTestCase: any[] = [
+const PanNetworkProfileTestCase: BRTest[] = [
   {
     'name' : '取消连接' ,
     'detail' : '取消Profile连接' ,
@@ -1020,12 +1021,12 @@ const PanNetworkProfileTestCase: any[] = [
   },
 ]
 
-const OppProfileTestCase:any[] =[
+const OppProfileTestCase: BRTest[] = [
   {
     'name' : '传输状态变化打开' ,
     'detail' : '传输状态更改打开' ,
     'method' : 'on.transferStateChange' ,
-    'api' :  testOnTransferStateChange ,
+    'api' : testOnTransferStateChange ,
     'result' : 'None' ,
     'category' : CaseCategory.ProfileOpp
   },
@@ -1033,23 +1034,23 @@ const OppProfileTestCase:any[] =[
     'name' : '接收传入文件变化打开' ,
     'detail' : '接收传入文件变化打开' ,
     'method' : 'on.receiveIncomingFile' ,
-    'api' :  testOnReceiveIncomingFile ,
+    'api' : testOnReceiveIncomingFile ,
     'result' : 'None' ,
     'category' : CaseCategory.ProfileOpp
   },
-  {
-    'name' : '发送文件' ,
-    'detail' : '发送文件' ,
-    'method' : 'sendFile' ,
-    'api' :  testSendFile ,
-    'result' : 'None' ,
-    'category' : CaseCategory.ProfileOpp
-  },
+  // {
+  //   'name' : '发送文件' ,
+  //   'detail' : '发送文件' ,
+  //   'method' : 'sendFile' ,
+  //   'api' :  testSendFile ,
+  //   'result' : 'None' ,
+  //   'category' : CaseCategory.ProfileOpp
+  // },
   {
     'name' : '设置传入文件确认' ,
     'detail' : '设置传入文件确认' ,
     'method' : 'setIncomingFileConfirmation' ,
-    'api' :  testSetIncomingFileConfirmation,
+    'api' : testSetIncomingFileConfirmation ,
     'result' : 'None' ,
     'category' : CaseCategory.ProfileOpp
   },
@@ -1057,7 +1058,7 @@ const OppProfileTestCase:any[] =[
     'name' : '获取当前传输信息' ,
     'detail' : '获取当前传输信息' ,
     'method' : 'getCurrentTransferInformation' ,
-    'api' :  testGetCurrentTransferInformation ,
+    'api' : testGetCurrentTransferInformation ,
     'result' : 'None' ,
     'category' : CaseCategory.ProfileOpp
   },
@@ -1065,39 +1066,39 @@ const OppProfileTestCase:any[] =[
     'name' : '取消传输' ,
     'detail' : '取消传输' ,
     'method' : 'cancelTransfer' ,
-    'api' :  testCancelTransfer,
+    'api' : testCancelTransfer ,
     'result' : 'None' ,
     'category' : CaseCategory.ProfileOpp
   },
 ]
 
-const TestComposition: any[] = [
+const TestComposition: BRTestComposition[] = [
   {
     'name' : 'Classic' ,
     'detail' : '经典蓝牙测试' ,
     'url' : 'pages/subManualApiTest/BrInterfaceTest' ,
-    'image' : $r( 'app.media.Bticon' ) ,
+    'image' : $r('app.media.Bticon') ,
     'category' : Category.API
   },
   {
     'name' : 'BLE' ,
     'detail' : '低功耗蓝牙测试' ,
     'url' : 'pages/subManualApiTest/bleTest' ,
-    'image' : $r( 'app.media.ble40' ) ,
+    'image' : $r('app.media.ble40') ,
     'category' : Category.API
   },
   {
     'name' : 'Gatt' ,
     'detail' : 'GATT测试' ,
     'url' : 'pages/subManualApiTest/gattTest' ,
-    'image' : $r( 'app.media.Gatt' ) ,
+    'image' : $r('app.media.Gatt') ,
     'category' : Category.API
   },
   {
     'name' : 'SPP' ,
     'detail' : 'SPP测试' ,
     'url' : 'pages/subManualApiTest/sppTest' ,
-    'image' : $r( 'app.media.spp' ) ,
+    'image' : $r('app.media.spp') ,
     'category' : Category.API
   },
 
@@ -1105,28 +1106,28 @@ const TestComposition: any[] = [
     'name' : 'Classic_M' ,
     'detail' : '经典蓝牙Manager测试' ,
     'url' : 'pages/subManualApiTestManager/brTestManager' ,
-    'image' : $r( 'app.media.Bticon' ) ,
+    'image' : $r('app.media.Bticon') ,
     'category' : Category.APIManager
   },
   {
     'name' : 'BLE_M' ,
     'detail' : '低功耗蓝牙Manager测试' ,
     'url' : 'pages/subManualApiTestManager/bleTestManager' ,
-    'image' : $r( 'app.media.ble40' ) ,
+    'image' : $r('app.media.ble40') ,
     'category' : Category.APIManager
   },
   {
     'name' : 'Gatt_M' ,
     'detail' : 'GATTManager测试' ,
     'url' : 'pages/subManualApiTestManager/gattTestManager' ,
-    'image' : $r( 'app.media.Gatt' ) ,
+    'image' : $r('app.media.Gatt') ,
     'category' : Category.APIManager
   },
   {
     'name' : 'SPP_M' ,
     'detail' : 'SPPManager测试' ,
     'url' : 'pages/subManualApiTestManager/sppTestManager' ,
-    'image' : $r( 'app.media.spp' ) ,
+    'image' : $r('app.media.spp') ,
     'category' : Category.APIManager
   },
 
@@ -1134,35 +1135,35 @@ const TestComposition: any[] = [
     'name' : 'BrAutoTest' ,
     'detail' : 'Br自动测试' ,
     'url' : 'pages/subAutoTest/brAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.AutoTest
   },
   {
     'name' : 'BleAutoTest' ,
     'detail' : 'Ble自动测试' ,
     'url' : 'pages/subAutoTest/bleAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.AutoTest
   },
   {
     'name' : 'GattAutoTest' ,
     'detail' : 'Gatt自动测试' ,
     'url' : 'pages/subAutoTest/gattAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.AutoTest
   },
   {
     'name' : 'SppAutoTest' ,
     'detail' : 'Spp自动测试' ,
     'url' : 'pages/subAutoTest/sppAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.AutoTest
   },
   {
     'name' : 'ProfileAutoTest' ,
     'detail' : 'Profile自动测试' ,
     'url' : 'pages/subAutoTest/profileAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.AutoTest
   },
 
@@ -1170,35 +1171,35 @@ const TestComposition: any[] = [
     'name' : 'Br_M_AutoTest' ,
     'detail' : 'BrManager自动测试' ,
     'url' : 'pages/subAutoTestManager/brAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.AutoTestManager
   },
   {
     'name' : 'Ble_M_AutoTest' ,
     'detail' : 'BleManager自动测试' ,
     'url' : 'pages/subAutoTestManager/bleAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.AutoTestManager
   },
   {
     'name' : 'Gatt_M_AutoTest' ,
     'detail' : 'GattManager自动测试' ,
     'url' : 'pages/subAutoTestManager/gattAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.AutoTestManager
   },
   {
     'name' : 'Spp_M_AutoTest' ,
     'detail' : 'SppManager自动测试' ,
     'url' : 'pages/subAutoTestManager/sppAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.AutoTestManager
   },
   {
     'name' : 'Profile_M_AutoTest' ,
     'detail' : 'ProfileManager自动测试' ,
     'url' : 'pages/subAutoTestManager/profileAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.AutoTestManager
   },
 
@@ -1207,56 +1208,56 @@ const TestComposition: any[] = [
     'name' : 'BrFoundScenarioTest' ,
     'detail' : '经典蓝牙发现场景测试' ,
     'url' : 'pages/subScenarioTest/brFoundScenarioTest' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.Scenario
   },
   {
     'name' : 'BleFoundScenarioTest' ,
     'detail' : 'Ble蓝牙发现场景测试' ,
     'url' : 'pages/subScenarioTest/bleFoundScenarioTest' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.Scenario
   },
   {
     'name' : 'GattClientScenarioTest' ,
     'detail' : 'GattClient场景测试' ,
     'url' : 'pages/subScenarioTest/gattClientScenarioTest' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.Scenario
   },
   {
     'name' : 'GattServerScenarioTest' ,
     'detail' : 'GattServer场景测试' ,
     'url' : 'pages/subScenarioTest/gattServerScenarioTest' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.Scenario
   },
   {
     'name' : 'SppClientScenarioTest' ,
     'detail' : 'SppClient场景测试' ,
     'url' : 'pages/subScenarioTest/sppClientScenarioTest' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.Scenario
   },
   {
     'name' : 'SppServerScenarioTest' ,
     'detail' : 'SppServer场景测试' ,
     'url' : 'pages/subScenarioTest/sppServerScenarioTest' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.Scenario
   },
   {
     'name' : 'OppSendScenarioTest' ,
     'detail' : 'Opp发送端场景测试' ,
     'url' : 'pages/subScenarioTest/oppSendScenarioTest' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.Scenario
   },
   {
     'name' : 'OppRecvScenarioTest' ,
     'detail' : 'Opp接收端场景测试' ,
     'url' : 'pages/subScenarioTest/oppRecvScenarioTest' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.Scenario
   },
 
@@ -1264,42 +1265,42 @@ const TestComposition: any[] = [
     'name' : 'BrFound_M_ScenarioTest' ,
     'detail' : '经典蓝牙Manager发现场景测试' ,
     'url' : 'pages/subScenarioTestManager/brFoundScenarioTestManager' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.ScenarioManager
   },
   {
     'name' : 'BleFound_M_ScenarioTest' ,
     'detail' : 'Ble蓝牙Manager发现场景测试' ,
     'url' : 'pages/subScenarioTestManager/bleFoundScenarioTestManager' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.ScenarioManager
   },
   {
     'name' : 'GattClient_M_ScenarioTest' ,
     'detail' : 'GattClientManager场景测试' ,
     'url' : 'pages/subScenarioTestManager/gattClientScenarioTestManager' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.ScenarioManager
   },
   {
     'name' : 'GattServer_M_ScenarioTest' ,
     'detail' : 'GattServerManager场景测试' ,
     'url' : 'pages/subScenarioTestManager/gattServerScenarioTestManager' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.ScenarioManager
   },
   {
     'name' : 'SppClient_M_ScenarioTest' ,
     'detail' : 'SppClientManager场景测试' ,
     'url' : 'pages/subScenarioTestManager/sppClientScenarioTestManager' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.ScenarioManager
   },
   {
     'name' : 'SppServer_M_ScenarioTest' ,
     'detail' : 'SppServerManager场景测试' ,
     'url' : 'pages/subScenarioTestManager/sppServerScenarioTestManager' ,
-    'image' : $r( 'app.media.ScenarioTest' ) ,
+    'image' : $r('app.media.ScenarioTest') ,
     'category' : Category.ScenarioManager
   },
 
@@ -1307,35 +1308,35 @@ const TestComposition: any[] = [
     'name' : 'A2dpSource' ,
     'detail' : 'A2dpSource配置测试' ,
     'url' : 'pages/subProfileTest/a2dpSourceProfileTest' ,
-    'image' : $r( 'app.media.profile' ) ,
+    'image' : $r('app.media.profile') ,
     'category' : Category.Profile
   },
   {
     'name' : 'HFAudioGateway' ,
     'detail' : 'HFAudioGateway配置测试' ,
     'url' : 'pages/subProfileTest/handsFreeAudioGatewayProfileTest' ,
-    'image' : $r( 'app.media.profile' ) ,
+    'image' : $r('app.media.profile') ,
     'category' : Category.Profile
   },
   {
     'name' : 'HidHost' ,
     'detail' : 'HidHost配置测试' ,
     'url' : 'pages/subProfileTest/hidHostProfileTest' ,
-    'image' : $r( 'app.media.profile' ) ,
+    'image' : $r('app.media.profile') ,
     'category' : Category.Profile
   },
   {
     'name' : 'PanNetwork' ,
     'detail' : 'PanNetwork配置测试' ,
     'url' : 'pages/subProfileTest/panNetworkProfileTest' ,
-    'image' : $r( 'app.media.profile' ) ,
+    'image' : $r('app.media.profile') ,
     'category' : Category.Profile
   },
   {
     'name' : 'Opp' ,
     'detail' : 'Opp配置测试' ,
     'url' : 'pages/subProfileTest/oppProfileTest' ,
-    'image' : $r( 'app.media.profile' ) ,
+    'image' : $r('app.media.profile') ,
     'category' : Category.Profile
   },
 
@@ -1343,28 +1344,28 @@ const TestComposition: any[] = [
     'name' : 'A2dpSource_M' ,
     'detail' : 'A2dpSourceManager配置测试' ,
     'url' : 'pages/subProfileTestManager/a2dpSourceProfileTestManager' ,
-    'image' : $r( 'app.media.profile' ) ,
+    'image' : $r('app.media.profile') ,
     'category' : Category.ProfileManager
   },
   {
     'name' : 'HFAudioGateway_M' ,
     'detail' : 'HFAudioGatewayManager配置测试' ,
     'url' : 'pages/subProfileTestManager/handsFreeAudioGatewayProfileTestManager' ,
-    'image' : $r( 'app.media.profile' ) ,
+    'image' : $r('app.media.profile') ,
     'category' : Category.ProfileManager
   },
   {
     'name' : 'HidHost_M' ,
     'detail' : 'HidHostManager配置测试' ,
     'url' : 'pages/subProfileTestManager/hidHostProfileTestManager' ,
-    'image' : $r( 'app.media.profile' ) ,
+    'image' : $r('app.media.profile') ,
     'category' : Category.ProfileManager
   },
   {
     'name' : 'PanNetwork_M' ,
     'detail' : 'PanNetworkManager配置测试' ,
     'url' : 'pages/subProfileTestManager/panNetworkProfileTestManager' ,
-    'image' : $r( 'app.media.profile' ) ,
+    'image' : $r('app.media.profile') ,
     'category' : Category.ProfileManager
   },
 
@@ -1372,56 +1373,56 @@ const TestComposition: any[] = [
     'name' : 'BrBenchmarkTest' ,
     'detail' : '经典蓝牙性能测试' ,
     'url' : 'pages/subBenchmarkTest/brBenchmarkTest' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMark
   },
   {
     'name' : 'BleBenchmarkTest' ,
     'detail' : 'ble蓝牙性能测试' ,
     'url' : 'pages/subBenchmarkTest/bleBenchmarkTest' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMark
   },
   {
     'name' : 'GattClientVelocityBenchmarkTest' ,
     'detail' : 'GattClient速率性能测试' ,
     'url' : 'pages/subBenchmarkTest/gattClientVelocityBenchmarkTest' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMark
   },
   {
     'name' : 'GattServerVelocityBenchmarkTest' ,
     'detail' : 'GattServer速率性能测试' ,
     'url' : 'pages/subBenchmarkTest/gattServerVelocityBenchmarkTest' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMark
   },
   {
     'name' : 'SppClientVelocityBenchmarkTest' ,
     'detail' : 'SppClient速率性能测试' ,
     'url' : 'pages/subBenchmarkTest/sppClientVelocityBenchmarkTest' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMark
   },
   {
     'name' : 'SppServerVelocityBenchmarkTest' ,
     'detail' : 'SppServer速率性能测试' ,
     'url' : 'pages/subBenchmarkTest/sppServerVelocityBenchmarkTest' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMark
   },
   {
     'name' : 'SppClientBandWidthBenchmarkTest' ,
     'detail' : 'SppClient带宽性能测试' ,
     'url' : 'pages/subBenchmarkTest/sppClientBandWidthBenchmarkTest' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMark
   },
   {
     'name' : 'SppServerBandWidthBenchmarkTest' ,
     'detail' : 'SppServer带宽性能测试' ,
     'url' : 'pages/subBenchmarkTest/sppServerBandWidthBenchmarkTest' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMark
   },
 
@@ -1429,259 +1430,258 @@ const TestComposition: any[] = [
     'name' : 'Br_M_BenchmarkTest' ,
     'detail' : '经典蓝牙性能测试' ,
     'url' : 'pages/subBenchmarkTestManager/brBenchmarkTestManager' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMarkManager
   },
   {
     'name' : 'Ble_M_BenchmarkTest' ,
     'detail' : 'ble蓝牙性能测试' ,
     'url' : 'pages/subBenchmarkTestManager/bleBenchmarkTestManager' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMarkManager
   },
   {
     'name' : 'GattClient_M_VelocityBenchmarkTest' ,
     'detail' : 'GattClient速率性能测试' ,
     'url' : 'pages/subBenchmarkTestManager/gattClientVelocityBenchmarkTestManager' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMarkManager
   },
   {
     'name' : 'GattServer_M_VelocityBenchmarkTest' ,
     'detail' : 'GattServer速率性能测试' ,
     'url' : 'pages/subBenchmarkTestManager/gattServerVelocityBenchmarkTestManager' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMarkManager
   },
   {
     'name' : 'SppClient_M_VelocityBenchmarkTest' ,
     'detail' : 'SppClient速率性能测试' ,
     'url' : 'pages/subBenchmarkTestManager/sppClientVelocityBenchmarkTestManager' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMarkManager
   },
   {
     'name' : 'SppServer_M_VelocityBenchmarkTest' ,
     'detail' : 'SppServer速率性能测试' ,
     'url' : 'pages/subBenchmarkTestManager/sppServerVelocityBenchmarkTestManager' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMarkManager
   },
   {
     'name' : 'SppClient_M_BandWidthBenchmarkTest' ,
     'detail' : 'SppClient带宽性能测试' ,
     'url' : 'pages/subBenchmarkTestManager/sppClientBandWidthBenchmarkTestManager' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMarkManager
   },
   {
     'name' : 'SppServer_M_BandWidthBenchmarkTest' ,
     'detail' : 'SppServer带宽性能测试' ,
     'url' : 'pages/subBenchmarkTestManager/sppServerBandWidthBenchmarkTestManager' ,
-    'image' : $r( 'app.media.Benchmark' ) ,
+    'image' : $r('app.media.Benchmark') ,
     'category' : Category.BenchMarkManager
   }
 ]
 
-const GattAutoTestComposition: any[] = [
+const GattAutoTestComposition: BRTestComposition[] = [
   {
     'name' : 'GattClientAutoTest' ,
     'detail' : 'GattClient自动测试' ,
     'url' : 'pages/subAutoTest/subGattAutoTest/gattClientAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.GattAutoTest
   },
   {
     'name' : 'GattServerAutoTest' ,
     'detail' : 'GattServer自动测试' ,
     'url' : 'pages/subAutoTest/subGattAutoTest/gattServerAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.GattAutoTest
   },
 ]
 
-const SppAutoTestComposition: any[] = [
+const SppAutoTestComposition: BRTestComposition[] = [
   {
     'name' : 'SppClientAutoTest' ,
     'detail' : 'SppClient自动测试' ,
     'url' : 'pages/subAutoTest/subSppAutoTest/sppClientAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.SppAutoTest
   },
   {
     'name' : 'SppServerAutoTest' ,
     'detail' : 'SppServer自动测试' ,
     'url' : 'pages/subAutoTest/subSppAutoTest/sppServerAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.SppAutoTest
   },
 ]
 
-const ProfileAutoTestComposition: any[] = [
+const ProfileAutoTestComposition: BRTestComposition[] = [
   {
     'name' : 'A2dpSourceAutoTest' ,
     'detail' : 'A2dpSource自动测试' ,
     'url' : 'pages/subAutoTest/subProfileAutoTest/a2dpSourceAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.ProfileAutoTest
   },
   {
     'name' : 'HFAudioGatewayAutoTest' ,
     'detail' : 'HFAudioGateway自动测试' ,
     'url' : 'pages/subAutoTest/subProfileAutoTest/handsFreeAudioGatewayAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.ProfileAutoTest
   },
   {
     'name' : 'HitHostAutoTest' ,
     'detail' : 'HitHost自动测试' ,
     'url' : 'pages/subAutoTest/subProfileAutoTest/hitHostAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.ProfileAutoTest
   },
   {
     'name' : 'PanNetworkAutoTest' ,
     'detail' : 'PanNetwork自动测试' ,
     'url' : 'pages/subAutoTest/subProfileAutoTest/panNetworkAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
+    'image' : $r("app.media.AutoTestIcon") ,
     'category' : Category.ProfileAutoTest
   },
 ]
 
-
 export function initTestData(): Array<TestData> {
   let TestDataArray: Array<TestData> = []
-  TestComposition.forEach( item => {
-    TestDataArray.push( new TestData(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+  TestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }
 
 export function initBRApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  BRTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  BRTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initBleApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  BleTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  BleTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initGattApiTestData(): Array<TestData> {
   let TestDataArray: Array<TestData> = []
-  GattTestComposition.forEach( item => {
-    TestDataArray.push( new TestData(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+  GattTestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }
 
 export function initSppApiTestData(): Array<TestData> {
   let TestDataArray: Array<TestData> = []
-  SppTestComposition.forEach( item => {
-    TestDataArray.push( new TestData(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+  SppTestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }
 
 
 export function initGattClientApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  GattClientTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  GattClientTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initGattServerApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  GattServerTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  GattServerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initSppClientApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  SppClientTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  SppClientTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initSppServerApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  SppServerTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  SppServerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initA2dpSourceProfileApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  A2dpSourceProfileTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  A2dpSourceProfileTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initHandsFreeAudioGatewayProfileApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  HandsFreeAudioGatewayProfileTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  HandsFreeAudioGatewayProfileTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initHitHostProfileApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  HitHostProfileTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  HitHostProfileTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initPanNetworkProfileApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  PanNetworkProfileTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  PanNetworkProfileTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initOppProfileApiData(): Array<TestApi> {
   let TestApiArray: Array<TestApi> = []
-  OppProfileTestCase.forEach( item => {
-    TestApiArray.push( new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+  OppProfileTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
 export function initGattAutoTestData(): Array<TestData> {
   let TestDataArray: Array<TestData> = []
-  GattAutoTestComposition.forEach( item => {
-    TestDataArray.push( new TestData(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+  GattAutoTestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }
 
 export function initSppAutoTestData(): Array<TestData> {
   let TestDataArray: Array<TestData> = []
-  SppAutoTestComposition.forEach( item => {
-    TestDataArray.push( new TestData(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+  SppAutoTestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }
 
 export function initProfileAutoTestData(): Array<TestData> {
   let TestDataArray: Array<TestData> = []
-  ProfileAutoTestComposition.forEach( item => {
-    TestDataArray.push( new TestData(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+  ProfileAutoTestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }

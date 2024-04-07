@@ -19,17 +19,17 @@
         "name": "default",
         "material": {
           "certpath": "C:\\Users\\kaihong\\.ohos\\config\\openharmony\\auto_ohos_default_bluetoothtest_com.example.myapplicationbt.cer",
-          "storePassword": "0000001A2EDDE78A0AD112E0B20CDAEAD5B7584330ADE19BBC13BAF1D71F91C8786F7D36FFF127EB9E6F",
+          "storePassword": "0000001B348872D05640B2A1092FFB2B2D083ED96916795F17E95EF16DF5D2E3CB0FCB1A9FF7E05A773A36",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001ADB7A2B5957E1905A4CD8BFD79369DDB0757489E5B246275CDFC95F98C95C8DF7DF2F05E52DF1",
+          "keyPassword": "0000001B3BDA70A4C58E362FD2F436450570CD70D2F51DCDC42BCEF3AE1D878E74AB38923327DD09C63C8E",
           "profile": "C:\\Users\\kaihong\\.ohos\\config\\openharmony\\auto_ohos_default_bluetoothtest_com.example.myapplicationbt.p7b",
           "signAlg": "SHA256withECDSA",
           "storeFile": "C:\\Users\\kaihong\\.ohos\\config\\openharmony\\auto_ohos_default_bluetoothtest_com.example.myapplicationbt.p12"
         }
       }
     ],
-    "compileSdkVersion": 9,
-    "compatibleSdkVersion": 9,
+    "compileSdkVersion": 11,
+    "compatibleSdkVersion": 10,
     "products": [
       {
         "name": "default",

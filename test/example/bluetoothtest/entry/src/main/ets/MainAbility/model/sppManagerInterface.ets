@@ -12,24 +12,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
 
-import Router from '@system.router';
-import prompt from '@system.prompt';
+import router from '@ohos.router';
+import promptAction from '@ohos.promptAction';
 
 const PAGE_URI_GET_SPP_CLIENT_TEST_MANAGER = 'pages/subManualApiTestManager/subSppTestManager/sppClientManager';
 const PAGE_URI_GET_SPP_SERVER_TEST_MANAGER = 'pages/subManualApiTestManager/subSppTestManager/sppServerManager';
 
 export function testSppClient(): string {
-  Router.push( { uri : PAGE_URI_GET_SPP_CLIENT_TEST_MANAGER } )
+  router.pushUrl({ url : PAGE_URI_GET_SPP_CLIENT_TEST_MANAGER })
   let message = "跳转成功"
-  prompt.showToast( { message : message } )
+  promptAction.showToast({ message : message })
   return message
 }
 
 export function testSppServer(): string {
-  Router.push( { uri : PAGE_URI_GET_SPP_SERVER_TEST_MANAGER } )
+  router.pushUrl({ url : PAGE_URI_GET_SPP_SERVER_TEST_MANAGER })
   let message = "跳转成功"
-  prompt.showToast( { message : message } )
+  promptAction.showToast({ message : message })
   return message
 }
