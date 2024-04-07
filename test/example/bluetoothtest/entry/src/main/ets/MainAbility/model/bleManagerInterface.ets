@@ -13,16 +13,18 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
-
 /**
  * BLE Test Page Of Bluetooth test
  */
-import prompt from '@system.prompt';
+
+import { BleScanFilter , CurScanOptions } from '../../Utils/common'
 import BluetoothModelManager from './BluetoothModelManager'
 import bluetoothManager from '@ohos.bluetoothManager';
+import promptAction from '@ohos.promptAction';
+import bluetooth from '@ohos.bluetooth';
 
-let gattServerInstance = null;
+let gattServerInstance: bluetoothManager.GattServer;
+let gattClientDeviceInstance: bluetoothManager.GattClientDevice
 
 export function testCreateGattServerDeviceManager(): string {
   try {
@@ -41,27 +43,25 @@ export function testCreateGattServerDeviceManager(): string {
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testCreateGattServerDeviceManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testCreateGattServerDeviceManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testCreateGattServerDeviceManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
-
-let gattClientDeviceInstance = null
 
 export function testCreateGattClientDeviceManager(): string {
   try {
     let message = "test createGattClientDevice"
     let btState = bluetoothManager.getState();
-    let peripheralDeviceId = AppStorage.Get( 'peripheralDeviceId' );
+    let peripheralDeviceId: string = AppStorage.get('peripheralDeviceId') !;
     if ( btState == bluetoothManager.BluetoothState.STATE_ON ) {
       message = "createGattClient start"
       if ( !gattClientDeviceInstance ) {
-        gattClientDeviceInstance = BluetoothModelManager.createGattClient( peripheralDeviceId );
+        gattClientDeviceInstance = BluetoothModelManager.createGattClient(peripheralDeviceId);
         message = "createGattClient:succeeds.";
       } else {
         message = "gattClient existed!";
@@ -71,12 +71,12 @@ export function testCreateGattClientDeviceManager(): string {
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testCreateGattClientDeviceManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testCreateGattClientDeviceManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testCreateGattClientDeviceManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -84,21 +84,21 @@ export function testCreateGattClientDeviceManager(): string {
 export function testGetConnectedBLEDevicesManager(): string {
   try {
     let connectedBleDevices = BluetoothModelManager.getConnectedBLEDevices();
-    let message = "getConnectedBLEDevices" + JSON.stringify( connectedBleDevices );
-    console.log( "getConnectedBLEDevices" + JSON.stringify( connectedBleDevices ) )
-    prompt.showToast( { message : message } )
+    let message = "getConnectedBLEDevices" + JSON.stringify(connectedBleDevices);
+    console.log("getConnectedBLEDevices" + JSON.stringify(connectedBleDevices))
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGetConnectedBLEDevicesManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGetConnectedBLEDevicesManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGetConnectedBLEDevicesManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
 export function testStartBLEScanManager(): string {
   try {
-    console.log( "StartBLEScan -------------------------------" )
+    console.log("StartBLEScan -------------------------------")
 
     let btState = bluetoothManager.getState();
     let message = "test startBLEScan"
@@ -106,48 +106,48 @@ export function testStartBLEScanManager(): string {
       message = "BT is not enabled!";
       return message;
     }
-    let txtScanFilter_deviceId = AppStorage.Get( 'txtScanFilterDeviceId' );
-    let txtScanFilter_name = AppStorage.Get( 'txtScanFilterName' );
-    let txtScanFilter_serviceUuid = AppStorage.Get( 'txtScanFilterServiceUuid' );
-    let txtScanOptions_interval = AppStorage.Get( 'txtScanOptions_interval' );
-    let txtScanOptions_dutyMode = AppStorage.Get( 'txtScanOptionsDutyMode' );
-    let txtScanOptions_matchMode = AppStorage.Get( 'txtScanOptionsMatchMode' );
-    let cbxBleScanFilter = AppStorage.Get( 'cbxBleScanFilter' );
-    let cbxBleScanOptions = AppStorage.Get( 'cbxBleScanOptions' );
-    let curScanFilters = [];
-    let bleScanFilter = {
+    let txtScanFilter_deviceId: string = AppStorage.get('txtScanFilterDeviceId') !;
+    let txtScanFilter_name: string = AppStorage.get('txtScanFilterName') !;
+    let txtScanFilter_serviceUuid: string = AppStorage.get('txtScanFilterServiceUuid') !;
+    let txtScanOptions_interval: string = AppStorage.get('txtScanOptions_interval') !;
+    let txtScanOptions_dutyMode: string = AppStorage.get('txtScanOptionsDutyMode') !;
+    let txtScanOptions_matchMode: string = AppStorage.get('txtScanOptionsMatchMode') !;
+    let cbxBleScanFilter: boolean = AppStorage.get('cbxBleScanFilter') !;
+    let cbxBleScanOptions: boolean = AppStorage.get('cbxBleScanOptions') !;
+    let curScanFilters: Array<bluetooth.ScanFilter> = [];
+    let bleScanFilter: BleScanFilter = {
       deviceId : txtScanFilter_deviceId ,
       name : txtScanFilter_name ,
       serviceUuid : txtScanFilter_serviceUuid
     }
-    let curScanOptions = {
-      interval : parseInt( txtScanOptions_interval ) ,
-      dutyMode : parseInt( txtScanOptions_dutyMode ) ,
-      matchMode : parseInt( txtScanOptions_matchMode )
+    let curScanOptions: CurScanOptions = {
+      interval : parseInt(txtScanOptions_interval) ,
+      dutyMode : parseInt(txtScanOptions_dutyMode) ,
+      matchMode : parseInt(txtScanOptions_matchMode)
     }
     if ( cbxBleScanFilter ) {
-      curScanFilters.push( bleScanFilter );
+      curScanFilters.push(bleScanFilter);
     }
 
     if ( !cbxBleScanOptions ) {
       if ( cbxBleScanFilter ) {
-        BluetoothModelManager.startBLEScan( curScanFilters );
-        message = "startBLEScan Filters:" + JSON.stringify( curScanFilters );
+        BluetoothModelManager.startBLEScan(curScanFilters);
+        message = "startBLEScan Filters:" + JSON.stringify(curScanFilters);
       } else {
-        BluetoothModelManager.startBLEScan( null );
+        BluetoothModelManager.startBLEScan(null);
         message = "startBLEScan(null)";
       }
     } else {
-      BluetoothModelManager.startBLEScan( curScanFilters , curScanOptions );
-      message = "startBLEScan Filters:" + JSON.stringify( curScanFilters ) + "\n" + "Options:" + JSON.stringify( curScanOptions );
+      BluetoothModelManager.startBLEScan(curScanFilters , curScanOptions);
+      message = "startBLEScan Filters:" + JSON.stringify(curScanFilters) + "\n" + "Options:" + JSON.stringify(curScanOptions);
     }
-    console.log( "StartBLEScan end-------------------------------" )
-    prompt.showToast( { message : message } )
+    console.log("StartBLEScan end-------------------------------")
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testStartBLEScanManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testStartBLEScanManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testStartBLEScanManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -156,12 +156,12 @@ export function testStopBLEScanManager(): string {
   try {
     BluetoothModelManager.stopBLEScan();
     let message = "stopBLEScan OK!";
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testStopBLEScanManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testStopBLEScanManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testStopBLEScanManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -174,30 +174,30 @@ export function testOnBLEDeviceFindManager(): string {
     if ( bleDeviceFindManager ) {
       BluetoothModelManager.unsubscribeBLEDeviceFind();
       message = '关闭BLE查找状态变化'
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
     } else {
-      BluetoothModelManager.subscribeBLEDeviceFind( ( deviceItems: Array<bluetoothManager.ScanResult> ) => {
-        console.log( "BLE Test:" + 'available ble devices changed.' );
+      BluetoothModelManager.subscribeBLEDeviceFind((deviceItems: Array<bluetoothManager.ScanResult>) => {
+        console.log("BLE Test:" + 'available ble devices changed.');
         let message = ""
-        let availBleDeviceIds = []
-        deviceItems?.forEach( deviceItem => {
+        let availBleDeviceIds: Array<string> = []
+        deviceItems?.forEach(deviceItem => {
           let newDevice = deviceItem.deviceId;
           message += "mac:" + newDevice;
-          console.log( "BLE Test:" + 'available bluetooth new device : ' + newDevice );
-          availBleDeviceIds.push( newDevice );
-        } )
-        AppStorage.SetOrCreate( 'bluetoothAvailableDevices' , availBleDeviceIds );
-        prompt.showToast( { message : message } )
-      } )
+          console.log("BLE Test,available bluetooth new device : " + newDevice);
+          availBleDeviceIds.push(newDevice);
+        })
+        AppStorage.setOrCreate('bluetoothAvailableDevices' , availBleDeviceIds);
+        promptAction.showToast({ message : message })
+      })
       message = "打开BLE查找状态变化"
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
     }
     bleDeviceFindManager = !bleDeviceFindManager
     return message
   } catch( e ) {
-    console.log( `Failed to testOnBLEDeviceFindManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testOnBLEDeviceFindManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testOnBLEDeviceFindManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }

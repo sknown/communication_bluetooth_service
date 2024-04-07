@@ -12,11 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
-import {
-  TestAutoManager ,
-  AutoCategoryManager
-} from './testDataManager'
+
+import { TestAuto , AutoCategory } from './testData'
 import {
   testEnableBluetoothManager ,
   testDisableBluetoothManager ,
@@ -109,14 +106,23 @@ import {
 } from './a2dpSinkProfileManagerInterface'
 import BluetoothModelManager from './BluetoothModelManager'
 
-export const BrManagerAutoTestCase: [] = [
+interface AutoManagerTest {
+  name: string;
+  detail: string;
+  method: string;
+  api: Function;
+  result: string;
+  category: AutoCategory;
+}
+
+export const BrManagerAutoTestCase: AutoManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '注册状态变化' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '注册pin码变化Manager' ,
@@ -124,7 +130,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'on.pinRequiredManager' ,
     'api' : testOnPinRequiredManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '注册绑定状态变化Manager' ,
@@ -132,7 +138,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'on.bondStateChange' ,
     'api' : testOnBondStateChangeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -140,7 +146,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -148,7 +154,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '获取当前连接状态Manager' ,
@@ -156,7 +162,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'getBtConnectionStateManager' ,
     'api' : testGetBtConnectionStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -164,7 +170,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -172,7 +178,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -180,7 +186,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -188,7 +194,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '订阅蓝牙发现Manager' ,
@@ -196,7 +202,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'subscribeBluetoothDeviceFindManager' ,
     'api' : subscribeBluetoothDeviceFindManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '开始蓝牙发现Manager' ,
@@ -204,7 +210,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'startBluetoothDiscoveryManager' ,
     'api' : BluetoothModelManager.startBluetoothDiscovery ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '停止蓝牙发现Manager' ,
@@ -212,7 +218,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'stopBluetoothDiscoveryManager' ,
     'api' : testStopBluetoothDiscoveryManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '配对设备Manager' ,
@@ -220,7 +226,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'pairDeviceManager' ,
     'api' : testPairDeviceManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '获取远程设备名称Manager' ,
@@ -228,7 +234,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'getDeviceNameManager' ,
     'api' : testGetRemoteDeviceNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '获取远程设备类型Manager' ,
@@ -236,7 +242,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'getDeviceTypeManager' ,
     'api' : testGetRemoteDeviceClassManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '获取配对设备Manager' ,
@@ -244,7 +250,7 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'getPairedDeviceIdsManager' ,
     'api' : testGetPairedDevicesManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
   {
     'name' : '取消配对设备Manager' ,
@@ -252,44 +258,26 @@ export const BrManagerAutoTestCase: [] = [
     'method' : 'unpairDeviceManager' ,
     'api' : testUnPairedDeviceManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
-  /*
-    {
-    'name': '获取配置文件连接状态Manager1',
-    'detail': '获取配置文件的连接状态',
-    'method': 'getProfileConnStateManager',
-    'api':testGetProfileConnStateManager1,
-    'result': 'None',
-    'category':AutoCategoryManager.BrAutoManager
-    },
-    {
-    'name': '获取配置文件连接状态Manager2',
-    'detail': '获取设备的配置文件状态',
-    'method': 'getDeviceStateManager',
-    'api':testGetProfileConnStateManager2,
-    'result': 'None',
-    'category':AutoCategoryManager.BrAutoManager
-  },
-  */
   {
     'name' : '关蓝牙Manager' ,
     'detail' : '去使能蓝牙' ,
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BrAutoManager
+    'category' : AutoCategory.BrAutoManager
   },
 ]
 
-export const BleManagerAutoTestCase: [] = [
+export const BleManagerAutoTestCase: AutoManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -297,7 +285,7 @@ export const BleManagerAutoTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -305,7 +293,7 @@ export const BleManagerAutoTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -313,7 +301,7 @@ export const BleManagerAutoTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -321,7 +309,7 @@ export const BleManagerAutoTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -329,33 +317,15 @@ export const BleManagerAutoTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
-  /*
-    {
-    'name': '创建Gatt服务器Manager',
-    'detail': '创建Gatt服务器',
-    'method': 'createGattServerManager',
-    'api':testCreateGattServerDevice,
-    'result': 'None',
-    'category':AutoCategoryManager.BleAutoManager
-    },
-    {
-    'name': '创建Gatt客户端Manager',
-    'detail': '创建Gatt客户端',
-    'method': 'createGattClientManager',
-    'api':testCreateGattClientDevice,
-    'result': 'None',
-    'category':AutoCategoryManager.BleAutoManager
-  },
-  */
   {
     'name' : '获取连接的Ble设备Manager' ,
     'detail' : '获取连接的Ble设备信息' ,
     'method' : 'getConnectedBleDevices' ,
     'api' : testGetConnectedBLEDevicesManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
   {
     'name' : '注册Ble查找状态变化Manager' ,
@@ -363,7 +333,7 @@ export const BleManagerAutoTestCase: [] = [
     'method' : 'on.BleDeviceFindManager' ,
     'api' : testOnBLEDeviceFindManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
   {
     'name' : '开始Ble扫描Manager' ,
@@ -371,7 +341,7 @@ export const BleManagerAutoTestCase: [] = [
     'method' : 'startBleScanManager' ,
     'api' : testStartBLEScanManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
   {
     'name' : '停止Ble扫描Manager' ,
@@ -379,7 +349,7 @@ export const BleManagerAutoTestCase: [] = [
     'method' : 'stopBleScanManager' ,
     'api' : testStopBLEScanManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -387,18 +357,18 @@ export const BleManagerAutoTestCase: [] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.BleAutoManager
+    'category' : AutoCategory.BleAutoManager
   },
 ]
 
-export const GattClientManagerAutoTestCase: [] = [
+export const GattClientManagerAutoTestCase: AutoManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -406,7 +376,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -414,7 +384,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -422,7 +392,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -430,7 +400,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -438,7 +408,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '创造Gatt客户端Manager' ,
@@ -446,7 +416,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'createGattClientManager' ,
     'api' : testCreateGattClientManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : 'Ble连接状态Manager' ,
@@ -454,7 +424,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'on.BleConnectionStateChangeManager' ,
     'api' : testOnBLEConnectionStateChangeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '连接Manager' ,
@@ -462,7 +432,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'connectManager' ,
     'api' : testConnectManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '获取服务callbackManager' ,
@@ -470,7 +440,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'getServices(Callback)Manager' ,
     'api' : testGetServicesCallbackManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '获取服务promiseManager' ,
@@ -478,7 +448,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'getServices(promise)Manager' ,
     'api' : testGetServicesPromiseManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '读取特征值callbackManager' ,
@@ -486,7 +456,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'readCharacteristicValue(callback)Manager' ,
     'api' : testReadCharacteristicValueCallbackManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '读取特征值promiseManager' ,
@@ -494,7 +464,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'readCharacteristicValue(promise)Manager' ,
     'api' : testReadCharacteristicValuePromiseManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '读取描述符值callbackManager' ,
@@ -502,7 +472,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'readDescriptorValue(callback)Manager' ,
     'api' : testReadDescriptorValueCallbackManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '读取描述符值promiseManager' ,
@@ -510,7 +480,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'readDescriptorValue(promise)Manager' ,
     'api' : testReadDescriptorValuePromiseManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '写入特征值Manager' ,
@@ -518,7 +488,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'writeCharacteristicValueManager' ,
     'api' : testWriteCharacteristicValueManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '写入描述符值Manager' ,
@@ -526,7 +496,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'writeDescriptorValueManager' ,
     'api' : testWriteDescriptorValueManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : 'Ble特征值变化Manager' ,
@@ -534,7 +504,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'on.BleCharacteristicChangeManager' ,
     'api' : testOnBLECharacteristicChangeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '设定BleMtu尺寸Manager' ,
@@ -542,7 +512,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'setBleMtuSizeManager' ,
     'api' : testSetBLEMtuSizeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '设置通知特性更改Manager' ,
@@ -550,7 +520,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'setNotifyCharacteristicChangedManager' ,
     'api' : testSetNotifyCharacteristicChangedManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '获取设备名称callbackManager' ,
@@ -558,7 +528,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'getDeviceName(callback)Manager' ,
     'api' : testGetDeviceNameCallbackManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '获取设备名称promiseManager' ,
@@ -566,7 +536,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'getDeviceName(Promise)Manager' ,
     'api' : testGetDeviceNamePromiseManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '获取Rssi值callbackManager' ,
@@ -574,7 +544,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'getRssiValue(Callback)Manager' ,
     'api' : testGetRssiValueCallbackManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '获取Rssi值promiseManager' ,
@@ -582,7 +552,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'getRssiValue(Promise)Manager' ,
     'api' : testGetRssiValuePromiseManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '取消连接Manager' ,
@@ -590,7 +560,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'disconnectManager' ,
     'api' : testDisconnectManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '关闭Manager' ,
@@ -598,7 +568,7 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'closeManager' ,
     'api' : testGattClientCloseManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -606,18 +576,18 @@ export const GattClientManagerAutoTestCase: [] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattClientAutoManager
+    'category' : AutoCategory.GattClientAutoManager
   },
 ]
 
-export const GattServerManagerAutoTestCase: [] = [
+export const GattServerManagerAutoTestCase: AutoManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -625,7 +595,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -633,7 +603,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -641,7 +611,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -649,7 +619,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -657,7 +627,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '创建Gatt服务器Manager' ,
@@ -665,7 +635,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'createGattServerManager' ,
     'api' : testCreateGattServerManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '添加服务Manager' ,
@@ -673,7 +643,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'addServiceManager' ,
     'api' : testAddServiceManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '开始广播Manager' ,
@@ -681,7 +651,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'startAdvertisingManager' ,
     'api' : testStartAdvertisingManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '连接状态Manager' ,
@@ -689,7 +659,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'on.connectStateChangeManager' ,
     'api' : testOnConnectStateChangeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '读取特征值Manager' ,
@@ -697,7 +667,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'on.characteristicReadManager' ,
     'api' : testOnCharacteristicReadManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '写入特征值Manager' ,
@@ -705,7 +675,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'on.characteristicWriteManager' ,
     'api' : testOnCharacteristicWriteManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '读取描述符Manager' ,
@@ -713,7 +683,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'on.descriptorReadManager' ,
     'api' : testOnDescriptorReadManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '写入描述符Manager' ,
@@ -721,7 +691,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'on.descriptorWriteManager' ,
     'api' : testOnDescriptorWriteManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '停止广播Manager' ,
@@ -729,7 +699,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'stopAdvertisingManager' ,
     'api' : testStopAdvertisingManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '删除服务Manager' ,
@@ -737,7 +707,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'removeServiceManager' ,
     'api' : testRemoveServiceManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '关闭Manager' ,
@@ -745,7 +715,7 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'closeManager' ,
     'api' : testGattServerCloseManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -753,18 +723,18 @@ export const GattServerManagerAutoTestCase: [] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.GattServerAutoManager
+    'category' : AutoCategory.GattServerAutoManager
   },
 ]
 
-export const SppClientManagerAutoTestCase: [] = [
+export const SppClientManagerAutoTestCase: AutoManagerTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetooth' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : '设置SPP扫描模式' ,
@@ -772,7 +742,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'setBluetoothScanMode' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : '设置本地名称' ,
@@ -780,7 +750,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'setLocalName' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : '获取本地名称' ,
@@ -788,7 +758,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'getLocalName' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : '获取状态' ,
@@ -796,7 +766,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'getState' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : '获取扫描模式' ,
@@ -804,7 +774,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'getBluetoothScanMode' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : 'Spp客户端连接(安全模式)' ,
@@ -812,7 +782,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'sppConnect' ,
     'api' : testSppClientConnectSafeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : 'Spp客户端连接(非安全模式)' ,
@@ -820,7 +790,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'sppConnect' ,
     'api' : testSppClientConnectUnSafeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : '配对设备' ,
@@ -828,7 +798,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'pairDevice' ,
     'api' : testPairDeviceManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : 'Spp客户端写入' ,
@@ -836,7 +806,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'sppWrite' ,
     'api' : testSppClientWriteManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : 'Spp客户端读取打开' ,
@@ -844,7 +814,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'on.sppRead' ,
     'api' : testSppClientReadOnManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : 'Spp客户端读取关闭' ,
@@ -852,7 +822,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'off.sppRead' ,
     'api' : testSppClientReadOffManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : 'Spp客户端关闭' ,
@@ -860,7 +830,7 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'sppCloseClientSocket' ,
     'api' : testSppClientCloseManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
   {
     'name' : '关蓝牙' ,
@@ -868,18 +838,18 @@ export const SppClientManagerAutoTestCase: [] = [
     'method' : 'disableBluetooth' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppClientAutoManager
+    'category' : AutoCategory.SppClientAutoManager
   },
 ]
 
-export const SppServerManagerAutoTestCase: [] = [
+export const SppServerManagerAutoTestCase: AutoManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : '设置SPP扫描模式Manager' ,
@@ -887,7 +857,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : '注册pin码变化Manager' ,
@@ -895,7 +865,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'on.pinRequiredManager' ,
     'api' : testOnPinRequiredManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -903,7 +873,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -911,7 +881,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -919,7 +889,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -927,7 +897,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : 'Spp服务器创建(安全模式)Manager' ,
@@ -935,7 +905,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'sppListenManager' ,
     'api' : testSppServerCreateSafeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : 'Spp服务器创建(非安全模式)Manager' ,
@@ -943,7 +913,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'sppListenManager' ,
     'api' : testSppServerCreateUnSafeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : 'Spp服务器写入Manager' ,
@@ -951,7 +921,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'sppWriteManager' ,
     'api' : testSppServerWriteManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : 'Spp服务器接受Manager' ,
@@ -959,7 +929,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'sppAcceptManager' ,
     'api' : testSppServerAcceptManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : 'Spp服务器读取打开Manager' ,
@@ -967,7 +937,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'on.sppReadManager' ,
     'api' : testSppServerReadOnManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : 'Spp服务器读取关闭Manager' ,
@@ -975,7 +945,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'off.sppReadManager' ,
     'api' : testSppServerReadOffManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : 'Spp服务器关闭Manager' ,
@@ -983,7 +953,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'sppCloseServerSocketManager' ,
     'api' : testSppCloseServerSocketManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : 'Spp客户端关闭Manager' ,
@@ -991,7 +961,7 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'sppCloseClientSocketManager' ,
     'api' : testSppCloseClientSocketManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -999,18 +969,18 @@ export const SppServerManagerAutoTestCase: [] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.SppServerAutoManager
+    'category' : AutoCategory.SppServerAutoManager
   },
 ]
 
-export const A2dpSourceProfileManagerAutoTestCase: [] = [
+export const A2dpSourceProfileManagerAutoTestCase: AutoManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -1018,7 +988,7 @@ export const A2dpSourceProfileManagerAutoTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -1026,7 +996,7 @@ export const A2dpSourceProfileManagerAutoTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -1034,7 +1004,7 @@ export const A2dpSourceProfileManagerAutoTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -1042,7 +1012,7 @@ export const A2dpSourceProfileManagerAutoTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -1050,7 +1020,7 @@ export const A2dpSourceProfileManagerAutoTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
   {
     'name' : '连接Manager' ,
@@ -1058,7 +1028,7 @@ export const A2dpSourceProfileManagerAutoTestCase: [] = [
     'method' : 'connectManager' ,
     'api' : testProfileConnectManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
   {
     'name' : '获取播放状态Manager' ,
@@ -1066,7 +1036,7 @@ export const A2dpSourceProfileManagerAutoTestCase: [] = [
     'method' : 'getPlayingStateManager' ,
     'api' : testProfileGetPlayingStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
   {
     'name' : '获取连接设备Manager' ,
@@ -1074,7 +1044,7 @@ export const A2dpSourceProfileManagerAutoTestCase: [] = [
     'method' : 'getConnectionDevicesManager' ,
     'api' : testProfileGetConnectionDevicesManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
   {
     'name' : '获取设备状态Manager' ,
@@ -1082,7 +1052,7 @@ export const A2dpSourceProfileManagerAutoTestCase: [] = [
     'method' : 'getDeviceStateManager' ,
     'api' : testProfileGetDeviceStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
   {
     'name' : '取消连接Manager' ,
@@ -1090,18 +1060,18 @@ export const A2dpSourceProfileManagerAutoTestCase: [] = [
     'method' : 'disconnectManager' ,
     'api' : testProfileDisConnectManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.A2dpSourceAutoManager
+    'category' : AutoCategory.A2dpSourceAutoManager
   },
 ]
 
-export const HandsFreeAudioGatewayProfileManagerAutoTestCase: [] = [
+export const HandsFreeAudioGatewayProfileManagerAutoTestCase: AutoManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HandsFreeAudioGatewayAutoManager
+    'category' : AutoCategory.HandsFreeAudioGatewayAutoManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -1109,7 +1079,7 @@ export const HandsFreeAudioGatewayProfileManagerAutoTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HandsFreeAudioGatewayAutoManager
+    'category' : AutoCategory.HandsFreeAudioGatewayAutoManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -1117,7 +1087,7 @@ export const HandsFreeAudioGatewayProfileManagerAutoTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HandsFreeAudioGatewayAutoManager
+    'category' : AutoCategory.HandsFreeAudioGatewayAutoManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -1125,7 +1095,7 @@ export const HandsFreeAudioGatewayProfileManagerAutoTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HandsFreeAudioGatewayAutoManager
+    'category' : AutoCategory.HandsFreeAudioGatewayAutoManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -1133,7 +1103,7 @@ export const HandsFreeAudioGatewayProfileManagerAutoTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HandsFreeAudioGatewayAutoManager
+    'category' : AutoCategory.HandsFreeAudioGatewayAutoManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -1141,7 +1111,7 @@ export const HandsFreeAudioGatewayProfileManagerAutoTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HandsFreeAudioGatewayAutoManager
+    'category' : AutoCategory.HandsFreeAudioGatewayAutoManager
   },
   {
     'name' : '连接Manager' ,
@@ -1149,7 +1119,7 @@ export const HandsFreeAudioGatewayProfileManagerAutoTestCase: [] = [
     'method' : 'connectManager' ,
     'api' : testProfileConnectManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HandsFreeAudioGatewayAutoManager
+    'category' : AutoCategory.HandsFreeAudioGatewayAutoManager
   },
   {
     'name' : '获取连接设备Manager' ,
@@ -1157,7 +1127,7 @@ export const HandsFreeAudioGatewayProfileManagerAutoTestCase: [] = [
     'method' : 'getConnectionDevicesManager' ,
     'api' : testProfileGetConnectionDevicesManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HandsFreeAudioGatewayAutoManager
+    'category' : AutoCategory.HandsFreeAudioGatewayAutoManager
   },
   {
     'name' : '获取设备状态Manager' ,
@@ -1165,7 +1135,7 @@ export const HandsFreeAudioGatewayProfileManagerAutoTestCase: [] = [
     'method' : 'getDeviceStateManager' ,
     'api' : testProfileGetDeviceStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HandsFreeAudioGatewayAutoManager
+    'category' : AutoCategory.HandsFreeAudioGatewayAutoManager
   },
   {
     'name' : '取消连接Manager' ,
@@ -1173,18 +1143,18 @@ export const HandsFreeAudioGatewayProfileManagerAutoTestCase: [] = [
     'method' : 'disconnectManager' ,
     'api' : testProfileDisConnectManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HandsFreeAudioGatewayAutoManager
+    'category' : AutoCategory.HandsFreeAudioGatewayAutoManager
   },
 ]
 
-export const HitHostProfileManagerAutoTestCase: [] = [
+export const HitHostProfileManagerAutoTestCase: AutoManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HitHostAutoManager
+    'category' : AutoCategory.HitHostAutoManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -1192,7 +1162,7 @@ export const HitHostProfileManagerAutoTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HitHostAutoManager
+    'category' : AutoCategory.HitHostAutoManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -1200,7 +1170,7 @@ export const HitHostProfileManagerAutoTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HitHostAutoManager
+    'category' : AutoCategory.HitHostAutoManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -1208,7 +1178,7 @@ export const HitHostProfileManagerAutoTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HitHostAutoManager
+    'category' : AutoCategory.HitHostAutoManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -1216,7 +1186,7 @@ export const HitHostProfileManagerAutoTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HitHostAutoManager
+    'category' : AutoCategory.HitHostAutoManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -1224,7 +1194,7 @@ export const HitHostProfileManagerAutoTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HitHostAutoManager
+    'category' : AutoCategory.HitHostAutoManager
   },
   {
     'name' : '连接Manager' ,
@@ -1232,7 +1202,7 @@ export const HitHostProfileManagerAutoTestCase: [] = [
     'method' : 'connectManager' ,
     'api' : testProfileConnectManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HitHostAutoManager
+    'category' : AutoCategory.HitHostAutoManager
   },
   {
     'name' : '获取连接设备Manager' ,
@@ -1240,7 +1210,7 @@ export const HitHostProfileManagerAutoTestCase: [] = [
     'method' : 'getConnectionDevicesManager' ,
     'api' : testProfileGetConnectionDevicesManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HitHostAuto
+    'category' : AutoCategory.HitHostAutoManager
   },
   {
     'name' : '获取设备状态Manager' ,
@@ -1248,7 +1218,7 @@ export const HitHostProfileManagerAutoTestCase: [] = [
     'method' : 'getDeviceStateManager' ,
     'api' : testProfileGetDeviceStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HitHostAutoManager
+    'category' : AutoCategory.HitHostAutoManager
   },
   {
     'name' : '取消连接Manager' ,
@@ -1256,18 +1226,18 @@ export const HitHostProfileManagerAutoTestCase: [] = [
     'method' : 'disconnectManager' ,
     'api' : testProfileDisConnectManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.HitHostAutoManager
+    'category' : AutoCategory.HitHostAutoManager
   },
 ]
 
-export const PanNetworkProfileManagerAutoTestCase: [] = [
+export const PanNetworkProfileManagerAutoTestCase: AutoManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.PanNetworkAutoManager
+    'category' : AutoCategory.PanNetworkAutoManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -1275,7 +1245,7 @@ export const PanNetworkProfileManagerAutoTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.PanNetworkAutoManager
+    'category' : AutoCategory.PanNetworkAutoManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -1283,7 +1253,7 @@ export const PanNetworkProfileManagerAutoTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.PanNetworkAutoManager
+    'category' : AutoCategory.PanNetworkAutoManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -1291,7 +1261,7 @@ export const PanNetworkProfileManagerAutoTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.PanNetworkAutoManager
+    'category' : AutoCategory.PanNetworkAutoManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -1299,7 +1269,7 @@ export const PanNetworkProfileManagerAutoTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.PanNetworkAutoManager
+    'category' : AutoCategory.PanNetworkAutoManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -1307,7 +1277,7 @@ export const PanNetworkProfileManagerAutoTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.PanNetworkAutoManager
+    'category' : AutoCategory.PanNetworkAutoManager
   },
   {
     'name' : '获取连接设备Manager' ,
@@ -1315,7 +1285,7 @@ export const PanNetworkProfileManagerAutoTestCase: [] = [
     'method' : 'getConnectionDevicesManager' ,
     'api' : testProfileGetConnectionDevicesManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.PanNetworkAutoManager
+    'category' : AutoCategory.PanNetworkAutoManager
   },
   {
     'name' : '获取设备状态Manager' ,
@@ -1323,7 +1293,7 @@ export const PanNetworkProfileManagerAutoTestCase: [] = [
     'method' : 'getDeviceStateManager' ,
     'api' : testProfileGetDeviceStateManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.PanNetworkAutoManager
+    'category' : AutoCategory.PanNetworkAutoManager
   },
   {
     'name' : '取消连接Manager' ,
@@ -1331,87 +1301,86 @@ export const PanNetworkProfileManagerAutoTestCase: [] = [
     'method' : 'disconnectManager' ,
     'api' : testProfileDisConnectManager ,
     'result' : 'None' ,
-    'category' : AutoCategoryManager.PanNetworkAutoManager
+    'category' : AutoCategory.PanNetworkAutoManager
   },
 ]
 
-export function initBrManagerAutoData(): Array<TestAutoManager> {
-  let TestAutoArray: Array<TestAutoManager> = []
-  BrManagerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAutoManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initBrManagerAutoData(): Array<TestAuto> {
+  let TestAutoArray: Array<TestAuto> = []
+  BrManagerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
-export function initBleManagerAutoData(): Array<TestAutoManager> {
-  let TestAutoArray: Array<TestAutoManager> = []
-  BleManagerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAutoManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initBleManagerAutoData(): Array<TestAuto> {
+  let TestAutoArray: Array<TestAuto> = []
+  BleManagerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
-export function initGattClientManagerAutoData(): Array<TestAutoManager> {
-  let TestAutoArray: Array<TestAutoManager> = []
-  GattClientManagerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAutoManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initGattClientManagerAutoData(): Array<TestAuto> {
+  let TestAutoArray: Array<TestAuto> = []
+  GattClientManagerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
-export function initGattServerManagerAutoData(): Array<TestAutoManager> {
-  let TestAutoArray: Array<TestAutoManager> = []
-  GattServerManagerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAutoManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initGattServerManagerAutoData(): Array<TestAuto> {
+  let TestAutoArray: Array<TestAuto> = []
+  GattServerManagerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
-export function initSppClientManagerAutoData(): Array<TestAutoManager> {
-  let TestAutoArray: Array<TestAutoManager> = []
-  SppClientManagerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAutoManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initSppClientManagerAutoData(): Array<TestAuto> {
+  let TestAutoArray: Array<TestAuto> = []
+  SppClientManagerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
-export function initSppServerManagerAutoData(): Array<TestAutoManager> {
-  let TestAutoArray: Array<TestAutoManager> = []
-  SppServerManagerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAutoManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initSppServerManagerAutoData(): Array<TestAuto> {
+  let TestAutoArray: Array<TestAuto> = []
+  SppServerManagerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
-export function initA2dpSourceProfileManagerAutoData(): Array<TestAutoManager> {
-  let TestAutoArray: Array<TestAutoManager> = []
-  A2dpSourceProfileManagerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAutoManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initA2dpSourceProfileManagerAutoData(): Array<TestAuto> {
+  let TestAutoArray: Array<TestAuto> = []
+  A2dpSourceProfileManagerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
-export function initHandsFreeAudioGatewayProfileManagerAutoData(): Array<TestAutoManager> {
-  let TestAutoArray: Array<TestAutoManager> = []
-  HandsFreeAudioGatewayProfileManagerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAutoManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initHandsFreeAudioGatewayProfileManagerAutoData(): Array<TestAuto> {
+  let TestAutoArray: Array<TestAuto> = []
+  HandsFreeAudioGatewayProfileManagerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
-export function initHitHostProfileManagerAutoData(): Array<TestAutoManager> {
-  let TestAutoArray: Array<TestAutoManager> = []
-  HitHostProfileManagerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAutoManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initHitHostProfileManagerAutoData(): Array<TestAuto> {
+  let TestAutoArray: Array<TestAuto> = []
+  HitHostProfileManagerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
-export function initPanNetworkProfileManagerAutoData(): Array<TestAutoManager> {
-  let TestAutoArray: Array<TestAutoManager> = []
-  PanNetworkProfileManagerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAutoManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initPanNetworkProfileManagerAutoData(): Array<TestAuto> {
+  let TestAutoArray: Array<TestAuto> = []
+  PanNetworkProfileManagerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
-

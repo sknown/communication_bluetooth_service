@@ -12,7 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
 
 import { TestData } from '../MainAbility/model/testData'
 import { TestList } from './testList';
@@ -23,13 +22,13 @@ import { TestList } from './testList';
 
 @Component
 export struct AutoTest {
-  private testItems: TestData[]
+  private testItems!: TestData[]
 
   build() {
     Column() {
-      TestList( {
+      TestList({
         testItems : this.testItems
-      } )
+      })
     }
   }
 }
