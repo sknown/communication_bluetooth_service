@@ -21,7 +21,7 @@ import ConfigData from '../../../Utils/ConfigData';
 import LogUtil from '../../../Utils/LogUtil';
 import bluetoothManager from '@ohos.bluetoothManager';
 import BluetoothModelManager from '../../../MainAbility/model/BluetoothModelManager';
-import BluetoothDevice from '../../../MainAbility/model/BluetoothDevice'
+import { BluetoothDevice } from '../../../MainAbility/model/BluetoothModel'
 import BluetoothDeviceController from '../../../MainAbility/controller/BluetoothDeviceController';
 import { TestData } from '../../../MainAbility/model/testData'
 import { PageTitle } from '../../../Component/pageTitle';

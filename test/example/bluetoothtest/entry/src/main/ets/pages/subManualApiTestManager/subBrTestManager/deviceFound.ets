@@ -16,9 +16,8 @@
 import ConfigData from '../../../Utils/ConfigData';
 import LogUtil from '../../../Utils/LogUtil';
 import BluetoothDeviceController from '../../../MainAbility/controller/BluetoothDeviceController';
-import BluetoothDevice from '../../../MainAbility/model/BluetoothDevice'
+import { BluetoothDevice , DeviceState , DeviceType } from '../../../MainAbility/model/BluetoothModel'
 import router from '@ohos.router';
-import { DeviceState , DeviceType } from '../../../MainAbility/model/BluetoothModel';
 import ImageAnimatorComponent from '../../../Component/imageAnimatorComponent';
 import { PageTitle } from '../../../Component/pageTitle';
 import bluetooth from '@ohos.bluetooth';

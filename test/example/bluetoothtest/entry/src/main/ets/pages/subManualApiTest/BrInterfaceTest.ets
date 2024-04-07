@@ -16,9 +16,8 @@ import { myParams } from '../../Utils/common'
 import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
 import { ContentTable } from '../../Component/contentTable';
-import BluetoothModel from '../../MainAbility/model/BluetoothModel';
+import BluetoothModel , { BluetoothDevice } from '../../MainAbility/model/BluetoothModel';
 import router from '@ohos.router';
-import BluetoothDevice from '../../MainAbility/model/BluetoothDevice';
 import BluetoothDeviceController from '../../MainAbility/controller/BluetoothDeviceController';
 import ConfigData from '../../Utils/ConfigData';
 import LogUtil from '../../Utils/LogUtil';

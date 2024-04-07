@@ -26,7 +26,6 @@ import {
 } from '../../MainAbility/model/scenarioTestDataModelManager'
 import * as BrManagerInterface from '../../MainAbility/model/brManagerInterface'
 import BluetoothModelManager from '../../MainAbility/model/BluetoothModelManager'
-import BluetoothDevice from '../../MainAbility/model/BluetoothDevice'
 
 /**
  * Classic Bluetooth Found Scenario Manager Test Page Of Bluetooth test

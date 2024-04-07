@@ -19,7 +19,7 @@ import { TestImageDisplay } from '../../Component/testImageDisplay';
 import { ContentTable } from '../../Component/contentTable';
 import BluetoothModelManager from '../../MainAbility/model/BluetoothModelManager';
 import router from '@ohos.router';
-import BluetoothDevice from '../../MainAbility/model/BluetoothDevice';
+import { BluetoothDevice } from '../../MainAbility/model/BluetoothModel';
 import BluetoothDeviceController from '../../MainAbility/controller/BluetoothDeviceController';
 import ConfigData from '../../Utils/ConfigData';
 import LogUtil from '../../Utils/LogUtil';

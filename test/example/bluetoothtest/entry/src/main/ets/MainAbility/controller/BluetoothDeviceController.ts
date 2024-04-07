@@ -13,10 +13,9 @@
  * limitations under the License.
  */
 
-import BluetoothModel, { BondState, DeviceState } from '../model/BluetoothModel';
+import BluetoothModel, { BluetoothDevice, BondState, DeviceState } from '../model/BluetoothModel';
 import ConfigData from '../../Utils/ConfigData';
 import LogUtil from '../../Utils/LogUtil'
-import BluetoothDevice from '../model/BluetoothDevice'
 import BaseSettingsController from '../../Component/controller/BaseSettingsController';
 import ISettingsController from '../../Component/controller/ISettingsController';
 

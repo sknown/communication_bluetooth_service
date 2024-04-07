@@ -17,7 +17,7 @@ import ConfigData from '../../../Utils/ConfigData';
 import HeadTableComponent from '../../../Component/headerComponent';
 import router from '@ohos.router';
 import LogUtil from '../../../Utils/LogUtil';
-import BluetoothDevice from '../../../MainAbility/model/BluetoothDevice';
+import { BluetoothDevice } from '../../../MainAbility/model/BluetoothModel';
 import BluetoothDeviceController from '../../../MainAbility/controller/BluetoothDeviceController'
 
 let param;

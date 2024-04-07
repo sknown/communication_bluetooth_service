@@ -18,7 +18,7 @@ import { TestData } from '../../../MainAbility/model/testData'
 import LogUtil from '../../../Utils/LogUtil';
 import ConfigData from '../../../Utils/ConfigData';
 import BluetoothModelManager from '../../../MainAbility/model/BluetoothModelManager';
-import BluetoothDevice from '../../../MainAbility/model/BluetoothDevice'
+import { BluetoothDevice } from '../../../MainAbility/model/BluetoothModel'
 import BluetoothDeviceController from '../../../MainAbility/controller/BluetoothDeviceController';
 import { PageTitle } from '../../../Component/pageTitle';
 import { ContentTable } from '../../../Component/contentTable';

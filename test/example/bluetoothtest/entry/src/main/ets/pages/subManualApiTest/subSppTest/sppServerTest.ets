@@ -16,8 +16,7 @@
 import { myParams } from '../../../Utils/common'
 import LogUtil from '../../../Utils/LogUtil';
 import ConfigData from '../../../Utils/ConfigData';
-import BluetoothModel from '../../../MainAbility/model/BluetoothModel';
-import BluetoothDevice from '../../../MainAbility/model/BluetoothDevice'
+import BluetoothModel , { BluetoothDevice } from '../../../MainAbility/model/BluetoothModel';
 import BluetoothDeviceController from '../../../MainAbility/controller/BluetoothDeviceController';
 import { TestData } from '../../../MainAbility/model/testData'
 import { PageTitle } from '../../../Component/pageTitle';
