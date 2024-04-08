@@ -369,6 +369,11 @@ int BluetoothHfpAgServer::IsInbandRingingEnabled(bool &isEnabled)
     return true;
 }
 
+void BluetoothHfpAgServer::CallDetailsChanged(int callId, int callState)
+{
+    HILOGI("enter");
+}
+
 void BluetoothHfpAgServer::RegisterObserver(const sptr<IBluetoothHfpAgObserver> &observer)
 {
     HILOGD("Enter!");
