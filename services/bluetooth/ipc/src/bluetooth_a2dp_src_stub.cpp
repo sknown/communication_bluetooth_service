@@ -450,11 +450,7 @@ ErrCode BluetoothA2dpSrcStub::A2dpOffloadSessionPathRequestInner(MessageParcel &
 ErrCode BluetoothA2dpSrcStub::GetOffloadCodecStatusInner(MessageParcel &data, MessageParcel &reply)
 {
     HILOGI("Not Support");
-    if (!reply.WriteInt32(BT_ERR_API_NOT_SUPPORT)) {
-        HILOGE("BluetoothA2dpSrcStub: WriteFrameInner reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
-    }
-    return NO_ERROR;
+    return BT_ERR_API_NOT_SUPPORT;
 }
 
 ErrCode BluetoothA2dpSrcStub::EnableAutoPlayInner(MessageParcel &data, MessageParcel &reply)
@@ -480,7 +476,11 @@ ErrCode BluetoothA2dpSrcStub::DisableAutoPlayInner(MessageParcel &data, MessageP
 ErrCode BluetoothA2dpSrcStub::GetAutoPlayDisabledDurationInner(MessageParcel &data, MessageParcel &reply)
 {
     HILOGI("Not Support");
-    return BT_ERR_API_NOT_SUPPORT;
+    if (!reply.WriteInt32(BT_ERR_API_NOT_SUPPORT)) {
+        HILOGE("BluetoothA2dpSrcStub: WriteFrameInner reply writing failed in: %{public}s.", __func__);
+        return TRANSACTION_ERR;
+    }
+    return NO_ERROR;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS
