@@ -26,7 +26,7 @@ BluetoothRemoteDeviceObserverproxy::~BluetoothRemoteDeviceObserverproxy()
 {}
 
 void BluetoothRemoteDeviceObserverproxy::OnPairStatusChanged(
-    const int32_t transport, const BluetoothRawAddress &device, int32_t status)
+    const int32_t transport, const BluetoothRawAddress &device, int32_t status, int32_t cause)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothRemoteDeviceObserverproxy::GetDescriptor())) {
@@ -43,6 +43,10 @@ void BluetoothRemoteDeviceObserverproxy::OnPairStatusChanged(
     }
     if (!data.WriteInt32(status)) {
         HILOGE("[OnPairStatusChanged] fail: write status failed.");
+        return;
+    }
+    if (!data.WriteInt32(cause)) {
+        HILOGE("[OnPairStatusChanged] fail: write cause failed.");
         return;
     }
 
