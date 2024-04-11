@@ -78,6 +78,12 @@ BluetoothA2dpSrcStub::BluetoothA2dpSrcStub()
         &BluetoothA2dpSrcStub::A2dpOffloadSessionPathRequestInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_OFFLOAD_GET_CODEC_STATUS)] =
         &BluetoothA2dpSrcStub::GetOffloadCodecStatusInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_ENABLE_AUTO_PLAY)] =
+        &BluetoothA2dpSrcStub::EnableAutoPlayInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_DISABLE_AUTO_PLAY)] =
+        &BluetoothA2dpSrcStub::DisableAutoPlayInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_GET_AUTO_PLAY_DISABLED_DURATION)] =
+        &BluetoothA2dpSrcStub::GetAutoPlayDisabledDurationInner;
 }
 
 BluetoothA2dpSrcStub::~BluetoothA2dpSrcStub()
@@ -445,6 +451,36 @@ ErrCode BluetoothA2dpSrcStub::GetOffloadCodecStatusInner(MessageParcel &data, Me
 {
     HILOGI("Not Support");
     return BT_ERR_API_NOT_SUPPORT;
+}
+
+ErrCode BluetoothA2dpSrcStub::EnableAutoPlayInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    if (!reply.WriteInt32(BT_ERR_API_NOT_SUPPORT)) {
+        HILOGE("BluetoothA2dpSrcStub: WriteFrameInner reply writing failed in: %{public}s.", __func__);
+        return TRANSACTION_ERR;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothA2dpSrcStub::DisableAutoPlayInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    if (!reply.WriteInt32(BT_ERR_API_NOT_SUPPORT)) {
+        HILOGE("BluetoothA2dpSrcStub: WriteFrameInner reply writing failed in: %{public}s.", __func__);
+        return TRANSACTION_ERR;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothA2dpSrcStub::GetAutoPlayDisabledDurationInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    if (!reply.WriteInt32(BT_ERR_API_NOT_SUPPORT)) {
+        HILOGE("BluetoothA2dpSrcStub: WriteFrameInner reply writing failed in: %{public}s.", __func__);
+        return TRANSACTION_ERR;
+    }
+    return NO_ERROR;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

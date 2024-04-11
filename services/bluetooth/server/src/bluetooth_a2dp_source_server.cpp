@@ -443,5 +443,20 @@ BluetoothA2dpOffloadCodecStatus BluetoothA2dpSourceServer::GetOffloadCodecStatus
     HILOGI("enter");
     return ret;
 }
+
+int BluetoothA2dpSourceServer::EnableAutoPlay(const RawAddress &device)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int BluetoothA2dpSourceServer::DisableAutoPlay(const RawAddress &device, const int duration)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int BluetoothA2dpSourceServer::GetAutoPlayDisabledDuration(const RawAddress &device, int &duration)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
