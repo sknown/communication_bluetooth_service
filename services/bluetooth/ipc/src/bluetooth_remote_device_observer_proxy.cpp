@@ -190,7 +190,7 @@ void BluetoothRemoteDeviceObserverproxy::OnRemoteBatteryChanged(
 
     CHECK_AND_RETURN_LOG(data.WriteParcelable(&device),
         "[OnRemoteBatteryLevelChanged] fail: write device failed.");
-    CHECK_AND_RETURN_LOG(data.WriteInt32(&batteryInfo),
+    CHECK_AND_RETURN_LOG(data.WriteParcelable(&batteryInfo),
         "[OnRemoteBatteryLevelChanged] fail: write value failed.");
 
     MessageParcel reply;
