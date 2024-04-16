@@ -18,7 +18,8 @@
 
 namespace OHOS {
 namespace Bluetooth {
-void BluetoothHfpHfObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int state, int cause) {
+void BluetoothHfpHfObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int state, int cause)
+{
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothHfpHfObserverProxy::GetDescriptor())) {
         HILOGE("BluetoothHfpHfObserverProxy::OnConnectionStateChanged WriteInterfaceToken error");
