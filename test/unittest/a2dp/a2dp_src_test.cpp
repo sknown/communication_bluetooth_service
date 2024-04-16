@@ -32,7 +32,7 @@ public:
     A2dpSourceObserverCommon() = default;
     virtual ~A2dpSourceObserverCommon() = default;
     
-    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause){}
+    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
     virtual void OnConfigurationChanged(const BluetoothRemoteDevice &device, const A2dpCodecInfo &info, int error){}
     virtual void OnPlayingStatusChanged(const BluetoothRemoteDevice &device, int playingState, int error){}
 

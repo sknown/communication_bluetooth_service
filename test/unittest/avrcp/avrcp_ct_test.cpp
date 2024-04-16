@@ -28,7 +28,7 @@ public:
     AvrcpControllerObserverCommon() = default;
     virtual ~AvrcpControllerObserverCommon() = default;
     
-    void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause){}
+    void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
     void OnActionCompleted(const BluetoothRemoteDevice &device, const AvrcpCtResponse &resp){}
 private:
 };
