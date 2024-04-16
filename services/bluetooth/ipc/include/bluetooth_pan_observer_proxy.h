@@ -27,7 +27,7 @@ public:
     explicit BluetoothPanObserverProxy(
         const sptr<IRemoteObject>& remote) : IRemoteProxy<IBluetoothPanObserver>(remote) {}
     ~BluetoothPanObserverProxy() {}
-    ErrCode OnConnectionStateChanged(const BluetoothRawAddress &device, int state) override;
+    ErrCode OnConnectionStateChanged(const BluetoothRawAddress &device, int state, int cause) override;
 
 private:
     static inline BrokerDelegator<BluetoothPanObserverProxy> delegator_;

@@ -17,7 +17,7 @@
 
 namespace OHOS {
 namespace Bluetooth {
-ErrCode BluetoothPanObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int state)
+ErrCode BluetoothPanObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int state, int cause)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -27,7 +27,8 @@ ErrCode BluetoothPanObserverProxy::OnConnectionStateChanged(const BluetoothRawAd
         return IPC_PROXY_TRANSACTION_ERR;
     }
     data.WriteParcelable(&device);
-    data.WriteInt16(state);
+    data.WriteInt32(state);
+    data.WriteInt32(cause);
     int32_t st = Remote()->SendRequest(static_cast<uint32_t>(
         BluetoothPanObserverInterfaceCode::COMMAND_ON_CONNECTION_STATE_CHANGED), data, reply, option);
     if (st != ERR_NONE) {

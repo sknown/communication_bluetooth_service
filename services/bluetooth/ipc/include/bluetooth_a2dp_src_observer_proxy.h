@@ -27,7 +27,7 @@ public:
         : IRemoteProxy<IBluetoothA2dpSourceObserver>(impl) {}
     ~BluetoothA2dpSrcObserverProxy() {}
 
-    void OnConnectionStateChanged(const RawAddress &device, int state) override;
+    void OnConnectionStateChanged(const RawAddress &device, int state, int cause) override;
     void OnPlayingStatusChanged(const RawAddress &device, int playingState, int error) override;
     void OnConfigurationChanged(const RawAddress &device, const BluetoothA2dpCodecInfo &info, int error) override;
     void OnMediaStackChanged(const RawAddress &device, int action) override;

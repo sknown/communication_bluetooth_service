@@ -27,7 +27,7 @@ public:
     explicit BluetoothHidHostObserverProxy(
         const sptr<IRemoteObject>& remote) : IRemoteProxy<IBluetoothHidHostObserver>(remote) {}
     ~BluetoothHidHostObserverProxy() {}
-    ErrCode OnConnectionStateChanged(const BluetoothRawAddress &device, int state) override;
+    ErrCode OnConnectionStateChanged(const BluetoothRawAddress &device, int state, int cause) override;
 
 private:
     static inline BrokerDelegator<BluetoothHidHostObserverProxy> delegator_;

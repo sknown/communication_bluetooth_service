@@ -26,7 +26,7 @@ public:
         : IRemoteProxy<IBluetoothHfpHfObserver>(impl) {};
     ~BluetoothHfpHfObserverProxy() {};
 
-    void OnConnectionStateChanged(const BluetoothRawAddress &device, int state) override;
+    void OnConnectionStateChanged(const BluetoothRawAddress &device, int state, int cause) override;
     void OnScoStateChanged(const BluetoothRawAddress &device,  int state) override;
     void OnCallChanged(const BluetoothRawAddress &device, const BluetoothHfpHfCall &call) override;
     void OnSignalStrengthChanged(const BluetoothRawAddress &device,  int signal) override;

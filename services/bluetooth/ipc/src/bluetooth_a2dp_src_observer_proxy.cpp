@@ -18,7 +18,7 @@
 
 namespace OHOS {
 namespace Bluetooth {
-void BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged(const RawAddress &device, int state)
+void BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged(const RawAddress &device, int state, int cause)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothA2dpSrcObserverProxy::GetDescriptor())) {
@@ -31,6 +31,10 @@ void BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged(const RawAddress &d
     }
     if (!data.WriteInt32(state)) {
         HILOGE("BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged state error");
+        return;
+    }
+    if (!data.WriteInt32(cause)) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged cause error");
         return;
     }
 
