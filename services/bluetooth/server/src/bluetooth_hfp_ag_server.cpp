@@ -47,7 +47,8 @@ public:
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "STATE", state);
         }
         observers_->ForEach([device, state](IBluetoothHfpAgObserver* observer) {
-            observer->OnConnectionStateChanged(device, state);
+            observer->OnConnectionStateChanged(device, state,
+                static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
         });
     }
 

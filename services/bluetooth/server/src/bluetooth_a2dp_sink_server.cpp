@@ -33,7 +33,8 @@ public:
     void OnConnectionStateChanged(const RawAddress &device, int state) override
     {
         observers_->ForEach([device, state](sptr<IBluetoothA2dpSinkObserver> observer) {
-            observer->OnConnectionStateChanged(device, state);
+            observer->OnConnectionStateChanged(device, state,
+                static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
         });
     }
 

@@ -28,7 +28,7 @@ public:
         : IRemoteProxy<IBluetoothAvrcpCtObserver>(impl) {};
     ~BluetoothAvrcpCtObserverProxy() {};
 
-    void OnConnectionStateChanged(const RawAddress &rawAddr, int state) override;
+    void OnConnectionStateChanged(const RawAddress &rawAddr, int state, int cause) override;
     void OnPressButton(const RawAddress &rawAddr, uint8_t button, int result) override;
     void OnReleaseButton(const RawAddress &rawAddr, uint8_t button,  int result) override;
     void OnSetBrowsedPlayer(const RawAddress &rawAddr, uint16_t uidCounter,

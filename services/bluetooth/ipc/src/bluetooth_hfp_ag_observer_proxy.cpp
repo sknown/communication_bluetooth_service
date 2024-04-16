@@ -19,7 +19,7 @@
 
 namespace OHOS {
 namespace Bluetooth {
-void BluetoothHfpAgObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int state)
+void BluetoothHfpAgObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int state, int cause)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
@@ -27,11 +27,15 @@ void BluetoothHfpAgObserverProxy::OnConnectionStateChanged(const BluetoothRawAdd
         return;
     }
     if (!data.WriteParcelable(&device)) {
-        HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged WriteParcelable error");
+        HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged write device error");
         return;
     }
     if (!data.WriteInt32(state)) {
-        HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged WriteInt32 error");
+        HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged write state error");
+        return;
+    }
+    if (!data.WriteInt32(cause)) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged write cause error");
         return;
     }
     MessageParcel reply;

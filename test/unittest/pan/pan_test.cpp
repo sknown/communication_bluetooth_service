@@ -28,7 +28,7 @@ class PanObserverTest : public PanObserver {
 public:
     PanObserverTest() = default;
     virtual ~PanObserverTest() = default;
-    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state) {}
+    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
 
 private:
 };
@@ -192,8 +192,8 @@ HWTEST_F(PanTest, PAN_ModuleTest_OnConnectionStateChanged_00100, TestSize.Level1
     GTEST_LOG_(INFO) << "OnConnectionStateChanged function test";
 
     BluetoothRemoteDevice device;
-    int state = static_cast<int>(BTConnectState::DISCONNECTED);;
-    panObserverTest->OnConnectionStateChanged(device, state);
+    int state = static_cast<int>(BTConnectState::DISCONNECTED);
+    panObserverTest->OnConnectionStateChanged(device, state, 0);
 
     GTEST_LOG_(INFO) << "PAN_ModuleTest_OnConnectionStateChanged_00100 end";
 }

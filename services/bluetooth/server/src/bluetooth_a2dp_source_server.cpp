@@ -42,7 +42,8 @@ public:
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "STATE", state);
         }
         observers_->ForEach([device, state](sptr<IBluetoothA2dpSourceObserver> observer) {
-            observer->OnConnectionStateChanged(device, state);
+            observer->OnConnectionStateChanged(device, state,
+                static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
         });
     }
 
@@ -190,7 +191,8 @@ void BluetoothA2dpSourceServer::RegisterObserver(const sptr<IBluetoothA2dpSource
     GetDeviceState(static_cast<const RawAddress &>(device), state);
     if (state == static_cast<int>(BTConnectState::CONNECTED)) {
         HILOGI("onConnectionStateChanged");
-        observer->OnConnectionStateChanged(device, state);
+        observer->OnConnectionStateChanged(device, state,
+            static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
     }
 }
 

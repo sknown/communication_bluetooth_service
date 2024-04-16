@@ -29,7 +29,7 @@ class HidHostObserverTest : public HidHostObserver {
 public:
     HidHostObserverTest() = default;
     virtual ~HidHostObserverTest() = default;
-    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state) {}
+    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
 
 private:
 };
@@ -216,7 +216,7 @@ HWTEST_F(HidHostTest, HID_ModuleTest_OnConnectionStateChanged_00100, TestSize.Le
 
     BluetoothRemoteDevice device;
     int ret = 0;
-    hidHostObserverTest->OnConnectionStateChanged(device, ret);
+    hidHostObserverTest->OnConnectionStateChanged(device, ret, 0);
 
     GTEST_LOG_(INFO) << "HID_ModuleTest_OnConnectionStateChanged_00100 end";
 }

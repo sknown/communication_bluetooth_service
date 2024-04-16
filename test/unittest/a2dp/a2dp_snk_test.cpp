@@ -31,7 +31,7 @@ public:
     A2dpSinkObserverCommon() = default;
     virtual ~A2dpSinkObserverCommon() = default;
     
-    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state){}
+    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
 
 private:
 };
