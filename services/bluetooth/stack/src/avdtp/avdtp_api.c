@@ -1942,7 +1942,9 @@ uint16_t AvdtConnectReq(const BtAddr *bdAddr, uint8_t role)
         transTbl = AvdtGetTransChTabByAddr(bdAddr, 0);
         sigCtrl->role = role;
         if (transTbl != NULL) {
-            AvdtCtrlEvtCallback(sigCtrl, sigCtrl->handle, bdAddr, AVDT_CONNECT_CFM_EVT, &confirmData, role);
+            if (sigCtrl->ia != AVDT_ACP) {
+                AvdtCtrlEvtCallback(sigCtrl, sigCtrl->handle, bdAddr, AVDT_CONNECT_CFM_EVT, &confirmData, role);
+            }
             return Ret;
         }
         sigCtrl->peerAddress = *bdAddr;
