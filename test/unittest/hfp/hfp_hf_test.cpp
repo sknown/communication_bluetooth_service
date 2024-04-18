@@ -31,7 +31,7 @@ public:
     HandsFreeUnitObserverCommon() = default;
     virtual ~HandsFreeUnitObserverCommon() = default;
     
-    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state) {}
+    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
     virtual void OnScoStateChanged(const BluetoothRemoteDevice &device, int state) {}
     virtual void OnCallChanged(const BluetoothRemoteDevice &device, const HandsFreeUnitCall &call) {}
     virtual void OnSignalStrengthChanged(const BluetoothRemoteDevice &device, int signal) {}

@@ -312,8 +312,8 @@ public:
         std::lock_guard<std::mutex> lock(observerMutex_);
 
         observers_.ForEach([rawAddr, state](IBluetoothAvrcpCtObserver *observer) {
-            observer->OnConnectionStateChanged(
-                rawAddr, static_cast<int32_t>(state));
+            observer->OnConnectionStateChanged(rawAddr, static_cast<int32_t>(state),
+                static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
         });
     }
 

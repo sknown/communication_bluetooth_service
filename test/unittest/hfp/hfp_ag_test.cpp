@@ -31,7 +31,7 @@ public:
     HandsFreeAudioGatewayObserverCommon() = default;
     virtual ~HandsFreeAudioGatewayObserverCommon() = default;
     
-    void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state) {}
+    void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
     void OnScoStateChanged(const BluetoothRemoteDevice &device, int state) {}
     void OnActiveDeviceChanged(const BluetoothRemoteDevice &device) {}
     void OnHfEnhancedDriverSafetyChanged(const BluetoothRemoteDevice &device, int indValue) {}

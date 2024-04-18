@@ -37,7 +37,8 @@ public:
         // Reference "BTConnectState"
         HILOGI("addr:%{public}s, state:%{public}d", GET_ENCRYPT_ADDR(device), state);
         observers_->ForEach([device, state](sptr<IBluetoothHidHostObserver> observer) {
-            observer->OnConnectionStateChanged(device, state);
+            observer->OnConnectionStateChanged(device, state,
+                static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
         });
     }
 
