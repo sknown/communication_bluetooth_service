@@ -32,7 +32,7 @@ namespace bluetooth {
 std::recursive_mutex g_a2dpServiceMutex {};
 struct HDIServiceManager *g_hdiServiceManager;
 struct ServiceStatusListenner *g_listener;
-const uint16_t AUDIO_Class = 0x1 << 5;
+const uint16_t AUDIO_CLASS = 0x1 << 5;
 ObserverProfile::ObserverProfile(uint8_t role)
 {
     role_ = role;
@@ -100,7 +100,7 @@ static void OnServiceStatusReceived(struct ServiceStatusListener *listener, stru
             return;
         }
         service->ProcessConnectFrameworkCallback(static_cast<int>(BTConnectState::CONNECTED),
-           service->GetActiveSinkDevice());
+            service->GetActiveSinkDevice());
         if ((g_hdiServiceManager == nullptr) || (g_listener == nullptr)) {
             LOG_ERROR("g_hdiServiceManager or g_listener is nullptr");
             return;
@@ -126,7 +126,7 @@ void RegisterDeviceStatusListener()
         return;
     }
     g_listener->callback = OnServiceStatusReceived;
-    int32_t status = g_hdiServiceManager->RegisterServiceStatusListener(g_hdiServiceManager, listenner_, AUDIO_Class);
+    int32_t status = g_hdiServiceManager->RegisterServiceStatusListener(g_hdiServiceManager, listenner_, AUDIO_CLASS);
     CHECK_AND_RETURN_LOG(status == HDF_SUCCESS, "RegisterServiceStatusListener failed");
 }
 
