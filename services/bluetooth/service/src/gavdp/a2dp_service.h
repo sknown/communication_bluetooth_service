@@ -25,6 +25,8 @@
 #ifndef A2DP_SERVICE_H
 #define A2DP_SERVICE_H
 
+#include <servmgr_hdi.h>
+
 #include <cstdint>
 #include <list>
 #include <map>
