@@ -604,7 +604,6 @@ int A2dpProfile::Connect(const BtAddr &device)
     } else {
         a2dpInstance = A2dpSnkProfile::GetInstance();
     }
-    FindOrCreatePeer(device, role);
     if (GetSDPInstance().FindSnkService(device, a2dpInstance, A2dpProfilePeer::SDPServiceCallback) != BT_SUCCESS) {
         LOG_WARN("[A2dpProfile]%{public}s SDP_ServiceSearch Error\n", __func__);
     }
