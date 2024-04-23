@@ -126,7 +126,7 @@ void RegisterDeviceStatusListener()
         return;
     }
     g_listener->callback = OnServiceStatusReceived;
-    int32_t status = g_hdiServiceManager->RegisterServiceStatusListener(g_hdiServiceManager, listenner_, AUDIO_CLASS);
+    int32_t status = g_hdiServiceManager->RegisterServiceStatusListener(g_hdiServiceManager, g_listenner, AUDIO_CLASS);
     CHECK_AND_RETURN_LOG(status == HDF_SUCCESS, "RegisterServiceStatusListener failed");
 }
 
@@ -148,7 +148,7 @@ void ObserverProfile::ProcessA2dpHdfLoad(const int state) const
                 LOG_INFO("[ObserverProfile] %{public}s, loadDevice of a2dp HDF", __func__);
                 devmgr->LoadDevice(AUDIO_BLUETOOTH_SERVICE_NAME);
             }
-            A2dpSevice *service = GetServiceInstance(A2DP_ROLE_SOURCE);
+            A2dpService *service = GetServiceInstance(A2DP_ROLE_SOURCE);
             if (service == nullptr) {
                 return;
             }
