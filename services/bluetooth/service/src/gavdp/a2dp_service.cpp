@@ -31,7 +31,7 @@ namespace OHOS {
 namespace bluetooth {
 std::recursive_mutex g_a2dpServiceMutex {};
 struct HDIServiceManager *g_hdiServiceManager;
-struct ServiceStatusListenner *g_listener;
+struct ServiceStatusListener *g_listener;
 const uint16_t AUDIO_CLASS = 0x1 << 5;
 ObserverProfile::ObserverProfile(uint8_t role)
 {
