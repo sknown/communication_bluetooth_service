@@ -30,6 +30,9 @@ constexpr const char *AUDIO_BLUETOOTH_SERVICE_NAME = "audio_bluetooth_hdi_servic
 namespace OHOS {
 namespace bluetooth {
 std::recursive_mutex g_a2dpServiceMutex {};
+struct HDIServiceManager *hdiServiceManager_;
+struct ServiceStatusListenner *listener_;
+const uint16_t audioClass = 0x1 << 5;
 ObserverProfile::ObserverProfile(uint8_t role)
 {
     role_ = role;
@@ -73,14 +76,57 @@ void ObserverProfile::OnConnectStateChanged(const BtAddr &addr, const int state,
         service->UpdateActiveDevice(btAddr);
     }
 
-    if ((connectState == static_cast<int>(BTConnectState::CONNECTED)) ||
-        (connectState == static_cast<int>(BTConnectState::DISCONNECTED))) {
+    if (connectState == static_cast<int>(BTConnectState::DISCONNECTED)) {
         service->ProcessConnectFrameworkCallback(connectState, btAddr);
+        ProcessA2dpHdfLoad(connectState);
+    } else if (connectState == static_cast<int>(BTConnectState::CONNECTED)) {
         ProcessA2dpHdfLoad(connectState);
     }
 
     service->CheckDisable();
     return;
+}
+
+static void OnServiceStatusReceived(struct ServiceStatusListener *listener, struct ServiceStatus *serviceStatus)
+{
+    CHECK_AND_RETURN_LOG(serviceStatus != nullptr, "Invalid ServiceStatus");
+    std::string info = serviceStatus->info;
+    LOG_INFO("OnServiceStatusReceived: [service name:%{public}s] [status:%{public}d] [info:%{public}s]",
+        serviceStatus->serviceName, serviceStatus->status, info.c_str());
+    if (serviceStatus->serviceName == AUDIO_BLUETOOTH_SERVICE_NAME) {
+        A2dpService *service = GetServiceInstance(A2DP_ROLE_SOURCE);
+        if (service == nullptr) {
+            LOG_ERROR("service is nullptr");
+            return;
+        }
+        service->ProcessConnectFrameworkCallback(static_cast<int>(BTConnectState::CONNECTED), service->GetActiveSinkDevice());
+        if ((hdiServiceManager_ == nullptr) || (listener_ == nullptr)) {
+            LOG_ERROR("hdiServiceManager_ or listener_ is nullptr");
+            return;
+        }
+        int32_t status = hdiServiceManager_->UnregisterServiceStatusListener(hdiServiceManager_, listener_);
+        CHECK_AND_RETURN_LOG(status == HDF_SUCCESS,
+        "[DevicesStatusListener]:UnRegister service status listener failed");
+        hdiServiceManager_ = nullptr;
+        listener_ = nullptr;
+    }
+}
+
+void RegisterDeviceStatusListener()
+{
+    hdiServiceManager_ = HDIServiceManagerGet();
+    if (hdiServiceManager_ == nullptr) {
+        LOG_ERROR("HDIServiceManagerGet error \n");
+        return;
+    }
+    listener_ = HdiServiceStatusListenerNewInstance();
+    if (listener_ == nullptr) {
+        LOG_ERROR("HdiServiceStatusListenerNewInstance error \n");
+        return;
+    }
+    listener_->callback = OnServiceStatusReceived;
+    int32_t status = hdiServiceManager_->RegisterServiceStatusListener(hdiServiceManager_, listenner_, audioClass);
+    CHECK_AND_RETURN_LOG(status == HDF_SUCCESS, "RegisterServiceStatusListener failed");
 }
 
 void ObserverProfile::ProcessA2dpHdfLoad(const int state) const
@@ -94,12 +140,19 @@ void ObserverProfile::ProcessA2dpHdfLoad(const int state) const
     }
     std::vector<RawAddress> devices = service->GetDevicesByStates(states);
 
-    if (state == static_cast<int>(BTConnectState::CONNECTED) && devices.size() == 1) {
-        auto devmgr = OHOS::HDI::DeviceManager::V1_0::IDeviceManager::Get();
-        if (devmgr != nullptr) {
-            LOG_INFO("[ObserverProfile] %{public}s, loadDevice of a2dp HDF", __func__);
-            devmgr->LoadDevice(AUDIO_BLUETOOTH_SERVICE_NAME);
-        }
+    if (state == static_cast<int>(BTConnectState::CONNECTED)) {
+        if (devices.size() == 1) {
+            auto devmgr = OHOS::HDI::DeviceManager::V1_0::IDeviceManager::Get();
+            if (devmgr != nullptr) {
+                LOG_INFO("[ObserverProfile] %{public}s, loadDevice of a2dp HDF", __func__);
+                devmgr->LoadDevice(AUDIO_BLUETOOTH_SERVICE_NAME);
+            }
+            A2dpSevice *service = GetServiceInstance(A2DP_ROLE_SOURCE);
+            if (service == nullptr) {
+                return;
+            }
+            service->ProcessConnectFrameworkCallback(static_cast<int>(BTConnectState::CONNECTED), service->GetActiveSinkDevice());
+        }s
     }
     if (state == static_cast<int>(BTConnectState::DISCONNECTED) && devices.size() == 0) {
         auto devmgr = OHOS::HDI::DeviceManager::V1_0::IDeviceManager::Get();
