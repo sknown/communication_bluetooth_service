@@ -126,7 +126,7 @@ void RegisterDeviceStatusListener()
         return;
     }
     g_listener->callback = OnServiceStatusReceived;
-    int32_t status = g_hdiServiceManager->RegisterServiceStatusListener(g_hdiServiceManager, g_listenner, AUDIO_CLASS);
+    int32_t status = g_hdiServiceManager->RegisterServiceStatusListener(g_hdiServiceManager, g_listener, AUDIO_CLASS);
     CHECK_AND_RETURN_LOG(status == HDF_SUCCESS, "RegisterServiceStatusListener failed");
 }
 
