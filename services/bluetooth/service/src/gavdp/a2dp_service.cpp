@@ -148,10 +148,6 @@ void ObserverProfile::ProcessA2dpHdfLoad(const int state) const
                 LOG_INFO("[ObserverProfile] %{public}s, loadDevice of a2dp HDF", __func__);
                 devmgr->LoadDevice(AUDIO_BLUETOOTH_SERVICE_NAME);
             }
-            A2dpService *service = GetServiceInstance(A2DP_ROLE_SOURCE);
-            if (service == nullptr) {
-                return;
-            }
             service->ProcessConnectFrameworkCallback(static_cast<int>(BTConnectState::CONNECTED),
                 service->GetActiveSinkDevice());
         }
