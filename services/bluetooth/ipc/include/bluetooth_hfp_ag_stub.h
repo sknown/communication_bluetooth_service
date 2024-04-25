@@ -54,6 +54,7 @@ private:
     ErrCode ConnectScoInnerEx(MessageParcel &data, MessageParcel &reply);
     ErrCode DisconnectScoInnerEx(MessageParcel &data, MessageParcel &reply);
     int32_t CallDetailsChangedInner(MessageParcel &data, MessageParcel &reply);
+    int32_t IsVgsSupportedInner(MessageParcel &data, MessageParcel &reply);
 
     using BluetoothHfpAgFunc = ErrCode (BluetoothHfpAgStub::*)(MessageParcel &data, MessageParcel &reply);
     std::map<uint32_t, BluetoothHfpAgFunc> memberFuncMap_;
