@@ -279,8 +279,7 @@ ErrCode BluetoothHfpAgStub::CloseVoiceRecognitionInner(MessageParcel &data, Mess
 ErrCode BluetoothHfpAgStub::SetActiveDeviceInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
-    if (!device) {
-        return TRANSACTION_ERR;
+    if (!device) {return TRANSACTION_ERR;
     }
     int result = SetActiveDevice(*device);
     if (!reply.WriteInt32(result)) {
@@ -382,6 +381,12 @@ ErrCode BluetoothHfpAgStub::CallDetailsChangedInner(MessageParcel &data, Message
 
 int32_t BluetoothHfpAgStub::IsVgsSupportedInner(MessageParcel &data, MessageParcel &reply)
 {
+    std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
+    CHECK_AND_RETURN_LOG_RET(device, BT_ERR_IPC_TRANS_FAILED, "Read device address failed.");
+    bool isSupported = false;
+    int32_t result = IsVgsSupported(*device, isSupported);
+    CHECK_AND_RETURN_LOG_RET(reply.WriteInt32(result), BT_ERR_INTERNAL_ERROR, "reply WriteInt32 failed");
+    CHECK_AND_RETURN_LOG_RET(reply.WriteBool(isSupported), BT_ERR_INTERNAL_ERROR, "reply WriteBool failed");
     return NO_ERROR;
 }
 }  // namespace Bluetooth

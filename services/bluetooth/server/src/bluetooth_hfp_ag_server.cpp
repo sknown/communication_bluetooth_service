@@ -377,7 +377,7 @@ void BluetoothHfpAgServer::CallDetailsChanged(int callId, int callState)
 
 int32_t BluetoothHfpAgServer::IsVgsSupported(const BluetoothRawAddress &device, bool &isSupported)
 {
-    return NO_ERROR;
+    return BT_ERR_API_NOT_SUPPORT;
 }
 
 void BluetoothHfpAgServer::RegisterObserver(const sptr<IBluetoothHfpAgObserver> &observer)
