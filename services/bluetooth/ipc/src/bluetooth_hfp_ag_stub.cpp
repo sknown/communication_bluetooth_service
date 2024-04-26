@@ -279,7 +279,8 @@ ErrCode BluetoothHfpAgStub::CloseVoiceRecognitionInner(MessageParcel &data, Mess
 ErrCode BluetoothHfpAgStub::SetActiveDeviceInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
-    if (!device) {return TRANSACTION_ERR;
+    if (!device) {
+        return TRANSACTION_ERR;
     }
     int result = SetActiveDevice(*device);
     if (!reply.WriteInt32(result)) {
