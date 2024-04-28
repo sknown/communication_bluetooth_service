@@ -282,7 +282,7 @@ ErrCode BluetoothHidHostServer::HidHostSendData(std::string &device,
 }
 
 ErrCode BluetoothHidHostServer::HidHostSetReport(std::string &device,
-    uint8_t &type, uint16_t &size, uint8_t &report, int& result)
+    uint8_t &type, std::string &report, int& result)
 {
     HILOGI("start");
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
@@ -293,7 +293,7 @@ ErrCode BluetoothHidHostServer::HidHostSetReport(std::string &device,
         HILOGI("hidHostService_ is null");
         return ERR_NO_INIT;
     }
-    result = pimpl->hidHostService_->HidHostSetReport(device, type, size, &report);
+    result = pimpl->hidHostService_->HidHostSetReport(device, type, report);
     HILOGI("end, result:%{public}d", result);
     return ERR_OK;
 }
