@@ -293,7 +293,12 @@ ErrCode BluetoothHidHostServer::HidHostSetReport(std::string &device,
         HILOGI("hidHostService_ is null");
         return ERR_NO_INIT;
     }
-    result = pimpl->hidHostService_->HidHostSetReport(device, type, report);
+    std::vector<uint8_t> data;
+    for(char ch : report) {
+        data.emplace(data.end(), static_cast<uint8_t>(ch));
+    }
+    data.emplace(data.end(), static_cast<uint8_t>('\0'));
+    result = pimpl->hidHostService_->HidHostSetReport(device, type, data.size(), data.data());
     HILOGI("end, result:%{public}d", result);
     return ERR_OK;
 }
