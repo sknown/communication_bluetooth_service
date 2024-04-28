@@ -294,7 +294,7 @@ ErrCode BluetoothHidHostServer::HidHostSetReport(std::string &device,
         return ERR_NO_INIT;
     }
     std::vector<uint8_t> data;
-    for(char ch : report) {
+    for (char ch : report) {
         data.emplace(data.end(), static_cast<uint8_t>(ch));
     }
     data.emplace(data.end(), static_cast<uint8_t>('\0'));
