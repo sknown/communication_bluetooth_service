@@ -125,6 +125,8 @@ public:
     int32_t GetDeviceProductId(const std::string &address, std::string &prodcutId) override;
     int32_t SetDeviceCustomType(const std::string &address, int32_t deviceType) override;
     int32_t GetDeviceCustomType(const std::string &address, int32_t &deviceType) override;
+    int32_t GetDeviceVendorId(const std::string &address, uint16_t &vendorId) override;
+    int32_t GetDeviceProductId(const std::string &address, uint16_t &productId) override;
 
 private:
     static sptr<BluetoothHostServer> instance;

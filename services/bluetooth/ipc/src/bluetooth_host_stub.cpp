@@ -236,9 +236,6 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SET_CUSTOM_TYPE,
             std::bind(&BluetoothHostStub::SetDeviceCustomTypeInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::GET_CUSTOM_TYPE,
-            std::bind(&BluetoothHostStub::GetDeviceCustomTypeInner, std::placeholders::_1, std::placeholders::_2,
-                std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -1314,21 +1311,6 @@ int32_t BluetoothHostStub::SetDeviceCustomTypeInner(MessageParcel &data, Message
     int32_t customType;
     if (!data.ReadInt32(customType)) {
         HILOGE("BluetoothHostStub::SetDeviceCustomType customType failed");
-        return TRANSACTION_ERR;
-    }
-    bool ret = reply.WriteInt32(BT_ERR_API_NOT_SUPPORT);
-    if (!ret) {
-        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
-    }
-    return BT_ERR_API_NOT_SUPPORT;
-}
-
-int32_t BluetoothHostStub::GetDeviceCustomTypeInner(MessageParcel &data, MessageParcel &reply)
-{
-    std::string address;
-    if (!data.ReadString(address)) {
-        HILOGE("BluetoothHostStub::SetDeviceCustomType address failed");
         return TRANSACTION_ERR;
     }
     bool ret = reply.WriteInt32(BT_ERR_API_NOT_SUPPORT);

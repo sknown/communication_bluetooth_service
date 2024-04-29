@@ -104,7 +104,6 @@ private:
     int32_t ConnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply);
     int32_t DisconnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply);
     int32_t SetDeviceCustomTypeInner(MessageParcel &data, MessageParcel &reply);
-    int32_t GetDeviceCustomTypeInner(MessageParcel &data, MessageParcel &reply);
 
     static const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParcel &, MessageParcel &)>>
         memberFuncMap_;

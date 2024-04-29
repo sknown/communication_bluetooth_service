@@ -1847,5 +1847,15 @@ int32_t BluetoothHostServer::GetDeviceCustomType(const std::string &address, int
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
+
+int32_t BluetoothHostServer::GetDeviceVendorId(const std::string &address, uint16_t &vendorId)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostServer::GetDeviceProductId(const std::string &address, uint16_t &productId)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

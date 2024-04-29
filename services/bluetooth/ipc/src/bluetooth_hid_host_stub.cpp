@@ -214,10 +214,9 @@ ErrCode BluetoothHidHostStub::HidHostSetReportInner(MessageParcel &data, Message
     HILOGD("BluetoothHidHostStub::HidHostSetReportInner");
     std::string device = data.ReadString();
     uint8_t type = data.ReadUint8();
-    uint16_t size = data.ReadUint16();
-    uint8_t report = data.ReadUint8();
+    std::string report = data.ReadString();
     int result;
-    ErrCode ec = HidHostSetReport(device, type, size, report, result);
+    ErrCode ec = HidHostSetReport(device, type, report, result);
     if (SUCCEEDED(ec)) {
         reply.WriteInt32(result);
     }
