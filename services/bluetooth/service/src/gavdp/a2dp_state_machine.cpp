@@ -25,14 +25,6 @@
 namespace OHOS {
 namespace bluetooth {
 std::recursive_mutex g_stateMutex {};
-void A2dpStateIdle::Entry()
-{
-    A2dpCodecThread *codecThread = A2dpCodecThread::GetInstance();
-    if (codecThread->GetInitStatus()) {
-        codecThread->StopA2dpCodecThread();
-        delete codecThread;
-    }
-}
 
 bool A2dpStateIdle::Dispatch(const utility::Message &msg)
 {
