@@ -32,6 +32,7 @@ namespace bluetooth {
 std::recursive_mutex g_a2dpServiceMutex {};
 struct HDIServiceManager *g_hdiServiceManager;
 struct ServiceStatusListener *g_listener;
+BtAddr g_btAddr;
 const uint16_t AUDIO_CLASS = 0x1 << 5;
 ObserverProfile::ObserverProfile(uint8_t role)
 {
@@ -73,13 +74,13 @@ void ObserverProfile::OnConnectStateChanged(const BtAddr &addr, const int state,
         service->ConnectManager().DeleteDevice(btAddr);
     } else if (connectState == static_cast<int>(BTConnectState::CONNECTED)) {
         LOG_INFO("[ObserverProfile] %{public}s Add the active device\n", __func__);
-        service->UpdateActiveDevice(btAddr);
     }
 
     if (connectState == static_cast<int>(BTConnectState::DISCONNECTED)) {
         service->ProcessConnectFrameworkCallback(connectState, btAddr);
         ProcessA2dpHdfLoad(connectState);
     } else if (connectState == static_cast<int>(BTConnectState::CONNECTED)) {
+        memcpy_s(&g_btAddr, sizeof(BtAddr), &addr, sizeof(BtAddr));
         ProcessA2dpHdfLoad(connectState);
     }
 
@@ -93,14 +94,16 @@ static void OnServiceStatusReceived(struct ServiceStatusListener *listener, stru
     std::string info = serviceStatus->info;
     LOG_INFO("OnServiceStatusReceived: [service name:%{public}s] [status:%{public}d] [info:%{public}s]",
         serviceStatus->serviceName, serviceStatus->status, info.c_str());
-    if (serviceStatus->serviceName == AUDIO_BLUETOOTH_SERVICE_NAME) {
+    if ((strcmp(serviceStatus->serviceName, AUDIO_BLUETOOTH_SERVICE_NAME) == 0) &&
+        (serviceStatus->status == SERVIE_STATUS_START)) {
         A2dpService *service = GetServiceInstance(A2DP_ROLE_SOURCE);
         if (service == nullptr) {
             LOG_ERROR("service is nullptr");
             return;
         }
+        RawAddress btAddr = bluetooth::RawAddress::ConvertToString(g_btAddr.addr);
         service->ProcessConnectFrameworkCallback(static_cast<int>(BTConnectState::CONNECTED),
-            service->GetActiveSinkDevice());
+            btAddr);
         if ((g_hdiServiceManager == nullptr) || (g_listener == nullptr)) {
             LOG_ERROR("g_hdiServiceManager or g_listener is nullptr");
             return;
@@ -146,10 +149,13 @@ void ObserverProfile::ProcessA2dpHdfLoad(const int state) const
             auto devmgr = OHOS::HDI::DeviceManager::V1_0::IDeviceManager::Get();
             if (devmgr != nullptr) {
                 LOG_INFO("[ObserverProfile] %{public}s, loadDevice of a2dp HDF", __func__);
+                RegisterDeviceStatusListener();
                 devmgr->LoadDevice(AUDIO_BLUETOOTH_SERVICE_NAME);
             }
+        } else {
+            RawAddress btAddr = bluetooth::RawAddress::ConvertToString(g_btAddr.addr);
             service->ProcessConnectFrameworkCallback(static_cast<int>(BTConnectState::CONNECTED),
-                service->GetActiveSinkDevice());
+                btAddr);
         }
     }
     if (state == static_cast<int>(BTConnectState::DISCONNECTED) && devices.size() == 0) {
@@ -647,16 +653,16 @@ int A2dpService::SetActiveSinkDevice(const RawAddress &device)
     }
 
     auto curDevice = a2dpDevices_.find(activeDevice_.GetAddress().c_str());
-    if (strcmp(device.GetAddress().c_str(), activeDevice_.GetAddress().c_str()) == 0) {
+    if (strcmp(device.GetAddress().c_str(), activeDevice_.GetAddress().c_str()) != 0) {
         LOG_ERROR("[A2dpService]The device is already active");
-        pflA2dp->Start(curDevice->second->GetHandle());
-    } else {
         if (curDevice != a2dpDevices_.end() && curDevice->second != nullptr) {
-            if (pflA2dp->Stop(curDevice->second->GetHandle(), true)) {
+            A2dpProfilePeer *peer = nullptr;
+            peer = pflA2dp->FindPeerByAddress(curDevice->second->GetDevice());
+            if (peer != nullptr &&
+                strcmp(A2DP_PROFILE_STREAMING.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0) {
+                pflA2dp->Stop(curDevice->second->GetHandle(), true);
                 pflA2dp->Start(iter->second->GetHandle());
             }
-        } else {
-            pflA2dp->Start(iter->second->GetHandle());
         }
         pflA2dp->SetActivePeer(btAddr);
         UpdateActiveDevice(rawAddr);

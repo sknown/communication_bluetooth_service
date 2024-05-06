@@ -201,13 +201,13 @@ void A2dpProfile::ConnectStateChangedNotify(const BtAddr &addr, const int state,
     switch (state) {
         case STREAM_CONNECT_FAILED:
         case STREAM_DISCONNECT:
-            ResetDelayValue(addr);
             DeletePeer(addr);
             if (IsActiveDevice(addr)) {
+                ResetDelayValue(addr);
                 ClearActiveDevice();
+                QueueFlush(packetQueue_, CleanPacketData);
+                buffer_->Reset();
             }
-            QueueFlush(packetQueue_, CleanPacketData);
-            buffer_->Reset();
             break;
         case STREAM_CONNECT:
             SetActivePeer(addr);
@@ -225,10 +225,12 @@ void A2dpProfile::ConnectStateChangedNotify(const BtAddr &addr, const int state,
 void A2dpProfile::AudioStateChangedNotify(const BtAddr &addr, const int state, void *context) const
 {
     LOG_INFO("[A2dpProfile] %{public}s state(%{public}d)\n", __func__, state);
-    if (state == A2DP_IS_PLAYING) {
-        buffer_->SetValid(true);
-    } else {
-        buffer_->SetValid(false);
+    if (IsActiveDevice(addr)) {
+        if (state == A2DP_IS_PLAYING) {
+            buffer_->SetValid(true);
+        } else {
+            buffer_->SetValid(false);
+        }
     }
     if (a2dpSvcCBack_ != nullptr) {
         a2dpSvcCBack_->OnAudioStateChanged(addr, state, context);
