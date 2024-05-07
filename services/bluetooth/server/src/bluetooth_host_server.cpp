@@ -1833,27 +1833,13 @@ int32_t BluetoothHostServer::DisconnectAllowedProfiles(const std::string &addres
     return BT_ERR_API_NOT_SUPPORT;
 }
 
-int32_t BluetoothHostServer::GetDeviceProductId(const std::string &address, std::string &prodcutId)
-{
-    return BT_ERR_API_NOT_SUPPORT;
-}
-
 int32_t BluetoothHostServer::SetDeviceCustomType(const std::string &address, int32_t deviceType)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
 
-int32_t BluetoothHostServer::GetDeviceCustomType(const std::string &address, int32_t &deviceType)
-{
-    return BT_ERR_API_NOT_SUPPORT;
-}
-
-int32_t BluetoothHostServer::GetDeviceVendorId(const std::string &address, uint16_t &vendorId)
-{
-    return BT_ERR_API_NOT_SUPPORT;
-}
-
-int32_t BluetoothHostServer::GetDeviceProductId(const std::string &address, uint16_t &productId)
+int32_t BluetoothHostServer::GetRemoteDeviceInfo(const std::string &address,
+    std::shared_ptr<BluetoothRemoteDeviceInfo> &deviceInfo)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
