@@ -540,16 +540,19 @@ void A2dpProfile::Disable()
     }
     SetProfileEnable(false);
 
-    for (const auto &it : peers_) {
-        peer = it.second;
-        HILOGI("[A2dpProfile] matched peers_addr(%{public}s) [role%u]\n", GetEncryptAddr(it.first).c_str(), role);
-        if (peer != nullptr && it.first.c_str() != nullptr) {
+    std::map<std::string, A2dpProfilePeer *>::iterator it;
+    for (it = peers_.begin(); it != peers_.end();) {
+        peer = it->second;
+        if (peer != nullptr && it->first.c_str() != nullptr) {
+            HILOGI("[A2dpProfile] matched peers_addr(%{public}s) [role%u]\n", GetEncryptAddr(it->first).c_str(), role);
             data.a2dpMsg.connectInfo.addr = peer->GetPeerAddress();
             data.role = role;
             msg.arg2_ = &data;
+            it++;
             peer->GetStateMachine()->ProcessMessage(msg);
             peer->SetCurrentCmd(EVT_DISCONNECT_REQ);
-            break;
+        } else {
+            it++;
         }
     }
     if (GetGapRegisterInfo()) {
