@@ -125,7 +125,7 @@ public:
     int32_t DisconnectAllowedProfiles(const std::string &address) override;
     int32_t SetDeviceCustomType(const std::string &address, int32_t deviceType) override;
     int32_t GetRemoteDeviceInfo(const std::string &address,
-        std::shared_ptr<BluetoothRemoteDeviceInfo> &deviceInfo) override;
+        std::shared_ptr<BluetoothRemoteDeviceInfo> &deviceInfo, int type) override;
 
 private:
     static sptr<BluetoothHostServer> instance;
