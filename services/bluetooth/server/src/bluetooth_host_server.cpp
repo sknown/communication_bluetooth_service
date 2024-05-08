@@ -1839,7 +1839,7 @@ int32_t BluetoothHostServer::SetDeviceCustomType(const std::string &address, int
 }
 
 int32_t BluetoothHostServer::GetRemoteDeviceInfo(const std::string &address,
-    std::shared_ptr<BluetoothRemoteDeviceInfo> &deviceInfo)
+    std::shared_ptr<BluetoothRemoteDeviceInfo> &deviceInfo, int type)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
