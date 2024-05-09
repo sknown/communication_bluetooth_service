@@ -634,6 +634,9 @@ void BluetoothBleCentralManagerServer::SetWindowAndInterval(const int mode, uint
             window = BLE_SCAN_MODE_OP_P10_30_300_WINDOW_MS;
             interval = BLE_SCAN_MODE_OP_P10_30_300_INTERVAL_MS;
             break;
+        case SCAN_MODE_OP_P2_30_1500:
+            window = BLE_SCAN_MODE_OP_P2_30_1500_WINDOW_MS;
+            window = BLE_SCAN_MODE_OP_P2_30_1500_WINDOW_MS;
         default:
             HILOGE("invalid scan mode.");
             break;

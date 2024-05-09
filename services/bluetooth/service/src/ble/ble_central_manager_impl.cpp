@@ -813,6 +813,9 @@ void BleCentralManagerImpl::SetScanModeDuration(int scanMode, int type) const
             break;
         case SCAN_MODE_OP_P10_30_300:
             SetDutyCycle1030Duration(type);
+        case SCAN_MODE_OP_P2_30_1500:
+            SetDutyCycle2Duration(type);
+            break;
         default:
             break;
     }
