@@ -63,6 +63,7 @@ public:
     void Stop();
     int32_t DisableBle() override;
     int32_t EnableBle() override;
+    int32_t RestrictBluetooth() override;
     bool IsBrEnabled() override;
     bool IsBleEnabled() override;
     std::vector<uint32_t> GetProfileList() override;
