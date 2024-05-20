@@ -21,7 +21,7 @@ namespace OHOS {
 namespace bluetooth {
 std::string A2dpSnkService::g_name = "A2dpSnkService";
 std::string A2dpSnkService::g_version = "1.3.2";
-uint8_t A2dpSnkService::g_role = A2DP_ROLE_SINK;
+uint8_t A2dpSnkService::g_role = A2DP_ROLE_SINK;  //----test------
 
 IProfileA2dp *IProfileA2dp::GetSnkProfile()
 {
