@@ -372,6 +372,14 @@ int BluetoothHfpAgServer::IsInbandRingingEnabled(bool &isEnabled)
 void BluetoothHfpAgServer::RegisterObserver(const sptr<IBluetoothHfpAgObserver> &observer)
 {
     HILOGD("Enter!");
+    if (observer == nullptr) {
+        HILOGE("observer is null");
+        return ;
+    }
+    if (pimpl == nullptr) {
+        HILOGE("pimpl is null");
+        return ;
+    }
     auto func = std::bind(&BluetoothHfpAgServer::DeregisterObserver, this, std::placeholders::_1);
     pimpl->observers_.Register(observer, func);
 }
@@ -379,6 +387,14 @@ void BluetoothHfpAgServer::RegisterObserver(const sptr<IBluetoothHfpAgObserver> 
 void BluetoothHfpAgServer::DeregisterObserver(const sptr<IBluetoothHfpAgObserver> &observer)
 {
     HILOGD("Enter!");
+    if (observer == nullptr) {
+        HILOGE("observer is null");
+        return ;
+    }
+    if (pimpl == nullptr) {
+        HILOGE("pimpl is null");
+        return ;
+    }
     pimpl->observers_.Deregister(observer);
 }
 
