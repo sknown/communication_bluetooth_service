@@ -433,5 +433,10 @@ int BluetoothHfpAgServer::DisconnectSco(uint8_t callType)
 {
     return NO_ERROR;
 }
+
+void BluetoothHfpAgServer::EnableBtCallLog(bool state)
+{
+    HILOGI("enter");
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
