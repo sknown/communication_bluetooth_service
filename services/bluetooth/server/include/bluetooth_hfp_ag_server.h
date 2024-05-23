@@ -55,6 +55,7 @@ public:
     int32_t IsVgsSupported(const BluetoothRawAddress &device, bool &isSupported) override;
     int32_t ConnectSco(uint8_t callType) override;
     int32_t DisconnectSco(uint8_t callType) override;
+    void EnableBtCallLog(bool state) override;
 
 private:
     BLUETOOTH_DECLARE_IMPL();
