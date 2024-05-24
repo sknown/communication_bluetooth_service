@@ -380,6 +380,11 @@ ErrCode BluetoothHfpAgStub::CallDetailsChangedInner(MessageParcel &data, Message
     return NO_ERROR;
 }
 
+ErrCode BluetoothHfpAgStub::EnableBtCallLog(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
 int32_t BluetoothHfpAgStub::IsVgsSupportedInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
