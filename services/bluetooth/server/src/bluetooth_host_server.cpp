@@ -49,6 +49,7 @@
 #include "string_ex.h"
 #include "system_ability_definition.h"
 #include "ipc_types.h"
+#include "safe_map.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -86,27 +87,31 @@ struct BluetoothHostServer::impl {
     /// user regist observers
     RemoteObserverList<IBluetoothHostObserver> observers_;
     RemoteObserverList<IBluetoothHostObserver> bleObservers_;
-    std::map<sptr<IRemoteObject>, uint32_t> observersToken_;
-    std::map<sptr<IRemoteObject>, uint32_t> bleObserversToken_;
-    std::map<sptr<IRemoteObject>, int32_t> observersPid_;
-    std::map<sptr<IRemoteObject>, int32_t> bleObserversPid_;
+    SafeMap<sptr<IRemoteObject>, uint32_t> observersToken_;
+    SafeMap<sptr<IRemoteObject>, uint32_t> bleObserversToken_;
+    SafeMap<sptr<IRemoteObject>, int32_t> observersPid_;
+    SafeMap<sptr<IRemoteObject>, int32_t> bleObserversPid_;
 
     /// user regist remote observers
     RemoteObserverList<IBluetoothRemoteDeviceObserver> remoteObservers_;
-    std::map<sptr<IRemoteObject>, uint32_t> remoteObserversToken_;
-    std::map<sptr<IRemoteObject>, int32_t> remoteObserversPid_;
+    SafeMap<sptr<IRemoteObject>, uint32_t> remoteObserversToken_;
+    SafeMap<sptr<IRemoteObject>, int32_t> remoteObserversPid_;
 
     /// user regist remote observers
     RemoteObserverList<IBluetoothBlePeripheralObserver> bleRemoteObservers_;
-    std::map<sptr<IRemoteObject>, uint32_t> bleRemoteObserversToken_;
+    SafeMap<sptr<IRemoteObject>, uint32_t> bleRemoteObserversToken_;
 
-    std::map<std::string, sptr<IRemoteObject>> servers_;
-    std::map<std::string, sptr<IRemoteObject>> bleServers_;
+    SafeMap<std::string, sptr<IRemoteObject>> servers_;
+    SafeMap<std::string, sptr<IRemoteObject>> bleServers_;
 
     std::vector<sptr<IBluetoothHostObserver>> hostObservers_;
+    std::mutex hostObserversMutex;
     std::vector<sptr<IBluetoothRemoteDeviceObserver>> remoteDeviceObservers_;
+    std::mutex remoteDeviceObserversMutex;
     std::vector<sptr<IBluetoothHostObserver>> bleAdapterObservers_;
+    std::mutex bleAdapterObserversMutex;
     std::vector<sptr<IBluetoothBlePeripheralObserver>> blePeripheralObservers_;
+    std::mutex blePeripheralObserversMutex;
 
 private:
     void createServers();
@@ -179,12 +184,12 @@ public:
         }
         if (transport == BTTransport::ADAPTER_BREDR) {
             impl_->observers_.ForEach([this, transport, state](sptr<IBluetoothHostObserver> observer) {
-                int32_t pid = this->impl_->observersPid_[observer->AsObject()];
+                int32_t pid = this->impl_->observersPid_.ReadVal(observer->AsObject());
                 if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                     HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                     return;
                 }
-                uint32_t tokenId = this->impl_->observersToken_[observer->AsObject()];
+                uint32_t tokenId = this->impl_->observersToken_.ReadVal(observer->AsObject());
                 if (PermissionUtils::VerifyUseBluetoothPermission(tokenId) == PERMISSION_DENIED) {
                     HILOGE("false, check permission failed");
                 } else {
@@ -199,12 +204,12 @@ public:
             }
         } else if (transport == BTTransport::ADAPTER_BLE) {
             impl_->bleObservers_.ForEach([this, transport, state](sptr<IBluetoothHostObserver> observer) {
-                int32_t pid = this->impl_->bleObserversPid_[observer->AsObject()];
+                int32_t pid = this->impl_->bleObserversPid_.ReadVal(observer->AsObject());
                 if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                     HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                     return;
                 }
-                uint32_t  tokenId = this->impl_->bleObserversToken_[observer->AsObject()];
+                uint32_t  tokenId = this->impl_->bleObserversToken_.ReadVal(observer->AsObject());
                 if (PermissionUtils::VerifyUseBluetoothPermission(tokenId) == PERMISSION_DENIED) {
                     HILOGE("false, check permission failed");
                 } else {
@@ -233,7 +238,7 @@ public:
     {
         HILOGI("status: %{public}d", status);
         impl_->observers_.ForEach([this, status](sptr<IBluetoothHostObserver> observer) {
-            int32_t pid = this->impl_->observersPid_[observer->AsObject()];
+            int32_t pid = this->impl_->observersPid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                 HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
@@ -254,12 +259,12 @@ public:
         HILOGI("device: %{public}s, rssi: %{public}d, deviceName: %{pubiic}s, deviceClass: %{public}d",
             GET_ENCRYPT_ADDR(device), rssi, deviceName.c_str(), deviceClass);
         impl_->observers_.ForEach([this, device, rssi, deviceName, deviceClass](IBluetoothHostObserver *observer) {
-            int32_t pid = this->impl_->observersPid_[observer->AsObject()];
+            int32_t pid = this->impl_->observersPid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                 HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
-            uint32_t tokenId = this->impl_->observersToken_[observer->AsObject()];
+            uint32_t tokenId = this->impl_->observersToken_.ReadVal(observer->AsObject());
             if (PermissionUtils::VerifyDiscoverBluetoothPermission(tokenId) == PERMISSION_DENIED) {
                 HILOGE("OnDiscoveryResult() false, check permission failed");
             } else {
@@ -281,7 +286,7 @@ public:
         HILOGI("device: %{public}s, reqType: %{public}d, number: %{public}d",
             GET_ENCRYPT_ADDR(device), reqType, number);
         impl_->observers_.ForEach([this, transport, device, reqType, number](IBluetoothHostObserver *observer) {
-            uint32_t tokenId = this->impl_->observersToken_[observer->AsObject()];
+            uint32_t tokenId = this->impl_->observersToken_.ReadVal(observer->AsObject());
             if (PermissionUtils::VerifyUseBluetoothPermission(tokenId) == PERMISSION_DENIED) {
                 HILOGE("false, check permission failed");
             } else {
@@ -328,12 +333,12 @@ public:
     {
         HILOGI("device: %{public}s, status: %{public}d", GET_ENCRYPT_ADDR(device), status);
         impl_->remoteObservers_.ForEach([this, transport, device, status](IBluetoothRemoteDeviceObserver *observer) {
-            int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
+            int32_t pid = this->impl_->remoteObserversPid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                 HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
-            uint32_t tokenId = this->impl_->remoteObserversToken_[observer->AsObject()];
+            uint32_t tokenId = this->impl_->remoteObserversToken_.ReadVal(observer->AsObject());
             if (PermissionUtils::VerifyUseBluetoothPermission(tokenId) == PERMISSION_DENIED) {
                 HILOGE("false, check permission failed");
             } else {
@@ -350,7 +355,7 @@ public:
             btUuids.push_back(val);
         }
         impl_->remoteObservers_.ForEach([this, device, btUuids](IBluetoothRemoteDeviceObserver *observer) {
-            int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
+            int32_t pid = this->impl_->remoteObserversPid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                 HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
@@ -363,7 +368,7 @@ public:
     {
         HILOGI("device: %{public}s, deviceName: %{public}s", GET_ENCRYPT_ADDR(device), deviceName.c_str());
         impl_->remoteObservers_.ForEach([this, device, deviceName](IBluetoothRemoteDeviceObserver *observer) {
-            int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
+            int32_t pid = this->impl_->remoteObserversPid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                 HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
@@ -384,7 +389,7 @@ public:
     {
         HILOGI("device: %{public}s, cod: %{public}d", GET_ENCRYPT_ADDR(device), cod);
         impl_->remoteObservers_.ForEach([this, device, cod](IBluetoothRemoteDeviceObserver *observer) {
-            int32_t pid = this->impl_->remoteObserversPid_[observer->AsObject()];
+            int32_t pid = this->impl_->remoteObserversPid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                 HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
@@ -407,7 +412,7 @@ public:
     {
         HILOGI("status: %{public}d", status);
         impl_->bleObservers_.ForEach([this, status](sptr<IBluetoothHostObserver> observer) {
-            int32_t pid = this->impl_->bleObserversPid_[observer->AsObject()];
+            int32_t pid = this->impl_->bleObserversPid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                 HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
@@ -422,12 +427,12 @@ public:
         HILOGI("device: %{public}s, rssi: %{public}d, deviceName: %{pubiic}s, deviceClass: %{public}d",
             GET_ENCRYPT_ADDR(device), rssi, deviceName.c_str(), deviceClass);
         impl_->bleObservers_.ForEach([this, device, rssi, deviceName, deviceClass](IBluetoothHostObserver *observer) {
-            int32_t pid = this->impl_->bleObserversPid_[observer->AsObject()];
+            int32_t pid = this->impl_->bleObserversPid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                 HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
-            uint32_t tokenId = this->impl_->bleObserversToken_[observer->AsObject()];
+            uint32_t tokenId = this->impl_->bleObserversToken_.ReadVal(observer->AsObject());
             if (PermissionUtils::VerifyDiscoverBluetoothPermission(tokenId) == PERMISSION_DENIED) {
                 HILOGE("false, check permission failed");
             } else {
@@ -449,12 +454,12 @@ public:
         HILOGI("device: %{public}s, reqType: %{public}d, number: %{public}d",
             GET_ENCRYPT_ADDR(device), reqType, number);
         impl_->bleObservers_.ForEach([this, transport, device, reqType, number](IBluetoothHostObserver *observer) {
-            int32_t pid = this->impl_->bleObserversPid_[observer->AsObject()];
+            int32_t pid = this->impl_->bleObserversPid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                 HILOGI("pid:%{public}d is proxy pid, not callback.", pid);
                 return;
             }
-            uint32_t tokenId = this->impl_->bleObserversToken_[observer->AsObject()];
+            uint32_t tokenId = this->impl_->bleObserversToken_.ReadVal(observer->AsObject());
             if (PermissionUtils::VerifyUseBluetoothPermission(tokenId) == PERMISSION_DENIED) {
                 HILOGE("OnPairConfirmed() false, check permission failed");
             } else {
@@ -509,7 +514,7 @@ public:
         HILOGI("device: %{public}s, status: %{public}d", GET_ENCRYPT_ADDR(device), status);
         impl_->bleRemoteObservers_.ForEach([this, transport, device, status](
             IBluetoothBlePeripheralObserver *observer) {
-            uint32_t tokenId = this->impl_->bleRemoteObserversToken_[observer->AsObject()];
+            uint32_t tokenId = this->impl_->bleRemoteObserversToken_.ReadVal(observer->AsObject());
             if (PermissionUtils::VerifyUseBluetoothPermission(tokenId) == PERMISSION_DENIED) {
                 HILOGE("false, check permission failed");
             } else {
@@ -600,71 +605,71 @@ void BluetoothHostServer::impl::Clear()
 void BluetoothHostServer::impl::createServers()
 {
     sptr<BluetoothSocketServer> socket = new BluetoothSocketServer();
-    servers_[PROFILE_SOCKET] = socket->AsObject();
+    servers_.EnsureInsert(PROFILE_SOCKET, socket->AsObject());
 
     sptr<BluetoothGattServerServer> gattserver = new BluetoothGattServerServer();
-    servers_[PROFILE_GATT_SERVER] = gattserver->AsObject();
+    servers_.EnsureInsert(PROFILE_GATT_SERVER, gattserver->AsObject());
 
     sptr<BluetoothGattClientServer> gattclient = new BluetoothGattClientServer();
-    servers_[PROFILE_GATT_CLIENT] = gattclient->AsObject();
+    servers_.EnsureInsert(PROFILE_GATT_CLIENT, gattclient->AsObject());
 
 #ifdef BLUETOOTH_HFP_AG_FEATURE
     sptr<BluetoothHfpAgServer> hfpAg = new BluetoothHfpAgServer();
-    servers_[PROFILE_HFP_AG] = hfpAg->AsObject();
+    servers_.EnsureInsert(PROFILE_HFP_AG, hfpAg->AsObject());
 #endif
 
 #ifdef BLUETOOTH_HFP_HF_FEATURE
     sptr<BluetoothHfpHfServer> hfpHf = new BluetoothHfpHfServer();
-    servers_[PROFILE_HFP_HF] = hfpHf->AsObject();
+    servers_.EnsureInsert(PROFILE_HFP_HF, hfpHf->AsObject());
 #endif
 
 #ifdef BLUETOOTH_AVRCP_CT_FEATURE
     sptr<BluetoothAvrcpCtServer> avrcpCtServer = new BluetoothAvrcpCtServer();
-    servers_[PROFILE_AVRCP_CT] = avrcpCtServer->AsObject();
+    servers_.EnsureInsert(PROFILE_AVRCP_CT, avrcpCtServer->AsObject());
 #endif
 
 #ifdef BLUETOOTH_AVRCP_TG_FEATURE
     sptr<BluetoothAvrcpTgServer> avrcpTgServer = new BluetoothAvrcpTgServer();
-    servers_[PROFILE_AVRCP_TG] = avrcpTgServer->AsObject();
+    servers_.EnsureInsert(PROFILE_AVRCP_TG, avrcpTgServer->AsObject());
 #endif
 
     sptr<BluetoothBleAdvertiserServer> bleAdvertiser = new BluetoothBleAdvertiserServer();
-    bleServers_[BLE_ADVERTISER_SERVER] = bleAdvertiser->AsObject();
+    bleServers_.EnsureInsert(BLE_ADVERTISER_SERVER, bleAdvertiser->AsObject());
 
     sptr<BluetoothBleCentralManagerServer> bleCentralManger = new BluetoothBleCentralManagerServer();
-    bleServers_[BLE_CENTRAL_MANAGER_SERVER] = bleCentralManger->AsObject();
+    bleServers_.EnsureInsert(BLE_CENTRAL_MANAGER_SERVER, bleCentralManger->AsObject());
 
 #ifdef BLUETOOTH_MAP_SERVER_FEATURE
     sptr<BluetoothMapMceServer> mapMce = new BluetoothMapMceServer();
-    servers_[PROFILE_MAP_MCE] = mapMce->AsObject();
+    servers_.EnsureInsert(PROFILE_MAP_MCE, mapMce->AsObject());
 #endif
 
 #ifdef BLUETOOTH_MAP_CLIENT_FEATURE
     sptr<BluetoothMapMseServer> mapMse = new BluetoothMapMseServer();
-    servers_[PROFILE_MAP_MSE] = mapMse->AsObject();
+    servers_.EnsureInsert(PROFILE_MAP_MSE, mapMse->AsObject());
 #endif
 
 #ifdef BLUETOOTH_A2DP_SRC_FEATURE
     sptr<BluetoothA2dpSourceServer> a2dpSource = new BluetoothA2dpSourceServer();
-    servers_[PROFILE_A2DP_SRC] = a2dpSource->AsObject();
+    servers_.EnsureInsert(PROFILE_A2DP_SRC, a2dpSource->AsObject());
 #endif
 
 #ifdef BLUETOOTH_A2DP_SINK_FEATURE
     sptr<BluetoothA2dpSinkServer> a2dpSink = new BluetoothA2dpSinkServer();
-    servers_[PROFILE_A2DP_SINK] = a2dpSink->AsObject();
+    servers_.EnsureInsert(PROFILE_A2DP_SINK, a2dpSink->AsObject());
 #endif
 
 #ifdef BLUETOOTH_HID_HOST_FEATURE
     sptr<BluetoothHidHostServer> hidHostServer = new BluetoothHidHostServer();
-    servers_[PROFILE_HID_HOST_SERVER] = hidHostServer->AsObject();
+    servers_.EnsureInsert(PROFILE_HID_HOST_SERVER, hidHostServer->AsObject());
 #endif
 
 #ifdef BLUETOOTH_PAN_FEATURE
     sptr<BluetoothPanServer> panServer = new BluetoothPanServer();
-    servers_[PROFILE_PAN_SERVER] = panServer->AsObject();
+    servers_.EnsureInsert(PROFILE_PAN_SERVER, panServer->AsObject());
 #endif
 
-    HILOGI("servers_ constructed, size is %{public}zu", servers_.size());
+    HILOGI("servers_ constructed, size is %{public}zu", servers_.Size());
 }
 
 BluetoothHostServer::BluetoothHostServer() : SystemAbility(BLUETOOTH_HOST_SYS_ABILITY_ID, true)
@@ -740,10 +745,11 @@ void BluetoothHostServer::RegisterObserver(const sptr<IBluetoothHostObserver> &o
         return;
     }
 
-    pimpl->observersToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
-    pimpl->observersPid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
+    pimpl->observersToken_.EnsureInsert(observer->AsObject(), IPCSkeleton::GetCallingTokenID());
+    pimpl->observersPid_.EnsureInsert(observer->AsObject(), IPCSkeleton::GetCallingUid());
     auto func = std::bind(&BluetoothHostServer::DeregisterObserver, this, std::placeholders::_1);
     pimpl->observers_.Register(observer, func);
+    std::lock_guard<std::mutex> lock(pimpl->hostObserversMutex);
     pimpl->hostObservers_.push_back(observer);
 }
 
@@ -754,23 +760,24 @@ void BluetoothHostServer::DeregisterObserver(const sptr<IBluetoothHostObserver> 
         HILOGE("DeregisterObserver observer is null");
         return;
     }
-    for (auto iter = pimpl->hostObservers_.begin(); iter != pimpl->hostObservers_.end(); ++iter) {
-        if ((*iter)->AsObject() == observer->AsObject()) {
-            pimpl->observers_.Deregister(*iter);
-            pimpl->hostObservers_.erase(iter);
-            break;
+    {
+        std::lock_guard<std::mutex> lock(pimpl->hostObserversMutex);
+        for (auto iter = pimpl->hostObservers_.begin(); iter != pimpl->hostObservers_.end(); ++iter) {
+            if ((*iter)->AsObject() == observer->AsObject()) {
+                pimpl->observers_.Deregister(*iter);
+                pimpl->hostObservers_.erase(iter);
+                break;
+            }
         }
     }
-    for (auto iter =  pimpl->observersToken_.begin(); iter !=  pimpl->observersToken_.end(); ++iter) {
-        if (iter->first != nullptr && iter->first == observer->AsObject()) {
-            pimpl->observersToken_.erase(iter);
-            break;
+    pimpl->observersToken_.Iterate([this, observer](sptr<IRemoteObject> object, uint32_t token)) {
+        if (object != nullptr && object == observer->AsObject()) {
+            pimpl->observersToken_.erase(object);
         }
     }
-    for (auto iter = pimpl->observersPid_.begin(); iter != pimpl->observersPid_.end(); ++iter) {
-        if (iter->first != nullptr && iter->first == observer->AsObject()) {
-            pimpl->observersPid_.erase(iter);
-            break;
+    pimpl->observersPid_.Iterate([this, observer](sptr<IRemoteObject> object, int32_t token)) {
+        if (object != nullptr && object == observer->AsObject()) {
+            pimpl->observersPid_.erase(object);
         }
     }
 }
@@ -805,24 +812,24 @@ int32_t BluetoothHostServer::GetBtState(int32_t &state)
 sptr<IRemoteObject> BluetoothHostServer::GetProfile(const std::string &name)
 {
     HILOGI("seraching %{public}s ", name.c_str());
-    auto it = pimpl->servers_.find(name);
-    if (it != pimpl->servers_.end()) {
-        HILOGI("server serached %{public}s ", name.c_str());
-        return pimpl->servers_[name];
-    } else {
-        return nullptr;
+    pimpl->servers_.Iterate([this, name](std::string token, sptr<IRemoteObject> object)) {
+        if (token == name) {
+            HILOGI("server serached %{public}s ", name.c_str());
+            return pimpl->servers_[token];
+        }
     }
+    return nullptr;
 }
 
 sptr<IRemoteObject> BluetoothHostServer::GetBleRemote(const std::string &name)
 {
     HILOGI("GetBleRemote %{public}s ", name.c_str());
-    auto iter = pimpl->bleServers_.find(name);
-    if (iter != pimpl->bleServers_.end()) {
-        return pimpl->bleServers_[name];
-    } else {
-        return nullptr;
+    pimpl->bleServers_.Iterate([this, name](std::string token, sptr<IRemoteObject> object)) {
+        if (token == name) {
+            return pimpl->bleServers_[name];
+        }
     }
+    return nullptr;
 }
 
 // Fac_Res_CODE
@@ -1647,11 +1654,12 @@ void BluetoothHostServer::RegisterRemoteDeviceObserver(const sptr<IBluetoothRemo
         HILOGE("observer is nullptr!");
         return;
     }
-    pimpl->remoteObserversToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
-    pimpl->remoteObserversPid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
+    pimpl->remoteObserversToken_.EnsureInsert(observer->AsObject(), IPCSkeleton::GetCallingTokenID());
+    pimpl->remoteObserversPid_.EnsureInsert(observer->AsObject(), IPCSkeleton::GetCallingUid());
     auto func = std::bind(&BluetoothHostServer::DeregisterRemoteDeviceObserver,
         this, std::placeholders::_1);
     pimpl->remoteObservers_.Register(observer, func);
+    std::lock_guard<std::mutex> lock(pimpl->remoteDeviceObserversMutex);
     pimpl->remoteDeviceObservers_.push_back(observer);
 }
 
@@ -1663,23 +1671,24 @@ void BluetoothHostServer::DeregisterRemoteDeviceObserver(const sptr<IBluetoothRe
         HILOGE("observer is nullptr!");
         return;
     }
-    for (auto iter = pimpl->remoteDeviceObservers_.begin(); iter != pimpl->remoteDeviceObservers_.end(); ++iter) {
-        if ((*iter)->AsObject() == observer->AsObject()) {
-            pimpl->remoteObservers_.Deregister(*iter);
-            pimpl->remoteDeviceObservers_.erase(iter);
-            break;
+    {
+        std::lock_guard<std::mutex> lock(pimpl->remoteDeviceObserversMutex);
+        for (auto iter = pimpl->remoteDeviceObservers_.begin(); iter != pimpl->remoteDeviceObservers_.end(); ++iter) {
+            if ((*iter)->AsObject() == observer->AsObject()) {
+                pimpl->remoteObservers_.Deregister(*iter);
+                pimpl->remoteDeviceObservers_.erase(iter);
+                break;
+            }
         }
     }
-    for (auto iter =  pimpl->remoteObserversToken_.begin(); iter !=  pimpl->remoteObserversToken_.end(); ++iter) {
-        if (iter->first != nullptr && iter->first == observer->AsObject()) {
-            pimpl->remoteObserversToken_.erase(iter);
-            break;
+    pimpl->remoteObserversToken_.Iterate([this, observer](sptr<IRemoteObject> object, uint32_t token)) {
+        if (object != nullptr && object == observer->AsObject()) {
+            pimpl->remoteObserversToken_.erase(object);
         }
     }
-    for (auto iter = pimpl->remoteObserversPid_.begin(); iter != pimpl->remoteObserversPid_.end(); ++iter) {
-        if (iter->first != nullptr && iter->first == observer->AsObject()) {
-            pimpl->remoteObserversPid_.erase(iter);
-            break;
+    pimpl->remoteObserversPid_.Iterate([this, observer](sptr<IRemoteObject> object, int32_t token)) {
+        if (object != nullptr && object == observer->AsObject()) {
+            pimpl->remoteObserversPid_.erase(object);
         }
     }
 }
@@ -1701,10 +1710,11 @@ void BluetoothHostServer::RegisterBleAdapterObserver(const sptr<IBluetoothHostOb
         HILOGE("observer is nullptr!");
         return;
     }
-    pimpl->bleObserversToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
-    pimpl->bleObserversPid_[observer->AsObject()] = IPCSkeleton::GetCallingUid();
+    pimpl->bleObserversToken_.EnsureInsert(observer->AsObject(), IPCSkeleton::GetCallingTokenID());
+    pimpl->bleObserversPid_.EnsureInsert(observer->AsObject(), IPCSkeleton::GetCallingUid());
     auto func = std::bind(&BluetoothHostServer::DeregisterBleAdapterObserver, this, std::placeholders::_1);
     pimpl->bleObservers_.Register(observer, func);
+    std::lock_guard<std::mutex> lock(pimpl->bleAdapterObserversMutex);
     pimpl->bleAdapterObservers_.push_back(observer);
 }
 
@@ -1716,23 +1726,24 @@ void BluetoothHostServer::DeregisterBleAdapterObserver(const sptr<IBluetoothHost
         HILOGE("observer is nullptr!");
         return;
     }
-    for (auto iter = pimpl->bleAdapterObservers_.begin(); iter != pimpl->bleAdapterObservers_.end(); ++iter) {
-        if ((*iter)->AsObject() == observer->AsObject()) {
-            pimpl->bleObservers_.Deregister(*iter);
-            pimpl->bleAdapterObservers_.erase(iter);
-            break;
+    {
+        std::lock_guard<std::mutex> lock(pimpl->bleAdapterObserversMutex);
+        for (auto iter = pimpl->bleAdapterObservers_.begin(); iter != pimpl->bleAdapterObservers_.end(); ++iter) {
+            if ((*iter)->AsObject() == observer->AsObject()) {
+                pimpl->bleObservers_.Deregister(*iter);
+                pimpl->bleAdapterObservers_.erase(iter);
+                break;
+            }
         }
     }
-    for (auto iter =  pimpl->bleObserversToken_.begin(); iter !=  pimpl->bleObserversToken_.end(); ++iter) {
-        if (iter->first != nullptr && iter->first == observer->AsObject()) {
-            pimpl->bleObserversToken_.erase(iter);
-            break;
+    pimpl->bleObserversToken_.Iterate([this, observer](sptr<IRemoteObject> object, uint32_t token)) {
+        if (object != nullptr && object == observer->AsObject()) {
+            pimpl->bleObserversToken_.erase(object);
         }
     }
-    for (auto iter = pimpl->bleObserversPid_.begin(); iter != pimpl->bleObserversPid_.end(); ++iter) {
-        if (iter->first != nullptr && iter->first == observer->AsObject()) {
-            pimpl->bleObserversPid_.erase(iter);
-            break;
+    pimpl->bleObserversPid_.Iterate([this, observer](sptr<IRemoteObject> object, int32_t token)) {
+        if (object != nullptr && object == observer->AsObject()) {
+            pimpl->bleObserversPid_.erase(object);
         }
     }
 }
@@ -1745,9 +1756,10 @@ void BluetoothHostServer::RegisterBlePeripheralCallback(const sptr<IBluetoothBle
         HILOGE("observer is nullptr!");
         return;
     }
-    pimpl->bleRemoteObserversToken_[observer->AsObject()] = IPCSkeleton::GetCallingTokenID();
+    pimpl->bleRemoteObserversToken_.EnsureInsert(observer->AsObject(), IPCSkeleton::GetCallingTokenID());
     auto func = std::bind(&BluetoothHostServer::DeregisterBlePeripheralCallback, this, std::placeholders::_1);
     pimpl->bleRemoteObservers_.Register(observer, func);
+    std::lock_guard<std::mutex> lock(pimpl->blePeripheralObserversMutex);
     pimpl->blePeripheralObservers_.push_back(observer);
 }
 
@@ -1759,19 +1771,21 @@ void BluetoothHostServer::DeregisterBlePeripheralCallback(const sptr<IBluetoothB
         HILOGE("observer is nullptr!");
         return;
     }
-    for (auto iter = pimpl->blePeripheralObservers_.begin(); iter != pimpl->blePeripheralObservers_.end(); ++iter) {
-        if ((*iter)->AsObject() == observer->AsObject()) {
-            if (pimpl != nullptr) {
-                pimpl->bleRemoteObservers_.Deregister(*iter);
-                pimpl->blePeripheralObservers_.erase(iter);
-                break;
+    {
+        std::lock_guard<std::mutex> lock(pimpl->blePeripheralObserversMutex);
+        for (auto iter = pimpl->blePeripheralObservers_.begin(); iter != pimpl->blePeripheralObservers_.end(); ++iter) {
+            if ((*iter)->AsObject() == observer->AsObject()) {
+                if (pimpl != nullptr) {
+                    pimpl->bleRemoteObservers_.Deregister(*iter);
+                    pimpl->blePeripheralObservers_.erase(iter);
+                    break;
+                }
             }
         }
     }
-    for (auto iter =  pimpl->bleRemoteObserversToken_.begin(); iter !=  pimpl->bleRemoteObserversToken_.end(); ++iter) {
-        if (iter->first != nullptr && iter->first == observer->AsObject()) {
-            pimpl->bleRemoteObserversToken_.erase(iter);
-            break;
+    pimpl->bleRemoteObserversToken_.Iterate([this, observer](sptr<IRemoteObject> object, uint32_t token)) {
+        if (object != nullptr && object == observer->AsObject()) {
+            pimpl->bleRemoteObserversToken_.erase(object);
         }
     }
 }
