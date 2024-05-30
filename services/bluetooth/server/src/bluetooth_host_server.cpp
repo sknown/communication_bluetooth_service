@@ -755,31 +755,29 @@ void BluetoothHostServer::RegisterObserver(const sptr<IBluetoothHostObserver> &o
 
 void BluetoothHostServer::DeregisterObserver(const sptr<IBluetoothHostObserver> &observer)
 {
-    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr || pimpl == nullptr) {
         HILOGE("DeregisterObserver observer is null");
         return;
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->hostObserversMutex);
-        for (auto iter = pimpl->hostObservers_.begin(); iter != pimpl->hostObservers_.end(); ++iter) {
+        while (auto iter != pimpl->hostObservers_.end()) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 pimpl->observers_.Deregister(*iter);
                 pimpl->hostObservers_.erase(iter);
                 break;
             }
+            ++iter;
         }
     }
-    pimpl->observersToken_.Iterate([this, observer](sptr<IRemoteObject> object, uint32_t token) {
-        if (object != nullptr && object == observer->AsObject()) {
-            pimpl->observersToken_.erase(object);
-        }
-    });
-    pimpl->observersPid_.Iterate([this, observer](sptr<IRemoteObject> object, int32_t token) {
-        if (object != nullptr && object == observer->AsObject()) {
-            pimpl->observersPid_.erase(object);
-        }
-    });
+    uint32_t token = 0;
+    if (pimpl->observersToken_.Find(observer->AsObject(), token)) {
+        pimpl->observersToken_.Erase(observer->AsObject());
+    }
+    int32_t value = 0;
+    if (pimpl->observersPid_.Find(observer->AsObject(), value)) {
+        pimpl->observersPid_.Erase(observer->AsObject());
+    }
 }
 
 int32_t BluetoothHostServer::EnableBt()
@@ -1646,7 +1644,6 @@ bool BluetoothHostServer::ReadRemoteRssiValue(const std::string &address)
 void BluetoothHostServer::RegisterRemoteDeviceObserver(const sptr<IBluetoothRemoteDeviceObserver> &observer)
 {
     HILOGI("Enter!");
-    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("observer is nullptr!");
         return;
@@ -1663,31 +1660,29 @@ void BluetoothHostServer::RegisterRemoteDeviceObserver(const sptr<IBluetoothRemo
 void BluetoothHostServer::DeregisterRemoteDeviceObserver(const sptr<IBluetoothRemoteDeviceObserver> &observer)
 {
     HILOGI("Enter!");
-    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr || pimpl == nullptr) {
         HILOGE("observer is nullptr!");
         return;
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->remoteDeviceObserversMutex);
-        for (auto iter = pimpl->remoteDeviceObservers_.begin(); iter != pimpl->remoteDeviceObservers_.end(); ++iter) {
+        while (auto iter != pimpl->remoteDeviceObservers_.end()) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 pimpl->remoteObservers_.Deregister(*iter);
                 pimpl->remoteDeviceObservers_.erase(iter);
                 break;
             }
+            ++iter;
         }
     }
-    pimpl->remoteObserversToken_.Iterate([this, observer](sptr<IRemoteObject> object, uint32_t token) {
-        if (object != nullptr && object == observer->AsObject()) {
-            pimpl->remoteObserversToken_.erase(object);
-        }
-    });
-    pimpl->remoteObserversPid_.Iterate([this, observer](sptr<IRemoteObject> object, int32_t token) {
-        if (object != nullptr && object == observer->AsObject()) {
-            pimpl->remoteObserversPid_.erase(object);
-        }
-    });
+    uint32_t token = 0;
+    if (pimpl->remoteObserversToken_.Find(observer->AsObject(), token)) {
+        pimpl->remoteObserversToken_.Erase(observer->AsObject());
+    }
+    int32_t value = 0;
+    if (pimpl->remoteObserversPid_.Find(observer->AsObject(), value)) {
+        pimpl->remoteObserversPid_.Erase(observer->AsObject());
+    }
 }
 
 bool BluetoothHostServer::IsBtEnabled()
@@ -1702,7 +1697,6 @@ bool BluetoothHostServer::IsBtEnabled()
 void BluetoothHostServer::RegisterBleAdapterObserver(const sptr<IBluetoothHostObserver> &observer)
 {
     HILOGI("start.");
-    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("observer is nullptr!");
         return;
@@ -1718,37 +1712,34 @@ void BluetoothHostServer::RegisterBleAdapterObserver(const sptr<IBluetoothHostOb
 void BluetoothHostServer::DeregisterBleAdapterObserver(const sptr<IBluetoothHostObserver> &observer)
 {
     HILOGI("start.");
-    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr || pimpl == nullptr) {
         HILOGE("observer is nullptr!");
         return;
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->bleAdapterObserversMutex);
-        for (auto iter = pimpl->bleAdapterObservers_.begin(); iter != pimpl->bleAdapterObservers_.end(); ++iter) {
+        while (auto iter != pimpl->bleAdapterObservers_.end()) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 pimpl->bleObservers_.Deregister(*iter);
                 pimpl->bleAdapterObservers_.erase(iter);
                 break;
             }
+            ++iter;
         }
     }
-    pimpl->bleObserversToken_.Iterate([this, observer](sptr<IRemoteObject> object, uint32_t token) {
-        if (object != nullptr && object == observer->AsObject()) {
-            pimpl->bleObserversToken_.erase(object);
-        }
-    });
-    pimpl->bleObserversPid_.Iterate([this, observer](sptr<IRemoteObject> object, int32_t token) {
-        if (object != nullptr && object == observer->AsObject()) {
-            pimpl->bleObserversPid_.erase(object);
-        }
-    });
+    uint32_t token = 0;
+    if (pimpl->bleObserversToken_.Find(observer->AsObject(), token)) {
+        pimpl->bleObserversToken_.Erase(observer->AsObject());
+    }
+    int32_t value = 0;
+    if (pimpl->bleObserversPid_.Find(observer->AsObject(), value)) {
+        pimpl->bleObserversPid_.Erase(observer->AsObject());
+    }
 }
 
 void BluetoothHostServer::RegisterBlePeripheralCallback(const sptr<IBluetoothBlePeripheralObserver> &observer)
 {
     HILOGI("start.");
-    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("observer is nullptr!");
         return;
@@ -1763,28 +1754,28 @@ void BluetoothHostServer::RegisterBlePeripheralCallback(const sptr<IBluetoothBle
 void BluetoothHostServer::DeregisterBlePeripheralCallback(const sptr<IBluetoothBlePeripheralObserver> &observer)
 {
     HILOGI("start.");
-    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("observer is nullptr!");
         return;
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->blePeripheralObserversMutex);
-        for (auto iter = pimpl->blePeripheralObservers_.begin(); iter != pimpl->blePeripheralObservers_.end(); ++iter) {
+        while (auto iter != pimpl->blePeripheralObservers_.end()) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 if (pimpl != nullptr) {
                     pimpl->bleRemoteObservers_.Deregister(*iter);
                     pimpl->blePeripheralObservers_.erase(iter);
                     break;
                 }
+                ++iter;
             }
+            ++iter;
         }
     }
-    pimpl->bleRemoteObserversToken_.Iterate([this, observer](sptr<IRemoteObject> object, uint32_t token) {
-        if (object != nullptr && object == observer->AsObject()) {
-            pimpl->bleRemoteObserversToken_.erase(object);
-        }
-    });
+    uint32_t token = 0;
+    if (pimpl->bleRemoteObserversToken_.Find(observer->AsObject(), token)) {
+        pimpl->bleRemoteObserversToken_.Erase(observer->AsObject());
+    }
 }
 
 int32_t BluetoothHostServer::Dump(int32_t fd, const std::vector<std::u16string> &args)
