@@ -283,11 +283,11 @@ void BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback(const sptr<IB
             }
         }
     }
-    pimpl->observerImp_->observersPid_.Iterate([this, callback](sptr<IRemoteObject> object, int32_t token)) {
+    pimpl->observerImp_->observersPid_.Iterate([this, callback](sptr<IRemoteObject> object, int32_t token) {
         if (object == callback->AsObject()) {
             pimpl->observerImp_->observersPid_.Erase(object);
         }
-    }
+    });
 }
 
 int32_t BluetoothBleAdvertiserServer::GetAdvertiserHandle(int32_t &advHandle)
