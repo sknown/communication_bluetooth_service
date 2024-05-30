@@ -160,13 +160,16 @@ ErrCode BluetoothPanServer::DeregisterObserver(const sptr<IBluetoothPanObserver>
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
-        for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
+        while (auto iter != pimpl->advCallBack_.end()) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 if (pimpl != nullptr) {
                     pimpl->observers_.Deregister(*iter);
                     pimpl->advCallBack_.erase(iter);
                     break;
                 }
+                ++iter;
+            } else {
+                ++iter;
             }
         }
     }
