@@ -812,24 +812,21 @@ int32_t BluetoothHostServer::GetBtState(int32_t &state)
 sptr<IRemoteObject> BluetoothHostServer::GetProfile(const std::string &name)
 {
     HILOGI("seraching %{public}s ", name.c_str());
-    pimpl->servers_.Iterate([this, name](std::string token, sptr<IRemoteObject> object)) {
-        if (token == name) {
-            HILOGI("server serached %{public}s ", name.c_str());
-            return pimpl->servers_[token];
-        }
+    sptr<IRemoteObject> object = nullptr;
+    if (pimpl->servers_.Find(name, object)) {
+        return object;
     }
-    return nullptr;
+    return object;
 }
 
 sptr<IRemoteObject> BluetoothHostServer::GetBleRemote(const std::string &name)
 {
     HILOGI("GetBleRemote %{public}s ", name.c_str());
-    pimpl->bleServers_.Iterate([this, name](std::string token, sptr<IRemoteObject> object)) {
-        if (token == name) {
-            return pimpl->bleServers_[name];
-        }
+    sptr<IRemoteObject> object = nullptr;
+    if (pimpl->bleServers_.Find(name, object)) {
+        return object;
     }
-    return nullptr;
+    return object;
 }
 
 // Fac_Res_CODE
