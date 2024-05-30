@@ -760,7 +760,8 @@ void BluetoothHostServer::DeregisterObserver(const sptr<IBluetoothHostObserver> 
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->hostObserversMutex);
-        while (auto iter != pimpl->hostObservers_.end()) {
+        auto iter = pimpl->hostObservers_.begin();
+        while (iter != pimpl->hostObservers_.end()) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 pimpl->observers_.Deregister(*iter);
                 pimpl->hostObservers_.erase(iter);
@@ -1665,7 +1666,8 @@ void BluetoothHostServer::DeregisterRemoteDeviceObserver(const sptr<IBluetoothRe
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->remoteDeviceObserversMutex);
-        while (auto iter != pimpl->remoteDeviceObservers_.end()) {
+        auto iter = pimpl->remoteDeviceObservers_.begin();
+        while (iter != pimpl->remoteDeviceObservers_.end()) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 pimpl->remoteObservers_.Deregister(*iter);
                 pimpl->remoteDeviceObservers_.erase(iter);
@@ -1717,7 +1719,8 @@ void BluetoothHostServer::DeregisterBleAdapterObserver(const sptr<IBluetoothHost
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->bleAdapterObserversMutex);
-        while (auto iter != pimpl->bleAdapterObservers_.end()) {
+        auto iter = pimpl->bleAdapterObservers_.begin();
+        while (iter != pimpl->bleAdapterObservers_.end()) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 pimpl->bleObservers_.Deregister(*iter);
                 pimpl->bleAdapterObservers_.erase(iter);
@@ -1759,7 +1762,8 @@ void BluetoothHostServer::DeregisterBlePeripheralCallback(const sptr<IBluetoothB
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->blePeripheralObserversMutex);
-        while (auto iter != pimpl->blePeripheralObservers_.end()) {
+        auto iter = pimpl->blePeripheralObservers_.begin();
+        while (iter != pimpl->blePeripheralObservers_.end()) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 if (pimpl != nullptr) {
                     pimpl->bleRemoteObservers_.Deregister(*iter);
