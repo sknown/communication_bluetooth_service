@@ -164,7 +164,8 @@ ErrCode BluetoothHidHostServer::DeregisterObserver(const sptr<IBluetoothHidHostO
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
-        while (auto iter != pimpl->advCallBack_.end()) {
+        auto iter = pimpl->advCallBack_.begin();
+        while (iter != pimpl->advCallBack_.end()) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 if (pimpl != nullptr) {
                     pimpl->observers_.Deregister(*iter);
