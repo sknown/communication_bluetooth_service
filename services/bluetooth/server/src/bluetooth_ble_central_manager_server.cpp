@@ -28,6 +28,7 @@
 #include "remote_observer_list.h"
 #include "permission_utils.h"
 #include "bluetooth_ble_central_manager_server.h"
+#include "safe_map.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -40,7 +41,7 @@ struct BluetoothBleCentralManagerServer::impl {
     class SystemStateObserver;
     std::unique_ptr<SystemStateObserver> systemStateObserver_ = nullptr;
     RemoteObserverList<IBluetoothBleCentralManagerCallback, int32_t> observers_;
-    std::map<sptr<IRemoteObject>, uint32_t> observersToken_;
+    SafeMap<sptr<IRemoteObject>, uint32_t> observersToken_;
     std::map<sptr<IRemoteObject>, int32_t> observersPid_;
     std::map<sptr<IRemoteObject>, int32_t> observersScannerId_;
     std::map<int32_t, std::vector<bluetooth::BleScanFilterImpl>> observersBleScanFilters_;
@@ -87,7 +88,7 @@ public:
         HILOGI("Address: %{public}s",
             GetEncryptAddr(result.GetPeripheralDevice().GetRawAddress().GetAddress()).c_str());
         observers_->ForEach([this, result](IBluetoothBleCentralManagerCallback *observer) {
-            uint32_t tokenId = this->pimpl_->observersToken_[observer->AsObject()];
+            uint32_t tokenId = this->pimpl_->observersToken_.ReadVal(observer->AsObject());
             int32_t pid = this->pimpl_->observersPid_[observer->AsObject()];
             if (BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(pid)) {
                 HILOGD("pid:%{public}d is proxy pid, not callback.", pid);
@@ -518,7 +519,7 @@ void BluetoothBleCentralManagerServer::RegisterBleCentralManagerCallback(int32_t
 
     pimpl->eventHandler_->PostSyncTask([&]() {
         if (pimpl != nullptr) {
-            pimpl->observersToken_[callback->AsObject()] = IPCSkeleton::GetCallingTokenID();
+            pimpl->observersToken_.EnsureInsert(callback->AsObject(), IPCSkeleton::GetCallingTokenID());
             pimpl->observersPid_[callback->AsObject()] = pid;
             pimpl->observersScannerId_[callback->AsObject()] = scannerId;
             auto func = std::bind(&BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallbackInner,
@@ -556,12 +557,11 @@ void BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallback(int32
                 break;
             }
         }
-        for (auto iter =  pimpl->observersToken_.begin(); iter !=  pimpl->observersToken_.end(); ++iter) {
-            if (iter->first == callback->AsObject()) {
-                pimpl->observersToken_.erase(iter);
-                break;
+        pimpl->observersToken_.Iterate([this, callback](sptr<IRemoteObject> object, uint32_t token) {
+            if (object == callback->AsObject()) {
+                pimpl->observersToken_.Erase(object);
             }
-        }
+        });
         for (auto iter = pimpl->observersPid_.begin(); iter != pimpl->observersPid_.end(); ++iter) {
             if (iter->first == callback->AsObject()) {
                 pimpl->observersPid_.erase(iter);
