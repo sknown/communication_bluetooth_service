@@ -78,6 +78,9 @@ int BluetoothHidHostStub::OnRemoteRequest(
 int32_t BluetoothHidHostStub::ConnectInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
+    if (!device) {
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
     HILOGD("BluetoothHidHostStub::ConnectInner");
     int32_t errCode = Connect(*device);
     // write error code
@@ -91,6 +94,9 @@ int32_t BluetoothHidHostStub::ConnectInner(MessageParcel &data, MessageParcel &r
 int32_t BluetoothHidHostStub::DisconnectInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
+    if (!device) {
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
     HILOGD("BluetoothHidHostStub::DisconnectInner");
     int32_t errCode = Disconnect(*device);
     // write error code
@@ -104,6 +110,9 @@ int32_t BluetoothHidHostStub::DisconnectInner(MessageParcel &data, MessageParcel
 int32_t BluetoothHidHostStub::GetDeviceStateInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
+    if (!device) {
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
     HILOGD("BluetoothHidHostStub::GetDeviceStateInner");
     int32_t state;
     int32_t errCode = GetDeviceState(*device, state);

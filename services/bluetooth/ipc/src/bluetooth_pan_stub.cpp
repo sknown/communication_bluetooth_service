@@ -67,6 +67,9 @@ int BluetoothPanStub::OnRemoteRequest(
 int32_t BluetoothPanStub::DisconnectInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
+    if (!device) {
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
     int32_t errCode = Disconnect(*device);
     // write error code
     if (!reply.WriteInt32(errCode)) {
@@ -79,6 +82,9 @@ int32_t BluetoothPanStub::DisconnectInner(MessageParcel &data, MessageParcel &re
 int32_t BluetoothPanStub::GetDeviceStateInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
+    if (!device) {
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
     int32_t state;
     int32_t errCode = GetDeviceState(*device, state);
     // write error code
