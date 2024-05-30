@@ -274,7 +274,8 @@ void BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback(const sptr<IB
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
-        while (auto iter != pimpl->advCallBack_.end()) {
+        auto iter = pimpl->advCallBack_.begin();
+        while (iter != pimpl->advCallBack_.end()) {
             if ((*iter)->AsObject() == callback->AsObject()) {
                 HILOGI("Deregister observer");
                 pimpl->observers_.Deregister(*iter);
