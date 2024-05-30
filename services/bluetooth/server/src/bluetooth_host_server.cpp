@@ -739,7 +739,6 @@ void BluetoothHostServer::OnStop()
 
 void BluetoothHostServer::RegisterObserver(const sptr<IBluetoothHostObserver> &observer)
 {
-    std::lock_guard<std::mutex> lock(oblock_);
     if (observer == nullptr) {
         HILOGE("RegisterObserver observer is null");
         return;
