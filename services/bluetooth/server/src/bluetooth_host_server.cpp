@@ -1374,12 +1374,12 @@ int32_t BluetoothHostServer::SetDeviceAlias(const std::string &address, const st
     HILOGI("address: %{public}s, aliasName: %{public}s", GetEncryptAddr(address).c_str(), aliasName.c_str());
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
-        return false;
+        return BT_ERR_PERMISSION_FAILED;
     }
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     if (IsBtEnabled() && classicService) {
         RawAddress addr(address);
-        return classicService->SetAliasName(addr, aliasName) ? BT_NO_ERROR : BT_ERR_INTERNAL_ERROR;
+        return classicService->SetAliasName(addr, aliasName) ? BT_NO_ERROR : BT_ERR_INVALID_PARAM;
     } else {
         HILOGE("BT current state is not enabled");
     }
