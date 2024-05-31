@@ -274,22 +274,16 @@ void BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback(const sptr<IB
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
-        auto iter = pimpl->advCallBack_.begin();
-        while (iter != pimpl->advCallBack_.end()) {
+        for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
             if ((*iter)->AsObject() == callback->AsObject()) {
                 HILOGI("Deregister observer");
                 pimpl->observers_.Deregister(*iter);
                 pimpl->advCallBack_.erase(iter);
                 break;
-            } else {
-                ++iter;
             }
         }
     }
-    int32_t token = 0;
-    if (pimpl->observerImp_->observersPid_.Find(callback->AsObject(), token)) {
-        pimpl->observerImp_->observersPid_.Erase(callback->AsObject());
-    }
+    pimpl->observerImp_->observersPid_.Erase(callback->AsObject());
 }
 
 int32_t BluetoothBleAdvertiserServer::GetAdvertiserHandle(int32_t &advHandle)
