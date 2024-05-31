@@ -760,24 +760,16 @@ void BluetoothHostServer::DeregisterObserver(const sptr<IBluetoothHostObserver> 
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->hostObserversMutex);
-        auto iter = pimpl->hostObservers_.begin();
-        while (iter != pimpl->hostObservers_.end()) {
+        for (auto iter = pimpl->hostObservers_.begin(); iter != pimpl->hostObservers_.end(); ++iter) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 pimpl->observers_.Deregister(*iter);
                 pimpl->hostObservers_.erase(iter);
                 break;
             }
-            ++iter;
         }
     }
-    uint32_t token = 0;
-    if (pimpl->observersToken_.Find(observer->AsObject(), token)) {
-        pimpl->observersToken_.Erase(observer->AsObject());
-    }
-    int32_t value = 0;
-    if (pimpl->observersPid_.Find(observer->AsObject(), value)) {
-        pimpl->observersPid_.Erase(observer->AsObject());
-    }
+    pimpl->observersToken_.Erase(observer->AsObject());
+    pimpl->observersPid_.Erase(observer->AsObject());
 }
 
 int32_t BluetoothHostServer::EnableBt()
@@ -1666,24 +1658,16 @@ void BluetoothHostServer::DeregisterRemoteDeviceObserver(const sptr<IBluetoothRe
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->remoteDeviceObserversMutex);
-        auto iter = pimpl->remoteDeviceObservers_.begin();
-        while (iter != pimpl->remoteDeviceObservers_.end()) {
+        for (auto iter = pimpl->remoteDeviceObservers_.begin(); iter != pimpl->remoteDeviceObservers_.end(); ++iter) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 pimpl->remoteObservers_.Deregister(*iter);
                 pimpl->remoteDeviceObservers_.erase(iter);
                 break;
             }
-            ++iter;
         }
     }
-    uint32_t token = 0;
-    if (pimpl->remoteObserversToken_.Find(observer->AsObject(), token)) {
-        pimpl->remoteObserversToken_.Erase(observer->AsObject());
-    }
-    int32_t value = 0;
-    if (pimpl->remoteObserversPid_.Find(observer->AsObject(), value)) {
-        pimpl->remoteObserversPid_.Erase(observer->AsObject());
-    }
+    pimpl->remoteObserversToken_.Erase(observer->AsObject());
+    pimpl->remoteObserversPid_.Erase(observer->AsObject());
 }
 
 bool BluetoothHostServer::IsBtEnabled()
@@ -1719,24 +1703,16 @@ void BluetoothHostServer::DeregisterBleAdapterObserver(const sptr<IBluetoothHost
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->bleAdapterObserversMutex);
-        auto iter = pimpl->bleAdapterObservers_.begin();
-        while (iter != pimpl->bleAdapterObservers_.end()) {
+        for (auto iter = pimpl->bleAdapterObservers_.begin(); iter != pimpl->bleAdapterObservers_.end(); ++iter) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 pimpl->bleObservers_.Deregister(*iter);
                 pimpl->bleAdapterObservers_.erase(iter);
                 break;
             }
-            ++iter;
         }
     }
-    uint32_t token = 0;
-    if (pimpl->bleObserversToken_.Find(observer->AsObject(), token)) {
-        pimpl->bleObserversToken_.Erase(observer->AsObject());
-    }
-    int32_t value = 0;
-    if (pimpl->bleObserversPid_.Find(observer->AsObject(), value)) {
-        pimpl->bleObserversPid_.Erase(observer->AsObject());
-    }
+    pimpl->bleObserversToken_.Erase(observer->AsObject());
+    pimpl->bleObserversPid_.Erase(observer->AsObject());
 }
 
 void BluetoothHostServer::RegisterBlePeripheralCallback(const sptr<IBluetoothBlePeripheralObserver> &observer)
@@ -1762,23 +1738,17 @@ void BluetoothHostServer::DeregisterBlePeripheralCallback(const sptr<IBluetoothB
     }
     {
         std::lock_guard<std::mutex> lock(pimpl->blePeripheralObserversMutex);
-        auto iter = pimpl->blePeripheralObservers_.begin();
-        while (iter != pimpl->blePeripheralObservers_.end()) {
+        for (auto iter = pimpl->blePeripheralObservers_.begin(); iter != pimpl->blePeripheralObservers_.end(); ++iter) {
             if ((*iter)->AsObject() == observer->AsObject()) {
                 if (pimpl != nullptr) {
                     pimpl->bleRemoteObservers_.Deregister(*iter);
                     pimpl->blePeripheralObservers_.erase(iter);
                     break;
                 }
-                ++iter;
             }
-            ++iter;
         }
     }
-    uint32_t token = 0;
-    if (pimpl->bleRemoteObserversToken_.Find(observer->AsObject(), token)) {
-        pimpl->bleRemoteObserversToken_.Erase(observer->AsObject());
-    }
+    pimpl->bleRemoteObserversToken_.Erase(observer->AsObject());
 }
 
 int32_t BluetoothHostServer::Dump(int32_t fd, const std::vector<std::u16string> &args)
