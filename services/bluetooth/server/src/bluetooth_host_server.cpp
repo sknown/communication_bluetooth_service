@@ -1370,7 +1370,7 @@ int32_t BluetoothHostServer::SetDeviceAlias(const std::string &address, const st
 int32_t BluetoothHostServer::GetRemoteDeviceBatteryInfo(const std::string &address,
     BluetoothBatteryInfo &batteryInfo)
 {
-    return BT_ERR_API_NOT_SUPPORT;
+    return BT_ERR_INTERNAL_ERROR;
 }
 
 int32_t BluetoothHostServer::GetPairState(int32_t transport, const std::string &address, int32_t &pairState)
