@@ -669,7 +669,7 @@ void BluetoothHostServer::impl::createServers()
     servers_.EnsureInsert(PROFILE_PAN_SERVER, panServer->AsObject());
 #endif
 
-    HILOGI("servers_ constructed, size is %{public}zu", servers_.Size());
+    HILOGI("servers_ constructed, size is %{public}d", servers_.Size());
 }
 
 BluetoothHostServer::BluetoothHostServer() : SystemAbility(BLUETOOTH_HOST_SYS_ABILITY_ID, true)
