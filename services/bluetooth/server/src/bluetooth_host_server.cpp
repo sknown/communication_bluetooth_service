@@ -1823,6 +1823,11 @@ int32_t BluetoothHostServer::CountEnableTimes(bool enable)
     return NO_ERROR;
 }
 
+int32_t BluetoothHostServer::RestrictBluetooth()
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
 int32_t BluetoothHostServer::ConnectAllowedProfiles(const std::string &address)
 {
     return BT_ERR_API_NOT_SUPPORT;
