@@ -2311,6 +2311,9 @@ static void AttDisconnectAbnormalAsync(const void *context)
         AttConnectingInfo *connecting = NULL;
         GapRequestSecurityParam gapReqSecurity;
         AttGetConnectingIndexByCid(attDisconnectAbnormalPtr->lcid, &connecting);
+        if (connecting == NULL) {
+            goto ATTDISCONNECTABNORMAL_END;
+        }
         connecting->cid = 0;
         AttAssignGAPRequestSecurity(&gapReqSecurity, OUTGOING, connecting);
         GAPIF_RequestSecurityAsync(&(connecting->addr), &gapReqSecurity);
@@ -2485,7 +2488,9 @@ static void L2cifConfigRspCallbackAsync(const void *context)
     int ret;
 
     AttGetConnectingIndexByCid(configRspPtr->lcid, &connecting);
-
+    if (connecting == NULL) {
+        goto L2CIFCONFIGRSPCALLBACK_END;
+    }
     if (configRspPtr->result == BT_SUCCESS) {
         if (connecting->initPassConnFlag == INITIATIVECONNECT) {
             ret = AttBredrConnectStatusChange(connecting->initiativeConnectStatus, &outPara, INITIATIVECONNECT);
