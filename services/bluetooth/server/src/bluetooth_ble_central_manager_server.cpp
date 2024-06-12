@@ -557,11 +557,8 @@ void BluetoothBleCentralManagerServer::DeregisterBleCentralManagerCallback(int32
                 break;
             }
         }
-        pimpl->observersToken_.Iterate([this, callback](sptr<IRemoteObject> object, uint32_t token) {
-            if (object == callback->AsObject()) {
-                pimpl->observersToken_.Erase(object);
-            }
-        });
+        pimpl->observersToken_.Erase(callback->AsObject());
+
         for (auto iter = pimpl->observersPid_.begin(); iter != pimpl->observersPid_.end(); ++iter) {
             if (iter->first == callback->AsObject()) {
                 pimpl->observersPid_.erase(iter);
