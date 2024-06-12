@@ -1137,7 +1137,7 @@ GattConnectionManager::Device::Device(const GattDevice &device, bool autoConnect
       info_(device),
       deviceRWMutex_(),
       sm_(*this),
-      directConnect_([&device]() {
+      directConnect_([device]() {
         GattConnectionManager::GetInstance().pimpl->dispatcher_->PostTask(
             std::bind(&impl::DirectConnectTimeout, GattConnectionManager::GetInstance().pimpl.get(), device));
     })
