@@ -30,7 +30,7 @@ public:
     ~BluetoothClientSocketObserverProxy() {}
 
     void OnConnectionStateChanged(const BluetoothRawAddress &dev, bluetooth::Uuid uuid,
-        int status, int result) override;
+        int status, int result, int type) override;
 
 private:
     static inline BrokerDelegator<BluetoothClientSocketObserverProxy> delegator_;

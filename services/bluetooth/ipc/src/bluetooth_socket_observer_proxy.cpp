@@ -19,7 +19,7 @@
 namespace OHOS {
 namespace Bluetooth {
 void BluetoothClientSocketObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &dev, bluetooth::Uuid uuid,
-    int status, int result)
+    int status, int result, int type)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -34,6 +34,7 @@ void BluetoothClientSocketObserverProxy::OnConnectionStateChanged(const Bluetoot
     data.WriteParcelable(&btUuid);
     data.WriteInt32(status);
     data.WriteInt32(result);
+    data.WriteInt32(type);
     int32_t st = Remote()->SendRequest(static_cast<uint32_t>(BT_SOCKET_OBSERVER_CONNECTION_STATE_CHANGED),
         data, reply, option);
     if (st != ERR_NONE) {
