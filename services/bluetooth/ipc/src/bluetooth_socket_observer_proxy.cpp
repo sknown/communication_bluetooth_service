@@ -18,8 +18,7 @@
 
 namespace OHOS {
 namespace Bluetooth {
-void BluetoothClientSocketObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &dev, bluetooth::Uuid uuid,
-    int status, int result, int type)
+void BluetoothClientSocketObserverProxy::OnConnectionStateChanged(CallbackParam callbackParam)
 {
     MessageParcel data;
     MessageParcel reply;
@@ -28,13 +27,14 @@ void BluetoothClientSocketObserverProxy::OnConnectionStateChanged(const Bluetoot
         HILOGE("WriteInterfaceToken error");
         return;
     }
-    data.WriteParcelable(&dev);
+    data.WriteParcelable(&callbackParam.dev);
 
-    BluetoothUuid btUuid(uuid);
+    BluetoothUuid btUuid(callbackParam.uuid);
     data.WriteParcelable(&btUuid);
-    data.WriteInt32(status);
-    data.WriteInt32(result);
-    data.WriteInt32(type);
+    data.WriteInt32(callbackParam.status);
+    data.WriteInt32(callbackParam.result);
+    data.WriteInt32(callbackParam.type);
+    data.WriteInt32(callbackParam.psm);
     int32_t st = Remote()->SendRequest(static_cast<uint32_t>(BT_SOCKET_OBSERVER_CONNECTION_STATE_CHANGED),
         data, reply, option);
     if (st != ERR_NONE) {
