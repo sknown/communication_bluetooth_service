@@ -29,8 +29,7 @@ public:
         : IRemoteProxy<IBluetoothClientSocketObserver>(impl) {}
     ~BluetoothClientSocketObserverProxy() {}
 
-    void OnConnectionStateChanged(const BluetoothRawAddress &dev, bluetooth::Uuid uuid,
-        int status, int result) override;
+    void OnConnectionStateChanged(CallbackParam callbackParam) override;
 
 private:
     static inline BrokerDelegator<BluetoothClientSocketObserverProxy> delegator_;
