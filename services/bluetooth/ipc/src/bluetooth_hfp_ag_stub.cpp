@@ -364,16 +364,36 @@ ErrCode BluetoothHfpAgStub::GetConnectStrategyInner(MessageParcel &data, Message
 
 ErrCode BluetoothHfpAgStub::IsInbandRingingEnabledInner(MessageParcel &data, MessageParcel &reply)
 {
+    bool isEnabled = true;
+    int result = IsInbandRingingEnabled(isEnabled);
+    if (!reply.WriteInt32(result)) {
+        HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
+    if (!reply.WriteBool(isEnabled)) {
+        HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
     return NO_ERROR;
 }
 
 ErrCode BluetoothHfpAgStub::ConnectScoInnerEx(MessageParcel &data, MessageParcel &reply)
 {
+    bool result = ConnectSco();
+    if (!reply.WriteBool(result)) {
+        HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
     return NO_ERROR;
 }
 
 ErrCode BluetoothHfpAgStub::DisconnectScoInnerEx(MessageParcel &data, MessageParcel &reply)
 {
+    bool result = DisconnectSco();
+    if (!reply.WriteBool(result)) {
+        HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
     return NO_ERROR;
 }
 
