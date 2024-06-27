@@ -2261,7 +2261,7 @@ int ClassicAdapter::ClassicAdapter::GetDeviceType(const RawAddress &device) cons
     HILOGI("enter");
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
-    int type = INVALID_VALUE;
+    int type = INVALID_TYPE;
     auto it = devices_.find(device.GetAddress());
     if (it != devices_.end()) {
         type = it->second->GetDeviceType();
