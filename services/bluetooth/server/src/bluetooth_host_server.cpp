@@ -993,6 +993,10 @@ int32_t BluetoothHostServer::GetLocalName(std::string &name)
 int32_t BluetoothHostServer::SetLocalName(const std::string &name)
 {
     HILOGI("name: %{public}s", name.c_str());
+    int api12 = 12;
+    if (!PermissionUtils::CheckSystemHapApp() && PermissionUtils::GetApiVersion() >= api12) {
+        return BT_ERR_API_NOT_SUPPORT;
+    }
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
         return BT_ERR_PERMISSION_FAILED;

@@ -22,7 +22,7 @@
 namespace OHOS {
 namespace bluetooth {
 using namespace OHOS;
-
+const int API_VERSION_INVALID = -1;
 int PermissionUtils::VerifyUseBluetoothPermission()
 {
     return AuthCenter::GetInstance().VerifyUseBluetoothPermission(
@@ -89,6 +89,20 @@ bool PermissionUtils::CheckSystemHapApp()
         return false;
     }
     return true;
+}
+
+int PermissionUtils::GetApiVersion()
+{
+    uint32_t tokenId = IPCSkeleton::GetCallingTokenID();
+    ATokenTypeEnum callingType = AccessTokenKit::GetTokenTypeFlag(tokenId);
+    if (callingType != ATokenTypeEnum::TOKEN_HAP) {
+        return API_VERSION_INVALID;
+    }
+    HapTokenInfo hapTokenInfo;
+    if (AccessTokenKit::GetHapTokenInfo(tokenId, hapTokenInfo) != AccessTokenKitRet::RET_SUCCESS) {
+        return API_VERSION_INVALID;
+    }
+    return hapTokenInfo.apiVersion;
 }
 }  // namespace bluetooth
 }  // namespace OHOS
