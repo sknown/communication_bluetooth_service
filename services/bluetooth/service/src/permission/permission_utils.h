@@ -36,6 +36,7 @@ public:
     static int VerifyUseBluetoothPermission(const std::uint32_t  &tokenID);
     static int VerifyDiscoverBluetoothPermission(const std::uint32_t  &tokenID);
     static bool CheckSystemHapApp();
+    static int GetApiVersion();
 };
 }  // namespace bluetooth
 }  // namespace OHOS
