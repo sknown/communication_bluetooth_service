@@ -1817,6 +1817,11 @@ int32_t BluetoothHostServer::DisconnectAllowedProfiles(const std::string &addres
     return BT_ERR_API_NOT_SUPPORT;
 }
 
+int32_t BluetoothHostServer::DisconnectAcl(const std::string &address)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
 int32_t BluetoothHostServer::SetDeviceCustomType(const std::string &address, int32_t deviceType)
 {
     return BT_ERR_API_NOT_SUPPORT;

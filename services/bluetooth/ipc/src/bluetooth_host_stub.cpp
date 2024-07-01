@@ -233,6 +233,9 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::DISCONNECT_ALLOWED_PROFILES,
             std::bind(&BluetoothHostStub::DisconnectAllowedProfilesInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::DISCONNECT_ACL,
+            std::bind(&BluetoothHostStub::DisconnectAclInner, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
         {BluetoothHostInterfaceCode::SET_CUSTOM_TYPE,
             std::bind(&BluetoothHostStub::SetDeviceCustomTypeInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
@@ -1305,6 +1308,11 @@ int32_t BluetoothHostStub::ConnectAllowedProfilesInner(MessageParcel &data, Mess
 }
 
 int32_t BluetoothHostStub::DisconnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::DisconnectAclInner(MessageParcel &data, MessageParcel &reply)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
