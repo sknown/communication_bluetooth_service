@@ -232,7 +232,6 @@ int BluetoothBleAdvertiserServer::StopAdvertising(int32_t advHandle)
     if (bleService != nullptr) {
         bleService->StopAdvertising(advHandle);
     }
-    pimpl->observerImp_->OnStopResultEvent(NO_ERROR, advHandle);
     return NO_ERROR;
 }
 
