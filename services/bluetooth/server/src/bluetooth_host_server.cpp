@@ -257,7 +257,7 @@ public:
     {
         HILOGI("device: %{public}s", GET_ENCRYPT_ADDR(device));
         impl_->observers_.ForEach([this, device](IBluetoothHostObserver *observer) {
-            int32_t uid = this->impl_->observersUid_ReadVal(observer->AsObject());
+            int32_t uid = this->impl_->observersUid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
                 HILOGI("uid:%{public}d is proxy uid, not callback.", uid);
                 return;
@@ -754,7 +754,7 @@ void BluetoothHostServer::RegisterObserver(const sptr<IBluetoothHostObserver> &o
     }
 
     pimpl->observersToken_.EnsureInsert(observer->AsObject(), IPCSkeleton::GetCallingTokenID());
-    pimpl->observersUid_EnsureInsert(observer->AsObject(), IPCSkeleton::GetCallingUid());
+    pimpl->observersUid_.EnsureInsert(observer->AsObject(), IPCSkeleton::GetCallingUid());
     auto func = std::bind(&BluetoothHostServer::DeregisterObserver, this, std::placeholders::_1);
     pimpl->observers_.Register(observer, func);
     std::lock_guard<std::mutex> lock(pimpl->hostObserversMutex);
