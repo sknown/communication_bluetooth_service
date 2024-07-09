@@ -1367,7 +1367,7 @@ void BleAdvertiserImpl::GapAdvStopCompleteEvt(int status) const
         case STOP_ADV_TYPE_SINGLE:
             break;
         case STOP_ADV_TYPE_ALL:
-            callback_->OnAutoStopAdvEvent(pimpl->advStopHandle_);
+            callback_->OnStopResultEvent(status, pimpl->advStopHandle_);
             break;
         case STOP_ADV_TYPE_RESOLVING_LIST:
             if (status != BT_SUCCESS) {
@@ -1716,6 +1716,13 @@ void BleAdvertiserImpl::GapExAdvTerminatedAdvSetEvt(int status, uint8_t handle) 
     auto exAdvTermIter = pimpl->advHandleSettingDatas_.find(handle);
     if (exAdvTermIter == pimpl->advHandleSettingDatas_.end()) {
         LOG_ERROR("[BleAdvertiserImpl] %{public}s:invalid handle! %u.", __func__, handle);
+        return;
+    }
+
+    if (!status) {
+        exAdvTermIter->second.advStatus_ = ADVERTISE_NOT_STARTED;
+        callback_->OnAutoStopAdvEvent(pimpl->advStopHandle_);
+        RemoveAdvHandle(handle);
         return;
     }
 
