@@ -171,9 +171,7 @@ BleAdvertiserDataImpl BluetoothBleAdvertiserServer::impl::ConvertAdvertisingData
         outData.AddServiceData(it->first, it->second);
     }
     std::vector<Uuid> serviceUuids = data.GetServiceUuids();
-    for (auto it = serviceUuids.begin(); it != serviceUuids.end(); it++) {
-        outData.AddServiceUuid(*it);
-    }
+    outData.AddServiceUuids(serviceUuids);
     outData.AddData(data.GetPayload());
 
     return outData;
