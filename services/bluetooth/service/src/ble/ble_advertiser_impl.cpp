@@ -1367,7 +1367,7 @@ void BleAdvertiserImpl::GapAdvStopCompleteEvt(int status) const
         case STOP_ADV_TYPE_SINGLE:
             break;
         case STOP_ADV_TYPE_ALL:
-            callback_->OnAutoStopAdvEvent(status, pimpl->advStopHandle_);
+            callback_->OnAutoStopAdvEvent(pimpl->advStopHandle_);
             break;
         case STOP_ADV_TYPE_RESOLVING_LIST:
             if (status != BT_SUCCESS) {
