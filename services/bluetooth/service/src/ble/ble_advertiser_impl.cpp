@@ -1720,6 +1720,13 @@ void BleAdvertiserImpl::GapExAdvTerminatedAdvSetEvt(int status, uint8_t handle) 
         return;
     }
 
+    if (!status) {
+        exAdvTermIter->second.advStatus_ = ADVERTISE_NOT_STARTED;
+        callback_->OnAutoStopAdvEvent(handle);
+        RemoveAdvHandle(handle);
+        return;
+    }
+
     if (exAdvTermIter->second.timer_ != nullptr) {
         exAdvTermIter->second.timer_->Stop();
         int inerval = BLE_CHANGE_RPA_ADDRESS_INTERVAL;
