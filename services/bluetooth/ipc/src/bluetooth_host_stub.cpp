@@ -239,6 +239,9 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::RESTRICT_BLUETOOTH,
             std::bind(&BluetoothHostStub::RestrictBluetoothInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::SATELLITE_CONTROL,
+            std::bind(&BluetoothHostStub::SatelliteControlInner, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -1295,6 +1298,11 @@ ErrCode BluetoothHostStub::CountEnableTimesInner(MessageParcel &data, MessagePar
 }
 
 ErrCode BluetoothHostStub::RestrictBluetoothInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHostStub::SatelliteControlInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }

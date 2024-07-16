@@ -1807,6 +1807,11 @@ int32_t BluetoothHostServer::RestrictBluetooth()
     return BT_ERR_API_NOT_SUPPORT;
 }
 
+int32_t BluetoothHostServer::SatelliteControl(int state)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
 int32_t BluetoothHostServer::ConnectAllowedProfiles(const std::string &address)
 {
     return BT_ERR_API_NOT_SUPPORT;
