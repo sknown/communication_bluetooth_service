@@ -37,6 +37,7 @@ private:
     ErrCode EnableBtInner(MessageParcel &data, MessageParcel &reply);
     int32_t DisableBtInner(MessageParcel &data, MessageParcel &reply);
     ErrCode RestrictBluetoothInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SatelliteControlInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetProfileInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetBleRemoteInner(MessageParcel &data, MessageParcel &reply);
     int32_t BluetoothFactoryResetInner(MessageParcel &data, MessageParcel &reply);
