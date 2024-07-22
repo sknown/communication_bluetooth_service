@@ -479,7 +479,6 @@ void AvrcpTgService::InitFeatures()
     features_ |= AVRC_TG_FEATURE_CATEGORY_1;
     features_ |= AVRC_TG_FEATURE_CATEGORY_2;
     features_ |= AVRC_TG_FEATURE_PLAYER_APPLICATION_SETTINGS;
-    features_ |= AVRC_TG_FEATURE_BROWSING;
     features_ |= AVRC_TG_FEATURE_MULTIPLE_MEDIA_PLAYER_APPLICATIONS;
     features_ |= AVRC_TG_FEATURE_KEY_OPERATION;
     features_ |= AVRC_TG_FEATURE_ABSOLUTE_VOLUME;
