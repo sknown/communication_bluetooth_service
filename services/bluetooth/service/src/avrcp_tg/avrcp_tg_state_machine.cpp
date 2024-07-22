@@ -362,7 +362,7 @@ void AvrcTgStateMachineManager::StateMachine::CtConnecting::Entry(void)
 
     const AvrcTgConnectInfo *info = AvrcTgConnectManager::GetInstance()->GetConnectInfo(rawAddr_);
 
-    AVCT_Register(info->controlMtu_, info->browseMtu_, AVCT_CT);
+    AVCT_Register(info->controlMtu_, info->browseMtu_, AVCT_TG);
 
     uint8_t connectId = 0x00;
     AvctConnectParam param = {info->eventCallback_, info->msgCallback_, AVRC_TG_AV_REMOTE_CONTROL,

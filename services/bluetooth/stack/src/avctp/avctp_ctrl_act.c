@@ -349,6 +349,7 @@ NO_SANITIZE("cfi") uint16_t AvctCbCtrlRevMsg(AvctCbDev *cbDev, const AvctEvtData
     PacketExtractHead(pkt, sHead, AVCT_PKG_HDR_LEN_SINGLE);
     uint8_t label;
     uint8_t cr;
+    uint8_t role;
     uint8_t ipid;
     uint16_t pid;
     AVCT_PARSE_SIGNLE_HDR(sHead, label, cr, ipid, pid);
@@ -357,8 +358,15 @@ NO_SANITIZE("cfi") uint16_t AvctCbCtrlRevMsg(AvctCbDev *cbDev, const AvctEvtData
         LOG_WARN("[AVCT] %{public}s: Invalid ipid!", __func__);
         return ret;
     }
-    /* Get the conn by pid */
-    AvctCbConn *cbConn = AvctGetCbConnByPid(cbDev, pid);
+    
+    if (cr == AVCT_CMD) {
+        role = AVCT_TG;
+    } else {
+        role = AVCT_CT;
+    }
+
+    /* Get the conn by pid and role*/
+    AvctCbConn *cbConn = AvctGetCbConnByPidAndRole(cbDev, pid, role);
     if (cbConn != NULL) {
         /* Send msg to app */
         if (cbConn->connParam.msgCallback != NULL) {

@@ -87,7 +87,6 @@ void AvrcpCtService::InitFeatures()
 
     features_ |= AVRC_CT_FEATURE_CATEGORY_1;
     features_ |= AVRC_CT_FEATURE_CATEGORY_2;
-    features_ |= AVRC_CT_FEATURE_BROWSING;
     features_ |= AVRC_CT_FEATURE_KEY_OPERATION;
     features_ |= AVRC_CT_FEATURE_ABSOLUTE_VOLUME;
     features_ |= AVRC_CT_FEATURE_NOTIFY_PLAYBACK_STATUS_CHANGED;

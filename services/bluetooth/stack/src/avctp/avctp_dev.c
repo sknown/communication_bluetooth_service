@@ -36,7 +36,7 @@ AvctCbDev *AvctGetCbDevByAddress(const BtAddr *peerAddr)
     AvctCbDev *cbDev = NULL;
     for (uint8_t i = 0; i < AVCT_MAX_DEVICES; i++) {
         if ((g_avctMng.cbDev[i].alloced) &&
-            (!memcmp((char *)g_avctMng.cbDev[i].peerAddr.addr, (char *)&(peerAddr->addr), BT_ADDR_LENGTH))) {
+            (!memcmp((char *)g_avctMng.cbDev[i].peerAddr.addr, (char *)(peerAddr->addr), BT_ADDR_LENGTH))) {
             cbDev = &g_avctMng.cbDev[i];
             LOG_DEBUG("[AVCT] %{public}s: Device id is %hhu", __func__, i);
             break;
