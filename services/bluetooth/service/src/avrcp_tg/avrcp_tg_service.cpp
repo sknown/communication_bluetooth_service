@@ -479,7 +479,6 @@ void AvrcpTgService::InitFeatures()
     features_ |= AVRC_TG_FEATURE_CATEGORY_1;
     features_ |= AVRC_TG_FEATURE_CATEGORY_2;
     features_ |= AVRC_TG_FEATURE_PLAYER_APPLICATION_SETTINGS;
-    features_ |= AVRC_TG_FEATURE_BROWSING;
     features_ |= AVRC_TG_FEATURE_MULTIPLE_MEDIA_PLAYER_APPLICATIONS;
     features_ |= AVRC_TG_FEATURE_KEY_OPERATION;
     features_ |= AVRC_TG_FEATURE_ABSOLUTE_VOLUME;
@@ -2687,13 +2686,13 @@ uint8_t AvrcpTgService::ConvertPlayState(const int32_t state) const
 #ifdef AVRCP_AVSESSION
     switch (state) {
         case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_INITIAL:
-        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PREPARING:
+        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PREPARE:
         case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_MAX:
             break;
-        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PLAYING:
+        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PLAY:
             ret = AVRC_PLAY_STATUS_PLAYING;
             break;
-        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PAUSED:
+        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PAUSE:
             ret = AVRC_PLAY_STATUS_PAUSED;
             break;
         case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_FAST_FORWARD:

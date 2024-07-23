@@ -129,7 +129,7 @@ public:
 
     void OnConnectionStateChanged(const RawAddress &rawAddr, int state)
     {
-        HILOGI("res: %{public}s, state: %{public}d.", GET_ENCRYPT_AVRCP_ADDR(rawAddr), state);
+        HILOGI("res: %{public}s, state: %{public}d.", GET_ENCRYPT_RAW_ADDR(rawAddr), state);
         std::lock_guard<std::mutex> lock(observerMutex_);
 
         observers_.ForEach([rawAddr, state](IBluetoothAvrcpTgObserver *observer) {
@@ -466,17 +466,18 @@ void BluetoothAvrcpTgServer::NotifyVolumeChanged(int32_t volume)
     pimpl->service_->NotifyVolumeChanged(static_cast<uint8_t>(volume));
     HILOGI("end.");
 }
-int32_t SetDeviceAbsoluteVolume(const BluetoothRawAddress &addr, int32_t volumeLevel)
+
+int32_t BluetoothAvrcpTgServer::SetDeviceAbsoluteVolume(const BluetoothRawAddress &addr, int32_t volumeLevel)
 {
     return BT_NO_ERROR;
 }
 
-int32_t SetDeviceAbsVolumeAbility(const BluetoothRawAddress &addr, int32_t ability)
+int32_t BluetoothAvrcpTgServer::SetDeviceAbsVolumeAbility(const BluetoothRawAddress &addr, int32_t ability)
 {
     return BT_NO_ERROR;
 }
 
-int32_t GetDeviceAbsVolumeAbility(const BluetoothRawAddress &addr, int32_t &ability)
+int32_t BluetoothAvrcpTgServer::GetDeviceAbsVolumeAbility(const BluetoothRawAddress &addr, int32_t &ability)
 {
     ability = DeviceAbsVolumeAbility::DEVICE_ABSVOL_UNSUPPORT;
     return BT_NO_ERROR;

@@ -83,7 +83,8 @@
         "safwk",
         "common_event_service",
         "state_registry",
-        "c_utils"
+        "c_utils",
+        "image_framework"
       ],
       "third_party": [
         "googletest",
