@@ -122,3 +122,27 @@ AvctCbConn *AvctGetCbConnByPid(const AvctCbDev *cbDev, uint16_t pid)
     }
     return cbConn;
 }
+
+/*
+ * Function     AvctGetCbConnByPidAndRole
+ * Description  Retrieve the AVCT connection object for a given profile ID and role.
+ * Param[in]    *cbDev  Pointer to the AVCT device block.
+ * Param[in]    pid     Profile ID.
+ * Param[in]    role    Role identifier.
+ * Return       Pointer to AvctCbConn structure representing the connection.
+ */
+AvctCbConn *AvctGetCbConnByPidAndRole(const AvctCbDev *cbDev, uint16_t pid, uint8_t role)
+{
+    LOG_DEBUG("[AVCT] %{public}s:pid (0x%x), role: (0x%x)", __func__, pid, role);
+    AvctCbConn *cbConn = NULL;
+    for (uint8_t i = 0; i < AVCT_MAX_CONNECTS; i++) {
+        LOG_DEBUG("[AVCT] %{public}s:pid:(0x%x), role:(0x%x)", __func__, g_avctMng.cbConn[i].connParam.pid, g_avctMng.cbConn[i].connParam.role);
+
+        if ((g_avctMng.cbConn[i].status == AVCT_CONN_BIND) && (g_avctMng.cbConn[i].cbDev == cbDev) &&
+            (g_avctMng.cbConn[i].connParam.pid == pid) && (g_avctMng.cbConn[i].connParam.role == role)) {
+            cbConn = &g_avctMng.cbConn[i];
+            break;
+        }
+    }
+    return cbConn;
+}

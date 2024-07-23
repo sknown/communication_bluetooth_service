@@ -579,9 +579,11 @@ uint16_t AvctConnectInitiate(AvctCbConn *cbConn, const AvctConnectParam *connPar
         }
     } else {
         /* check the connected ctrl channel has the same pid. */
-        if (AvctGetCbConnByPid(cbDev, connParam->pid)) {
+        if (AvctGetCbConnByPid(cbDev, connParam->pid) == NULL) {
             LOG_ERROR("[AVCT]pid is in used !");
             ret = AVCT_ERR_PID_USED;
+        } else {
+            cbCtrl = cbDev->cbCtrl;
         }
     }
     if (ret == AVCT_SUCCESS) {
