@@ -753,11 +753,11 @@ void A2dpStateOpen::ProcessCloseCfm(BtAddr addr, uint8_t role)
     }
 
     SetStateName(A2DP_PROFILE_IDLE);
-    if (!profile->HasOpen() && profile->GetDisalbeTag()) {
-        profile->Disable();
-    }
     if (profile->FindPeerByAddress(addr)->GetRestart()) {
         profile->FindPeerByAddress(addr)->UpdateConfigure();
+    }
+    if (!profile->HasOpen() && profile->GetDisalbeTag()) {
+        profile->Disable();
     }
 }
 
