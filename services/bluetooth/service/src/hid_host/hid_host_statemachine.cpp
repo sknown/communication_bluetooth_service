@@ -141,7 +141,9 @@ void HidHostDisconnectedState::Entry()
         stateMachine_.SetRemoving(true);
         HidHostService *service = HidHostService::GetService();
         if (service != nullptr) {
-            service->RemoveStateMachine(stateMachine_.GetDeviceAdress());
+            if (stateMachine_.getReconnectFlag() == false) {
+                service->RemoveStateMachine(stateMachine_.GetDeviceAdress());
+            }
         } else {
             LOG_ERROR("[HIDH Machine]%{public}s():HidHostService is nullptr!", __FUNCTION__);
         }
@@ -491,12 +493,14 @@ bool HidHostConnectedState::DispatchBle(const utility::Message &msg)
         case HID_HOST_API_OPEN_EVT:
             break;
         case HID_HOST_API_CLOSE_EVT:
+            stateMachine_.setReconnectFlag(false);
             stateMachine_.ProcessBleCloseDeviceReq(event);
             Transition(HidHostStateMachine::DISCONNECTING);
             break;
         case HID_HOST_INT_OPEN_EVT:
             break;
         case HID_HOST_INT_CLOSE_EVT:
+            stateMachine_.setReconnectFlag(true);
             stateMachine_.ProcessBleCloseDevice(event);
             Transition(HidHostStateMachine::DISCONNECTED);
             break;
@@ -730,6 +734,16 @@ void HidHostStateMachine::DisonnectionTimeout() const
     HidHostMessage event(HID_HOST_DISCONNECTION_TIMEOUT_EVT);
     event.dev_ = address_;
     HidHostService::GetService()->PostEvent(event);
+}
+
+void HidHostStateMachine::setReconnectFlag(bool flag)
+{
+    isReconnect_ = flag;
+}
+
+bool HidHostStateMachine::getReconnectFlag() const
+{
+    return isReconnect_;
 }
 
 std::string HidHostStateMachine::GetEventName(int what)
