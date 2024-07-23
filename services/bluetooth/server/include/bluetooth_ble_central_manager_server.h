@@ -61,6 +61,7 @@ private:
     static std::set<int32_t> proxyPids_;
     void SetScanParams(const BluetoothBleScanSettings &settings);
     void SetWindowAndInterval(const int mode, uint16_t &window, uint16_t &interval);
+    void SetOtherWindowAndInterval(const int mode, uint16_t &window, uint16_t &interval);
     bool IsNewScanParams();
     bool IsAllStop();
     int ConfigScanFilterInner(int32_t scannerId, const std::vector<BluetoothBleScanFilter> &filters);
