@@ -813,8 +813,15 @@ void BleCentralManagerImpl::SetScanModeDuration(int scanMode, int type) const
             break;
         case SCAN_MODE_OP_P10_30_300:
             SetDutyCycle1030Duration(type);
+            break;
         case SCAN_MODE_OP_P2_30_1500:
-            SetDutyCycle2Duration(type);
+            SetDutyCycle230Duration(type);
+            break;
+        case SCAN_MODE_OP_P75_30_40:
+            SetDutyCycle75Duration(type);
+            break;
+        case SCAN_MODE_OP_P50_30_60:
+            SetDutyCycle5030Duration(type);
             break;
         default:
             break;
@@ -955,6 +962,51 @@ void BleCentralManagerImpl::SetDutyCycle1030Duration(int type) const
         uint16_t interval = BLE_SCAN_MODE_OP_P10_30_300_INTERVAL_MS;
         SetInterval(interval);
         uint16_t window = BLE_SCAN_MODE_OP_P10_30_300_WINDOW_MS;
+        SetWindow(window);
+    }
+}
+
+void BleCentralManagerImpl::SetDutyCycle230Duration(int type) const
+{
+    if (type == CALLBACK_TYPE_ALL_MATCHES) {
+        uint16_t interval = BLE_SCAN_MODE_BATCH_OP_P2_30_1500_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_BATCH_OP_P2_30_1500_WINDOW_MS;
+        SetWindow(window);
+    } else {
+        uint16_t interval = BLE_SCAN_MODE_OP_P2_30_1500_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_OP_P2_30_1500_WINDOW_MS;
+        SetWindow(window);
+    }
+}
+
+void BleCentralManagerImpl::SetDutyCycle75Duration(int type) const
+{
+    if (type == CALLBACK_TYPE_ALL_MATCHES) {
+        uint16_t interval = BLE_SCAN_MODE_BATCH_OP_P75_30_40_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_BATCH_OP_P75_30_40_WINDOW_MS;
+        SetWindow(window);
+    } else {
+        uint16_t interval = BLE_SCAN_MODE_OP_P75_30_40_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_OP_P75_30_40_WINDOW_MS;
+        SetWindow(window);
+    }
+}
+
+void BleCentralManagerImpl::SetDutyCycle5030Duration(int type) const
+{
+    if (type == CALLBACK_TYPE_ALL_MATCHES) {
+        uint16_t interval = BLE_SCAN_MODE_BATCH_OP_P50_30_60_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_BATCH_OP_P50_30_60_WINDOW_MS;
+        SetWindow(window);
+    } else {
+        uint16_t interval = BLE_SCAN_MODE_OP_P50_30_60_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_OP_P50_30_60_WINDOW_MS;
         SetWindow(window);
     }
 }
