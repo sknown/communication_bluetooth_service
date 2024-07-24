@@ -312,6 +312,27 @@ private:
     void SetDutyCycle1030Duration(int type) const;
 
     /**
+     * @brief set duty cycle duration
+     *
+     * @param [in] type callback type
+     */
+    void SetDutyCycle230Duration(int type) const;
+
+    /**
+     * @brief set duty cycle duration
+     *
+     * @param [in] type callback type
+     */
+    void SetDutyCycle75Duration(int type) const;
+
+    /**
+     * @brief set duty cycle duration
+     *
+     * @param [in] type callback type
+     */
+    void SetDutyCycle5030Duration(int type) const;
+
+    /**
      *  @brief Gap scan event
      *
      *  @param [in] event gap event.
