@@ -356,6 +356,7 @@ ohos_shared_library("btservice") {
       "call_manager:tel_call_manager_api",
       "core_service:tel_core_service_api",
       "state_registry:tel_state_registry_api",
+    ]
   }
 
   if (bluetooth_service_avrcp_avsession) {
