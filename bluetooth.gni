@@ -21,8 +21,6 @@ declare_args() {
   bluetooth_service_pan_feature = false
 
   if (defined(global_parts_info) &&
-      !defined(global_parts_info.telephony_call_manager) ||
-      !defined(global_parts_info.telephony_core_service) ||
       !defined(global_parts_info.telephony_state_registry)) {
     bluetooth_service_hfp_ag_feature = false
   } else {
