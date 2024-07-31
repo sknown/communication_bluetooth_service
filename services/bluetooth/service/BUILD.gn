@@ -167,11 +167,15 @@ config("btservice_config") {
     "$BT_SERVICE_DIR/src/ble/ble_scan_filter",
     "$BT_SERVICE_DIR/src/gavdp/a2dp_codec/aaccodecctrl_l2/include",
     "$BT_SERVICE_DIR/src/gavdp/a2dp_codec/sbccodecctrl/include",
-    "//base/telephony/state_registry/frameworks/native/observer/include",
     "//foundation/multimedia/audio_framework/interfaces/inner_api/native/audiocommon/include",
     "//foundation/multimedia/audio_framework/interfaces/inner_api/native/audiomanager/include",
     "$PART_DIR/common",
   ]
+
+  if (bluetooth_service_hfp_ag_feature) {
+    include_dirs +=
+        [ "//base/telephony/state_registry/frameworks/native/observer/include" ]
+  }
 
   cflags_cc = [
     "-fPIC",
@@ -347,9 +351,7 @@ ohos_shared_library("btservice") {
     "audio_framework:audio_client",
     "bluetooth:btcommon",
     "c_utils:utils",
-    "call_manager:tel_call_manager_api",
     "common_event_service:cesfwk_innerkits",
-    "core_service:tel_core_service_api",
     "hdf_core:libhdf_ipc_adapter",
     "hdf_core:libhdf_utils",
     "hdf_core:libhdi",
@@ -358,8 +360,15 @@ ohos_shared_library("btservice") {
     "hisysevent:libhisysevent",
     "ipc:ipc_core",
     "samgr:samgr_proxy",
-    "state_registry:tel_state_registry_api",
   ]
+
+  if (bluetooth_service_hfp_ag_feature) {
+    external_deps += [
+      "call_manager:tel_call_manager_api",
+      "core_service:tel_core_service_api",
+      "state_registry:tel_state_registry_api",
+    ]
+  }
 
   if (bluetooth_service_avrcp_avsession) {
     external_deps += [
