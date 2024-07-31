@@ -27,6 +27,7 @@
 #include "platform/include/semaphore.h"
 #include "platform/include/thread.h"
 
+#include "alarm.h"
 #include "acl/hci_acl.h"
 #include "cmd/hci_cmd.h"
 #include "evt/hci_evt.h"
@@ -38,6 +39,7 @@
 
 #define HCI_TX_QUEUE_SIZE INT32_MAX
 #define HCI_RX_QUEUE_SIZE INT32_MAX
+#define HCI_WAIT_HDI_INIT_TIME 2000
 
 static BtHciCallbacks g_hdiCallacks;
 
@@ -49,6 +51,7 @@ static ReactorItem *g_hciRxReactorItem = NULL;
 
 static Semaphore *g_waitHdiInit;
 static BtInitStatus g_hdiInitStatus = UNKNOWN;
+static Alarm *g_waitHdiInitAlarm = NULL;
 
 static HDILib *g_hdiLib = NULL;
 
@@ -60,6 +63,7 @@ static Thread *g_hciTxThread = NULL;
 // Function Declare
 static void HciSendPacketCallback(void *param);
 static void HciRecvPacketCallback(void *param);
+static void HciOnHDIInited(BtInitStatus status);
 
 static void HciFreePacket(void *packet)
 {
@@ -68,6 +72,11 @@ static void HciFreePacket(void *packet)
         PacketFree(hciPacket->packet);
     }
     MEM_MALLOC.free(packet);
+}
+
+static void HciOnHDIInitedTimerTimeout(void *param)
+{
+    HciOnHDIInited(INITIALIZATION_ERROR);
 }
 
 static int HciInitQueue()
@@ -105,6 +114,12 @@ NO_SANITIZE("cfi") static int HciInitHal()
     g_waitHdiInit = SemaphoreCreate(0);
     int ret = g_hdiLib->hdiInit(&g_hdiCallacks);
     if (ret == SUCCESS) {
+        g_waitHdiInitAlarm = AlarmCreate(NULL, false);
+        if (g_waitHdiInitAlarm == NULL) {
+            LOG_ERROR("HdiInited alarm create failed");
+        } else {
+            AlarmSet(g_waitHdiInitAlarm, HCI_WAIT_HDI_INIT_TIME, HciOnHDIInitedTimerTimeout, NULL);
+        }
         SemaphoreWait(g_waitHdiInit);
         if (g_hdiInitStatus != SUCCESS) {
             LOG_ERROR("HdiInited failed: %{public}d", g_hdiInitStatus);
@@ -177,6 +192,9 @@ int HCI_Initialize()
 
     if (result != BT_SUCCESS) {
         if (g_hdiLib != NULL) {
+            if (g_hdiLib->hdiClose != NULL) {
+                g_hdiLib->hdiClose();
+            }
             UnloadHdiLib(g_hdiLib);
             g_hdiLib = NULL;
         }
@@ -240,6 +258,12 @@ NO_SANITIZE("cfi") void HCI_Close()
 
     CleanTxPacket();
 
+    if (g_waitHdiInitAlarm != NULL) {
+        AlarmCancel(g_waitHdiInitAlarm);
+        AlarmDelete(g_waitHdiInitAlarm);
+        g_waitHdiInitAlarm = NULL;
+    }
+
     if (g_hciTxReactorItem != NULL) {
         ReactorUnregister(g_hciTxReactorItem);
         g_hciTxReactorItem = NULL;
@@ -289,6 +313,11 @@ NO_SANITIZE("cfi") void HCI_Close()
 
 static void HciOnHDIInited(BtInitStatus status)
 {
+    if (g_waitHdiInitAlarm != NULL) {
+        AlarmCancel(g_waitHdiInitAlarm);
+        AlarmDelete(g_waitHdiInitAlarm);
+        g_waitHdiInitAlarm = NULL;
+    }
     g_hdiInitStatus = status;
     SemaphorePost(g_waitHdiInit);
 }
