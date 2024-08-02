@@ -38,7 +38,7 @@ public:
         HILOGI("result: %{public}d, advHandle: %{public}d, opcode: %{public}d", result, advHandle, opcode);
 
         observers_->ForEach([this, result, advHandle, opcode](IBluetoothBleAdvertiseCallback *observer) {
-            int32_t uid = observersPid_.ReadVal(observer->AsObject());
+            int32_t uid = observersUid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
                 HILOGD("uid:%{public}d is proxy uid, not callback.", uid);
                 return;
@@ -58,7 +58,7 @@ public:
         HILOGI("result: %{public}d, advHandle: %{public}d", result, advHandle);
 
         observers_->ForEach([this, result, advHandle](IBluetoothBleAdvertiseCallback *observer) {
-            int32_t uid = observersPid_.ReadVal(observer->AsObject());
+            int32_t uid = observersUid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
                 HILOGD("uid:%{public}d is proxy uid, not callback.", uid);
                 return;
@@ -85,7 +85,7 @@ public:
         observers_ = observers;
     }
 
-    SafeMap<sptr<IRemoteObject>, int32_t> observersPid_;
+    SafeMap<sptr<IRemoteObject>, int32_t> observersUid_;
 
 private:
     RemoteObserverList<IBluetoothBleAdvertiseCallback> *observers_;
@@ -255,7 +255,7 @@ void BluetoothBleAdvertiserServer::RegisterBleAdvertiserCallback(const sptr<IBlu
         return;
     }
     if (pimpl != nullptr) {
-        pimpl->observerImp_->observersPid_.EnsureInsert(callback->AsObject(), IPCSkeleton::GetCallingPid());
+        pimpl->observerImp_->observersUid_.EnsureInsert(callback->AsObject(), IPCSkeleton::GetCallingUid());
         auto func = std::bind(&BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback,
             this, std::placeholders::_1);
         pimpl->observers_.Register(callback, func);
@@ -283,7 +283,7 @@ void BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback(const sptr<IB
             }
         }
     }
-    pimpl->observerImp_->observersPid_.Erase(callback->AsObject());
+    pimpl->observerImp_->observersUid_.Erase(callback->AsObject());
 }
 
 int32_t BluetoothBleAdvertiserServer::GetAdvertiserHandle(int32_t &advHandle)
