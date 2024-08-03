@@ -410,9 +410,8 @@ ErrCode BluetoothA2dpSrcStub::WriteFrameInner(MessageParcel &data, MessageParcel
 
 ErrCode BluetoothA2dpSrcStub::GetRenderPositionInner(MessageParcel &data, MessageParcel &reply)
 {
-
-    uint16_t delayValue;
-    uint16_t sendDataSize;
+    uint32_t delayValue;
+    uint64_t sendDataSize;
     uint32_t timeStamp;
     int result = GetRenderPosition(RawAddress(data.ReadString), delayValue, sendDataSize, timeStamp);
     if(!reply.WriteUint32(result)) {
