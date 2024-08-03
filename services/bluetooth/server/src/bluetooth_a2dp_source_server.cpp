@@ -416,7 +416,8 @@ int BluetoothA2dpSourceServer::WriteFrame(const uint8_t *data, uint32_t size)
     return pimpl->a2dpSrcService_->WriteFrame(data, size);
 }
 
-int BluetoothA2dpSourceServer::GetRenderPosition(const RawAddress &device, uint32_t &delayValue, uint64_t &sendDataSize, uint32_t &timeStamp)
+int BluetoothA2dpSourceServer::GetRenderPosition(const RawAddress &device, uint32_t &delayValue, uint64_t &sendDataSize,
+                                                 uint32_t &timeStamp)
 {
     HILOGI("starts");
     return pimpl->a2dpSrcService_->GetRenderPosition(device, delayValue, sendDataSize, timeStamp);

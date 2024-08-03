@@ -413,8 +413,8 @@ ErrCode BluetoothA2dpSrcStub::GetRenderPositionInner(MessageParcel &data, Messag
     uint32_t delayValue;
     uint64_t sendDataSize;
     uint32_t timeStamp;
-    int result = GetRenderPosition(RawAddress(data.ReadString), delayValue, sendDataSize, timeStamp);
-    if(!reply.WriteUint32(result)) {
+    int result = GetRenderPosition(RawAddress(data.ReadString()), delayValue, sendDataSize, timeStamp);
+    if (!reply.WriteUint32(result)) {
         return TRANSACTION_ERR;
     }
     if (!reply.WriteUint32(delayValue)) {
