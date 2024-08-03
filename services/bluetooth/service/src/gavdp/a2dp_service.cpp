@@ -962,7 +962,7 @@ int A2dpService::WriteFrame(const uint8_t *data, uint32_t size)
     return BT_SUCCESS;
 }
 
-void A2dpService::GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp)
+int A2dpService::GetRenderPosition(const RawAddress &device, uint32_t &delayValue, uint64_t &sendDataSize, uint32_t &timeStamp)
 {
     LOG_INFO("[A2dpService] %{public}s\n", __func__);
 
