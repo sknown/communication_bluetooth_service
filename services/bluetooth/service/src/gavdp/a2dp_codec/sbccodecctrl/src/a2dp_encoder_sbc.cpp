@@ -91,12 +91,12 @@ void A2dpSbcEncoder::ResetFeedingState(void)
     a2dpSbcEncoderCb_.sendDataSize = 0;
 }
 
-void A2dpSbcEncoder::GetRenderPosition(uint16_t &sendDataSize, uint32_t &timeStamp)
+void A2dpSbcEncoder::GetRenderPosition(uint64_t &sendDataSize, uint32_t &timeStamp)
 {
     std::lock_guard<std::recursive_mutex> lock(g_sbcMutex);
     sendDataSize = a2dpSbcEncoderCb_.sendDataSize;
     timeStamp = a2dpSbcEncoderCb_.timestamp;
-    LOG_INFO("[A2dpSbcEncoder] %{public}s sendDataSize = %{public}hu, timeStamp = %{public}u\n",
+    LOG_INFO("[A2dpSbcEncoder] %{public}s sendDataSize = %{public}lu, timeStamp = %{public}u\n",
         __func__, sendDataSize, timeStamp);
 }
 

@@ -421,7 +421,7 @@ int BluetoothA2dpSourceServer::GetRenderPosition(const RawAddress &device, uint3
 {
     HILOGI("starts");
     return pimpl->a2dpSrcService_->GetRenderPosition(device, delayValue, sendDataSize, timeStamp);
-    HILOGI("delayValue = %{public}hu, sendDataSize = %{public}hu, timeStamp = %{public}u", delayValue, sendDataSize,
+    HILOGI("delayValue = %{public}u, sendDataSize = %{public}lu, timeStamp = %{public}u", delayValue, sendDataSize,
         timeStamp);
 }
 
