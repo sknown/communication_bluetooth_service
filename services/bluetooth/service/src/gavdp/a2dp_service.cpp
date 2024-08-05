@@ -970,9 +970,12 @@ int A2dpService::GetRenderPosition(const RawAddress &device, uint32_t &delayValu
     A2dpProfile *profile = GetProfileInstance(role_);
     if (profile != nullptr) {
         profile->GetRenderPosition(delayValue, sendDataSize, timeStamp);
+        return BT_SUCCESS;
     } else {
         LOG_ERROR("[A2dpService] %{public}s Failed to get profile instance. role_(%u)\n", __func__, role_);
+        return RET_BAD_STATUS;
     }
+
 }
 
 int A2dpService::GetMaxConnectNum()
