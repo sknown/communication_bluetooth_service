@@ -966,7 +966,6 @@ int A2dpService::GetRenderPosition(const RawAddress &device, uint32_t &delayValu
                                    uint32_t &timeStamp)
 {
     LOG_INFO("[A2dpService] %{public}s\n", __func__);
-
     A2dpProfile *profile = GetProfileInstance(role_);
     if (profile != nullptr) {
         profile->GetRenderPosition(delayValue, sendDataSize, timeStamp);
@@ -975,7 +974,6 @@ int A2dpService::GetRenderPosition(const RawAddress &device, uint32_t &delayValu
         LOG_ERROR("[A2dpService] %{public}s Failed to get profile instance. role_(%u)\n", __func__, role_);
         return RET_BAD_STATUS;
     }
-
 }
 
 int A2dpService::GetMaxConnectNum()
