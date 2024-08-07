@@ -416,14 +416,12 @@ int BluetoothA2dpSourceServer::WriteFrame(const uint8_t *data, uint32_t size)
     return pimpl->a2dpSrcService_->WriteFrame(data, size);
 }
 
-int BluetoothA2dpSourceServer::GetRenderPosition(const RawAddress &device, uint32_t &delayValue, uint64_t &sendDataSize,
-                                                 uint32_t &timeStamp)
+void BluetoothA2dpSourceServer::GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp)
 {
     HILOGI("starts");
-    int ret = pimpl->a2dpSrcService_->GetRenderPosition(device, delayValue, sendDataSize, timeStamp);
-    HILOGI("delayValue = %{public}u, sendDataSize = %{public}llu, timeStamp = %{public}u", delayValue, sendDataSize,
+    pimpl->a2dpSrcService_->GetRenderPosition(delayValue, sendDataSize, timeStamp);
+    HILOGI("delayValue = %{public}hu, sendDataSize = %{public}hu, timeStamp = %{public}u", delayValue, sendDataSize,
         timeStamp);
-    return ret;
 }
 
 int BluetoothA2dpSourceServer::OffloadStartPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId)

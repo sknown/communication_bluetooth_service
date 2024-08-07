@@ -119,7 +119,7 @@ public:
     void ResetFeedingState(void) override;
     void SendFrames(uint64_t timeStampUs) override;
     void UpdateEncoderParam() override;
-    void GetRenderPosition(uint64_t &sendDataSize, uint32_t &timeStamp) override;
+    void GetRenderPosition(uint16_t &sendDataSize, uint32_t &timeStamp) override;
 
 private:
     sbc::IEncoderBase* sbcEncoder_ = nullptr;

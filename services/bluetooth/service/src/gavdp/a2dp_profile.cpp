@@ -360,7 +360,7 @@ uint32_t A2dpProfile::GetPcmData(uint8_t *buf, uint32_t size)
     return actualReadBytes;
 }
 
-void A2dpProfile::GetRenderPosition(uint32_t &delayValue, uint64_t &sendDataSize, uint32_t &timeStamp)
+void A2dpProfile::GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp)
 {
     LOG_INFO("[A2dpProfile] %{public}s\n", __func__);
 
