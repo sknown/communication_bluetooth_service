@@ -19,7 +19,7 @@
     "description": "$string:module_desc",
     "mainElement": "EntryAbility",
     "deviceTypes": [
-      "phone",
+      "default",
       "tablet"
     ],
     "deliveryWithInstall": true,
@@ -53,12 +53,7 @@
         "reason": "$string:reason"
       },
       {
-        "name": "ohos.permission.WRITE_MEDIA",
-        "reason": "$string:reason"
-      },
-      {
-        "name": "ohos.permission.READ_MEDIA",
-        "reason": "$string:reason"
+        "name": "ohos.permission.WRITE_IMAGEVIDEO",
       },
       {
         "name": "ohos.permission.DISCOVER_BLUETOOTH"

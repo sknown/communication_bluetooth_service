@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,6 +62,18 @@ BluetoothHfpAgStub::BluetoothHfpAgStub() {
         &BluetoothHfpAgStub::SetConnectStrategyInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_GET_CONNECT_STRATEGY)] =
         &BluetoothHfpAgStub::GetConnectStrategyInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_IS_IN_BAND_RINGING_ENABLE)] =
+        &BluetoothHfpAgStub::IsInbandRingingEnabledInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_CONNECT_SCO_EX)] =
+        &BluetoothHfpAgStub::ConnectScoInnerEx;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_DISCONNECT_SCO_EX)] =
+        &BluetoothHfpAgStub::DisconnectScoInnerEx;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_CALL_DETAILS_CHANGED)] =
+        &BluetoothHfpAgStub::CallDetailsChangedInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_IS_VGS_SUPPORTED)] =
+        &BluetoothHfpAgStub::IsVgsSupportedInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_CALL_LOG)] =
+        &BluetoothHfpAgStub::EnableBtCallLogInner;
 
     HILOGI("%{public}s ends.", __func__);
 }
@@ -218,13 +230,10 @@ ErrCode BluetoothHfpAgStub::DisconnectScoInner(MessageParcel &data, MessageParce
 
 ErrCode BluetoothHfpAgStub::PhoneStateChangedInner(MessageParcel &data, MessageParcel &reply)
 {
-    int numActive = data.ReadInt32();
-    int numHeld = data.ReadInt32();
-    int callState = data.ReadInt32();
-    std::string number = data.ReadString();
-    int type = data.ReadInt32();
-    std::string name = data.ReadString();
-    PhoneStateChanged(numActive, numHeld, callState, number, type, name);
+    std::shared_ptr<BluetoothPhoneState> phoneState(data.ReadParcelable<BluetoothPhoneState>());
+    CHECK_AND_RETURN_LOG_RET(phoneState, BT_ERR_IPC_TRANS_FAILED,
+        "BluetoothHfpAgStub: read phone state failed");
+    PhoneStateChanged(*phoneState);
     return NO_ERROR;
 }
 
@@ -340,6 +349,11 @@ ErrCode BluetoothHfpAgStub::DeregisterObserverInner(MessageParcel &data, Message
 
 ErrCode BluetoothHfpAgStub::SetConnectStrategyInner(MessageParcel &data, MessageParcel &reply)
 {
+    int result = BT_ERR_SYSTEM_PERMISSION_FAILED;
+    if (!reply.WriteInt32(result)) {
+        HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
     return NO_ERROR;
 }
 
@@ -348,5 +362,60 @@ ErrCode BluetoothHfpAgStub::GetConnectStrategyInner(MessageParcel &data, Message
     return NO_ERROR;
 }
 
+ErrCode BluetoothHfpAgStub::IsInbandRingingEnabledInner(MessageParcel &data, MessageParcel &reply)
+{
+    bool isEnabled = true;
+    int result = IsInbandRingingEnabled(isEnabled);
+    if (!reply.WriteInt32(result)) {
+        HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
+    if (!reply.WriteBool(isEnabled)) {
+        HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHfpAgStub::ConnectScoInnerEx(MessageParcel &data, MessageParcel &reply)
+{
+    bool result = ConnectSco();
+    if (!reply.WriteBool(result)) {
+        HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHfpAgStub::DisconnectScoInnerEx(MessageParcel &data, MessageParcel &reply)
+{
+    bool result = DisconnectSco();
+    if (!reply.WriteBool(result)) {
+        HILOGE("BluetoothHfpAgStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHfpAgStub::CallDetailsChangedInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHfpAgStub::EnableBtCallLogInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+int32_t BluetoothHfpAgStub::IsVgsSupportedInner(MessageParcel &data, MessageParcel &reply)
+{
+    std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
+    CHECK_AND_RETURN_LOG_RET(device, BT_ERR_IPC_TRANS_FAILED, "Read device address failed.");
+    bool isSupported = false;
+    int32_t result = IsVgsSupported(*device, isSupported);
+    CHECK_AND_RETURN_LOG_RET(reply.WriteInt32(result), BT_ERR_INTERNAL_ERROR, "reply WriteInt32 failed");
+    CHECK_AND_RETURN_LOG_RET(reply.WriteBool(isSupported), BT_ERR_INTERNAL_ERROR, "reply WriteBool failed");
+    return NO_ERROR;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

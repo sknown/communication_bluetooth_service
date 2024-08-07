@@ -1119,10 +1119,10 @@ GattConnectionManager::Device::Device(const uint8_t *addr, uint8_t transport, ui
       info_(RawAddress::ConvertToString(addr), type, transport),
       deviceRWMutex_(),
       sm_(*this),
-      directConnect_([&addr, transport]() {
+      directConnect_([rawAddr = RawAddress::ConvertToString(addr), transport]() {
         GattConnectionManager::GetInstance().pimpl->dispatcher_->PostTask(std::bind(&impl::DirectConnectTimeout,
             GattConnectionManager::GetInstance().pimpl.get(),
-            GattDevice(RawAddress::ConvertToString(addr), transport)));
+            GattDevice(rawAddr, transport)));
     })
 {
     CopyAddress(addr, RawAddress::BT_ADDRESS_BYTE_LEN);
@@ -1137,7 +1137,7 @@ GattConnectionManager::Device::Device(const GattDevice &device, bool autoConnect
       info_(device),
       deviceRWMutex_(),
       sm_(*this),
-      directConnect_([&device]() {
+      directConnect_([device]() {
         GattConnectionManager::GetInstance().pimpl->dispatcher_->PostTask(
             std::bind(&impl::DirectConnectTimeout, GattConnectionManager::GetInstance().pimpl.get(), device));
     })

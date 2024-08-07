@@ -26,7 +26,8 @@ BluetoothBleCentralManagerCallBackProxy::BluetoothBleCentralManagerCallBackProxy
 BluetoothBleCentralManagerCallBackProxy::~BluetoothBleCentralManagerCallBackProxy()
 {}
 
-void BluetoothBleCentralManagerCallBackProxy::OnScanCallback(const BluetoothBleScanResult &result)
+void BluetoothBleCentralManagerCallBackProxy::OnScanCallback(const BluetoothBleScanResult &result,
+    uint8_t callbackType)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothBleCentralManagerCallBackProxy::GetDescriptor())) {
@@ -38,6 +39,8 @@ void BluetoothBleCentralManagerCallBackProxy::OnScanCallback(const BluetoothBleS
         HILOGE("[OnStartResultEvent] fail: write result failed");
         return;
     }
+
+    CHECK_AND_RETURN_LOG(data.WriteUint8(callbackType), "write callbackType failed");
 
     MessageParcel reply;
     MessageOption option = {MessageOption::TF_ASYNC};

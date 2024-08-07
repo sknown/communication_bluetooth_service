@@ -49,6 +49,7 @@ const std::string PROPERTY_BTSNOOP_OUTPUT = "BtsnoopOutput";
 const std::string PROPERTY_BTSNOOP_OUTPUT_PATH = "BtsnoopOutputPath";
 const std::string PROPERTY_HCILOG_OUTPUT = "HciLogOutput";
 const std::string PROPERTY_DESENSITIZATION = "Desensitization";
+const std::string PROPERTY_OUTPUTMAXSIZE = "BtOutputMaxSize";
 
 // define property name
 const std::string PROPERTY_IS_VALID = "IsValid";

@@ -491,7 +491,7 @@ public:
      * @param[out] timeStamp is the current time stamp
      * @since 6.0
      */
-    void GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp);
+    void GetRenderPosition(uint32_t &delayValue, uint64_t &sendDataSize, uint32_t &timeStamp);
 
     /**
      * @brief Enqueue the frame packet to the packet queue.

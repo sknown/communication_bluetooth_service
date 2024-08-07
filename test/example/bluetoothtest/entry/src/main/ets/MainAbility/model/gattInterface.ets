@@ -13,42 +13,40 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
-
 /**
  * Gatt Page Of Bluetooth test
  */
 
-import Router from '@system.router';
-import prompt from '@system.prompt';
+import router from '@ohos.router';
+import promptAction from '@ohos.promptAction';
 
 const PAGE_URI_GET_GATT_CLIENT = 'pages/subManualApiTest/subGattTest/gattClient';
 const PAGE_URI_GET_GATT_SERVER = 'pages/subManualApiTest/subGattTest/gattServer';
 
-export function testGattClient(): String {
+export function testGattClient(): string {
   try {
-    Router.push( { uri : PAGE_URI_GET_GATT_CLIENT } )
+    router.pushUrl({ url : PAGE_URI_GET_GATT_CLIENT })
     let message = "跳转成功"
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGattClient. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGattClient. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGattClient. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testGattServer(): String {
+export function testGattServer(): string {
   try {
-    Router.push( { uri : PAGE_URI_GET_GATT_SERVER } )
+    router.pushUrl({ url : PAGE_URI_GET_GATT_SERVER })
     let message = "跳转成功"
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGattServer. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGattServer. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGattServer. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }

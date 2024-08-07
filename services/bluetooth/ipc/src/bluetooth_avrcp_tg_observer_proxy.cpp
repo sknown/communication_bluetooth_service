@@ -18,7 +18,8 @@
 
 namespace OHOS {
 namespace Bluetooth {
-void BluetoothAvrcpTgObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int32_t state)
+void BluetoothAvrcpTgObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device,
+    int32_t state, int32_t cause)
 {
     HILOGI("BluetoothAvrcpTgObserverProxy::OnConnectionStateChanged Triggered!");
     MessageParcel data;
@@ -31,7 +32,11 @@ void BluetoothAvrcpTgObserverProxy::OnConnectionStateChanged(const BluetoothRawA
         return;
     }
     if (!data.WriteInt32(state)) {
-        HILOGE("BluetoothAvrcpTgObserverProxy::OnConnectionStateChanged transport error");
+        HILOGE("BluetoothAvrcpTgObserverProxy::OnConnectionStateChanged state error");
+        return;
+    }
+    if (!data.WriteInt32(cause)) {
+        HILOGE("BluetoothAvrcpTgObserverProxy::OnConnectionStateChanged cause error");
         return;
     }
 

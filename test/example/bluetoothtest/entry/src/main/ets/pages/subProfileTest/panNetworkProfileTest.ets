@@ -13,17 +13,19 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
-
+import { myParams } from '../../Utils/common'
+import promptAction from '@ohos.promptAction';
 import { initPanNetworkProfileApiData } from '../../MainAbility/model/testDataModels'
 import { ContentTable } from '../../Component/contentTable';
-import prompt from '@system.prompt';
-import router from '@system.router';
+import router from '@ohos.router';
 import btProfileModel from '../../MainAbility/model/btProfileModel';
 import ConfigData from '../../Utils/ConfigData';
 import LogUtil from '../../Utils/LogUtil';
 import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
+import { TestData } from '../../MainAbility/model/testData'
+import bluetooth from '@ohos.bluetooth';
+import btm from '@ohos.bluetoothManager'
 
 /**
  * panNetWork Test Page Of Bluetooth test
@@ -33,11 +35,9 @@ import { TestImageDisplay } from '../../Component/testImageDisplay';
 @Component
 struct PanNetWorkTest {
   @State hasProfile: boolean = false;
-  @StorageLink( 'textMessage' ) panMessage: string = "";
-  @State isConnection: boolean = false;
+  @StorageLink('textMessage') panMessage: string = "";
   @State connectionStateInfo: string = "";
-  //  @State deviceId: string = "F0:5C:D5:8B:A5:8A";
-  @State title: Resource = $r( 'app.string.pan_network_profile_test_title' );
+  @State title: Resource = $r('app.string.pan_network_profile_test_title');
   @State profileExist: string = ""
   @State profileNotExist: string = ""
   @State profileType: number = 0;
@@ -46,80 +46,80 @@ struct PanNetWorkTest {
   @State currentClick: number = - 1;
   private pageType = 7;
   private deviceId = "8C:5A:F8:25:FB:E9";
-  private testItem: TestData = router.getParams().testId;
+  private testItem: TestData = (router.getParams() as myParams).testItem
 
   aboutToAppear() {
-    LogUtil.log( ConfigData.TAG + "xzyj: aboutToAppear a2dp: deviceId " + JSON.stringify( this.deviceId ) );
-    AppStorage.SetOrCreate( "deviceId" , this.deviceId )
+    LogUtil.log(ConfigData.TAG + "xzyj: aboutToAppear a2dp: deviceId " + JSON.stringify(this.deviceId));
+    AppStorage.setOrCreate("deviceId" , this.deviceId)
     btProfileModel.initProfile()
   }
 
   build() {
     Row() {
       Column() {
-        Stack( { alignContent : Alignment.TopStart } ) {
-          TestImageDisplay( { testItem : this.testItem } )
-          PageTitle( { testItem : this.testItem } )
+        Stack({ alignContent : Alignment.TopStart }) {
+          TestImageDisplay({ testItem : this.testItem })
+          PageTitle({ testItem : this.testItem })
         }
 
-        Stack().height( "0.5vp" ).backgroundColor( "#000000" );
-        Text( this.hasProfile ? this.profileExist : this.profileNotExist )
-          .margin( { top : "10vp" } )
-          .fontSize( "20vp" )
-          .fontColor( this.hasProfile ? "#66ccff" : "#ff0000" )
-          .border( { width : 0.5 } )
-          .padding( 5 )
-          .fontStyle( FontStyle.Italic );
+        Stack().height("0.5vp").backgroundColor("#000000");
+        Text(this.hasProfile ? this.profileExist : this.profileNotExist)
+          .margin({ top : "10vp" })
+          .fontSize("20vp")
+          .fontColor(this.hasProfile ? "#66ccff" : "#ff0000")
+          .border({ width : 0.5 })
+          .padding(5)
+          .fontStyle(FontStyle.Italic);
         Column() {
           Row() {
-            Text( "现在正在连接的设备为：" )
-              .fontSize( "17" ).width( 110 ).margin( "5vp" )
-            TextInput( { text : JSON.stringify( this.deviceId ) , placeholder : "请输入需要连接的deviceId" } )
-              .fontSize( "17vp" )
-              .onChange( ( str ) => {
+            Text("现在正在连接的设备为：")
+              .fontSize("17").width(110).margin("5vp")
+            TextInput({ text : JSON.stringify(this.deviceId) , placeholder : "请输入需要连接的deviceId" })
+              .fontSize("17vp")
+              .onChange((str) => {
                 this.deviceId = str;
-                AppStorage.SetOrCreate( "deviceId" , str )
-              } )
-              .width( "70%" )
-              .borderRadius( 1 )
+                AppStorage.setOrCreate("deviceId" , str)
+              })
+              .width("70%")
+              .borderRadius(1)
           }
-          .backgroundColor( $r( "app.color.moon" ) )
-          .margin( { top : "20vp" , bottom : "20vp" , left : "20vp" , right : "20vp" } )
-          .alignItems( VerticalAlign.Center )
+          .backgroundColor($r("app.color.moon"))
+          .margin({ top : "20vp" , bottom : "20vp" , left : "20vp" , right : "20vp" })
+          .alignItems(VerticalAlign.Center)
 
           Column() {
-            Text( "接口调用结果： " + this.panMessage )
-              .fontSize( "17vp" )
-              .textAlign( TextAlign.Start )
-              .margin( { top : "5vp" , left : "10vp" } )
-              .width( "100%" )
-            Text( "connectionStateChange： " + this.connectionStateInfo )
-              .fontSize( "17vp" )
-              .margin( { top : "10vp" , left : "10vp" } )
-              .textAlign( TextAlign.Start )
-              .width( "90%" )
+            Text("接口调用结果： " + this.panMessage)
+              .fontSize("17vp")
+              .textAlign(TextAlign.Start)
+              .margin({ top : "5vp" , left : "10vp" })
+              .width("100%")
+            Text("connectionStateChange： " + this.connectionStateInfo)
+              .fontSize("17vp")
+              .margin({ top : "10vp" , left : "10vp" })
+              .textAlign(TextAlign.Start)
+              .width("90%")
           }
-          .backgroundColor( $r( "sys.color.ohos_id_color_foreground_contrary" ) )
-          .width( "88%" )
-          .height( 90 )
+          .backgroundColor($r("sys.color.ohos_id_color_foreground_contrary"))
+          .width("88%")
+          .height(90)
 
-          Text( "请点击需要测试的方法" )
-            .margin( { top : "10vp" } )
-            .padding( "5vp" )
-            .fontSize( "17vp" )
-            .fontColor( "#4444444" );
+          Text("请点击需要测试的方法")
+            .margin({ top : "10vp" })
+            .padding("5vp")
+            .fontSize("17vp")
+            .fontColor("#4444444");
           Column() {
-            ContentTable( { apiItems : initPanNetworkProfileApiData() } )
+            ContentTable({ apiItems : initPanNetworkProfileApiData() })
           }
-          .height( 800 )
+          .height(800)
         }
-        .visibility( this.hasProfile ? Visibility.Visible : Visibility.Hidden );
+        .visibility(this.hasProfile ? Visibility.Visible : Visibility.Hidden);
       }
-      .width( '100%' )
+      .width('100%')
     }
-    .backgroundColor( $r( "sys.color.ohos_id_color_sub_background" ) )
-    .height( '100%' )
-    .alignItems( VerticalAlign.Top )
+    .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
+    .height('100%')
+    .alignItems(VerticalAlign.Top)
   }
 
   onPageShow() {
@@ -128,8 +128,8 @@ struct PanNetWorkTest {
       this.profileNotExist = "蓝牙未打开，请先开启蓝牙后再使用！"
       return;
     }
-    this.hasProfile = btProfileModel.hasProfile( btProfileModel.PROFILE_PAN_NETWORK );
-    console.log( "bt_test pageType: " + this.pageType );
+    this.hasProfile = btProfileModel.hasProfile(btProfileModel.PROFILE_PAN_NETWORK);
+    console.log("bt_test pageType: " + this.pageType);
     switch ( this.pageType ) {
     //      case 0:
     //        this.title = $r('app.string.a2dp_sink_profile_test_title');
@@ -138,7 +138,7 @@ struct PanNetWorkTest {
     //        this.profileType = btProfileModel.PROFILE_A2DP_SINK;
     //        break;
       case 1:
-        this.title = $r( 'app.string.a2dp_sour_profile_test_title' );
+        this.title = $r('app.string.a2dp_sour_profile_test_title');
         this.profileExist = "A2DP_SOURCE exist";
         this.profileNotExist = "A2DP_SOURCE does not exist";
         this.profileType = btProfileModel.PROFILE_A2DP_SOURCE;
@@ -156,7 +156,7 @@ struct PanNetWorkTest {
     //        this.profileType = btProfileModel.PROFILE_AVRCP_TG;
     //        break;
       case 4:
-        this.title = $r( 'app.string.hands_free_audio_gateway_profile_test_title' );
+        this.title = $r('app.string.hands_free_audio_gateway_profile_test_title');
         this.profileExist = "HANDS_FREE_AUDIO_GATEWAY exist";
         this.profileNotExist = "HANDS_FREE_AUDIO_GATEWAY does not exist";
         this.profileType = btProfileModel.PROFILE_HANDS_FREE_AUDIO_GATEWAY;
@@ -168,13 +168,13 @@ struct PanNetWorkTest {
     //        this.profileType = btProfileModel.PROFILE_HANDS_FREE_UNIT;
     //        break;
       case 6:
-        this.title = $r( 'app.string.hid_host_profile_test_title' );
+        this.title = $r('app.string.hid_host_profile_test_title');
         this.profileExist = "HID HOST exist";
         this.profileNotExist = "HID HOST does not exist";
         this.profileType = btProfileModel.PROFILE_HID_HOST;
         break;
       case 7:
-        this.title = $r( 'app.string.pan_network_profile_test_title' );
+        this.title = $r('app.string.pan_network_profile_test_title');
         this.profileExist = "PAN_NETWORK exist";
         this.profileNotExist = "PAN_NETWORK does not exist";
         this.profileType = btProfileModel.PROFILE_PAN_NETWORK;
@@ -192,7 +192,7 @@ struct PanNetWorkTest {
     //        this.profileType = btProfileModel.PROFILE_PBAP_SERVER;
     //        break;
       case 10:
-        this.title = $r( 'app.string.opp_profile_test_title' );
+        this.title = $r('app.string.opp_profile_test_title');
         this.profileExist = "Opp exist";
         this.profileNotExist = "Opp does not exist";
         this.profileType = btProfileModel.PROFILE_OPP;
@@ -200,23 +200,23 @@ struct PanNetWorkTest {
       default:
         router.back();
     }
-    AppStorage.SetOrCreate( "profileType" , this.profileType )
-    prompt.showToast( { message : this.profileType.toString() } )
-    this.hasProfile = btProfileModel.hasProfile( this.profileType );
+    AppStorage.setOrCreate("profileType" , this.profileType)
+    promptAction.showToast({ message : this.profileType.toString() })
+    this.hasProfile = btProfileModel.hasProfile(this.profileType);
     if ( this.hasProfile ) {
-      console.log( "bt_test registered connectionStateChange type: " + this.profileType );
-      btProfileModel.getProfile( this.profileType ).on( "connectionStateChange" , ( date ) => {
-        this.connectionStateInfo = JSON.stringify( date );
+      console.log("bt_test registered connectionStateChange type: " + this.profileType);
+      (btProfileModel.getProfile(this.profileType) as bluetooth.A2dpSourceProfile | bluetooth.HandsFreeAudioGatewayProfile).on("connectionStateChange" , (date: bluetooth.StateChangeParam) => {
+        this.connectionStateInfo = JSON.stringify(date);
         this.btConnectionState = date.state;
-        AppStorage.SetOrCreate( "btConnectionState" , this.btConnectionState )
-      } );
+        AppStorage.setOrCreate("btConnectionState" , this.btConnectionState)
+      });
     }
   }
 
   onPageHide() {
     if ( this.hasProfile ) {
-      btProfileModel.getProfile( this.profileType ).off( "connectionStateChange" );
+      (btProfileModel.getProfile(this.profileType) as bluetooth.A2dpSourceProfile | bluetooth.HandsFreeAudioGatewayProfile).off("connectionStateChange");
     }
-    console.log( "bt_test Ability end" );
+    console.log("bt_test Ability end");
   }
 }

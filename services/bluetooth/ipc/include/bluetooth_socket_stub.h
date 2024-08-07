@@ -34,7 +34,10 @@ public:
 private:
     ErrCode ConnectInner(MessageParcel &data, MessageParcel &reply);
     ErrCode ListenInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode RemoveObserverInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode DeregisterServerObserverInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode RegisterClientObserverInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode DeregisterClientObserverInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode UpdateCocConnectionParamsInner(MessageParcel &data, MessageParcel &reply);
 
     using BluetoothSocketFunc = ErrCode (BluetoothSocketStub::*)(MessageParcel &data, MessageParcel &reply);
     std::map<uint32_t, BluetoothSocketFunc> memberFuncMap_;

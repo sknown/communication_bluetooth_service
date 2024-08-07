@@ -154,8 +154,8 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SET_DEVICE_ALIAS,
             std::bind(&BluetoothHostStub::SetDeviceAliasInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::GET_DEVICE_BATTERY_LEVEL,
-            std::bind(&BluetoothHostStub::GetDeviceBatteryLevelInner, std::placeholders::_1, std::placeholders::_2,
+        {BluetoothHostInterfaceCode::GET_DEVICE_BATTERY_INFO,
+            std::bind(&BluetoothHostStub::GetRemoteDeviceBatteryInfoInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
         {BluetoothHostInterfaceCode::GET_PAIR_STATE,
             std::bind(&BluetoothHostStub::GetPairStateInner, std::placeholders::_1, std::placeholders::_2,
@@ -227,6 +227,27 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::BT_COUNT_ENABLE_TIMES,
             std::bind(&BluetoothHostStub::CountEnableTimesInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::CONNECT_ALLOWED_PROFILES,
+            std::bind(&BluetoothHostStub::ConnectAllowedProfilesInner, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::DISCONNECT_ALLOWED_PROFILES,
+            std::bind(&BluetoothHostStub::DisconnectAllowedProfilesInner, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::SET_CUSTOM_TYPE,
+            std::bind(&BluetoothHostStub::SetDeviceCustomTypeInner, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::RESTRICT_BLUETOOTH,
+            std::bind(&BluetoothHostStub::RestrictBluetoothInner, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::SATELLITE_CONTROL,
+            std::bind(&BluetoothHostStub::SatelliteControlInner, std::placeholders::_1, std::placeholders::_2,
+                std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::BT_REGISTER_RESOURCE_MANAGER_OBSERVER,
+            std::bind(&BluetoothHostStub::RegisterBtResourceManagerObserverInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::BT_DEREGISTER_RESOURCE_MANAGER_OBSERVER,
+            std::bind(&BluetoothHostStub::DeregisterBtResourceManagerObserverInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -317,13 +338,12 @@ ErrCode BluetoothHostStub::GetBleRemoteInner(MessageParcel &data, MessageParcel 
     return NO_ERROR;
 }
 
-ErrCode BluetoothHostStub::BluetoothFactoryResetInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothHostStub::BluetoothFactoryResetInner(MessageParcel &data, MessageParcel &reply)
 {
-    HILOGI("BluetoothHostStub::BluetoothFactoryResetInner starts");
-    bool result = BluetoothFactoryReset();
-    bool ret = reply.WriteBool(result);
+    int32_t result = BluetoothFactoryReset();
+    bool ret = reply.WriteInt32(result);
     if (!ret) {
-        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
+        HILOGE("WriteInt32 failed");
         return ERR_INVALID_VALUE;
     }
     return NO_ERROR;
@@ -339,14 +359,14 @@ ErrCode BluetoothHostStub::GetBtStateInner(MessageParcel &data, MessageParcel &r
     return NO_ERROR;
 }
 
-ErrCode BluetoothHostStub::GetLocalAddressInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothHostStub::GetLocalAddressInner(MessageParcel &data, MessageParcel &reply)
 {
-    std::string result = GetLocalAddress();
-    bool ret = reply.WriteString(result);
-    if (!ret) {
-        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
-    }
+    std::string addr = "00:00:00:00:00:00";
+    int32_t result = GetLocalAddress(addr);
+
+    CHECK_AND_RETURN_LOG_RET(reply.WriteInt32(result), BT_ERR_IPC_TRANS_FAILED, "writing res failed");
+    CHECK_AND_RETURN_LOG_RET((result == BT_NO_ERROR), NO_ERROR, "get local addr failed");
+    CHECK_AND_RETURN_LOG_RET(reply.WriteString(addr), BT_ERR_IPC_TRANS_FAILED, "writing addr failed");
     return NO_ERROR;
 }
 
@@ -746,15 +766,21 @@ ErrCode BluetoothHostStub::GetDeviceAliasInner(MessageParcel &data, MessageParce
 
 ErrCode BluetoothHostStub::IsBtDiscoveringInner(MessageParcel &data, MessageParcel &reply)
 {
+    bool isDiscovering = false;
     int32_t transport;
     data.ReadInt32(transport);
-    bool result = IsBtDiscovering(transport);
-    bool ret = reply.WriteBool(result);
+    int32_t result = IsBtDiscovering(isDiscovering, transport);
+    bool ret = reply.WriteInt32(result);
     if (!ret) {
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
+        return BT_ERR_IPC_TRANS_FAILED;
     }
-    return NO_ERROR;
+    ret = reply.WriteBool(isDiscovering);
+    if (!ret) {
+        HILOGE("BluetoothHostStub: reply isDiscovering writing failed in: %{public}s.", __func__);
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
+    return BT_NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::SetDeviceAliasInner(MessageParcel &data, MessageParcel &reply)
@@ -769,8 +795,8 @@ ErrCode BluetoothHostStub::SetDeviceAliasInner(MessageParcel &data, MessageParce
         HILOGE("BluetoothHostStub::SetDeviceAlias aliasName failed");
         return TRANSACTION_ERR;
     }
-    bool result = SetDeviceAlias(address, aliasName);
-    bool ret = reply.WriteBool(result);
+    int32_t res = SetDeviceAlias(address, aliasName);
+    bool ret = reply.WriteInt32(res);
     if (!ret) {
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
@@ -778,20 +804,19 @@ ErrCode BluetoothHostStub::SetDeviceAliasInner(MessageParcel &data, MessageParce
     return NO_ERROR;
 }
 
-ErrCode BluetoothHostStub::GetDeviceBatteryLevelInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothHostStub::GetRemoteDeviceBatteryInfoInner(MessageParcel &data, MessageParcel &reply)
 {
     std::string address;
     if (!data.ReadString(address)) {
-        HILOGE("BluetoothHostStub::GetDeviceBatteryLevel address failed");
+        HILOGE("BluetoothHostStub::GetRemoteDeviceBattery address failed");
         return TRANSACTION_ERR;
     }
-    int result = GetDeviceBatteryLevel(address);
-    bool ret = reply.WriteInt32(result);
-    if (!ret) {
-        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
-    }
-    return NO_ERROR;
+    BluetoothBatteryInfo info;
+    int ret = GetRemoteDeviceBatteryInfo(address, info);
+    CHECK_AND_RETURN_LOG_RET(reply.WriteInt32(ret), BT_ERR_INTERNAL_ERROR, "write ret failed");
+    CHECK_AND_RETURN_LOG_RET(reply.WriteParcelable(&info), BT_ERR_INTERNAL_ERROR,
+        "write battery failed");
+    return BT_NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::GetBtDiscoveryEndMillisInner(MessageParcel &data, MessageParcel &reply)
@@ -817,20 +842,25 @@ ErrCode BluetoothHostStub::GetPairStateInner(MessageParcel &data, MessageParcel 
         HILOGE("BluetoothHostStub::GetPairState address failed");
         return TRANSACTION_ERR;
     }
-    int result = GetPairState(transport, address);
+    int32_t pairState;
+    int result = GetPairState(transport, address, pairState);
     bool ret = reply.WriteInt32(result);
     if (!ret) {
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
+        return BT_ERR_IPC_TRANS_FAILED;
     }
-    return NO_ERROR;
+    ret = reply.WriteInt32(pairState);
+    if (!ret) {
+        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
+    return BT_NO_ERROR;
 }
 
 int32_t BluetoothHostStub::GetPairedDevicesInner(MessageParcel &data, MessageParcel &reply)
 {
-    int32_t transport = data.ReadInt32();
     std::vector<BluetoothRawAddress> pairDevice;
-    int32_t result = GetPairedDevices(transport, pairDevice);
+    int32_t result = GetPairedDevices(pairDevice);
     bool ret = true;
     if (!reply.WriteInt32(pairDevice.size())) {
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
@@ -1258,11 +1288,78 @@ ErrCode BluetoothHostStub::SyncRandomAddressInner(MessageParcel &data, MessagePa
 
 ErrCode BluetoothHostStub::StartCrediblePairInner(MessageParcel &data, MessageParcel &reply)
 {
+    std::string address = data.ReadString();
+    int32_t transport = data.ReadInt32();
+    int result = StartCrediblePair(transport, address);
+    bool ret = reply.WriteInt32(result);
+    if (!ret) {
+        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
+    }
     return NO_ERROR;
 }
 
 ErrCode BluetoothHostStub::CountEnableTimesInner(MessageParcel &data, MessageParcel &reply)
 {
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHostStub::RestrictBluetoothInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+ErrCode BluetoothHostStub::SatelliteControlInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
+}
+
+int32_t BluetoothHostStub::ConnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::DisconnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::SetDeviceCustomTypeInner(MessageParcel &data, MessageParcel &reply)
+{
+    std::string address;
+    if (!data.ReadString(address)) {
+        HILOGE("BluetoothHostStub::SetDeviceCustomType address failed");
+        return TRANSACTION_ERR;
+    }
+    int32_t customType;
+    if (!data.ReadInt32(customType)) {
+        HILOGE("BluetoothHostStub::SetDeviceCustomType customType failed");
+        return TRANSACTION_ERR;
+    }
+    bool ret = reply.WriteInt32(BT_ERR_API_NOT_SUPPORT);
+    if (!ret) {
+        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
+        return TRANSACTION_ERR;
+    }
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::RegisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply)
+{
+    auto tempObject = data.ReadRemoteObject();
+    sptr<IBluetoothResourceManagerObserver> observer;
+    observer = iface_cast<IBluetoothResourceManagerObserver>(tempObject);
+    CHECK_AND_RETURN_LOG_RET(observer != nullptr, ERR_INVALID_VALUE, "observer is nullptr");
+    RegisterBtResourceManagerObserver(observer);
+    return NO_ERROR;
+}
+
+int32_t BluetoothHostStub::DeregisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply)
+{
+    auto tempObject = data.ReadRemoteObject();
+    sptr<IBluetoothResourceManagerObserver> observer;
+    observer = iface_cast<IBluetoothResourceManagerObserver>(tempObject);
+    CHECK_AND_RETURN_LOG_RET(observer != nullptr, ERR_INVALID_VALUE, "observer is nullptr");
+    DeregisterBtResourceManagerObserver(observer);
     return NO_ERROR;
 }
 }  // namespace Bluetooth

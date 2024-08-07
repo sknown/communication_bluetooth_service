@@ -31,7 +31,7 @@ public:
     HandsFreeAudioGatewayObserverCommon() = default;
     virtual ~HandsFreeAudioGatewayObserverCommon() = default;
     
-    void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state) {}
+    void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
     void OnScoStateChanged(const BluetoothRemoteDevice &device, int state) {}
     void OnActiveDeviceChanged(const BluetoothRemoteDevice &device) {}
     void OnHfEnhancedDriverSafetyChanged(const BluetoothRemoteDevice &device, int indValue) {}
@@ -39,7 +39,8 @@ public:
 private:
 };
 
-static HandsFreeAudioGatewayObserverCommon observer_;
+static std::shared_ptr<HandsFreeAudioGatewayObserverCommon> observer_ =
+    std::make_shared<HandsFreeAudioGatewayObserverCommon>();
 static HandsFreeAudioGateway *profile_;
 static BluetoothHost *host_;
 
@@ -340,7 +341,7 @@ HWTEST_F(HandsFreeAudioGatewayTest, HandsFreeAudioGateway_UnitTest_RegisterObser
     GTEST_LOG_(INFO) << "HandsFreeAudioGateway_UnitTest_RegisterObserver start";
  
     profile_ = HandsFreeAudioGateway::GetProfile();
-    profile_->RegisterObserver(&observer_);
+    profile_->RegisterObserver(observer_);
     GTEST_LOG_(INFO) << "HandsFreeAudioGateway_UnitTest_RegisterObserver end";
 }
 
@@ -354,7 +355,7 @@ HWTEST_F(HandsFreeAudioGatewayTest, HandsFreeAudioGateway_UnitTest_DeregisterObs
     GTEST_LOG_(INFO) << "HandsFreeAudioGateway_UnitTest_DeregisterObserver start";
  
     profile_ = HandsFreeAudioGateway::GetProfile();
-    profile_->DeregisterObserver(&observer_);
+    profile_->DeregisterObserver(observer_);
     GTEST_LOG_(INFO) << "HandsFreeAudioGateway_UnitTest_DeregisterObserver end";
 }
 

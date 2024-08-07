@@ -27,57 +27,58 @@ const TAG = '[Screenshot]'
 
 @Component
 struct TestCategory {
-  private testItems: TestData[]
+  private testItems!: TestData[]
 
   build() {
     Stack() {
       Tabs() {
         TabContent() {
-          ManualApiTest( { testItems : this.testItems.filter( item => ( item.category === Category.API ) ) } )
-        }.tabBar( $r( "app.string.api" ) )
+          ManualApiTest({ testItems : this.testItems.filter(item => (item.category === Category.API)) })
+        }.tabBar($r("app.string.api")).margin({ top : $r("app.float.distance_5") })
 
         TabContent() {
-          ManualApiTest( { testItems : this.testItems.filter( item => ( item.category === Category.APIManager ) ) } )
-        }.tabBar( $r( "app.string.api_M" ) )
+          ManualApiTest({ testItems : this.testItems.filter(item => (item.category === Category.APIManager)) })
+        }.tabBar($r("app.string.api_M")).margin({ top : $r("app.float.distance_5") })
 
         TabContent() {
-          AutoTest( { testItems : this.testItems.filter( item => ( item.category === Category.AutoTest ) ) } )
-        }.tabBar( $r( "app.string.autotest" ) )
+          AutoTest({ testItems : this.testItems.filter(item => (item.category === Category.AutoTest)) })
+        }.tabBar($r("app.string.autotest")).margin({ top : $r("app.float.distance_5") })
 
         TabContent() {
-          AutoTest( { testItems : this.testItems.filter( item => ( item.category === Category.AutoTestManager ) ) } )
-        }.tabBar( $r( "app.string.autotest_M" ) )
+          AutoTest({ testItems : this.testItems.filter(item => (item.category === Category.AutoTestManager)) })
+        }.tabBar($r("app.string.autotest_M")).margin({ top : $r("app.float.distance_5") })
 
         TabContent() {
-          ManualSceneTest( { testItems : this.testItems.filter( item => ( item.category === Category.Scenario ) ) } )
-        }.tabBar( $r( "app.string.scenario" ) )
+          ManualSceneTest({ testItems : this.testItems.filter(item => (item.category === Category.Scenario)) })
+        }.tabBar($r("app.string.scenario")).margin({ top : $r("app.float.distance_5") })
 
         TabContent() {
-          ManualSceneTest( { testItems : this.testItems.filter( item => ( item.category === Category.ScenarioManager ) ) } )
-        }.tabBar( $r( "app.string.scenario_M" ) )
+          ManualSceneTest({ testItems : this.testItems.filter(item => (item.category === Category.ScenarioManager)) })
+        }.tabBar($r("app.string.scenario_M")).margin({ top : $r("app.float.distance_5") })
 
         TabContent() {
-          ProfileTest( { testItems : this.testItems.filter( item => ( item.category === Category.Profile ) ) } )
-        }.tabBar( $r( "app.string.profile" ) )
+          ProfileTest({ testItems : this.testItems.filter(item => (item.category === Category.Profile)) })
+        }.tabBar($r("app.string.profile")).margin({ top : $r("app.float.distance_5") })
 
         TabContent() {
-          ProfileTest( { testItems : this.testItems.filter( item => ( item.category === Category.ProfileManager ) ) } )
-        }.tabBar( $r( "app.string.profile_M" ) )
+          ProfileTest({ testItems : this.testItems.filter(item => (item.category === Category.ProfileManager)) })
+        }.tabBar($r("app.string.profile_M")).margin({ top : $r("app.float.distance_5") })
 
         TabContent() {
-          BenchmarkTest( { testItems : this.testItems.filter( item => ( item.category === Category.BenchMark ) ) } )
-        }.tabBar( $r( "app.string.benchmark" ) )
+          BenchmarkTest({ testItems : this.testItems.filter(item => (item.category === Category.BenchMark)) })
+        }.tabBar($r("app.string.benchmark")).margin({ top : $r("app.float.distance_5") })
 
         TabContent() {
-          BenchmarkTest( {
-            testItems : this.testItems.filter( item => ( item.category === Category.BenchMarkManager ) )
-          } )
-        }.tabBar( $r( "app.string.benchmark_M" ) )
+          BenchmarkTest({
+            testItems : this.testItems.filter(item => (item.category === Category.BenchMarkManager))
+          })
+        }.tabBar($r("app.string.benchmark_M"))
       }
-      .barWidth( "80%" )
-      .barHeight( 60 )
-      .barMode( BarMode.Scrollable )
-      .backgroundColor( $r( "app.color.white" ) )
+      .barWidth("80%")
+      .barHeight("40vp")
+      .align(Alignment.TopStart)
+      .barMode(BarMode.Scrollable)
+      .backgroundColor($r("app.color.white"))
     }
   }
 }
@@ -90,27 +91,27 @@ struct TestCategory {
 struct HomePage {
   private testItems: TestData[] = initTestData()
 
-  aboutToAppear(){
+  aboutToAppear() {
     let abilityMgr = abilityAccessCtrl.createAtManager();
-    abilityMgr.requestPermissionsFromUser(globalThis.context, ["ohos.permission.LOCATION", "ohos.permission.APPROXIMATELY_LOCATION",
-    "ohos.permission.CAPTURE_SCREEN","ohos.permission.WRITE_MEDIA","ohos.permission.READ_MEDIA"], (error, result) => {
-      console.log("bluetooth requestPermissionsFromUser, err: "+JSON.stringify(error)+" ; result: "+JSON.stringify(result))
+    abilityMgr.requestPermissionsFromUser(globalThis.context , [ "ohos.permission.LOCATION", "ohos.permission.APPROXIMATELY_LOCATION",
+      "ohos.permission.CAPTURE_SCREEN", "ohos.permission.WRITE_MEDIA", "ohos.permission.READ_MEDIA" ] , (error , result) => {
+      console.log("bluetooth requestPermissionsFromUser, err: " + JSON.stringify(error) + " ; result: " + JSON.stringify(result))
     })
   }
 
   build() {
     Column() {
       MainPageTitle()
-      Stack( { alignContent : Alignment.TopEnd } ) {
-        TestCategory( { testItems : this.testItems } )
-        Image( $r( 'app.media.Switch' ) )
-          .height( 30 )
-          .width( 30 )
-          .margin( { top : 15 , right : 10 } )
-          .onClick( () => {
-          } )
+      Stack({ alignContent : Alignment.TopEnd }) {
+        TestCategory({ testItems : this.testItems })
+        Image($r('app.media.Switch'))
+          .height(30)
+          .width(30)
+          .margin({ top : $r("app.float.distance_5") , right : $r("app.float.distance_10") })
+          .onClick(() => {
+          })
       }
-      .height( '100%' )
+      .height('100%')
     }
   }
 }

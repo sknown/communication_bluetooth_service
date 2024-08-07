@@ -36,11 +36,13 @@ private:
     ErrCode DeregisterObserverInner(MessageParcel &data, MessageParcel &reply);
     ErrCode EnableBtInner(MessageParcel &data, MessageParcel &reply);
     int32_t DisableBtInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode RestrictBluetoothInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode SatelliteControlInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetProfileInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetBleRemoteInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode BluetoothFactoryResetInner(MessageParcel &data, MessageParcel &reply);
+    int32_t BluetoothFactoryResetInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetBtStateInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode GetLocalAddressInner(MessageParcel &data, MessageParcel &reply);
+    int32_t GetLocalAddressInner(MessageParcel &data, MessageParcel &reply);
     int32_t DisableBleInner(MessageParcel &data, MessageParcel &reply);
     int32_t EnableBleInner(MessageParcel &data, MessageParcel &reply);
     ErrCode IsBrEnabledInner(MessageParcel &data, MessageParcel &reply);
@@ -76,7 +78,7 @@ private:
     int32_t GetDeviceNameInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetDeviceAliasInner(MessageParcel &data, MessageParcel &reply);
     ErrCode SetDeviceAliasInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode GetDeviceBatteryLevelInner(MessageParcel &data, MessageParcel &reply);
+    int32_t GetRemoteDeviceBatteryInfoInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetPairStateInner(MessageParcel &data, MessageParcel &reply);
     int32_t StartPairInner(MessageParcel &data, MessageParcel &reply);
     ErrCode CancelPairingInner(MessageParcel &data, MessageParcel &reply);
@@ -101,6 +103,11 @@ private:
     ErrCode SyncRandomAddressInner(MessageParcel &data, MessageParcel &reply);
     ErrCode StartCrediblePairInner(MessageParcel &data, MessageParcel &reply);
     ErrCode CountEnableTimesInner(MessageParcel &data, MessageParcel &reply);
+    int32_t ConnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply);
+    int32_t DisconnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply);
+    int32_t SetDeviceCustomTypeInner(MessageParcel &data, MessageParcel &reply);
+    int32_t RegisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply);
+    int32_t DeregisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply);
 
     static const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParcel &, MessageParcel &)>>
         memberFuncMap_;

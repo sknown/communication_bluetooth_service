@@ -19,18 +19,23 @@
 
 namespace OHOS {
 namespace Bluetooth {
-void BluetoothHfpAgObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int state) {
+void BluetoothHfpAgObserverProxy::OnConnectionStateChanged(const BluetoothRawAddress &device, int state, int cause)
+{
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
         HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged WriteInterfaceToken error");
         return;
     }
     if (!data.WriteParcelable(&device)) {
-        HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged WriteParcelable error");
+        HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged write device error");
         return;
     }
     if (!data.WriteInt32(state)) {
-        HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged WriteInt32 error");
+        HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged write state error");
+        return;
+    }
+    if (!data.WriteInt32(cause)) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnConnectionStateChanged write cause error");
         return;
     }
     MessageParcel reply;
@@ -45,7 +50,8 @@ void BluetoothHfpAgObserverProxy::OnConnectionStateChanged(const BluetoothRawAdd
     }
 }
 
-void BluetoothHfpAgObserverProxy::OnScoStateChanged(const BluetoothRawAddress &device, int state) {
+void BluetoothHfpAgObserverProxy::OnScoStateChanged(const BluetoothRawAddress &device, int state, int reason)
+{
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
         HILOGE("BluetoothHfpAgObserverProxy::OnScoStateChanged WriteInterfaceToken error");
@@ -56,6 +62,10 @@ void BluetoothHfpAgObserverProxy::OnScoStateChanged(const BluetoothRawAddress &d
         return;
     }
     if (!data.WriteInt32(state)) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnScoStateChanged WriteInt32 error");
+        return;
+    }
+    if (!data.WriteInt32(reason)) {
         HILOGE("BluetoothHfpAgObserverProxy::OnScoStateChanged WriteInt32 error");
         return;
     }
@@ -70,7 +80,9 @@ void BluetoothHfpAgObserverProxy::OnScoStateChanged(const BluetoothRawAddress &d
         return;
     }
 }
-void BluetoothHfpAgObserverProxy::OnActiveDeviceChanged(const BluetoothRawAddress &device) {
+
+void BluetoothHfpAgObserverProxy::OnActiveDeviceChanged(const BluetoothRawAddress &device)
+{
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
         HILOGE("BluetoothHfpAgObserverProxy::OnActiveDeviceChanged WriteInterfaceToken error");
@@ -92,7 +104,8 @@ void BluetoothHfpAgObserverProxy::OnActiveDeviceChanged(const BluetoothRawAddres
     }
 }
 
-void BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged(const BluetoothRawAddress &device, int indValue) {
+void BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged(const BluetoothRawAddress &device, int indValue)
+{
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
         HILOGE("BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged WriteInterfaceToken error");
@@ -116,6 +129,33 @@ void BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged(const Bluetoot
         HILOGE("BluetoothHfpAgObserverProxy::OnHfEnhancedDriverSafetyChanged done fail, error: %{public}d", error);
         return;
     }    
+}
+
+void BluetoothHfpAgObserverProxy::OnHfpStackChanged(const BluetoothRawAddress &device, int action)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnHfpStackChanged WriteInterfaceToken error");
+        return;
+    }
+    if (!data.WriteParcelable(&device)) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnHfpStackChanged WriteParcelable error");
+        return;
+    }
+    if (!data.WriteInt32(action)) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnHfpStackChanged WriteInt32 error");
+        return;
+    }
+    MessageParcel reply;
+    MessageOption option {
+        MessageOption::TF_ASYNC
+    };
+    int error = Remote()->SendRequest(
+        BluetoothHfpAgObserverInterfaceCode::BT_HFP_AG_OBSERVER_HFP_STACK_CHANGED, data, reply, option);
+    if (error != NO_ERROR) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnHfpStackChanged done fail, error: %{public}d", error);
+        return;
+    } 
 }
 
 }  // namespace Bluetooth

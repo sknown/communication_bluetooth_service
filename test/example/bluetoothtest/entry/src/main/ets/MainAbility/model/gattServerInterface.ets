@@ -13,123 +13,135 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
-
 /**
  * GattServer Interface Of Bluetooth test
  */
 
-import prompt from '@system.prompt';
 import bluetooth from '@ohos.bluetooth';
 import BluetoothModel from './BluetoothModel'
+import {
+  Descriptor ,
+  Characteristic ,
+  CurGattService ,
+  CurAdvSettings ,
+  AdvDataManufactureDataInstance ,
+  AdvDataServiceDataInstance ,
+  CurAdvData ,
+  AdvResponseManufactureDataInstance ,
+  AdvResponseServiceDataInstance ,
+  CurAdvResponse ,
+  ServerResponse ,
+  NotifyCharacteristic
+} from '../../Utils/common'
+import promptAction from '@ohos.promptAction';
 
-let gattServerInstance = null
+let gattServerInstance :bluetooth.GattServer
 
-export function testCreateGattServer(): String {
+export function testCreateGattServer(): string {
   try {
     let btState = bluetooth.getState();
     let message = "createGattServer test"
     if ( btState === bluetooth.BluetoothState.STATE_ON || btState === bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( gattServerInstance ) {
         message = "GattServer exists!";
-        prompt.showToast( { message : message } )
+        promptAction.showToast({ message : message })
         return message
       }
-      console.log( "CreateGattServer start -----------" )
+      console.log("CreateGattServer start -----------")
       gattServerInstance = BluetoothModel.createGattServer();
       message = "CreateGattServer:succeeds!";
-      console.log( "CreateGattServer:succeeds!-----------" )
-      prompt.showToast( { message : message } )
+      console.log("CreateGattServer:succeeds!-----------")
+      promptAction.showToast({ message : message })
       return message
     } else if ( btState === bluetooth.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
     } else {
       message = "switching,wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testCreateGattServer. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testCreateGattServer. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testCreateGattServer. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testAddService(): String {
+export function testAddService(): string {
   try {
     let message = "addService test"
     let btStatus = bluetooth.getState();
     if ( btStatus === bluetooth.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     }
     if ( !gattServerInstance ) {
       message = "NO_GATT_Server_OBJECT";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     }
     // build service
     // 调这个本地函数 buildGattService();
-    let curServiceUUID = AppStorage.Get( "curServiceUUID" )
-    let curCharacteristicUUID = AppStorage.Get( "curCharacteristicUUID" )
-    let curDescriptorUUID = AppStorage.Get( "curDescriptorUUID" )
-    let curDescriptorValue = AppStorage.Get( "curDescriptorValue" )
-    let curCharacteristicValue = AppStorage.Get( "curCharacteristicValue" )
-    let isPrimary = AppStorage.Get( "isPrimary" )
-    let descriptors = [];
-    let descriptor = {
+    let curServiceUUID: string = AppStorage.get("curServiceUUID") !
+    let curCharacteristicUUID: string = AppStorage.get("curCharacteristicUUID") !
+    let curDescriptorUUID: string = AppStorage.get("curDescriptorUUID") !
+    let curDescriptorValue: string = AppStorage.get("curDescriptorValue") !
+    let curCharacteristicValue: string = AppStorage.get("curCharacteristicValue") !
+    let isPrimary: boolean = AppStorage.get("isPrimary") !
+    let descriptors : Array<bluetooth.BLEDescriptor>= [];
+    let descriptor: Descriptor = {
       serviceUuid : curServiceUUID ,
       characteristicUuid : curCharacteristicUUID ,
       descriptorUuid : curDescriptorUUID ,
-      descriptorValue : string2ArrayBuffer( curDescriptorValue )
+      descriptorValue : string2ArrayBuffer(curDescriptorValue)
     };
-    descriptors.push( descriptor );
+    descriptors.push(descriptor);
 
     // build characteristics
-    let characteristics = [];
-    let characteristic = {
+    let characteristics : Array<bluetooth.BLECharacteristic>= [];
+    let characteristic: Characteristic = {
       serviceUuid : curServiceUUID ,
       characteristicUuid : curCharacteristicUUID ,
-      characteristicValue : string2ArrayBuffer( curCharacteristicValue ) ,
+      characteristicValue : string2ArrayBuffer(curCharacteristicValue) ,
       descriptors : descriptors
     };
-    characteristics.push( characteristic );
-    let curGattService = {
+    characteristics.push(characteristic);
+    let curGattService: bluetooth.GattService = {
       serviceUuid : curServiceUUID ,
       isPrimary : isPrimary ,
       characteristics : characteristics ,
       includeServices : []
     }
-    console.log( "gattServerInstance.addService start -----------" )
-    let ret = gattServerInstance.addService( curGattService );
+    console.log("gattServerInstance.addService start -----------")
+    let ret: boolean = gattServerInstance!.addService(curGattService);
     message = "result: addService," + ret;
-    console.log( "服务的参数为：" + JSON.stringify( curGattService ) )
-    console.log( "gattServerInstance.addService succeeds!-----------" + message )
-    prompt.showToast( { message : message } )
+    console.log("服务的参数为：" + JSON.stringify(curGattService))
+    console.log("gattServerInstance.addService succeeds!-----------" + message)
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testAddService. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testAddService. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testAddService. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testRemoveService(): String {
+export function testRemoveService(): string {
   try {
     let message = "removeService test"
-    let curServiceUUID = AppStorage.Get( "curServiceUUID" )
+    let curServiceUUID: string = AppStorage.get("curServiceUUID") !
     let btState = bluetooth.getState();
     if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattServerInstance ) {
         message = "NO_GATT_Server_OBJECT";
-        prompt.showToast( { message : message } )
+        promptAction.showToast({ message : message })
         return message
       }
       message = "result: removeService ";
-      if ( gattServerInstance.removeService( curServiceUUID ) ) {
+      if ( gattServerInstance!.removeService(curServiceUUID) ) {
         message += 'true';
       } else {
         message += 'false';
@@ -139,12 +151,12 @@ export function testRemoveService(): String {
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testRemoveService. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testRemoveService. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testRemoveService. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -156,14 +168,14 @@ let curAdvData: bluetooth.AdvertiseData = {
   ] ,
   manufactureData : [ {
     manufactureId : 7456 ,
-    manufactureValue : string2ArrayBuffer( "OHOS CHN" )
+    manufactureValue : string2ArrayBuffer("OHOS CHN")
   } ] ,
   serviceData : [ {
     serviceUuid : "000054F6-0000-1000-8000-00805f9b34fb" ,
-    serviceValue : string2ArrayBuffer( "OhosBle!" )
+    serviceValue : string2ArrayBuffer("OhosBle!")
   }, {
     serviceUuid : "00009999-0000-1000-8000-00805f9b34fb" ,
-    serviceValue : string2ArrayBuffer( "dudu_tiger" )
+    serviceValue : string2ArrayBuffer("dudu_tiger")
   } ]
 };
 
@@ -174,101 +186,102 @@ let curAdvResponse: bluetooth.AdvertiseData = {
   ] ,
   manufactureData : [ {
     manufactureId : 6547 ,
-    manufactureValue : string2ArrayBuffer( "OHOS CHN" )
+    manufactureValue : string2ArrayBuffer("OHOS CHN")
   } ] ,
   serviceData : [ {
     serviceUuid : "000054F6-0000-1000-8000-00805f9b34fb" ,
-    serviceValue : string2ArrayBuffer( "OhosBle!" )
+    serviceValue : string2ArrayBuffer("OhosBle!")
   }, {
     serviceUuid : "00007456-0000-1000-8000-00805f9b34fb" ,
-    serviceValue : string2ArrayBuffer( "OhosBle" )
+    serviceValue : string2ArrayBuffer("OhosBle")
   } ]
 };
 
-export function testStartAdvertising(): String {
+export function testStartAdvertising(): string {
   try {
     let message = "startAdvertising test"
     let btState = bluetooth.getState();
     if ( btState === bluetooth.BluetoothState.STATE_ON || btState === bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattServerInstance ) {
         message = "NO_GATT_Server_OBJECT";
-        prompt.showToast( { message : message } )
+        promptAction.showToast({ message : message })
         return message
       }
       message = "startAdvertising:build input parameter In!";
       // 调三个本地函数
       // buildAdvSettings();
-      let cbxAdvSettings = AppStorage.Get( "cbxAdvSettings" )
-      let cbxInterval = AppStorage.Get( "cbxInterval" )
-      let cbxTxPower = AppStorage.Get( "cbxTxPower" )
-      let curAdvSettings = {
+      let cbxAdvSettings: boolean = AppStorage.get("cbxAdvSettings") !
+      let cbxInterval: boolean = AppStorage.get("cbxInterval") !
+      let cbxTxPower: boolean = AppStorage.get("cbxTxPower") !
+      let curAdvSettings: CurAdvSettings = {
         interval : 800 , //500ms
         txPower : - 7 ,
         connectable : true
       }
       if ( cbxAdvSettings ) {
         if ( cbxInterval ) {
-          let advSettings_interval = AppStorage.Get( "advSettings_interval" )
-          curAdvSettings.interval = parseInt( advSettings_interval )
+          let advSettings_interval: string = AppStorage.get("advSettings_interval") !
+          curAdvSettings.interval = parseInt(advSettings_interval)
         }
         if ( cbxTxPower ) {
-          let advSettings_txPower = AppStorage.Get( "advSettings_txPower" )
-          curAdvSettings.txPower = parseInt( advSettings_txPower )
+          let advSettings_txPower: string = AppStorage.get("advSettings_txPower") !
+          curAdvSettings.txPower = parseInt(advSettings_txPower)
         }
-        let advSettings_connectable = AppStorage.Get( "advSettings_connectable" )
+        let advSettings_connectable: boolean = AppStorage.get("advSettings_connectable") !
         curAdvSettings.connectable = advSettings_connectable
       }
 
       //    buildAdvData();
-      let advDataServiceUuids_serviceUuid = AppStorage.Get( "advDataServiceUuids_serviceUuid" )
-      let advDataManufactureData_manufactureId = AppStorage.Get( "advDataManufactureData_manufactureId" )
-      let advDataManufactureData_manufactureValue = AppStorage.Get( "advDataManufactureData_manufactureValue" )
-      let advDataServiceData_serviceUuid = AppStorage.Get( "advDataServiceData_serviceUuid" )
-      let advDataServiceData_serviceValue = AppStorage.Get( "advDataServiceData_serviceValue" )
-      let advDataServiceUuidList = []
-      let advDataManufactureDataList = []
-      let advDataServiceDataList = []
-      let advDataManufactureDataInstance = {
-        manufactureId : parseInt( advDataManufactureData_manufactureId ) ,
-        manufactureValue : string2ArrayBuffer( advDataManufactureData_manufactureValue )
+      let advDataServiceUuids_serviceUuid: string = AppStorage.get("advDataServiceUuids_serviceUuid") !
+      let advDataManufactureData_manufactureId: string = AppStorage.get("advDataManufactureData_manufactureId") !
+      let advDataManufactureData_manufactureValue: string = AppStorage.get("advDataManufactureData_manufactureValue") !
+      let advDataServiceData_serviceUuid: string = AppStorage.get("advDataServiceData_serviceUuid") !
+      let advDataServiceData_serviceValue: string = AppStorage.get("advDataServiceData_serviceValue") !
+      let advDataServiceUuidList :Array<string> = []
+      let advDataManufactureDataList : Array<bluetooth.ManufactureData>= []
+      let advDataServiceDataList : Array<bluetooth.ServiceData>= []
+      let advDataManufactureDataInstance: AdvDataManufactureDataInstance = {
+        manufactureId : parseInt(advDataManufactureData_manufactureId) ,
+        manufactureValue : string2ArrayBuffer(advDataManufactureData_manufactureValue)
       }
-      let advDataServiceDataInstance = {
+      let advDataServiceDataInstance: AdvDataServiceDataInstance = {
         serviceUuid : advDataServiceData_serviceUuid ,
-        serviceValue : string2ArrayBuffer( advDataServiceData_serviceValue )
+        serviceValue : string2ArrayBuffer(advDataServiceData_serviceValue)
       }
-      let advDataServiceUuidListLength = advDataServiceUuidList.push( advDataServiceUuids_serviceUuid )
-      let advDataManufactureDataListLength = advDataManufactureDataList.push( advDataManufactureDataInstance )
-      let advDataServiceDataListLength = advDataServiceDataList.push( advDataServiceDataInstance )
 
-      let curAdvData = {
+      advDataServiceUuidList.push(advDataServiceUuids_serviceUuid)
+      advDataManufactureDataList.push(advDataManufactureDataInstance)
+      advDataServiceDataList.push(advDataServiceDataInstance)
+
+      let curAdvData: CurAdvData = {
         serviceUuids : advDataServiceUuidList ,
         manufactureData : advDataManufactureDataList ,
         serviceData : advDataServiceDataList
       }
 
       //    buildAdvResponse();
-      let advResponseServiceUuids_serviceUuid = AppStorage.Get( "advResponseServiceUuids_serviceUuid" )
-      let advResponseManufactureData_manufactureId = AppStorage.Get( "advResponseManufactureData_manufactureId" )
-      let advResponseManufactureData_manufactureValue = AppStorage.Get( "advResponseManufactureData_manufactureValue" )
-      let advResponseServiceData_serviceUuid = AppStorage.Get( "advResponseServiceData_serviceUuid" )
-      let advResponseServiceData_serviceValue = AppStorage.Get( "advResponseServiceData_serviceValue" )
-      let advResponseServiceUuidList = []
-      let advResponseManufactureDataList = []
-      let advResponseServiceDataList = []
-      let advResponseManufactureDataInstance = {
-        manufactureId : parseInt( advResponseManufactureData_manufactureId ) ,
-        manufactureValue : string2ArrayBuffer( advResponseManufactureData_manufactureValue )
+      let advResponseServiceUuids_serviceUuid: string = AppStorage.get("advResponseServiceUuids_serviceUuid") !
+      let advResponseManufactureData_manufactureId: string = AppStorage.get("advResponseManufactureData_manufactureId") !
+      let advResponseManufactureData_manufactureValue: string = AppStorage.get("advResponseManufactureData_manufactureValue") !
+      let advResponseServiceData_serviceUuid: string = AppStorage.get("advResponseServiceData_serviceUuid") !
+      let advResponseServiceData_serviceValue: string = AppStorage.get("advResponseServiceData_serviceValue") !
+      let advResponseServiceUuidList: Array<string> = []
+      let advResponseManufactureDataList: Array<bluetooth.ManufactureData> = []
+      let advResponseServiceDataList : Array<bluetooth.ServiceData>= []
+      let advResponseManufactureDataInstance: AdvResponseManufactureDataInstance = {
+        manufactureId : parseInt(advResponseManufactureData_manufactureId) ,
+        manufactureValue : string2ArrayBuffer(advResponseManufactureData_manufactureValue)
       }
-      let advResponseServiceDataInstance = {
+      let advResponseServiceDataInstance: AdvResponseServiceDataInstance = {
         serviceUuid : advResponseServiceData_serviceUuid ,
-        serviceValue : string2ArrayBuffer( advResponseServiceData_serviceValue )
+        serviceValue : string2ArrayBuffer(advResponseServiceData_serviceValue)
       }
 
-      let advResponseServiceUuidListLength = advResponseServiceUuidList.push( advResponseServiceUuids_serviceUuid )
-      let advResponseManufactureDataListLength = advResponseManufactureDataList.push( advResponseManufactureDataInstance )
-      let advResponseServiceDataListLength = advResponseServiceDataList.push( advResponseServiceDataInstance )
+      advResponseServiceUuidList.push(advResponseServiceUuids_serviceUuid)
+      advResponseManufactureDataList.push(advResponseManufactureDataInstance)
+      advResponseServiceDataList.push(advResponseServiceDataInstance)
 
-      let curAdvResponse = {
+      let curAdvResponse: CurAdvResponse = {
         serviceUuids : advResponseServiceUuidList ,
         manufactureData : advResponseManufactureDataList ,
         serviceData : advResponseServiceDataList
@@ -277,36 +290,36 @@ export function testStartAdvertising(): String {
       let setting = curAdvSettings;
       let advData = curAdvData;
       let advResponse = curAdvResponse;
-      let cbxAdvResponse = AppStorage.Get( "cbxAdvResponse" )
+      let cbxAdvResponse: boolean = AppStorage.get("cbxAdvResponse") !
       message = "startAdvertising:build input parameter Out!";
 
       if ( !cbxAdvResponse ) {
-        console.log( "advData.serviceUuids:" + advData.serviceUuids + "\n" )
-        console.log( "advData.manufactureData:" + advData.manufactureData + ( typeof advData.manufactureData ) + "\n" )
-        console.log( "advData.serviceData:" + advData.serviceData + "\n" )
-        gattServerInstance.startAdvertising( setting , advData );
-        console.log( "startAdvertising(setting,advData)-----------" )
+        console.log("advData.serviceUuids:" + advData.serviceUuids + "\n")
+        console.log("advData.manufactureData:" + advData.manufactureData + (typeof advData.manufactureData) + "\n")
+        console.log("advData.serviceData:" + advData.serviceData + "\n")
+        gattServerInstance!.startAdvertising(setting , advData);
+        console.log("startAdvertising(setting,advData)-----------")
       } else {
-        console.log( "advResponse.serviceUuids:" + advResponse.serviceUuids + "\n" )
-        console.log( "advResponse.manufactureData:" + advResponse.manufactureData + "\n" )
-        console.log( "advResponse.serviceData:" + advResponse.serviceData + "\n" )
-        gattServerInstance.startAdvertising( setting , advData , advResponse );
-        console.log( "startAdvertising(setting,advData,advResponse)-----------" )
+        console.log("advResponse.serviceUuids:" + advResponse.serviceUuids + "\n")
+        console.log("advResponse.manufactureData:" + advResponse.manufactureData + "\n")
+        console.log("advResponse.serviceData:" + advResponse.serviceData + "\n")
+        gattServerInstance!.startAdvertising(setting , advData , advResponse);
+        console.log("startAdvertising(setting,advData,advResponse)-----------")
       }
-      console.log( "cbxAdvSettings:" + cbxAdvSettings + "\n" )
-      console.log( "cbxAdvResponse:" + cbxAdvResponse + "\n" )
+      console.log("cbxAdvSettings:" + cbxAdvSettings + "\n")
+      console.log("cbxAdvResponse:" + cbxAdvResponse + "\n")
       message = "startAdvertising succeeds!" + cbxAdvSettings + "," + cbxAdvResponse;
     } else if ( btState === bluetooth.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testStartAdvertising. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testStartAdvertising. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testStartAdvertising. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -318,22 +331,22 @@ export function testStopAdvertising(): String {
     if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattServerInstance ) {
         message = "NO_GATT_Server_OBJECT";
-        prompt.showToast( { message : message } )
+        promptAction.showToast({ message : message })
         return message
       }
-      gattServerInstance.stopAdvertising();
+      gattServerInstance!.stopAdvertising();
       message = "stopAdvertising succeeds.";
     } else if ( btState == bluetooth.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testStopAdvertising. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testStopAdvertising. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testStopAdvertising. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -345,22 +358,22 @@ export function testGattServerClose(): String {
     if ( btState == bluetooth.BluetoothState.STATE_ON || btState == bluetooth.BluetoothState.STATE_BLE_ON ) {
       if ( !gattServerInstance ) {
         message = "NO_GATT_Server_OBJECT";
-        prompt.showToast( { message : message } )
+        promptAction.showToast({ message : message })
         return message
       }
-      gattServerInstance.close();
+      gattServerInstance!.close();
       message = "GattServer closed: succeeds";
     } else if ( btState == bluetooth.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
     } else {
       message = "switching,please wait!";
     }
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testGattServerClose. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testGattServerClose. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testGattServerClose. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -374,17 +387,17 @@ export function testOnConnectStateChange(): String {
     let btStatus = bluetooth.getState();
     if ( btStatus === bluetooth.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     }
     if ( connectStateChange ) {
-      gattServerInstance.off( "connectStateChange" , () => {
-      } )
+      gattServerInstance!.off("connectStateChange" , () => {
+      })
       message = "关闭连接状态变化 "
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     } else {
-      gattServerInstance.on( 'connectStateChange' , ( data ) => {
+      gattServerInstance!.on('connectStateChange' , (data: bluetooth.BLEConnectChangedState) => {
         let connectStateMsg = "deviceId:" + data.deviceId + ",connectState:" + data.state;
         let connect_StateMsg = ""
         if ( data.state == 0 ) {
@@ -396,19 +409,19 @@ export function testOnConnectStateChange(): String {
         } else {
           connect_StateMsg = "STATE_DISCONNECTING"
         }
-        AppStorage.SetOrCreate( "connect_StateMsg" , connect_StateMsg )
-        console.log( "connectStateChange:" + JSON.stringify( data ) )
-        prompt.showToast( { message : connectStateMsg } )
-      } )
+        AppStorage.setOrCreate("connect_StateMsg" , connect_StateMsg)
+        console.log("connectStateChange:" + JSON.stringify(data))
+        promptAction.showToast({ message : connectStateMsg })
+      })
       message = '打开连接状态变化'
     }
     connectStateChange = !connectStateChange
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testOnConnectStateChange. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testOnConnectStateChange. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testOnConnectStateChange. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -422,37 +435,37 @@ export function testOnCharacteristicRead(): String {
     let btStatus = bluetooth.getState();
     if ( btStatus === bluetooth.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     }
     if ( characteristicRead ) {
-      gattServerInstance.off( "characteristicRead" , () => {
-      } )
+      gattServerInstance!.off("characteristicRead" , () => {
+      })
       message = "特征值读取 关闭"
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     } else {
-      gattServerInstance.on( 'characteristicRead' , ( characteristicReadReq ) => {
+      gattServerInstance.on('characteristicRead' , (characteristicReadReq: bluetooth.CharacteristicReadReq) => {
 
         let characteristicReadMsg = 'characteristicRead received!';
         // client address
-        let clientDeviceId = characteristicReadReq.deviceId;
+        let clientDeviceId: string = characteristicReadReq.deviceId;
         // transId
-        let transId = characteristicReadReq.transId;
+        let transId: number = characteristicReadReq.transId;
         // the byte offset of the start position for reading characteristic value
-        let offset = characteristicReadReq.offset;
+        let offset: number = characteristicReadReq.offset;
         // service/characteristic Uuid
-        let characteristicUuid = characteristicReadReq.characteristicUuid;
-        let serviceUuid = characteristicReadReq.serviceUuid;
+        let characteristicUuid: string = characteristicReadReq.characteristicUuid;
+        let serviceUuid: string = characteristicReadReq.serviceUuid;
 
         characteristicReadMsg += 'characteristicRead input parameters: deviceId = ' + clientDeviceId + '\n';
         characteristicReadMsg += 'transId = ' + transId + '\n';
         characteristicReadMsg += "characteristicUuid = " + characteristicUuid + '\n';
         characteristicReadMsg += "serviceUuid = " + serviceUuid + '\n';
-        AppStorage.SetOrCreate( "characteristicReadMsg" , characteristicReadMsg ) // build data for response
-        let arrayBufferCCC = string2ArrayBuffer( 'DaYuBlue' );
+        AppStorage.setOrCreate("characteristicReadMsg" , characteristicReadMsg) // build data for response
+        let arrayBufferCCC = string2ArrayBuffer('DaYuBlue');
 
-        let serverResponse = {
+        let serverResponse: ServerResponse = {
           deviceId : clientDeviceId ,
           transId : transId ,
           status : 0 ,
@@ -460,19 +473,19 @@ export function testOnCharacteristicRead(): String {
           value : arrayBufferCCC
         }
 
-        let ret = gattServerInstance.sendResponse( serverResponse )
+        let ret: boolean = gattServerInstance!.sendResponse(serverResponse)
         message = 'characteristicRead sendResponse:' + ret
-        prompt.showToast( { message : message } )
-      } )
+        promptAction.showToast({ message : message })
+      })
       message = '特征值读取 打开'
     }
     characteristicRead = !characteristicRead
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testOnCharacteristicRead. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testOnCharacteristicRead. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testOnCharacteristicRead. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -486,34 +499,34 @@ export function testOnCharacteristicWrite(): String {
     let btStatus = bluetooth.getState();
     if ( btStatus === bluetooth.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     }
     if ( characteristicWrite ) {
-      gattServerInstance.off( "characteristicWrite" , () => {
-      } );
+      gattServerInstance!.off("characteristicWrite" , () => {
+      });
       message = "特征值写入 关闭"
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     } else {
-      gattServerInstance.on( 'characteristicWrite' , ( characteristicWriteReq ) => {
-        btOnCharacteristicWrite = 'on characteristicWrite'
-        characteristicWriteMsg = '';
+      gattServerInstance!.on('characteristicWrite' , (characteristicWriteReq: bluetooth.CharacteristicWriteReq) => {
+        let btOnCharacteristicWrite = 'on characteristicWrite'
+        let characteristicWriteMsg = '';
 
-        let arrayBufferCCC = string2ArrayBuffer( "characteristicWriteForResponse" );
+        let arrayBufferCCC = string2ArrayBuffer("characteristicWriteForResponse");
 
         // client address
-        let deviceId = characteristicWriteReq.deviceId;
-        let transId = characteristicWriteReq.transId;
-        let offset = characteristicWriteReq.offset;
+        let deviceId: string = characteristicWriteReq.deviceId;
+        let transId: number = characteristicWriteReq.transId;
+        let offset: number = characteristicWriteReq.offset;
         /** Whether this request should be pending for later operation */
-        let isPrep = characteristicWriteReq.isPrep;
+        let isPrep: boolean = characteristicWriteReq.isPrep;
         /** Whether the remote client need a response */
-        let needRsp = characteristicWriteReq.needRsp;
+        let needRsp: boolean = characteristicWriteReq.needRsp;
         /** Indicates the value to be written */
         let value = new Uint8Array(characteristicWriteReq.value);
-        let characteristicUuid = characteristicWriteReq.characteristicUuid;
-        let serviceUuid = characteristicWriteReq.serviceUuid;
+        let characteristicUuid: string = characteristicWriteReq.characteristicUuid;
+        let serviceUuid: string = characteristicWriteReq.serviceUuid;
 
 
         characteristicWriteMsg += "The characteristicWriteReq input parameters: deviceId =" + deviceId;
@@ -521,11 +534,11 @@ export function testOnCharacteristicWrite(): String {
         characteristicWriteMsg += "offset =" + offset;
         characteristicWriteMsg += "isPrep =" + isPrep;
         characteristicWriteMsg += "needRsp =" + needRsp;
-        characteristicWriteMsg += "value =" + JSON.stringify( value );
+        characteristicWriteMsg += "value =" + JSON.stringify(value);
         characteristicWriteMsg += "characteristicUuid =" + characteristicUuid;
         characteristicWriteMsg += "serviceUuid =" + serviceUuid;
-        AppStorage.SetOrCreate( "characteristicWriteMsg" , characteristicWriteMsg )
-        let serverResponse = {
+        AppStorage.setOrCreate("characteristicWriteMsg" , characteristicWriteMsg)
+        let serverResponse: ServerResponse = {
           deviceId : deviceId ,
           transId : transId ,
           status : 0 ,
@@ -534,32 +547,32 @@ export function testOnCharacteristicWrite(): String {
         };
         // sendResponse
         if ( needRsp ) {
-          let ret = gattServerInstance.sendResponse( serverResponse );
+          let ret: boolean = gattServerInstance!.sendResponse(serverResponse);
           message = 'characteristicWrite sendResponse:' + ret;
-          prompt.showToast( { message : message } )
+          promptAction.showToast({ message : message })
         }
-        notifyCharacteristic_notifyCharacteristic = {
+        let notifyCharacteristic_notifyCharacteristic: NotifyCharacteristic = {
           serviceUuid : serviceUuid ,
           characteristicUuid : characteristicUuid ,
-          characteristicValue : string2ArrayBuffer( "Value4notifyCharacteristic" ) ,
+          characteristicValue : string2ArrayBuffer("Value4notifyCharacteristic") ,
           confirm : true //notification:true; indication:false;
         }
         let notifyCharacteristic = notifyCharacteristic_notifyCharacteristic;
-        if ( gattServerInstance.notifyCharacteristicChanged( deviceId , notifyCharacteristic ) ) {
+        if ( gattServerInstance!.notifyCharacteristicChanged(deviceId , notifyCharacteristic) ) {
           message = "notifyCharacteristicChanged successfully!";
         } else {
           message = "notifyCharacteristicChanged failed!";
         }
-      } )
+      })
       message = '特征值写入 打开';
     }
     characteristicWrite = !characteristicWrite
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testOnCharacteristicWrite. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testOnCharacteristicWrite. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testOnCharacteristicWrite. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -576,45 +589,45 @@ export function testOnDescriptorRead(): String {
       return message;
     }
     if ( descriptorRead ) {
-      gattServerInstance.off( "descriptorRead" , () => {
-      } );
+      gattServerInstance!.off("descriptorRead" , () => {
+      });
       message = '描述符读取 关闭';
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     } else {
-      gattServerInstance.on( 'descriptorRead' , ( descriptorReadReq ) => {
-        btOnDescriptorRead = 'on:descriptorRead'
-        descriptorReadMsg = "descriptorReadIn!!";
-        let deviceId = descriptorReadReq.deviceId;
-        let transId = descriptorReadReq.transId;
+      gattServerInstance!.on('descriptorRead' , (descriptorReadReq: bluetooth.DescriptorReadReq) => {
+        let btOnDescriptorRead = 'on:descriptorRead'
+        let descriptorReadMsg = "descriptorReadIn!!";
+        let deviceId: string = descriptorReadReq.deviceId;
+        let transId: number = descriptorReadReq.transId;
         /** Indicates the byte offset of the start position for reading characteristic value */
-        let offset = descriptorReadReq.offset;
-        let descriptorUuid = descriptorReadReq.descriptorUuid;
-        let characteristicUuid = descriptorReadReq.characteristicUuid;
-        let serviceUuid = descriptorReadReq.serviceUuid;
-        let arrayBufferDesc = string2ArrayBuffer( "Response4descriptorRead" );
-        let serverResponse = {
+        let offset: number = descriptorReadReq.offset;
+        let descriptorUuid: string = descriptorReadReq.descriptorUuid;
+        let characteristicUuid: string = descriptorReadReq.characteristicUuid;
+        let serviceUuid: string = descriptorReadReq.serviceUuid;
+        let arrayBufferDesc = string2ArrayBuffer("Response4descriptorRead");
+        let serverResponse: ServerResponse = {
           deviceId : deviceId ,
           transId : transId ,
           status : 0 ,
           offset : offset ,
           value : arrayBufferDesc
         }
-        let ret = gattServerInstance.sendResponse( serverResponse );
+        let ret: boolean = gattServerInstance!.sendResponse(serverResponse);
         message = 'descriptorRead sendResponse:' + ret;
         descriptorReadMsg += message
-        AppStorage.SetOrCreate( "descriptorReadMsg" , descriptorReadMsg )
-        prompt.showToast( { message : message } )
-      } )
+        AppStorage.setOrCreate("descriptorReadMsg" , descriptorReadMsg)
+        promptAction.showToast({ message : message })
+      })
       message = '描述符读取 打开';
     }
     descriptorRead = !descriptorRead
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testOnDescriptorRead. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testOnDescriptorRead. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testOnDescriptorRead. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -628,38 +641,38 @@ export function testOnDescriptorWrite(): String {
     let btStatus = bluetooth.getState();
     if ( btStatus === bluetooth.BluetoothState.STATE_OFF ) {
       message = "BT is not enabled!";
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     }
     if ( descriptorWrite ) {
-      gattServerInstance.off( "descriptorWrite" , () => {
-      } );
+      gattServerInstance!.off("descriptorWrite" , () => {
+      });
       message = '描述符写入 关闭';
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     } else {
-      gattServerInstance.on( 'descriptorWrite' , ( descriptorWriteReq ) => {
-        btOnDescriptorWrite = 'on:descriptorWrite'
-        descriptorWriteMsg = "descriptorWriteIn";
+      gattServerInstance!.on('descriptorWrite' , (descriptorWriteReq: bluetooth.DescriptorWriteReq) => {
+        let btOnDescriptorWrite = 'on:descriptorWrite'
+        let descriptorWriteMsg = "descriptorWriteIn";
         descriptorWriteMsg += "The descriptorWriteReq client address: deviceId is " + descriptorWriteReq.deviceId;
-        let deviceId = descriptorWriteReq.deviceId;
-        let transId = descriptorWriteReq.transId;
+        let deviceId: string = descriptorWriteReq.deviceId;
+        let transId: number = descriptorWriteReq.transId;
         /** Indicates the byte offset of the start position for writing descriptor value */
-        let offset = descriptorWriteReq.offset;
+        let offset: number = descriptorWriteReq.offset;
         /** Whether this request should be pending for later operation */
-        let isPrep = descriptorWriteReq.isPrep;
+        let isPrep: boolean = descriptorWriteReq.isPrep;
         /** Whether the remote client need a response */
-        let needRsp = descriptorWriteReq.needRsp;
+        let needRsp: boolean = descriptorWriteReq.needRsp;
         /** Indicates the value to be written */
         let value = new Uint8Array(descriptorWriteReq.value);
-        let descriptorUuid = descriptorWriteReq.descriptorUuid;
-        let characteristicUuid = descriptorWriteReq.characteristicUuid;
-        let serviceUuid = descriptorWriteReq.serviceUuid;
+        let descriptorUuid: string = descriptorWriteReq.descriptorUuid;
+        let characteristicUuid: string = descriptorWriteReq.characteristicUuid;
+        let serviceUuid: string = descriptorWriteReq.serviceUuid;
 
         let arrayBufferDesc = new ArrayBuffer(8);
         let descValue = new Uint8Array(arrayBufferDesc);
-        descValue[0] = value[0];
-        let serverResponse = {
+        descValue[ 0 ] = value[ 0 ];
+        let serverResponse: ServerResponse = {
           deviceId : deviceId ,
           transId : transId ,
           status : 0 ,
@@ -668,29 +681,29 @@ export function testOnDescriptorWrite(): String {
         };
 
         if ( needRsp ) {
-          let ret = gattServerInstance.sendResponse( serverResponse );
+          let ret: boolean = gattServerInstance!.sendResponse(serverResponse);
           message = 'descriptorWrite sendResponse:' + ret;
-          prompt.showToast( { message : message } )
+          promptAction.showToast({ message : message })
         }
         descriptorWriteMsg += 'descriptorWrite Callback finished!';
-      } )
+      })
       message = '描述符写入 打开';
     }
     descriptorWrite = !descriptorWrite
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testOnDescriptorWrite. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testOnDescriptorWrite. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testOnDescriptorWrite. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function string2ArrayBuffer( str ) {
+export function string2ArrayBuffer(str: string) {
   let array = new Uint8Array(str.length);
-  for ( var i = 0 ; i < str.length ; i ++ ) {
-    array[i] = str.charCodeAt( i );
+  for ( let i = 0 ; i < str.length ; i ++ ) {
+    array[ i ] = str.charCodeAt(i);
   }
   return array.buffer
 }

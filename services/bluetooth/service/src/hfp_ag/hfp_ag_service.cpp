@@ -18,6 +18,7 @@
 #include "adapter_config.h"
 #include "bluetooth_errorcode.h"
 #include "class_creator.h"
+#include "adapter_manager.h"
 #include "hfp_ag_defines.h"
 #include "hfp_ag_system_interface.h"
 #include "log_util.h"
@@ -150,6 +151,12 @@ int HfpAgService::Connect(const RawAddress &device)
 {
     LOG_INFO("[HFP AG]%{public}s():==========<start>==========", __FUNCTION__);
     std::lock_guard<std::recursive_mutex> lk(mutex_);
+    auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    if (!classicService || !(classicService->IsHfpCodSupported(device))) {
+        LOG_ERROR("[HFP AG]%{public}s():Not Support HFP!", __FUNCTION__);
+        return Bluetooth::BT_ERR_INTERNAL_ERROR;
+    }
+
     std::string address = device.GetAddress();
     auto it = stateMachines_.find(address);
     if ((it != stateMachines_.end()) && (it->second != nullptr)) {
@@ -165,7 +172,6 @@ int HfpAgService::Connect(const RawAddress &device)
         LOG_INFO("[HFP AG]%{public}s():Max connection has reached!", __FUNCTION__);
         return Bluetooth::BT_ERR_INTERNAL_ERROR;
     }
-
     HfpAgMessage event(HFP_AG_CONNECT_EVT);
     event.dev_ = address;
     PostEvent(event);
@@ -489,10 +495,14 @@ void HfpAgService::UpdateMockCallList(int callState, const std::string &number, 
     callList_.push_back(call);
 }
 
-void HfpAgService::PhoneStateChanged(
-    int numActive, int numHeld, int callState, const std::string &number, int type, const std::string &name)
+void HfpAgService::PhoneStateChanged(Bluetooth::BluetoothPhoneState &phoneState)
 {
     LOG_INFO("[HFP AG]%{public}s(): ==========<start>==========", __FUNCTION__);
+    int numActive = phoneState.GetActiveNum();
+    int numHeld = phoneState.GetHeldNum();
+    int callState = phoneState.GetCallState();
+    std::string number = phoneState.GetNumber();
+    int type = phoneState.GetCallType();
     if (mockState_ == HFP_AG_MOCK) {
         UpdateMockCallList(callState, number, type);
         return;
@@ -522,12 +532,7 @@ void HfpAgService::PhoneStateChanged(
     HfpAgSystemInterface::GetInstance().SetCallState(callState);
 
     HfpAgMessage curEvent(HFP_AG_CALL_STATE_CHANGE);
-    curEvent.state_.activeNum = numActive;
-    curEvent.state_.heldNum = numHeld;
-    curEvent.state_.callState = callState;
-    curEvent.state_.number = number;
-    curEvent.state_.type = type;
-    curEvent.state_.name = name;
+    curEvent.state_ = {numActive, numHeld, callState, number, type, phoneState.GetName()};
     PostEvent(curEvent);
     UpdateAgIndicators();
 }
@@ -785,12 +790,13 @@ void HfpAgService::NotifySlcStateChanged(const RawAddress &device, int toState)
     }
 }
 
-void HfpAgService::NotifyAudioStateChanged(const RawAddress &device, int toState)
+void HfpAgService::NotifyAudioStateChanged(const RawAddress &device, int toState, int reason)
 {
-    HILOGI("[HFP AG] device:%{public}s, toState:%{public}d", GET_ENCRYPT_ADDR(device), toState);
+    HILOGI("[HFP AG] device:%{public}s, toState:%{public}d, reason:%{public}d",
+        GET_ENCRYPT_ADDR(device), toState, reason);
     std::list<HfpAgServiceObserver *>::iterator iter;
     for (iter = observers_.begin(); iter != observers_.end(); ++iter) {
-        (*iter)->OnScoStateChanged(device, toState);
+        (*iter)->OnScoStateChanged(device, toState, reason);
     }
 }
 

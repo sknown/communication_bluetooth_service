@@ -61,7 +61,7 @@ void BluetoothBlePeripheralObserverProxy::OnReadRemoteRssiEvent(const BluetoothR
     }
 }
 void BluetoothBlePeripheralObserverProxy::OnPairStatusChanged(
-    const int32_t transport, const BluetoothRawAddress &device, int status)
+    const int32_t transport, const BluetoothRawAddress &device, int status, int cause)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothBlePeripheralObserverProxy::GetDescriptor())) {
@@ -81,6 +81,11 @@ void BluetoothBlePeripheralObserverProxy::OnPairStatusChanged(
 
     if (!data.WriteInt32(status)) {
         HILOGE("BluetoothBlePeripheralObserverProxy::OnReadRemoteRssiEvent device status");
+        return;
+    }
+
+    if (!data.WriteInt32(cause)) {
+        HILOGE("[OnPairStatusChanged] fail: write cause failed");
         return;
     }
 

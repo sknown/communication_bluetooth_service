@@ -42,7 +42,8 @@ public:
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "STATE", state);
         }
         observers_->ForEach([device, state](sptr<IBluetoothA2dpSourceObserver> observer) {
-            observer->OnConnectionStateChanged(device, state);
+            observer->OnConnectionStateChanged(device, state,
+                static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
         });
     }
 
@@ -72,6 +73,11 @@ public:
 
             observer->OnConfigurationChanged(device, tmpInfo, error);
         });
+    }
+
+    void OnMediaStackChanged(const RawAddress &device, int action) override
+    {
+        HILOGI("addr: %{public}s, action: %{public}d", GET_ENCRYPT_ADDR(device), action);
     }
 
     void SetObserver(RemoteObserverList<IBluetoothA2dpSourceObserver> *observers)
@@ -185,7 +191,8 @@ void BluetoothA2dpSourceServer::RegisterObserver(const sptr<IBluetoothA2dpSource
     GetDeviceState(static_cast<const RawAddress &>(device), state);
     if (state == static_cast<int>(BTConnectState::CONNECTED)) {
         HILOGI("onConnectionStateChanged");
-        observer->OnConnectionStateChanged(device, state);
+        observer->OnConnectionStateChanged(device, state,
+            static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
     }
 }
 
@@ -269,6 +276,10 @@ int32_t BluetoothA2dpSourceServer::GetPlayingState(const RawAddress &device, int
 
 int BluetoothA2dpSourceServer::SetConnectStrategy(const RawAddress &device, int strategy)
 {
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     HILOGI("addr: %{public}s, strategy: %{public}d", GET_ENCRYPT_ADDR(device), strategy);
     return pimpl->a2dpSrcService_->SetConnectStrategy(device, strategy);
 }
@@ -340,6 +351,11 @@ BluetoothA2dpCodecStatus BluetoothA2dpSourceServer::GetCodecStatus(const RawAddr
     return codeStatus;
 }
 
+int BluetoothA2dpSourceServer::GetCodecPreference(const RawAddress &device, BluetoothA2dpCodecInfo &info)
+{
+    return  NO_ERROR;
+}
+
 int BluetoothA2dpSourceServer::SetCodecPreference(const RawAddress &device, const BluetoothA2dpCodecInfo &info)
 {
     HILOGI("BluetoothA2dpSourceServer::SetCodecPreference starts, codecPriority = %{public}u,"
@@ -400,12 +416,51 @@ int BluetoothA2dpSourceServer::WriteFrame(const uint8_t *data, uint32_t size)
     return pimpl->a2dpSrcService_->WriteFrame(data, size);
 }
 
-void BluetoothA2dpSourceServer::GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp)
+int BluetoothA2dpSourceServer::GetRenderPosition(const RawAddress &device, uint32_t &delayValue, uint64_t &sendDataSize,
+                                                 uint32_t &timeStamp)
 {
     HILOGI("starts");
-    pimpl->a2dpSrcService_->GetRenderPosition(delayValue, sendDataSize, timeStamp);
-    HILOGI("delayValue = %{public}hu, sendDataSize = %{public}hu, timeStamp = %{public}u", delayValue, sendDataSize,
+    int ret = pimpl->a2dpSrcService_->GetRenderPosition(device, delayValue, sendDataSize, timeStamp);
+    HILOGI("delayValue = %{public}u, sendDataSize = %{public}llu, timeStamp = %{public}u", delayValue, sendDataSize,
         timeStamp);
+    return ret;
+}
+
+int BluetoothA2dpSourceServer::OffloadStartPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int BluetoothA2dpSourceServer::OffloadStopPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+int BluetoothA2dpSourceServer::A2dpOffloadSessionPathRequest(const RawAddress &device,
+    const std::vector<BluetoothA2dpStreamInfo> &info)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+BluetoothA2dpOffloadCodecStatus BluetoothA2dpSourceServer::GetOffloadCodecStatus(const RawAddress &device)
+{
+    BluetoothA2dpOffloadCodecStatus ret;
+    HILOGI("enter");
+    return ret;
+}
+
+int BluetoothA2dpSourceServer::EnableAutoPlay(const RawAddress &device)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int BluetoothA2dpSourceServer::DisableAutoPlay(const RawAddress &device, const int duration)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int BluetoothA2dpSourceServer::GetAutoPlayDisabledDuration(const RawAddress &device, int &duration)
+{
+    return BT_ERR_API_NOT_SUPPORT;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

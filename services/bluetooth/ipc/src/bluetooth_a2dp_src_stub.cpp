@@ -15,6 +15,7 @@
 
 #include "bluetooth_a2dp_src_stub.h"
 #include "bluetooth_log.h"
+#include "bluetooth_errorcode.h"
 #include "ipc_types.h"
 #include "parcel_bt_uuid.h"
 #include "raw_address.h"
@@ -50,6 +51,8 @@ BluetoothA2dpSrcStub::BluetoothA2dpSrcStub()
         &BluetoothA2dpSrcStub::GetActiveSinkDeviceInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_GET_CODEC_STATUS)] =
         &BluetoothA2dpSrcStub::GetCodecStatusInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_GET_CODEC_PREFERENCE)] =
+        &BluetoothA2dpSrcStub::GetCodecPreferenceInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_SET_CODEC_PREFERENCE)] =
         &BluetoothA2dpSrcStub::SetCodecPreferenceInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_SWITCH_OPTIONAL_CODECS)] =
@@ -67,6 +70,20 @@ BluetoothA2dpSrcStub::BluetoothA2dpSrcStub()
         &BluetoothA2dpSrcStub::WriteFrameInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_GET_RENDER_POSITION)] =
         &BluetoothA2dpSrcStub::GetRenderPositionInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_OFFLOAD_START_PLAYING)] =
+        &BluetoothA2dpSrcStub::OffloadStartPlayingInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_OFFLOAD_STOP_PLAYING)] =
+        &BluetoothA2dpSrcStub::OffloadStopPlayingInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_OFFLOAD_SESSION_REQUEST)] =
+        &BluetoothA2dpSrcStub::A2dpOffloadSessionPathRequestInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_OFFLOAD_GET_CODEC_STATUS)] =
+        &BluetoothA2dpSrcStub::GetOffloadCodecStatusInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_ENABLE_AUTO_PLAY)] =
+        &BluetoothA2dpSrcStub::EnableAutoPlayInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_DISABLE_AUTO_PLAY)] =
+        &BluetoothA2dpSrcStub::DisableAutoPlayInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_GET_AUTO_PLAY_DISABLED_DURATION)] =
+        &BluetoothA2dpSrcStub::GetAutoPlayDisabledDurationInner;
 }
 
 BluetoothA2dpSrcStub::~BluetoothA2dpSrcStub()
@@ -285,7 +302,13 @@ ErrCode BluetoothA2dpSrcStub::GetCodecStatusInner(MessageParcel &data, MessagePa
     return NO_ERROR;
 }
 
-ErrCode BluetoothA2dpSrcStub::SetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothA2dpSrcStub::GetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("NOT SUPPORT NOW");
+    return NO_ERROR;
+}
+
+int32_t BluetoothA2dpSrcStub::SetCodecPreferenceInner(MessageParcel &data, MessageParcel &reply)
 {
     std::string addr = data.ReadString();
     std::shared_ptr<BluetoothA2dpCodecInfo> info(data.ReadParcelable<BluetoothA2dpCodecInfo>());
@@ -387,15 +410,18 @@ ErrCode BluetoothA2dpSrcStub::WriteFrameInner(MessageParcel &data, MessageParcel
 
 ErrCode BluetoothA2dpSrcStub::GetRenderPositionInner(MessageParcel &data, MessageParcel &reply)
 {
-    uint16_t delayValue;
-    uint16_t sendDataSize;
+    uint32_t delayValue;
+    uint64_t sendDataSize;
     uint32_t timeStamp;
-    GetRenderPosition(delayValue, sendDataSize, timeStamp);
-    if (!reply.WriteUint16(delayValue)) {
+    int result = GetRenderPosition(RawAddress(data.ReadString()), delayValue, sendDataSize, timeStamp);
+    if (!reply.WriteUint32(result)) {
+        return TRANSACTION_ERR;
+    }
+    if (!reply.WriteUint32(delayValue)) {
         HILOGE("BluetoothA2dpSrcStub: GetRenderPositionInner reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
     }
-    if (!reply.WriteUint16(sendDataSize)) {
+    if (!reply.WriteUint64(sendDataSize)) {
         HILOGE("BluetoothA2dpSrcStub: GetRenderPositionInner reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
     }
@@ -406,5 +432,58 @@ ErrCode BluetoothA2dpSrcStub::GetRenderPositionInner(MessageParcel &data, Messag
     return NO_ERROR;
 }
 
+ErrCode BluetoothA2dpSrcStub::OffloadStartPlayingInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+ErrCode BluetoothA2dpSrcStub::OffloadStopPlayingInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+ErrCode BluetoothA2dpSrcStub::A2dpOffloadSessionPathRequestInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+ErrCode BluetoothA2dpSrcStub::GetOffloadCodecStatusInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+ErrCode BluetoothA2dpSrcStub::EnableAutoPlayInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    if (!reply.WriteInt32(BT_ERR_API_NOT_SUPPORT)) {
+        HILOGE("BluetoothA2dpSrcStub: WriteFrameInner reply writing failed in: %{public}s.", __func__);
+        return TRANSACTION_ERR;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothA2dpSrcStub::DisableAutoPlayInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    if (!reply.WriteInt32(BT_ERR_API_NOT_SUPPORT)) {
+        HILOGE("BluetoothA2dpSrcStub: WriteFrameInner reply writing failed in: %{public}s.", __func__);
+        return TRANSACTION_ERR;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothA2dpSrcStub::GetAutoPlayDisabledDurationInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    if (!reply.WriteInt32(BT_ERR_API_NOT_SUPPORT)) {
+        HILOGE("BluetoothA2dpSrcStub: WriteFrameInner reply writing failed in: %{public}s.", __func__);
+        return TRANSACTION_ERR;
+    }
+    return NO_ERROR;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

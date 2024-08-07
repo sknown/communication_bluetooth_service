@@ -71,8 +71,7 @@ public:
     ErrCode HidHostSetReport(
         std::string &device,
         uint8_t &type,
-        uint16_t &size,
-        uint8_t &report,
+        std::string &report,
         int& reuslt) override;
 
     ErrCode HidHostGetReport(

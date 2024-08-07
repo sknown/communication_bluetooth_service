@@ -41,6 +41,7 @@
 
 #include "base_def.h"
 #include "context.h"
+#include "bluetooth_phone_state.h"
 #include "hfp_ag_message.h"
 #include "hfp_ag_statemachine.h"
 #include "interface_profile_hfp_ag.h"
@@ -201,16 +202,10 @@ public:
     /**
      * @brief This function used to Update changed phone call information.
      *
-     * @param numActive Active call number.
-     * @param numHeld Held call number.
-     * @param callState Current call state.
-     * @param number Phone call number.
-     * @param type Type of phone call number.
-     * @param name Name of phone call number.
+     * @param phoneState Bluetooth phone state.
      * @since 6
      */
-    void PhoneStateChanged(int numActive, int numHeld, int callState, const std::string &number, int type,
-        const std::string &name) override;
+    void PhoneStateChanged(Bluetooth::BluetoothPhoneState &phoneState) override;
 
     /**
      * @brief Send response for querying standard list current calls by remote Hf device.
@@ -284,7 +279,7 @@ public:
      * @param toState The current state.
      * @since 6
      */
-    void NotifyAudioStateChanged(const RawAddress &device, int toState);
+    void NotifyAudioStateChanged(const RawAddress &device, int toState, int reason = 0);
 
     /**
      * @brief Notify the active device change.
