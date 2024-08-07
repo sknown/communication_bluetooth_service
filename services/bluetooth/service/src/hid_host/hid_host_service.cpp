@@ -163,6 +163,8 @@ int HidHostService::Connect(const RawAddress &device)
         return Bluetooth::BT_ERR_INTERNAL_ERROR;
     }
 
+    RemoveSdpClient(address);
+
     HidHostMessage event(HID_HOST_API_OPEN_EVT);
     event.dev_ = address;
     PostEvent(event);
@@ -247,6 +249,20 @@ int HidHostService::HidHostGetReport(std::string device, uint8_t id, uint16_t si
     event.sendData_.reportId = id;
     PostEvent(event);
     return HID_HOST_SUCCESS;
+}
+
+std::shared_ptr<HidHostSdpClient> HidHostService::FindSdpClient(const std::string &address)
+{
+    std::shared_ptr<HidHostSdpClient> sdpClient;
+    auto it = sdpClient_.find(address);
+    if (it != sdpClient_.end()) {
+        sdpClient = it->second;
+    } else {
+        sdpClient = std::make_shared<HidHostSdpClient>(address);
+        sdpClient_.insert(std::make_pair(address, sdpClient));
+    }
+
+    return sdpClient;
 }
 
 bool HidHostService::IsConnected(const std::string &address) const
@@ -451,6 +467,14 @@ void HidHostService::ProcessRemoveStateMachine(const std::string &address)
     stateMachines_.insert_or_assign(address, nullptr);
     if (isShuttingDown_) {
         ShutDownDone(false);
+    }
+}
+
+void HidHostService::RemoveSdpClient(const std::string &address)
+{
+    auto it = sdpClient_.find(address);
+    if (it != sdpClient_.end()) {
+        sdpClient_.erase(it);
     }
 }
 

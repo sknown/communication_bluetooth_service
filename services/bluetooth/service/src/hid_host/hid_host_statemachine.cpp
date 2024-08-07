@@ -56,7 +56,12 @@ void HidHostStateMachine::SetDeviceType()
         if (std::find(devices.begin(), devices.end(), RawAddress(address_)) != devices.end()) {
             deviceType_ = HID_HOST_DEVICE_TYPE_BREDR;
             l2capConnection_ = std::make_unique<HidHostL2capConnection>(address_);
-            sdpClient_ = std::make_unique<HidHostSdpClient>(address_);
+            HidHostService *service = HidHostService::GetService();
+            if (service != nullptr) {
+                sdpClient_ = service->FindSdpClient(address_);
+            } else {
+                LOG_ERROR("[HIDH Machine]%{public}s():HidHostService is nullptr!", __FUNCTION__);
+            }
             LOG_DEBUG("[HIDH Machine]%{public}s():Device is br/edr device", __FUNCTION__);
             return;
         }

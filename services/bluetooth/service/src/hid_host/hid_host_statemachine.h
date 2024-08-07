@@ -136,7 +136,7 @@ private:
 
     std::unique_ptr<HidHostL2capConnection> l2capConnection_ {nullptr};
     HidHostUhid uhid_;
-    std::unique_ptr<HidHostSdpClient> sdpClient_ {nullptr};
+    std::shared_ptr<HidHostSdpClient> sdpClient_ {nullptr};
     std::unique_ptr<HidHostHogp> hogp_ {nullptr};
 
     void SetDeviceType();
