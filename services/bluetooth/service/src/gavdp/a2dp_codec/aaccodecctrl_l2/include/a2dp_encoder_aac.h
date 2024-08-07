@@ -34,7 +34,7 @@ public:
     {}
     void UpdateEncoderParam() override
     {}
-    void GetRenderPosition(uint64_t &sendDataSize, uint32_t &timeStamp) override
+    void GetRenderPosition(uint16_t &sendDataSize, uint32_t &timeStamp) override
     {}
 };
 }  // namespace bluetooth

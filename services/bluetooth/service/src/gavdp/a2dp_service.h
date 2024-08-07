@@ -405,16 +405,12 @@ public:
 
     /**
      * @brief Get the information of the current rendered position.
-     * @param device The address of the bluetooth device.
      * @param[out] dalayValue is the delayed time
      * @param[out] sendDataSize is the data size that has been sent
      * @param[out] timeStamp is the current time stamp
-     * @return Returns <b>BT_SUCCESS</b> if the operation is successful.
-     *         Returns <b>RET_BAD_STATUS</b> if the operation fails.
      * @since 6.0
      */
-    int GetRenderPosition(const RawAddress &device, uint32_t &delayValue, uint64_t &sendDataSize,
-                          uint32_t &timeStamp) override;
+    void GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp) override;
     /**
      * @brief Get boject pointer of A2dpConnectManager.
      *

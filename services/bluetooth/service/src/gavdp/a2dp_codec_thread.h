@@ -138,7 +138,7 @@ public:
      * @param[out] timeStamp is the current time stamp
      * @since 6.0
      */
-    void GetRenderPosition(uint64_t &sendDataSize, uint32_t &timeStamp) const;
+    void GetRenderPosition(uint16_t &sendDataSize, uint32_t &timeStamp) const;
 
 private:
     /**
