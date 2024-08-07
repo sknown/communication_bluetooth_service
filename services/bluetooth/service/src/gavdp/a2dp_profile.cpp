@@ -633,7 +633,7 @@ void A2dpProfile::ProcessSDPCallback(const BtAddr &addr, uint8_t result)
         LOG_ERROR("[A2dpProfile]%{public}s Not resources", __func__);
     } else {
         if (!peer->GetSDPServiceCapability()) {
-            msg.arg1_ = EVT_SDP_CFM;
+            msg.arg1_ = EVT_SDP_PMF;
             LOG_ERROR("[A2dpProfile]%{public}s Can't find peer service matched. role(%u)", __func__, data.role);
         }
         peer->GetStateMachine()->ProcessMessage(msg);
@@ -954,6 +954,8 @@ void A2dpProfile::RegisterObserver(A2dpProfileObserver *observer)
 void A2dpProfile::DeregisterObserver(A2dpProfileObserver *observer)
 {
     LOG_INFO("[A2dpProfile]%{public}s\n", __func__);
+    
+    a2dpSvcCBack_ = observer;
     return;
 }
 

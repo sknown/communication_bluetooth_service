@@ -138,7 +138,7 @@ public:
     const State *GetState() const;
 
 private:
-    const static int STACK_DEPTH = 5;
+    const static int STACK_DEPTH = 10;
     void Transition(const std::string &name);
     inline int GetStateDepth(State &state);
 
