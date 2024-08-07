@@ -99,7 +99,7 @@ enum ServiceStatus {
 
 enum EventStream {
     EVT_SDP_DISC,
-    EVT_SDP_CFM,
+    EVT_SDP_PMF,
     EVT_CONNECT_REQ,
     EVT_CONNECT_IND,
     EVT_CONNECT_CFM,

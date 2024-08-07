@@ -277,7 +277,7 @@ public:
      * @param[in] The pointer of callback of service
      * @since 6.0
      */
-    static void DeregisterObserver(A2dpProfileObserver *observer);
+    void DeregisterObserver(A2dpProfileObserver *observer);
 
     /**
      * @brief A function to delete the profile peer of address
