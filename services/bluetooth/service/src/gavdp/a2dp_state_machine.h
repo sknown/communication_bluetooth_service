@@ -58,7 +58,8 @@ public:
      * @brief Operation should be executed when Entry the state.
      * @since 6.0
      */
-    void Entry();
+    void Entry()
+    {}
 
     /**
      * @brief Operation should be executed when Exit the state.
@@ -216,6 +217,15 @@ private:
      */
     void ProcessDisconnectInd(BtAddr addr, uint16_t handle, uint8_t role);
 
+     /**
+     * @brief Process the confirm of disconnection.
+     * @param[in] addr The address of peer device
+     * @param[in] handle The handle of stream
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessDisconnectCfm(BtAddr addr, uint16_t handle, uint8_t role) const;
+    
     /**
      * @brief Process the Indication of configure.
      * @param[in] msgData The data of message
@@ -238,6 +248,7 @@ private:
      *
      * @since 6.0
      */
+    
     void SetStateName(std::string state);
 
     /**
@@ -304,6 +315,32 @@ private:
      * @since 6.0
      */
     void ProcessDisconnectInd(BtAddr addr, uint16_t handle, uint8_t role);
+    
+    /**
+     * @brief Process the confirm of disconnection.
+     * @param[in] addr The address of peer device
+     * @param[in] handle The handle of stream
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessDisconnectCfm(BtAddr addr, uint16_t handle, uint8_t role) const ;
+
+        /**
+     * @brief Process the Indication of configure.
+     * @param[in] msgData The data of message
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessOpenInd(A2dpAvdtMsgData msgData, uint8_t role);
+
+    /**
+     * @brief Process the requirement of open.
+     * @param[in] addr The address of peer device
+     * @param[in] handle The handle of stream
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessOpenReq(BtAddr addr, uint16_t handle, uint8_t role);
 
     /**
      * @brief Process the confirm of open.
@@ -436,11 +473,21 @@ private:
     void ProcessDisconnectInd(BtAddr addr, uint16_t handle, uint8_t role);
 
     /**
+     * @brief Process the confirm of disconnection.
+     * @param[in] addr The address of peer device
+     * @param[in] handle The handle of stream
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessDisconnectCfm(BtAddr addr, uint16_t handle, uint8_t role) const ;
+
+    /**
      * @brief Process the other cmd of open state.
      * @param[in] msgData The information of message
      * @param[in] role The role of local profile
      * @since 6.0
      */
+    
     void ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd);
 
     /**
@@ -525,11 +572,37 @@ private:
     void ProcessDisconnectReq(BtAddr addr, uint8_t role);
 
     /**
+     * @brief Process the confirm of disconnection.
+     * @param[in] addr The address of peer device
+     * @param[in] handle The handle of stream
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessDisconnectCfm(BtAddr addr, uint16_t handle, uint8_t role) const;
+
+    /**
      * @brief Process the confirm of suspend.
      * @param[in] msgData The information of message
      * @param[in] role The role of local profile
      * @since 6.0
      */
+    
+    /**
+     * @brief Process the indication of start.
+     * @param[in] msgData The information of message
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessStartInd(A2dpAvdtMsgData msgData, uint8_t role);
+
+    /**
+     * @brief Process the confirm of start.
+     * @param[in] addr The address of peer device
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessStartCfm(BtAddr addr, uint8_t role);
+    
     void ProcessSuspendCfm(A2dpAvdtMsgData msgData, uint8_t role);
 
      /**
