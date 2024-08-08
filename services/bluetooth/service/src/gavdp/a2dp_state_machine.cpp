@@ -33,7 +33,6 @@ bool A2dpStateIdle::Dispatch(const utility::Message &msg)
         LOG_ERROR("[A2dpStateIdle]%{public}s input error parameter\n", __func__);
         return false;
     }
-    uint8_t label = 0;
     A2dpAvdtMsgData msgData = (static_cast<A2dpAvdtMsg*>(msg.arg2_))->a2dpMsg;
     uint8_t role = (static_cast<A2dpAvdtMsg*>(msg.arg2_))->role;
     A2dpAvdtp avdtp(role);
@@ -50,20 +49,6 @@ bool A2dpStateIdle::Dispatch(const utility::Message &msg)
             ProcessDiscoverReq(msgData.connectInfo.addr, role, msgData.connectInfo.errCode);
             break;
         case EVT_DISCOVER_CFM:
-            break;
-        case EVT_GET_ALLCAP_REQ:
-            avdtp.GetAllCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
-            break;
-        case EVT_GET_ALLCAP_IND:
-            break;
-        case EVT_GET_ALLCAP_CFM:
-            break;    
-        case EVT_GET_CAP_REQ:
-            avdtp.GetCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
-            break;
-        case EVT_GET_CAP_IND:
-            break;
-        case EVT_GET_CAP_CFM:
             break;
         case EVT_SETCONFIG_REQ:
             ProcessSetConfigReq(msgData, role);
@@ -87,10 +72,37 @@ bool A2dpStateIdle::Dispatch(const utility::Message &msg)
             ProcessTimeout(msgData.stream.addr, role);
             break;
         default:
-            LOG_ERROR("[A2dpStateIdle]%{public}s [msgcode: %u]", __func__, msg.what_);
+            ProcessSubOpenState(msgData, role, msg.what_);
             break;
     }
     return true;
+}
+
+void A2dpStateIdle::ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd)
+{
+    LOG_INFO("[A2dpStateOpen]%{public}s cmd(%{public}d)\n", __func__, cmd);
+
+    A2dpAvdtp avdtp(role);
+    uint8_t label = 0;
+    switch (cmd) {
+        case EVT_GET_ALLCAP_REQ:
+            avdtp.GetAllCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
+            break;
+        case EVT_GET_ALLCAP_IND:
+            break;
+        case EVT_GET_ALLCAP_CFM:
+            break;
+        case EVT_GET_CAP_REQ:
+            avdtp.GetCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
+            break;
+        case EVT_GET_CAP_IND:
+            break;
+        case EVT_GET_CAP_CFM:
+            break;
+        default:
+            LOG_ERROR("[A2dpStateIdle]%{public}s [msgcode: %u]", __func__, cmd);
+            break;
+    }
 }
 
 void A2dpStateIdle::ProcessDisconnectCfm(BtAddr addr, uint16_t handle, uint8_t role) const
@@ -275,7 +287,6 @@ bool A2dpStateConfigure::Dispatch(const utility::Message &msg)
         LOG_ERROR("[A2dpStateConfigure]%{public}s input error parameter\n", __func__);
         return false;
     }
-
     uint8_t label = 0;
     A2dpAvdtMsgData msgData = (static_cast<A2dpAvdtMsg*>(msg.arg2_))->a2dpMsg;
     uint8_t role = (static_cast<A2dpAvdtMsg*>(msg.arg2_))->role;
@@ -288,7 +299,7 @@ bool A2dpStateConfigure::Dispatch(const utility::Message &msg)
         case EVT_GET_ALLCAP_IND:
             break;
         case EVT_GET_ALLCAP_CFM:
-            break;    
+            break;
         case EVT_GET_CAP_REQ:
             avdtp.GetCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
             break;
@@ -305,6 +316,27 @@ bool A2dpStateConfigure::Dispatch(const utility::Message &msg)
         case EVT_OPEN_IND:
             ProcessOpenInd(msgData, role);
             break;
+        case EVT_TIME_OUT:
+            avdtp.DisconnectReq(msgData.stream.addr);
+            SetStateName(A2DP_PROFILE_CLOSING);
+            break;
+        case EVT_DELAY_IND:
+            ProcessDelayReportInd(msgData, role);
+            break;
+        default:
+            ProcessSubOpenState(msgData, role, msg.what_);        
+            break;
+    }
+    return true;
+}
+
+void A2dpStateConfigure::ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd)
+{
+    LOG_INFO("[A2dpStateOpen]%{public}s cmd(%{public}d)\n", __func__, cmd);
+
+    A2dpAvdtp avdtp(role);
+
+    switch (cmd) {
         case EVT_DISCONNECT_REQ:
             ProcessDisconnectReq(msgData.connectInfo.addr, role);
             break;
@@ -314,18 +346,10 @@ bool A2dpStateConfigure::Dispatch(const utility::Message &msg)
         case EVT_DISCONNECT_CFM:
             ProcessDisconnectCfm(msgData.stream.addr, msgData.stream.handle, role);
             break;
-        case EVT_TIME_OUT:
-            avdtp.DisconnectReq(msgData.stream.addr);
-            SetStateName(A2DP_PROFILE_CLOSING);
-            break;
-        case EVT_DELAY_IND:
-            ProcessDelayReportInd(msgData, role);
-            break;
         default:
-            LOG_ERROR("[A2dpStateConfigure]%{public}s [msgcode: %u]", __func__, msg.what_);
+            LOG_ERROR("[A2dpStateConfigure]%{public}s [msgcode: %u]", __func__, cmd);
             break;
     }
-    return true;
 }
 
 void A2dpStateConfigure::SetStateName(std::string state)
@@ -506,23 +530,7 @@ bool A2dpStateOpening::Dispatch(const utility::Message &msg)
         case EVT_GET_ALLCAP_IND:
             break;
         case EVT_GET_ALLCAP_CFM:
-            break;    
-        case EVT_GET_CAP_REQ:
-            avdtp.GetCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
             break;
-        case EVT_GET_CAP_IND:
-            break;
-        case EVT_GET_CAP_CFM:
-            break;
-        case EVT_DISCONNECT_REQ:
-            ProcessDisconnectReq(msgData.connectInfo.addr, role);
-            break;
-        case EVT_DISCONNECT_IND:
-            ProcessDisconnectInd(msgData.stream.addr, msgData.stream.handle, role);
-            break;
-        case EVT_DISCONNECT_CFM:
-            ProcessDisconnectCfm(msgData.stream.addr, msgData.stream.handle, role);
-            break; 
         case EVT_OPEN_REQ:
             ProcessOpenReq(msgData.stream.addr, msgData.stream.handle, role);
             break;
@@ -540,11 +548,39 @@ bool A2dpStateOpening::Dispatch(const utility::Message &msg)
             ProcessDelayReportInd(msgData, role);
             break;
         default:
-            LOG_ERROR("[A2dpStateOpening]%{public}s [msgcode: %u]", __func__, msg.what_);
+            ProcessSubOpenState(msgData, role, msg.what_);
             break;
     }
-    return true;
-    
+    return true;    
+}
+
+void A2dpStateOpening::ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd)
+{
+    LOG_INFO("[A2dpStateOpen]%{public}s cmd(%{public}d)\n", __func__, cmd);
+
+    A2dpAvdtp avdtp(role);
+    uint8_t label = 0;
+    switch (cmd) {
+        case EVT_GET_CAP_REQ:
+            avdtp.GetCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
+            break;
+        case EVT_GET_CAP_IND:
+            break;
+        case EVT_GET_CAP_CFM:
+            break;
+        case EVT_DISCONNECT_REQ:
+            ProcessDisconnectReq(msgData.connectInfo.addr, role);
+            break;
+        case EVT_DISCONNECT_IND:
+            ProcessDisconnectInd(msgData.stream.addr, msgData.stream.handle, role);
+            break;
+        case EVT_DISCONNECT_CFM:
+            ProcessDisconnectCfm(msgData.stream.addr, msgData.stream.handle, role);
+            break;
+        default:
+            LOG_ERROR("[A2dpStateOpening]%{public}s [msgcode: %u]", __func__, cmd);
+            break;
+    }
 }
 
 void A2dpStateOpening::SetStateName(std::string state)
@@ -553,8 +589,6 @@ void A2dpStateOpening::SetStateName(std::string state)
     Transition(state);
 }
 
-
-
 void A2dpStateOpening::ProcessOpenReq(BtAddr addr, uint16_t handle, uint8_t role)
 {
     LOG_INFO("[A2dpStateConfigure]%{public}s\n", __func__);
@@ -562,9 +596,9 @@ void A2dpStateOpening::ProcessOpenReq(BtAddr addr, uint16_t handle, uint8_t role
     A2dpAvdtp avdtp(role);
     uint8_t label = 0;
 
-    //SetStateName(A2DP_PROFILE_OPENING);
     avdtp.OpenReq(handle, label);
 }
+
 void A2dpStateOpening::ProcessOpenInd(A2dpAvdtMsgData msgData, uint8_t role)
 {
     LOG_INFO("[A2dpStateConfigure]%{public}s\n", __func__);
@@ -588,7 +622,6 @@ void A2dpStateOpening::ProcessOpenInd(A2dpAvdtMsgData msgData, uint8_t role)
             bluetooth::RawAddress::ConvertToString(msgData.stream.addr.addr));
     }
 }
-
 
 void A2dpStateOpening::ProcessOpenCfm(A2dpAvdtMsgData msgData, uint8_t role)
 {
@@ -665,8 +698,6 @@ void A2dpStateOpening::ProcessDisconnectCfm(BtAddr addr, uint16_t handle, uint8_
     }
 
     profile->ConnectStateChangedNotify(addr, STREAM_DISCONNECT, (void *)&param);
-
-
 }
 
 void A2dpStateOpening::ProcessDelayReportInd(A2dpAvdtMsgData msgData, uint8_t role) const
@@ -696,30 +727,15 @@ bool A2dpStateOpen::Dispatch(const utility::Message &msg)
     A2dpAvdtMsgData msgData = (static_cast<A2dpAvdtMsg*>(msg.arg2_))->a2dpMsg;
     uint8_t role = (static_cast<A2dpAvdtMsg*>(msg.arg2_))->role;
     A2dpAvdtp avdtp(role);
-    uint8_t label = 0;
     LOG_INFO("[A2dpStateOpen]%{public}s [msgcode: %u]", __func__, msg.what_);
-   switch (msg.what_) {
-        case EVT_GET_ALLCAP_REQ:
-            avdtp.GetAllCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
-            break;
-        case EVT_GET_ALLCAP_IND:
-            break;
-        case EVT_GET_ALLCAP_CFM:
-            break;    
-        case EVT_GET_CAP_REQ:
-            avdtp.GetCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
-            break;
-        case EVT_GET_CAP_IND:
-            break;
-        case EVT_GET_CAP_CFM:
-            break;
+    switch (msg.what_) {
         case EVT_START_REQ:
             avdtp.StartReq(msgData.stream.handle, label_);
             break;
         case EVT_START_IND:
             ProcessStartInd(msgData, role);
             break;
-         case EVT_START_CFM:
+        case EVT_START_CFM:
             ProcessStartCfm(msgData.stream.addr, role);
             break;
         case EVT_CLOSE_REQ:
@@ -737,32 +753,14 @@ bool A2dpStateOpen::Dispatch(const utility::Message &msg)
         case EVT_DISCONNECT_IND:
             ProcessDisconnectInd(msgData.stream.addr, msgData.stream.handle, role);
             break;
-         case EVT_DISCONNECT_CFM:
+        case EVT_DISCONNECT_CFM:
             ProcessDisconnectCfm(msgData.stream.addr, msgData.stream.handle, role);
-            break;
-        case EVT_RECONFIG_REQ:
-            avdtp.ReconfigureReq(msgData.configStream.intSeid, msgData.configStream.cfg, label_);
-            break;
-        case EVT_RECONFIG_IND:
-            avdtp.ReconfigureRsp(msgData.configRsp.handle, msgData.configRsp.label, msgData.configRsp.category);
-            break;
-        case EVT_RECONFIG_CFM:
-            ProcessReconfigCfm(msgData.stream.addr, role, msgData.stream.handle);
-            break;
-         
-        case EVT_DELAY_IND:
-            ProcessDelayReportInd(msgData, role);
-            break;
-        case EVT_TIME_OUT:
-            ProcessTimeout(msgData.stream.addr, role);
             break;
         default:
             ProcessSubOpenState(msgData, role, msg.what_);
-            LOG_ERROR("[A2dpStateOpen]%{public}s [msgcode: %u]", __func__, msg.what_);
             break;
     }
     return true;
-
 }
 
 void A2dpStateOpen::SetStateName(std::string state)
@@ -776,21 +774,39 @@ void A2dpStateOpen::ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, i
     LOG_INFO("[A2dpStateOpen]%{public}s cmd(%{public}d)\n", __func__, cmd);
 
     A2dpAvdtp avdtp(role);
-    //uint8_t label = 0;
-
+    uint8_t label = 0;
     switch (cmd) {
-        /*
         case EVT_GET_ALLCAP_REQ:
             avdtp.GetAllCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
+            break;
+        case EVT_GET_ALLCAP_IND:
+            break;
+        case EVT_GET_ALLCAP_CFM:
             break;
         case EVT_GET_CAP_REQ:
             avdtp.GetCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
             break;
+        case EVT_GET_CAP_IND:
+            break;
+        case EVT_GET_CAP_CFM:
+            break;
+        case EVT_RECONFIG_REQ:
+            avdtp.ReconfigureReq(msgData.configStream.intSeid, msgData.configStream.cfg, label_);
+            break;
+        case EVT_RECONFIG_IND:
+            avdtp.ReconfigureRsp(msgData.configRsp.handle, msgData.configRsp.label, msgData.configRsp.category);
+            break;
+        case EVT_RECONFIG_CFM:
+            ProcessReconfigCfm(msgData.stream.addr, role, msgData.stream.handle);
+            break;
+        case EVT_DELAY_IND:
+            ProcessDelayReportInd(msgData, role);
+            break;
         case EVT_TIME_OUT:
             ProcessTimeout(msgData.stream.addr, role);
             break;
-        */
         default:
+            LOG_ERROR("[A2dpStateOpen]%{public}s [msgcode: %u]", __func__, cmd);
             break;
     }
 }
@@ -858,7 +874,6 @@ void A2dpStateOpen::ProcessDisconnectInd(BtAddr addr, uint16_t handle, uint8_t r
     profile->ConnectStateChangedNotify(addr, STREAM_DISCONNECT, (void *)&param);
 }
 
-
 void A2dpStateOpen::ProcessDisconnectCfm(BtAddr addr, uint16_t handle, uint8_t role) const
 {
         LOG_INFO("[A2dpStateOpen]%{public}s\n", __func__);
@@ -876,8 +891,6 @@ void A2dpStateOpen::ProcessDisconnectCfm(BtAddr addr, uint16_t handle, uint8_t r
     }
 
     profile->ConnectStateChangedNotify(addr, STREAM_DISCONNECT, (void *)&param);
-
-
 }
 
 void A2dpStateOpen::ProcessReconfigCfm(BtAddr addr, uint8_t role, uint16_t handle)
@@ -920,7 +933,7 @@ void A2dpStateOpen::ProcessCloseCfm(BtAddr addr, uint8_t role)
     if (!profile->HasOpen() && profile->GetDisalbeTag()) {
         profile->Disable();
     }
-      if (profile->FindPeerByAddress(addr) != nullptr) {
+    if (profile->FindPeerByAddress(addr) != nullptr) {
         if (profile->FindPeerByAddress(addr)->GetRestart()) {
             profile->FindPeerByAddress(addr)->UpdateConfigure();
         }
@@ -1014,20 +1027,13 @@ bool A2dpStateStreaming::Dispatch(const utility::Message &msg)
     A2dpAvdtp avdtp(role);
     uint8_t label = 0;
     LOG_INFO("[A2dpStateStreaming]%{public}s [msgcode: %u]", __func__, msg.what_);
-     switch (msg.what_) {
+    switch (msg.what_) {
         case EVT_GET_ALLCAP_REQ:
             avdtp.GetAllCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
             break;
         case EVT_GET_ALLCAP_IND:
             break;
         case EVT_GET_ALLCAP_CFM:
-            break; 
-        case EVT_GET_CAP_REQ:
-            avdtp.GetCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
-            break;
-        case EVT_GET_CAP_IND:
-            break;
-        case EVT_GET_CAP_CFM:
             break;
         case EVT_START_REQ:
             avdtp.StartReq(msgData.stream.handle, label_);
@@ -1035,7 +1041,7 @@ bool A2dpStateStreaming::Dispatch(const utility::Message &msg)
         case EVT_START_IND:
             ProcessStartInd(msgData, role);
             break;
-         case EVT_START_CFM:
+        case EVT_START_CFM:
             ProcessStartCfm(msgData.stream.addr, role);
             break;
         case EVT_SUSPEND_REQ:
@@ -1046,6 +1052,36 @@ bool A2dpStateStreaming::Dispatch(const utility::Message &msg)
             break;
         case EVT_SUSPEND_CFM:
             ProcessSuspendCfm(msgData, role);
+            break;
+        case EVT_WRITE_CFM:
+            ProcessWriteCfm(msgData, role);
+            break;
+        default:
+            ProcessSubOpenState(msgData, role, msg.what_);
+            break;
+    }
+    return true;
+}
+
+void A2dpStateStreaming::SetStateName(std::string state)
+{
+    std::lock_guard<std::recursive_mutex> lock(g_stateMutex);
+    Transition(state);
+}
+
+void A2dpStateStreaming::ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd)
+{
+    LOG_INFO("[A2dpStateOpen]%{public}s cmd(%{public}d)\n", __func__, cmd);
+
+    A2dpAvdtp avdtp(role);
+    uint8_t label = 0;
+    switch (cmd) {
+        case EVT_GET_CAP_REQ:
+            avdtp.GetCapabilityReq(msgData.stream.addr, msgData.stream.acpSeid, label);
+            break;
+        case EVT_GET_CAP_IND:
+            break;
+        case EVT_GET_CAP_CFM:
             break;
         case EVT_CLOSE_REQ:
             avdtp.CloseReq(msgData.stream.handle);
@@ -1062,27 +1098,17 @@ bool A2dpStateStreaming::Dispatch(const utility::Message &msg)
             break;
         case EVT_DISCONNECT_IND:
             ProcessDisconnectInd(msgData.stream.addr, msgData.stream.handle, role);
-            break;    
+            break;
         case EVT_DISCONNECT_CFM:
             ProcessDisconnectCfm(msgData.stream.addr, msgData.stream.handle, role);
-            break;
-        case EVT_WRITE_CFM:
-            ProcessWriteCfm(msgData, role);
             break;
         case EVT_DELAY_IND:
             ProcessDelayReportInd(msgData, role);
             break;
         default:
-            LOG_ERROR("[A2dpStateStreaming]%{public}s [msgcode: %u]", __func__, msg.what_);
+            LOG_ERROR("[A2dpStateStreaming]%{public}s [msgcode: %u]", __func__, cmd);
             break;
     }
-    return true;
-}
-
-void A2dpStateStreaming::SetStateName(std::string state)
-{
-    std::lock_guard<std::recursive_mutex> lock(g_stateMutex);
-    Transition(state);
 }
 
 void A2dpStateStreaming::ProcessStartInd(A2dpAvdtMsgData msgData, uint8_t role)
@@ -1097,7 +1123,6 @@ void A2dpStateStreaming::ProcessStartInd(A2dpAvdtMsgData msgData, uint8_t role)
         return;
     }
 
-    //SetStateName(A2DP_PROFILE_STREAMING);
     if (avdtp.StartRsp(msgData.stream.handle, msgData.stream.label, 0, 0) == AVDT_SUCCESS) {
         profile->AudioStateChangedNotify(msgData.stream.addr, A2DP_IS_PLAYING, (void *)&gavdpRole);
         if (role == A2DP_ROLE_SOURCE) {
@@ -1121,7 +1146,6 @@ void A2dpStateStreaming::ProcessStartCfm(BtAddr addr, uint8_t role)
         return;
     }
 
-    //SetStateName(A2DP_PROFILE_STREAMING);
     profile->AudioStateChangedNotify(addr, A2DP_IS_PLAYING, (void *)&gavdpRole);
 
     if (role == A2DP_ROLE_SOURCE) {
@@ -1252,8 +1276,6 @@ void A2dpStateStreaming::ProcessDisconnectCfm(BtAddr addr, uint16_t handle, uint
     }
 
     profile->ConnectStateChangedNotify(addr, STREAM_DISCONNECT, (void *)&param);
-
-
 }
 
 void A2dpStateStreaming::ProcessCloseCfm(BtAddr addr, uint8_t role)

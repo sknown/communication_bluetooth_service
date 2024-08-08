@@ -77,6 +77,14 @@ public:
 
 private:
     /**
+     * @brief Process the other cmd of open state.
+     * @param[in] msgData The information of message
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd);
+    
+    /**
      * @brief Process the result of signaling connect.
      * @param[in] addr The address of peer device
      * @param[in] role The role of local profile
@@ -193,6 +201,14 @@ public:
 
 private:
     /**
+     * @brief Process the other cmd of open state.
+     * @param[in] msgData The information of message
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd);
+
+    /**
      * @brief Process the Indication of configure.
      * @param[in] msgData The data of message
      * @param[in] role The role of local profile
@@ -299,6 +315,15 @@ public:
     bool Dispatch(const utility::Message &msg);
 
 private:
+
+    /**
+     * @brief Process the other cmd of open state.
+     * @param[in] msgData The information of message
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd);
+
     /**
      * @brief Process the requirement of disconnect.
      * @param[in] addr The address of peer device
@@ -487,7 +512,6 @@ private:
      * @param[in] role The role of local profile
      * @since 6.0
      */
-    
     void ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd);
 
     /**
@@ -546,6 +570,15 @@ public:
     bool Dispatch(const utility::Message &msg);
 
 private:
+    
+    /**
+     * @brief Process the other cmd of open state.
+     * @param[in] msgData The information of message
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd);
+    
     /**
      * @brief Process the confirm of close.
      * @param[in] addr The address of peer device
