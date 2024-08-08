@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <inttypes.h>
+#include <cinttypes>
 #include "../include/a2dp_encoder_sbc.h"
 #include <cmath>
 #include <cstring>
@@ -305,11 +305,7 @@ void A2dpSbcEncoder::UpdateEncoderParam(void)
     A2dpSbcUpdateEncoderParams(encParams, codecCfgInfo);
 
     const uint16_t mtu = A2DP_SBC_MAX_PACKET_SIZE - A2DP_SBC_PACKET_HEAD_SIZE - A2DP_SBC_MEDIA_PAYLOAD_HEAD_SIZE;
-    if (mtu < a2dpSbcEncoderCb_.peerMtu) {
-        a2dpSbcEncoderCb_.mtuSize = mtu;
-    } else {
-        a2dpSbcEncoderCb_.mtuSize = a2dpSbcEncoderCb_.peerMtu;
-    }
+    a2dpSbcEncoderCb_.mtuSize = a2dpSbcEncoderCb_.peerMtu < mtu ? a2dpSbcEncoderCb_.peerMtu : mtu;
 
     samplingFreq = encParams->samplingFreq;
     encParams->bitRate = A2DP_SBC_DEFAULT_BITRATE;

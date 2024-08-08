@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include <inttypes.h>
+#include <cinttypes>
 #include "bluetooth_def.h"
 #include "bluetooth_errorcode.h"
 #include "bluetooth_hitrace.h"
