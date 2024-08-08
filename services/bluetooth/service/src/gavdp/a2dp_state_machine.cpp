@@ -355,6 +355,7 @@ void A2dpStateConfigure::ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t ro
 void A2dpStateConfigure::SetStateName(std::string state)
 {
     std::lock_guard<std::recursive_mutex> lock(g_stateMutex);
+    
     Transition(state);
 }
 
