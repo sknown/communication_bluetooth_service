@@ -15,40 +15,40 @@
 
 export enum Category {
   All ,
-  API ,
-  Gatt ,
-  SPP ,
-  Scenario ,
-  AutoTest ,
-  GattAutoTest ,
-  SppAutoTest ,
-  ProfileAutoTest ,
-  Profile ,
-  BenchMark ,
 
+  API ,
   APIManager ,
+  Gatt ,
   GattManager ,
+  SPP ,
   SPPManager ,
-  ScenarioManager ,
+  AutoTest ,
   AutoTestManager ,
-  GattAutoTestManager ,
-  SppAutoTestManager ,
-  ProfileAutoTestManager ,
+  Scenario ,
+  ScenarioManager ,
+  Profile ,
   ProfileManager ,
-  BenchMarkManager
+  BenchMark ,
+  BenchMarkManager ,
+  GattAutoTest ,
+  GattAutoTestManager ,
+  SppAutoTest ,
+  SppAutoTestManager ,
+  ProfileAutoTest ,
+  ProfileAutoTestManager ,
 }
 
 let NextId = 0;
 
 export class TestData {
   id: string;
-  name: string;
-  detail: string;
-  url: string;
-  image: Resource
-  category: Category;
+  name?: string;
+  detail?: string;
+  url?: string;
+  image?: Resource
+  category?: Category;
 
-  constructor( name: string , detail: string , url: string , image: Resource , category: Category ) {
+  constructor(name: string , detail: string , url: string , image: Resource , category: Category) {
     this.id = `${ NextId ++ }`;
     this.name = name;
     this.url = url;
@@ -74,20 +74,24 @@ export enum CaseCategory {
   ProfileA2dpSource ,
   ProfileHandsFreeAudioGateway ,
   ProfileHitHost ,
-  ProfilePan ,
-  ProfileOpp,
+  ProfilePanNetwork ,
+  ProfileOpp ,
+  ProfileA2dpSourceManager ,
+  ProfileHandsFreeAudioGatewayManager ,
+  ProfileHitHostManager ,
+  ProfilePanNetworkManager ,
 }
 
 export class TestApi {
-  id: string;
-  name: string;
-  detail: string;
-  method: string;
-  api: any;
-  result: string;
-  category: CaseCategory;
+  id?: string;
+  name?: string;
+  detail?: string;
+  method?: string;
+  api: Function;
+  result?: string;
+  category?: CaseCategory;
 
-  constructor( name: string , detail: string , method: string , api: any , result: string , category: CaseCategory ) {
+  constructor(name: string , detail: string , method: string , api: Function , result: string , category: CaseCategory) {
     this.id = `${ NextId ++ }`;
     this.name = name;
     this.detail = detail;
@@ -108,20 +112,30 @@ export enum AutoCategory {
   A2dpSourceAuto ,
   HandsFreeAudioGatewayAuto ,
   HitHostAuto ,
-  PanNetworkAuto
+  PanNetworkAuto ,
+
+  BrAutoManager ,
+  BleAutoManager ,
+  GattClientAutoManager ,
+  GattServerAutoManager ,
+  SppClientAutoManager ,
+  SppServerAutoManager ,
+  A2dpSourceAutoManager ,
+  HandsFreeAudioGatewayAutoManager ,
+  HitHostAutoManager ,
+  PanNetworkAutoManager
 }
 
 export class TestAuto {
-  id: string;
-  name: string;
-  detail: string;
-  method: string;
-  api: any;
-  image: Resource;
-  result: string;
-  category: AutoCategory;
+  id?: string;
+  name?: string;
+  detail?: string;
+  method?: string;
+  api?: Function;
+  result?: string;
+  category?: AutoCategory;
 
-  constructor( name: string , detail: string , method: string , api: any , result: string , category: AutoCategory ) {
+  constructor(name: string , detail: string , method: string , api: Function , result: string , category: AutoCategory) {
     this.id = `${ NextId ++ }`;
     this.name = name;
     this.detail = detail;
@@ -140,6 +154,13 @@ export enum ScenarioCategory {
   GattServerScenario ,
   SppClientScenario ,
   SppServerScenario ,
+
+  BrFoundScenarioManager ,
+  BleFoundScenarioManager ,
+  GattClientScenarioManager ,
+  GattServerScenarioManager ,
+  SppClientScenarioManager ,
+  SppServerScenarioManager ,
 }
 
 export class TestScenario {
@@ -147,12 +168,11 @@ export class TestScenario {
   name: string;
   detail: string;
   method: string;
-  api: any;
-  image: Resource;
+  api: Function;
   result: string;
   category: ScenarioCategory;
 
-  constructor( name: string , detail: string , method: string , api: any , result: string , category: ScenarioCategory ) {
+  constructor(name: string , detail: string , method: string , api: Function , result: string , category: ScenarioCategory) {
     this.id = `${ NextId ++ }`;
     this.name = name;
     this.detail = detail;
@@ -170,6 +190,13 @@ export enum BenchmarkCategory {
   GattServerBenchmark ,
   SppClientBenchmark ,
   SppServerBenchmark ,
+
+  BrBenchmarkManager ,
+  BleBenchmarkManager ,
+  GattClientBenchmarkManager ,
+  GattServerBenchmarkManager ,
+  SppClientBenchmarkManager ,
+  SppServerBenchmarkManager ,
 }
 
 export class TestBenchmark {
@@ -177,12 +204,11 @@ export class TestBenchmark {
   name: string;
   detail: string;
   method: string;
-  api: any;
-  image: Resource;
+  api: Function;
   result: string;
   category: BenchmarkCategory;
 
-  constructor( name: string , detail: string , method: string , api: any , result: string , category: BenchmarkCategory ) {
+  constructor(name: string , detail: string , method: string , api: Function , result: string , category: BenchmarkCategory) {
     this.id = `${ NextId ++ }`;
     this.name = name;
     this.detail = detail;

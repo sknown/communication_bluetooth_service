@@ -37,7 +37,8 @@ public:
         // Reference "BTConnectState"
         HILOGI("addr:%{public}s, state:%{public}d", GET_ENCRYPT_ADDR(device), state);
         observers_->ForEach([device, state](sptr<IBluetoothHidHostObserver> observer) {
-            observer->OnConnectionStateChanged(device, state);
+            observer->OnConnectionStateChanged(device, state,
+                static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
         });
     }
 
@@ -61,6 +62,7 @@ struct BluetoothHidHostServer::impl {
     std::unique_ptr<BluetoothHidHostCallback> observerImp_ = std::make_unique<BluetoothHidHostCallback>();
     IProfileHidHost *hidHostService_ = nullptr;
     std::vector<sptr<IBluetoothHidHostObserver>> advCallBack_;
+    std::mutex advCallBackMutex;
 
     IProfileHidHost *GetServicePtr()
     {
@@ -144,6 +146,7 @@ ErrCode BluetoothHidHostServer::RegisterObserver(const sptr<IBluetoothHidHostObs
     }
     auto func = std::bind(&BluetoothHidHostServer::DeregisterObserver, this, std::placeholders::_1);
     pimpl->observers_.Register(observer, func);
+    std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
     pimpl->advCallBack_.push_back(observer);
     return ERR_OK;
 }
@@ -159,12 +162,15 @@ ErrCode BluetoothHidHostServer::DeregisterObserver(const sptr<IBluetoothHidHostO
         HILOGE("pimpl is null");
         return ERR_NO_INIT;
     }
-    for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
-        if ((*iter)->AsObject() == observer->AsObject()) {
-            if (pimpl != nullptr) {
-                pimpl->observers_.Deregister(*iter);
-                pimpl->advCallBack_.erase(iter);
-                break;
+    {
+        std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
+        for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
+            if ((*iter)->AsObject() == observer->AsObject()) {
+                if (pimpl != nullptr) {
+                    pimpl->observers_.Deregister(*iter);
+                    pimpl->advCallBack_.erase(iter);
+                    break;
+                }
             }
         }
     }
@@ -281,7 +287,7 @@ ErrCode BluetoothHidHostServer::HidHostSendData(std::string &device,
 }
 
 ErrCode BluetoothHidHostServer::HidHostSetReport(std::string &device,
-    uint8_t &type, uint16_t &size, uint8_t &report, int& result)
+    uint8_t &type, std::string &report, int& result)
 {
     HILOGI("start");
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
@@ -292,7 +298,12 @@ ErrCode BluetoothHidHostServer::HidHostSetReport(std::string &device,
         HILOGI("hidHostService_ is null");
         return ERR_NO_INIT;
     }
-    result = pimpl->hidHostService_->HidHostSetReport(device, type, size, &report);
+    std::vector<uint8_t> data;
+    for (char ch : report) {
+        data.emplace(data.end(), static_cast<uint8_t>(ch));
+    }
+    data.emplace(data.end(), static_cast<uint8_t>('\0'));
+    result = pimpl->hidHostService_->HidHostSetReport(device, type, data.size(), data.data());
     HILOGI("end, result:%{public}d", result);
     return ERR_OK;
 }
@@ -316,6 +327,11 @@ ErrCode BluetoothHidHostServer::HidHostGetReport(std::string &device,
 
 int32_t BluetoothHidHostServer::SetConnectStrategy(const BluetoothRawAddress &device, int strategy)
 {
+    HILOGI("target device:%{public}s()", GET_ENCRYPT_ADDR(device));
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     return NO_ERROR;
 }
 

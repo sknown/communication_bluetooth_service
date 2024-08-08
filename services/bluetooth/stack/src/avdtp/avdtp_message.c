@@ -1236,11 +1236,6 @@ void AvdtParseDelayRptInd(AvdtSigCtrl *sigCtrl, uint8_t label, const Packet *pkt
     PacketPayloadRead(pkt, &maxSB, Offset, AVDT_1BYTE);
     Offset++;
     PacketPayloadRead(pkt, &lowSB, Offset, AVDT_1BYTE);
-    Offset++;
-    PacketPayloadRead(pkt, &data, Offset, AVDT_1BYTE);
-    if (AvdtServiceCapCheck(sigCtrl, AVDT_SIG_DELAY_RPT, data) != AVDT_SUCCESS) {
-        return;
-    }
     msg.msg.delayRptCmd.delay = AvdtParseDelayValue(maxSB, lowSB);
     msg.msg.delayRptCmd.hdr.seid = seid;
     msg.msg.delayRptCmd.hdr.label = label;

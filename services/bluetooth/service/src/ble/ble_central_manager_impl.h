@@ -52,13 +52,6 @@ public:
     ~BleCentralManagerImpl();
 
     /**
-     * @brief  Start Bluetooth LE scan with filters.
-     *
-     * @param [in] for finding exact BLE devices.
-     */
-    void StartScan() const;
-
-    /**
      * @brief Start Bluetooth LE scan with filters,dutyRatio and matching mode.
      *
      * @param [in] for finding exact BLE devices.
@@ -303,6 +296,41 @@ private:
      * @param [in] type callback type
      */
     void SetDutyCycle100Duration(int type) const;
+
+    /**
+     * @brief set duty cycle duration
+     *
+     * @param [in] type callback type
+     */
+    void SetDutyCycle50Duration(int type) const;
+
+    /**
+     * @brief set duty cycle duration
+     *
+     * @param [in] type callback type
+     */
+    void SetDutyCycle1030Duration(int type) const;
+
+    /**
+     * @brief set duty cycle duration
+     *
+     * @param [in] type callback type
+     */
+    void SetDutyCycle230Duration(int type) const;
+
+    /**
+     * @brief set duty cycle duration
+     *
+     * @param [in] type callback type
+     */
+    void SetDutyCycle75Duration(int type) const;
+
+    /**
+     * @brief set duty cycle duration
+     *
+     * @param [in] type callback type
+     */
+    void SetDutyCycle5030Duration(int type) const;
 
     /**
      *  @brief Gap scan event

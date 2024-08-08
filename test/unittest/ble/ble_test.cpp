@@ -156,17 +156,17 @@ void BleTest::TearDownTestCase(void)
 void BleTest::SetUp()
 {
     GTEST_LOG_(INFO) << "SetUp";
+    bleHostObserverTest_ = std::make_shared<BleHostObserverTest>();
     host_->RegisterObserver(bleHostObserverTest_);
 }
 
 void BleTest::TearDown()
 {
     GTEST_LOG_(INFO) << "SetUp";
-    host_->DeregisterObserver(bleHostObserverTest_);
+    if (bleHostObserverTest_) {
+        host_->DeregisterObserver(bleHostObserverTest_);
+    }
 }
-
-void BleAdvertiseCallbackTest::OnStartResultEvent(int result)
-{}
 
 void BleHostObserverTest::OnStateChanged(const int transport, const int status)
 {
@@ -192,15 +192,15 @@ HWTEST_F(BleTest, BLE_ModuleTest_StartAdvertising_00100, TestSize.Level1)
 
     EXPECT_TRUE(EnableBle());
     BleTest::bleInstance_->InitAdvertiseSettings();
-    BleAdvertiser bleAdvertise;
+    std::shared_ptr<BleAdvertiser> bleAdvertise = BleAdvertiser::CreateInstance();
     BleAdvertiserData advData;
     BleAdvertiserData scanData;
     advData.AddServiceUuid(g_uuid);
     advData.AddManufacturerData(g_manufacturerId, g_manufacturerData);
     advData.AddServiceData(g_serviceDataUuid, g_serviceData);
     advData.SetAdvFlag(BLE_ADV_FLAG_GEN_DISC);
-    bleAdvertise.StartAdvertising(
-        BleTest::bleInstance_->bleAdvertiserSettings_, advData, scanData, bleAdvertiseCallbackTest_);
+    bleAdvertise->StartAdvertising(
+        BleTest::bleInstance_->bleAdvertiserSettings_, advData, scanData, 0, bleAdvertiseCallbackTest_);
 
     GTEST_LOG_(INFO) << "advData function test";
     EXPECT_TRUE(BleTest::bleInstance_->HaveUuid(advData));
@@ -208,17 +208,17 @@ HWTEST_F(BleTest, BLE_ModuleTest_StartAdvertising_00100, TestSize.Level1)
     EXPECT_TRUE(BleTest::bleInstance_->ServiceData(advData));
     EXPECT_EQ(BLE_ADV_FLAG_GEN_DISC, advData.GetAdvFlag());
 
-    bleAdvertise.StopAdvertising(bleAdvertiseCallbackTest_);
+    bleAdvertise->StopAdvertising(bleAdvertiseCallbackTest_);
     vector<uint8_t> advData1 = {1, 2, 3};
     vector<uint8_t> scanData1 = {3, 2, 1};
-    bleAdvertise.StartAdvertising(
-        BleTest::bleInstance_->bleAdvertiserSettings_, advData1, scanData1, bleAdvertiseCallbackTest_);
-    bleAdvertise.StopAdvertising(bleAdvertiseCallbackTest_);
+    bleAdvertise->StartAdvertising(
+        BleTest::bleInstance_->bleAdvertiserSettings_, advData1, scanData1, 0, bleAdvertiseCallbackTest_);
+    bleAdvertise->StopAdvertising(bleAdvertiseCallbackTest_);
     int32_t length = host_->GetBleMaxAdvertisingDataLength();
     EXPECT_LE(MIN_ADV_LENGTH, length);
     EXPECT_GE(MAX_ADV_LENGTH, length);
 
-    bleAdvertise.Close(bleAdvertiseCallbackTest_);
+    bleAdvertise->Close(bleAdvertiseCallbackTest_);
     EXPECT_TRUE(DisableBle());
     GTEST_LOG_(INFO) << "Ble_ModuleTest_StartAdvertising_00100 end";
 }
@@ -268,8 +268,7 @@ HWTEST_F(BleTest, BLE_ModuleTest_StartCentralManager_00100, TestSize.Level1)
     filters.push_back(filter);
     BleTest::bleInstance_->InitScanSettings();
     BleCentralManager bleCentralManager(bleCentralManagerCallbackTest_);
-    bleCentralManager.ConfigScanFilter(filters);
-    bleCentralManager.StartScan(BleTest::bleInstance_->bleScanSettings_);
+    bleCentralManager.StartScan(BleTest::bleInstance_->bleScanSettings_, filters);
     EXPECT_TRUE(host_->IsBtDiscovering(1));
     bleCentralManager.StopScan();
     EXPECT_TRUE(DisableBle());

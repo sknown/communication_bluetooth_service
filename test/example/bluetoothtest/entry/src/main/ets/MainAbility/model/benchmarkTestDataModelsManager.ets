@@ -13,9 +13,7 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
-
-import { TestBenchmarkManager , BenchmarkCategoryManager } from './testDataManager'
+import { TestBenchmark , BenchmarkCategory } from './testData'
 import {
   testOnStateChangeManager ,
   testEnableBluetoothManager ,
@@ -83,14 +81,23 @@ import {
   testSppCloseClientSocketManager
 } from './sppServerManagerInterface'
 
-export const BrManagerBenchmarkTestCase: [] = [
+interface BenchmarkManagerTest {
+  name: string;
+  detail: string;
+  method: string;
+  api: Function;
+  result: string;
+  category: BenchmarkCategory;
+}
+
+export const BrManagerBenchmarkTestCase: BenchmarkManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '1' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BrBenchmarkManager
+    'category' : BenchmarkCategory.BrBenchmarkManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -98,7 +105,7 @@ export const BrManagerBenchmarkTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BrBenchmarkManager
+    'category' : BenchmarkCategory.BrBenchmarkManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -106,7 +113,7 @@ export const BrManagerBenchmarkTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BrBenchmarkManager
+    'category' : BenchmarkCategory.BrBenchmarkManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -114,7 +121,7 @@ export const BrManagerBenchmarkTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BrBenchmarkManager
+    'category' : BenchmarkCategory.BrBenchmarkManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -122,7 +129,7 @@ export const BrManagerBenchmarkTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BrBenchmarkManager
+    'category' : BenchmarkCategory.BrBenchmarkManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -130,7 +137,7 @@ export const BrManagerBenchmarkTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BrBenchmarkManager
+    'category' : BenchmarkCategory.BrBenchmarkManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -138,18 +145,18 @@ export const BrManagerBenchmarkTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BrBenchmarkManager
+    'category' : BenchmarkCategory.BrBenchmarkManager
   },
 ]
 
-export const BleManagerBenchmarkTestCase: [] = [
+export const BleManagerBenchmarkTestCase: BenchmarkManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '1' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BleBenchmarkManager
+    'category' : BenchmarkCategory.BleBenchmarkManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -157,7 +164,7 @@ export const BleManagerBenchmarkTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BleBenchmarkManager
+    'category' : BenchmarkCategory.BleBenchmarkManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -165,7 +172,7 @@ export const BleManagerBenchmarkTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BleBenchmarkManager
+    'category' : BenchmarkCategory.BleBenchmarkManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -173,7 +180,7 @@ export const BleManagerBenchmarkTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BleBenchmarkManager
+    'category' : BenchmarkCategory.BleBenchmarkManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -181,7 +188,7 @@ export const BleManagerBenchmarkTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BleBenchmarkManager
+    'category' : BenchmarkCategory.BleBenchmarkManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -189,7 +196,7 @@ export const BleManagerBenchmarkTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BleBenchmarkManager
+    'category' : BenchmarkCategory.BleBenchmarkManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -197,18 +204,18 @@ export const BleManagerBenchmarkTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.BleBenchmarkManager
+    'category' : BenchmarkCategory.BleBenchmarkManager
   },
 ]
 
-export const GattClientManagerBenchmarkTestCase: [] = [
+export const GattClientManagerBenchmarkTestCase: BenchmarkManagerTest[] = [
   {
     'name' : '创建Gatt客户端Manager' ,
     'detail' : '4' ,
     'method' : 'createGattClientManager' ,
     'api' : testCreateGattClientManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattClientBenchmarkManager
+    'category' : BenchmarkCategory.GattClientBenchmarkManager
   },
   {
     'name' : 'Ble连接状态Manager' ,
@@ -216,7 +223,7 @@ export const GattClientManagerBenchmarkTestCase: [] = [
     'method' : 'on.BleConnectionStateChangeManager' ,
     'api' : testOnBLEConnectionStateChangeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattClientBenchmarkManager
+    'category' : BenchmarkCategory.GattClientBenchmarkManager
   },
   {
     'name' : '连接Manager' ,
@@ -224,7 +231,7 @@ export const GattClientManagerBenchmarkTestCase: [] = [
     'method' : 'connectManager' ,
     'api' : testConnectManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattClientBenchmarkManager
+    'category' : BenchmarkCategory.GattClientBenchmarkManager
   },
   {
     'name' : '设置通知特性更改Manager' ,
@@ -232,7 +239,7 @@ export const GattClientManagerBenchmarkTestCase: [] = [
     'method' : 'setNotifyCharacteristicChangedManager' ,
     'api' : testSetNotifyCharacteristicChangedManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattClientBenchmarkManager
+    'category' : BenchmarkCategory.GattClientBenchmarkManager
   },
   {
     'name' : 'Ble特征值变化Manager' ,
@@ -240,7 +247,7 @@ export const GattClientManagerBenchmarkTestCase: [] = [
     'method' : 'on.BleCharacteristicChangeManager' ,
     'api' : testOnBLECharacteristicChangeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattClientBenchmarkManager
+    'category' : BenchmarkCategory.GattClientBenchmarkManager
   },
   {
     'name' : '获取服务callbackManager' ,
@@ -248,7 +255,7 @@ export const GattClientManagerBenchmarkTestCase: [] = [
     'method' : 'getServices(Callback)Manager' ,
     'api' : testGetServicesCallbackManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattClientBenchmarkManager
+    'category' : BenchmarkCategory.GattClientBenchmarkManager
   },
   {
     'name' : '读取特征值callbackManager' ,
@@ -256,7 +263,7 @@ export const GattClientManagerBenchmarkTestCase: [] = [
     'method' : 'readCharacteristicValue(callback)Manager' ,
     'api' : testReadCharacteristicValueCallbackManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattClientBenchmarkManager
+    'category' : BenchmarkCategory.GattClientBenchmarkManager
   },
   {
     'name' : '写入特征值Manager' ,
@@ -264,18 +271,18 @@ export const GattClientManagerBenchmarkTestCase: [] = [
     'method' : 'writeCharacteristicValueManager' ,
     'api' : testWriteCharacteristicValueManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattClientBenchmarkManager
+    'category' : BenchmarkCategory.GattClientBenchmarkManager
   },
 ]
 
-export const GattServerManagerBenchmarkTestCase: [] = [
+export const GattServerManagerBenchmarkTestCase: BenchmarkManagerTest[] = [
   {
     'name' : '创建Gatt服务器Manager' ,
     'detail' : '4' ,
     'method' : 'createGattServerManager' ,
     'api' : testCreateGattServerManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattServerBenchmarkManager
+    'category' : BenchmarkCategory.GattServerBenchmarkManager
   },
   {
     'name' : '添加服务Manager' ,
@@ -283,7 +290,7 @@ export const GattServerManagerBenchmarkTestCase: [] = [
     'method' : 'addServiceManager' ,
     'api' : testAddServiceManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattServerBenchmarkManager
+    'category' : BenchmarkCategory.GattServerBenchmarkManager
   },
   {
     'name' : '连接状态Manager' ,
@@ -291,7 +298,7 @@ export const GattServerManagerBenchmarkTestCase: [] = [
     'method' : 'on.connectStateChangeManager' ,
     'api' : testOnConnectStateChangeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattServerBenchmarkManager
+    'category' : BenchmarkCategory.GattServerBenchmarkManager
   },
   {
     'name' : '开始广播Manager' ,
@@ -299,7 +306,7 @@ export const GattServerManagerBenchmarkTestCase: [] = [
     'method' : 'startAdvertisingManager' ,
     'api' : testStartAdvertisingManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattServerBenchmarkManager
+    'category' : BenchmarkCategory.GattServerBenchmarkManager
   },
   {
     'name' : '读取特征值Manager' ,
@@ -307,7 +314,7 @@ export const GattServerManagerBenchmarkTestCase: [] = [
     'method' : 'on.characteristicReadManager' ,
     'api' : testOnCharacteristicReadManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattServerBenchmarkManager
+    'category' : BenchmarkCategory.GattServerBenchmarkManager
   },
   {
     'name' : '写入特征值Manager' ,
@@ -315,18 +322,18 @@ export const GattServerManagerBenchmarkTestCase: [] = [
     'method' : 'on.characteristicWriteManager' ,
     'api' : testOnCharacteristicWriteManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.GattServerBenchmarkManager
+    'category' : BenchmarkCategory.GattServerBenchmarkManager
   },
 ]
 
-export const SppClientManagerBenchmarkTestCase: [] = [
+export const SppClientManagerBenchmarkTestCase: BenchmarkManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '1' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppClientBenchmarkManager
+    'category' : BenchmarkCategory.SppClientBenchmarkManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -334,7 +341,7 @@ export const SppClientManagerBenchmarkTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppClientBenchmarkManager
+    'category' : BenchmarkCategory.SppClientBenchmarkManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -342,7 +349,7 @@ export const SppClientManagerBenchmarkTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppClientBenchmarkManager
+    'category' : BenchmarkCategory.SppClientBenchmarkManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -350,7 +357,7 @@ export const SppClientManagerBenchmarkTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppClientBenchmarkManager
+    'category' : BenchmarkCategory.SppClientBenchmarkManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -358,7 +365,7 @@ export const SppClientManagerBenchmarkTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppClientBenchmarkManager
+    'category' : BenchmarkCategory.SppClientBenchmarkManager
   },
 
   {
@@ -367,7 +374,7 @@ export const SppClientManagerBenchmarkTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppClientBenchmarkManager
+    'category' : BenchmarkCategory.SppClientBenchmarkManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -375,7 +382,7 @@ export const SppClientManagerBenchmarkTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppClientBenchmarkManager
+    'category' : BenchmarkCategory.SppClientBenchmarkManager
   },
   {
     'name' : 'Spp客户端连接(安全模式)Manager' ,
@@ -383,18 +390,18 @@ export const SppClientManagerBenchmarkTestCase: [] = [
     'method' : 'sppConnectManager' ,
     'api' : testSppClientConnectSafeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppClientBenchmarkManager
+    'category' : BenchmarkCategory.SppClientBenchmarkManager
   },
 ]
 
-export const SppServerManagerBenchmarkTestCase: [] = [
+export const SppServerManagerBenchmarkTestCase: BenchmarkManagerTest[] = [
   {
     'name' : '注册状态变化Manager' ,
     'detail' : '1' ,
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppServerBenchmarkManager
+    'category' : BenchmarkCategory.SppServerBenchmarkManager
   },
   {
     'name' : '开蓝牙Manager' ,
@@ -402,7 +409,7 @@ export const SppServerManagerBenchmarkTestCase: [] = [
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppServerBenchmarkManager
+    'category' : BenchmarkCategory.SppServerBenchmarkManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -410,7 +417,7 @@ export const SppServerManagerBenchmarkTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppServerBenchmarkManager
+    'category' : BenchmarkCategory.SppServerBenchmarkManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -418,7 +425,7 @@ export const SppServerManagerBenchmarkTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppServerBenchmarkManager
+    'category' : BenchmarkCategory.SppServerBenchmarkManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -426,7 +433,7 @@ export const SppServerManagerBenchmarkTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppServerBenchmarkManager
+    'category' : BenchmarkCategory.SppServerBenchmarkManager
   },
 
   {
@@ -435,7 +442,7 @@ export const SppServerManagerBenchmarkTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppServerBenchmarkManager
+    'category' : BenchmarkCategory.SppServerBenchmarkManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -443,55 +450,54 @@ export const SppServerManagerBenchmarkTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : BenchmarkCategoryManager.SppServerBenchmarkManager
+    'category' : BenchmarkCategory.SppServerBenchmarkManager
   },
 ]
 
-
-export function initBrManagerBenchmarkData(): Array<TestBenchmarkManager> {
-  let TestBenchmarkArray: Array<TestBenchmarkManager> = []
-  BrManagerBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmarkManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initBrManagerBenchmarkData(): Array<TestBenchmark> {
+  let TestBenchmarkArray: Array<TestBenchmark> = []
+  BrManagerBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }
 
-export function initBleManagerBenchmarkData(): Array<TestBenchmarkManager> {
-  let TestBenchmarkArray: Array<TestBenchmarkManager> = []
-  BleManagerBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmarkManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initBleManagerBenchmarkData(): Array<TestBenchmark> {
+  let TestBenchmarkArray: Array<TestBenchmark> = []
+  BleManagerBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }
 
-export function initGattClientManagerBenchmarkData(): Array<TestBenchmarkManager> {
-  let TestBenchmarkArray: Array<TestBenchmarkManager> = []
-  GattClientManagerBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmarkManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initGattClientManagerBenchmarkData(): Array<TestBenchmark> {
+  let TestBenchmarkArray: Array<TestBenchmark> = []
+  GattClientManagerBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }
 
-export function initGattServerManagerBenchmarkData(): Array<TestBenchmarkManager> {
-  let TestBenchmarkArray: Array<TestBenchmarkManager> = []
-  GattServerManagerBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmarkManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initGattServerManagerBenchmarkData(): Array<TestBenchmark> {
+  let TestBenchmarkArray: Array<TestBenchmark> = []
+  GattServerManagerBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }
 
-export function initSppClientManagerBenchmarkData(): Array<TestBenchmarkManager> {
-  let TestBenchmarkArray: Array<TestBenchmarkManager> = []
-  SppClientManagerBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmarkManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initSppClientManagerBenchmarkData(): Array<TestBenchmark> {
+  let TestBenchmarkArray: Array<TestBenchmark> = []
+  SppClientManagerBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }
 
-export function initSppServerManagerBenchmarkData(): Array<TestBenchmarkManager> {
-  let TestBenchmarkArray: Array<TestBenchmarkManager> = []
-  SppServerManagerBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmarkManager(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+export function initSppServerManagerBenchmarkData(): Array<TestBenchmark> {
+  let TestBenchmarkArray: Array<TestBenchmark> = []
+  SppServerManagerBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }

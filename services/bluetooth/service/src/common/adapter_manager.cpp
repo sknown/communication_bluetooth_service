@@ -244,12 +244,18 @@ bool AdapterManager::OutputSetting() const
 {
     bool outputValue = false;
     bool desensitization = false;
-
+    int maxSize = 0;
+    AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_OUTPUTMAXSIZE, maxSize);
     AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_DESENSITIZATION, desensitization);
     if (AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_BTSNOOP_OUTPUT, outputValue) &&
         outputValue) {
         std::string outputPath = "./snoop.log";
         AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_BTSNOOP_OUTPUT_PATH, outputPath);
+
+        if (BTM_SetSnoopOutputMaxsize(maxSize)) {
+            LOG_ERROR("Set snoop file output maxsize Failed!!");
+            return false;
+        }
 
         if (BTM_SetSnoopFilePath(outputPath.c_str(), outputPath.length()) != BT_SUCCESS) {
             LOG_ERROR("Set snoop file path Failed!!");
@@ -270,6 +276,11 @@ bool AdapterManager::OutputSetting() const
     outputValue = false;
     if (AdapterConfig::GetInstance()->GetValue(SECTION_OUTPUT_SETTING, PROPERTY_HCILOG_OUTPUT, outputValue) &&
         outputValue) {
+        if (BTM_SetSnoopOutputMaxsize(maxSize)) {
+            LOG_ERROR("Set snoop file output maxsize Failed!!");
+            return false;
+        }
+        
         if (BTM_EnableHciLogOutput(desensitization) != BT_SUCCESS) {
             LOG_ERROR("Enable HciLog output Failed!!");
             return false;
@@ -818,11 +829,12 @@ void AdapterManager::RestoreTurnOnState()
             sleep(1);
             
             int processed = 0;
-            for (int i =  0; i < TRANSPORT_MAX; i++) {
-                int turnOn = 0;
-                AdapterDeviceConfig::GetInstance()->GetValue(SECTION_HOST, adapterConfigTbl[i].first, turnOn);
-                LOG_INFO("restore turnon, %{public}s, %{public}d", adapterConfigTbl[i].first.c_str(), turnOn);
+            const unsigned char btStateFlag = 0;
+            int turnOn = 0;
 
+            AdapterDeviceConfig::GetInstance()->GetValue(SECTION_HOST, adapterConfigTbl[btStateFlag].first, turnOn);
+            LOG_INFO("restore turnon, %{public}s, %{public}d", adapterConfigTbl[btStateFlag].first.c_str(), turnOn);
+            for (int i =  0; i < TRANSPORT_MAX; i++) {
                 if (!turnOn) {
                     processed++;
                     continue;

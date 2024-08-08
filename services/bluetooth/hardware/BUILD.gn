@@ -12,7 +12,9 @@
 # limitations under the License.
 
 import("//build/ohos.gni")
-import("//drivers/hdf_core/adapter/uhdf2/uhdf.gni")
+
+SUBSYSTEM_DIR = "//foundation/communication"
+PART_DIR = "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth"
 
 ohos_shared_library("bluetooth_hdi_adapter") {
   # sanitize = {
@@ -21,7 +23,7 @@ ohos_shared_library("bluetooth_hdi_adapter") {
   stack_protector_ret = true
   include_dirs = [
     "include",
-    "//third_party/bounds_checking_function/include",
+    "$PART_DIR/common",
   ]
 
   cflags = [ "-fPIC" ]

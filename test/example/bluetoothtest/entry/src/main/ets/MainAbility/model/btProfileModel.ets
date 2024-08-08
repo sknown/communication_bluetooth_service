@@ -12,22 +12,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
+
 /**
  * BT ProfileModel Test Page Of Bluetooth test
  */
+
 import ConfigData from '../../Utils/ConfigData';
 import BaseModel from '../../Utils/BaseModel';
 import bt from '@ohos.bluetooth';
+import hid from '@ohos.bluetooth.hid'
+import pan from '@ohos.bluetooth.pan'
+
 
 export class BTProfileModel extends BaseModel {
   private TAG = ConfigData.TAG + 'BTProfileModel';
-  private profiles: any[] = new Array();
+  private profiles: bt.A2dpSourceProfile | bt.HandsFreeAudioGatewayProfile | hid.HidHostProfile | pan.PanProfile | bt.OppProfile | null [] = []
   public PROFILE_A2DP_SOURCE = 1;
   public PROFILE_HANDS_FREE_AUDIO_GATEWAY = 4;
   public PROFILE_HID_HOST = 6;
   public PROFILE_PAN_NETWORK = 7;
-  public PROFILE_OPP = 10 ;
+  public PROFILE_OPP = 10;
   public BLUETOOTH_STATE_OFF = 0;
 
   constructor() {
@@ -35,66 +39,72 @@ export class BTProfileModel extends BaseModel {
   }
 
   initProfile() {
-    console.log( 'bt_test BTProfileModel start' );
+    console.log('bt_test BTProfileModel start');
 
-    this.profiles[this.PROFILE_A2DP_SOURCE] = bt.getProfile( this.PROFILE_A2DP_SOURCE );
+    this.profiles[ this.PROFILE_A2DP_SOURCE ] = bt.getProfile(this.PROFILE_A2DP_SOURCE) as bt.A2dpSourceProfile;
 
-    this.profiles[this.PROFILE_HANDS_FREE_AUDIO_GATEWAY] = bt.getProfile( this.PROFILE_HANDS_FREE_AUDIO_GATEWAY );
+    this.profiles[ this.PROFILE_HANDS_FREE_AUDIO_GATEWAY ] = bt.getProfile(this.PROFILE_HANDS_FREE_AUDIO_GATEWAY) as bt.HandsFreeAudioGatewayProfile;
 
-    this.profiles[this.PROFILE_HID_HOST] = bt.getProfile( this.PROFILE_HID_HOST );
+    this.profiles[ this.PROFILE_HID_HOST ] = hid.createHidHostProfile() as hid.HidHostProfile;
 
-    this.profiles[this.PROFILE_PAN_NETWORK] = bt.getProfile( this.PROFILE_PAN_NETWORK );
+    this.profiles[ this.PROFILE_PAN_NETWORK ] = pan.createPanProfile() as pan.PanProfile;
 
-    this.profiles[this.PROFILE_OPP] = bt.getProfile( this.PROFILE_OPP );
+    this.profiles[ this.PROFILE_OPP ] = bt.getProfile(this.PROFILE_OPP) as bt.OppProfile;
 
-    console.log( 'bt_test BTProfileModel end' );
+    console.log("this.profiles[ this.PROFILE_A2DP_SOURCE ]" + JSON.stringify(bt.getProfile(this.PROFILE_A2DP_SOURCE)))
+    console.log("this.profiles[ this.PROFILE_HANDS_FREE_AUDIO_GATEWAY ]" + bt.getProfile(this.PROFILE_HANDS_FREE_AUDIO_GATEWAY))
+    console.log("this.profiles[ this.PROFILE_HID_HOST ]" + this.profiles[ this.PROFILE_HID_HOST ])
+    console.log("this.profiles[ this.PROFILE_PAN_NETWORK ]" + this.profiles[ this.PROFILE_PAN_NETWORK ])
+    console.log("this.profiles[ this.PROFILE_OPP ]" + bt.getProfile(this.PROFILE_OPP))
+    console.log('bt_test BTProfileModel end');
   }
 
-  hasProfile( type: number ): boolean {
-    if ( !this.profiles[type] ) {
+  hasProfile(type: number): boolean {
+    console.log("hasProfile1:" + JSON.stringify(this.profiles[ type ]))
+    if ( !this.profiles[ type ] ) {
       return false;
     }
     return true;
   }
 
-  getA2DPSourceProfile(): bt.A2dpSourceProfile {
-    if ( this.profiles[this.PROFILE_A2DP_SOURCE] != null ) {
-      return this.profiles[this.PROFILE_A2DP_SOURCE]
+  getA2DPSourceProfile(): bt.A2dpSourceProfile | null {
+    if ( this.profiles[ this.PROFILE_A2DP_SOURCE ] != null ) {
+      return this.profiles[ this.PROFILE_A2DP_SOURCE ] as bt.A2dpSourceProfile;
     }
     return null;
   }
 
-  getHandsFreeAudioGatewayProfile(): bt.HandsFreeAudioGatewayProfile {
-    if ( this.profiles[this.PROFILE_HANDS_FREE_AUDIO_GATEWAY] != null ) {
-      return this.profiles[this.PROFILE_HANDS_FREE_AUDIO_GATEWAY];
+  getHandsFreeAudioGatewayProfile(): bt.HandsFreeAudioGatewayProfile | null {
+    if ( this.profiles[ this.PROFILE_HANDS_FREE_AUDIO_GATEWAY ] != null ) {
+      return this.profiles[ this.PROFILE_HANDS_FREE_AUDIO_GATEWAY ] as bt.HandsFreeAudioGatewayProfile;
     }
     return null;
   }
 
-  getHidHostProfile(): bt.HidHostProfile {
-    if ( this.profiles[this.PROFILE_HID_HOST] != null ) {
-      return this.profiles[this.PROFILE_HID_HOST];
+  getHidHostProfile(): hid.HidHostProfile | null {
+    if ( this.profiles[ this.PROFILE_HID_HOST ] != null ) {
+      return this.profiles[ this.PROFILE_HID_HOST ] as hid.HidHostProfile;
     }
     return null;
   }
 
-  getPanNetworkProfile(): bt.PanNetworkProfile {
-    if ( this.profiles[this.PROFILE_PAN_NETWORK] != null ) {
-      return this.profiles[this.PROFILE_PAN_NETWORK];
+  getPanNetworkProfile(): pan.PanProfile | null {
+    if ( this.profiles[ this.PROFILE_PAN_NETWORK ] != null ) {
+      return this.profiles[ this.PROFILE_PAN_NETWORK ] as pan.PanProfile;
     }
     return null;
   }
 
-  getOppProfile(): bt.OppProfile {
-    if ( this.profiles[this.PROFILE_OPP] != null ) {
-      return this.profiles[this.PROFILE_OPP];
+  getOppProfile(): bt.OppProfile | null {
+    if ( this.profiles[ this.PROFILE_OPP ] != null ) {
+      return this.profiles[ this.PROFILE_OPP ] as bt.OppProfile;
     }
     return null;
   }
 
-  getProfile( type: number ) {
-    if ( this.profiles[type] != null ) {
-      return this.profiles[type];
+  getProfile(type: number): bt.A2dpSourceProfile | bt.HandsFreeAudioGatewayProfile | hid.HidHostProfile | pan.PanProfile | bt.OppProfile | null {
+    if ( this.profiles[ type ] != null ) {
+      return this.profiles[ type ];
     }
     return null;
   }

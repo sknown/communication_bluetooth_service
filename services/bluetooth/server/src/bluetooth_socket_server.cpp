@@ -13,13 +13,14 @@
  * limitations under the License.
  */
 
-#include "bluetooth_socket_server.h"
+#include "bluetooth_errorcode.h"
 #include "bluetooth_log.h"
 #include "bluetooth_utils_server.h"
 #include "bt_def.h"
 #include "interface_profile_manager.h"
 #include "interface_profile_socket.h"
 #include "permission_utils.h"
+#include "bluetooth_socket_server.h"
 
 using namespace OHOS::bluetooth;
 
@@ -34,10 +35,6 @@ int BluetoothSocketServer::Connect(ConnectSocketParam &param, int &fd)
     IProfileSocket *socket = (IProfileSocket *)IProfileManager::GetInstance()->GetProfileService(PROFILE_NAME_SPP);
     if (socket != nullptr) {
         fd = socket->Connect(param.addr, param.uuid, (int)param.securityFlag, (int)param.type);
-    }
-
-    if (fd != -1 && param.observer != nullptr) {
-        socketObserverList_->AddObserver(fd, param.observer->AsObject());
     }
 
     return NO_ERROR;
@@ -62,9 +59,27 @@ int BluetoothSocketServer::Listen(ListenSocketParam &param, int &fd)
     return NO_ERROR;
 }
 
-void BluetoothSocketServer::RemoveObserver(const sptr<IBluetoothSocketObserver> &observer)
+int BluetoothSocketServer::DeregisterServerObserver(const sptr<IBluetoothServerSocketObserver> &observer)
 {
     socketObserverList_->RemoveObserver(observer->AsObject());
+    return NO_ERROR;
+}
+
+int BluetoothSocketServer::RegisterClientObserver(const BluetoothRawAddress &addr, const bluetooth::Uuid uuid,
+    const sptr<IBluetoothClientSocketObserver> &observer)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int BluetoothSocketServer::DeregisterClientObserver(const BluetoothRawAddress &addr, const bluetooth::Uuid uuid,
+    const sptr<IBluetoothClientSocketObserver> &observer)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int BluetoothSocketServer::UpdateCocConnectionParams(const BluetoothSocketCocInfo &info)
+{
+    return BT_ERR_API_NOT_SUPPORT;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

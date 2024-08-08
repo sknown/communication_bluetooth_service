@@ -184,11 +184,7 @@ StackSmpSrc = [
 ]
 
 config("btstack_public_config") {
-  include_dirs = [
-    "include",
-    "//third_party/openssl/include",
-    "//third_party/bounds_checking_function/include",
-  ]
+  include_dirs = [ "include" ]
 }
 
 config("btstack_config") {
@@ -196,6 +192,7 @@ config("btstack_config") {
     "./",
     "src",
     "platform/include",
+    "$PART_DIR/common",
     "$PART_DIR/hardware/include",
   ]
 

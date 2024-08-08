@@ -19,7 +19,7 @@
         <T1 property="DeviceName">BluetoothDevice</T1>
         <T1 property="ClassOfDevice">0x2A0104</T1>
         <T1 property="IOCapability">0x04</T1>
-        <T1 property="LocalPasskey">0x0000</T1>
+        <T1 property="LocalPasskey">0000</T1>
         <T1 property="SecurityMode">0x01</T1>
         <T1 property="Appearance">0x02</T1>
         <T1 property="BleRoles">0x0F</T1>

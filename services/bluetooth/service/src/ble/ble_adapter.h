@@ -130,7 +130,6 @@ public:
         const BleAdvertiserDataImpl &scanResponse, uint8_t advHandle) const override;
     void StopAdvertising(uint8_t advHandle) const override;
     void Close(uint8_t advHandle) const override;
-    void StartScan() const override;
     void StartScan(const BleScanSettingsImpl &setting) const override;
     void StopScan() const override;
     int ConfigScanFilter(int32_t scannerId, const std::vector<BleScanFilterImpl> &filters) override;

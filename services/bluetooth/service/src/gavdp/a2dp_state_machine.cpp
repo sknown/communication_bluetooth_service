@@ -925,6 +925,7 @@ void A2dpStateOpen::ProcessCloseCfm(BtAddr addr, uint8_t role)
             profile->FindPeerByAddress(addr)->UpdateConfigure();
         }
     }
+   
 }
 
 void A2dpStateOpen::ProcessStartCfm(BtAddr addr, uint8_t role)

@@ -31,11 +31,11 @@ public:
     AvrcpTargetObserverCommon() = default;
     virtual ~AvrcpTargetObserverCommon() = default;
     
-    void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state){}
+    void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
 private:
 };
 
-static AvrcpTargetObserverCommon observer_;
+static std::shared_ptr<AvrcpTargetObserverCommon> observer_ = std::make_shared<AvrcpTargetObserverCommon>();
 static AvrcpTarget *profile_;
 
 class AvrcpTargetTest : public testing::Test {
@@ -127,7 +127,7 @@ HWTEST_F(AvrcpTargetTest, Avrcp_UnitTest_RegisterObserver, TestSize.Level1)
     GTEST_LOG_(INFO) << "Avrcp_UnitTest_RegisterObserver start";
  
     profile_ = AvrcpTarget::GetProfile();
-    profile_->RegisterObserver(&observer_);
+    profile_->RegisterObserver(observer_);
     GTEST_LOG_(INFO) << "Avrcp_UnitTest_RegisterObserver end";
 }
 
@@ -141,7 +141,7 @@ HWTEST_F(AvrcpTargetTest, Avrcp_UnitTest_UnregisterObserver, TestSize.Level1)
     GTEST_LOG_(INFO) << "Avrcp_UnitTest_DeregisterObserver start";
  
     profile_ = AvrcpTarget::GetProfile();
-    profile_->UnregisterObserver(&observer_);
+    profile_->UnregisterObserver(observer_);
     GTEST_LOG_(INFO) << "Avrcp_UnitTest_DeregisterObserver end";
 }
 

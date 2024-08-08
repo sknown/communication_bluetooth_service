@@ -1522,16 +1522,6 @@ void BleAdapter::Close(uint8_t advHandle) const
     }
 }
 
-void BleAdapter::StartScan() const
-{
-    LOG_DEBUG("[BleAdapter] %{public}s", __func__);
-
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
-    if (pimpl->bleCentralManager_ != nullptr) {
-        pimpl->bleCentralManager_->StartScan();
-    }
-}
-
 void BleAdapter::StartScan(const BleScanSettingsImpl &setting) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);

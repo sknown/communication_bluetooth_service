@@ -22,7 +22,7 @@
 namespace OHOS {
 namespace bluetooth {
 using namespace OHOS;
-
+const int API_VERSION_INVALID = -1;
 int PermissionUtils::VerifyUseBluetoothPermission()
 {
     return AuthCenter::GetInstance().VerifyUseBluetoothPermission(
@@ -53,6 +53,18 @@ int PermissionUtils::VerifyApproximatelyPermission()
         IPCSkeleton::GetCallingPid(), IPCSkeleton::GetCallingUid());
 }
 
+int PermissionUtils::VerifyAccessBluetoothPermission()
+{
+    return AuthCenter::GetInstance().VerifyAccessBluetoothPermission(
+        IPCSkeleton::GetCallingPid(), IPCSkeleton::GetCallingUid());
+}
+
+int PermissionUtils::VerifyGetBluetoothLocalMacPermission()
+{
+    return AuthCenter::GetInstance().VerifyGetBluetoothLocalMacPermission(
+        IPCSkeleton::GetCallingPid(), IPCSkeleton::GetCallingUid());
+}
+
 int PermissionUtils::VerifyUseBluetoothPermission(const std::uint32_t  &tokenID)
 {
     return AuthCenter::GetInstance().VerifyUseBluetoothPermission(tokenID);
@@ -77,6 +89,20 @@ bool PermissionUtils::CheckSystemHapApp()
         return false;
     }
     return true;
+}
+
+int PermissionUtils::GetApiVersion()
+{
+    uint32_t tokenId = IPCSkeleton::GetCallingTokenID();
+    ATokenTypeEnum callingType = AccessTokenKit::GetTokenTypeFlag(tokenId);
+    if (callingType != ATokenTypeEnum::TOKEN_HAP) {
+        return API_VERSION_INVALID;
+    }
+    HapTokenInfo hapTokenInfo;
+    if (AccessTokenKit::GetHapTokenInfo(tokenId, hapTokenInfo) != AccessTokenKitRet::RET_SUCCESS) {
+        return API_VERSION_INVALID;
+    }
+    return hapTokenInfo.apiVersion;
 }
 }  // namespace bluetooth
 }  // namespace OHOS

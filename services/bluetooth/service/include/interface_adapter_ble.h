@@ -102,6 +102,9 @@ class IBleAdvertiserCallback {
 public:
     virtual ~IBleAdvertiserCallback() = default;
     virtual void OnStartResultEvent(int result, uint8_t advHandle, int opcode = BLE_ADV_DEFAULT_OP_CODE) = 0;
+    virtual void OnEnableResultEvent(int result, uint8_t advHandle) = 0;
+    virtual void OnDisableResultEvent(int result, uint8_t advHandle) = 0;
+    virtual void OnStopResultEvent(int result, uint8_t advHandle) = 0;
     virtual void OnAutoStopAdvEvent(uint8_t advHandle) = 0;
     virtual void OnSetAdvDataEvent(int32_t result, int32_t advHandle) = 0;
 };
@@ -132,9 +135,13 @@ public:
      * @brief Discovery result observer.
      *
      * @param device Remote device.
+     * @param rssi Rssi of device.
+     * @param deviceName Name of device.
+     * @param deviceClass Class of device.
      * @since 6
      */
-    virtual void OnDiscoveryResult(const RawAddress &device) = 0;
+    virtual void OnDiscoveryResult(
+        const RawAddress &device, int rssi, const std::string deviceName, int deviceClass) = 0;
 
     /**
      * @brief Pair request observer.
@@ -408,13 +415,6 @@ public:
      * @since 6
      */
     virtual void Close(uint8_t advHandle) const = 0;
-
-    /**
-     * @brief Start scan
-     *
-     * @since 6
-     */
-    virtual void StartScan() const = 0;
 
     /**
      * @brief Start scan

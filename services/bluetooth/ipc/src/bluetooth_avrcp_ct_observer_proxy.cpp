@@ -18,21 +18,26 @@
 
 namespace OHOS {
 namespace Bluetooth {
-void BluetoothAvrcpCtObserverProxy::OnConnectionStateChanged(const RawAddress &rawAddr, int state)
+void BluetoothAvrcpCtObserverProxy::OnConnectionStateChanged(const RawAddress &rawAddr, int state, int cause)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothAvrcpCtObserverProxy::GetDescriptor())) {
-        HILOGE("[GetDeviceState] fail: write interface token failed.");
+        HILOGE("[OnConnectionStateChanged] fail: write interface token failed.");
         return;
     }
 
     if (!data.WriteString(rawAddr.GetAddress())) {
-        HILOGE("[GetDeviceState] fail: write result failed");
+        HILOGE("[OnConnectionStateChanged] fail: write addr failed");
         return;
     }
 
     if (!data.WriteInt32(state)) {
-        HILOGE("[GetDeviceState] fail: write result failed");
+        HILOGE("[OnConnectionStateChanged] fail: write state failed");
+        return;
+    }
+
+    if (!data.WriteInt32(cause)) {
+        HILOGE("[OnConnectionStateChanged] fail: write cause failed");
         return;
     }
     MessageParcel reply;
@@ -40,7 +45,7 @@ void BluetoothAvrcpCtObserverProxy::OnConnectionStateChanged(const RawAddress &r
     int error = InnerTransact(
         BluetoothAvrcpCtObserverInterfaceCode::AVRCP_CT_CONNECTION_STATE_CHANGED, option, data, reply);
     if (error != NO_ERROR) {
-        HILOGE("BluetoothAvrcpCtObserverProxy::GetDeviceState done fail, error: %{public}d", error);
+        HILOGE("BluetoothAvrcpCtObserverProxy::OnConnectionStateChanged done fail, error: %{public}d", error);
         return;
     }
 }

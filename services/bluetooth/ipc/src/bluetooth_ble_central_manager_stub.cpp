@@ -36,20 +36,14 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothBleCentralManagerStub *,
         {BluetoothBleCentralManagerInterfaceCode::BLE_START_SCAN,
             std::bind(&BluetoothBleCentralManagerStub::StartScanInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothBleCentralManagerInterfaceCode::BLE_START_SCAN_WITH_SETTINGS,
-            std::bind(&BluetoothBleCentralManagerStub::StartScanWithSettingsInner, std::placeholders::_1,
-                std::placeholders::_2, std::placeholders::_3)},
-        {BluetoothBleCentralManagerInterfaceCode::BLE_CONFIG_SCAN_FILTER,
-            std::bind(&BluetoothBleCentralManagerStub::ConfigScanFilterInner, std::placeholders::_1,
-                std::placeholders::_2, std::placeholders::_3)},
         {BluetoothBleCentralManagerInterfaceCode::BLE_REMOVE_SCAN_FILTER,
             std::bind(&BluetoothBleCentralManagerStub::RemoveScanFilterInner, std::placeholders::_1,
                 std::placeholders::_2, std::placeholders::_3)},
         {BluetoothBleCentralManagerInterfaceCode::BLE_STOP_SCAN,
             std::bind(&BluetoothBleCentralManagerStub::StopScanInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothBleCentralManagerInterfaceCode::BLE_PROXY_UID,
-            std::bind(&BluetoothBleCentralManagerStub::ProxyUidInner, std::placeholders::_1, std::placeholders::_2,
+        {BluetoothBleCentralManagerInterfaceCode::BLE_FREEZE_BY_RSS,
+            std::bind(&BluetoothBleCentralManagerStub::FreezeByRssInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
         {BluetoothBleCentralManagerInterfaceCode::BLE_RESET_ALL_PROXY,
             std::bind(&BluetoothBleCentralManagerStub::ResetAllProxyInner, std::placeholders::_1, std::placeholders::_2,
@@ -145,24 +139,29 @@ ErrCode BluetoothBleCentralManagerStub::DeregisterBleCentralManagerCallbackInner
 ErrCode BluetoothBleCentralManagerStub::StartScanInner(MessageParcel &data, MessageParcel &reply)
 {
     int32_t scannerId = data.ReadInt32();
-    int ret = StartScan(scannerId);
-    if (!reply.WriteInt32(ret)) {
-        HILOGE("reply writing failed");
-        return ERR_INVALID_VALUE;
-    }
-    return NO_ERROR;
-}
-
-ErrCode BluetoothBleCentralManagerStub::StartScanWithSettingsInner(MessageParcel &data, MessageParcel &reply)
-{
-    int32_t scannerId = data.ReadInt32();
     std::shared_ptr<BluetoothBleScanSettings> settings(data.ReadParcelable<BluetoothBleScanSettings>());
     if (settings == nullptr) {
-        HILOGW("[StartScanWithSettingsInner] fail: read settings failed");
+        HILOGW("[StartScanInner] fail: read settings failed");
         return TRANSACTION_ERR;
     }
 
-    int ret = StartScan(scannerId, *settings);
+    std::vector<BluetoothBleScanFilter> filters {};
+    int32_t itemsSize = 0;
+    if (!data.ReadInt32(itemsSize) || itemsSize > BLE_CENTRAL_MANAGER_STUB_READ_DATA_SIZE_MAX_LEN) {
+        HILOGE("read Parcelable size failed.");
+        return ERR_INVALID_VALUE;
+    }
+    for (int i = 0; i < itemsSize; i++) {
+        std::shared_ptr<BluetoothBleScanFilter> res(data.ReadParcelable<BluetoothBleScanFilter>());
+        if (res == nullptr) {
+            HILOGE("null pointer");
+            return ERR_INVALID_VALUE;
+        }
+        BluetoothBleScanFilter item = *(res);
+        filters.push_back(item);
+    }
+
+    int ret = StartScan(scannerId, *settings, filters);
     if (!reply.WriteInt32(ret)) {
         HILOGE("reply writing failed");
         return ERR_INVALID_VALUE;
@@ -180,34 +179,6 @@ ErrCode BluetoothBleCentralManagerStub::StopScanInner(MessageParcel &data, Messa
     }
     return NO_ERROR;
 }
-ErrCode BluetoothBleCentralManagerStub::ConfigScanFilterInner(MessageParcel &data, MessageParcel &reply)
-{
-    std::vector<BluetoothBleScanFilter> filters {};
-    int32_t scannerId = data.ReadInt32();
-    int32_t itemsSize = 0;
-    if (!data.ReadInt32(itemsSize) || itemsSize > BLE_CENTRAL_MANAGER_STUB_READ_DATA_SIZE_MAX_LEN) {
-        HILOGE("read Parcelable size failed.");
-        return ERR_INVALID_VALUE;
-    }
-    for (int i = 0; i < itemsSize; i++) {
-        std::shared_ptr<BluetoothBleScanFilter> res(data.ReadParcelable<BluetoothBleScanFilter>());
-        if (res == nullptr) {
-            HILOGE("null pointer");
-            return ERR_INVALID_VALUE;
-        }
-        BluetoothBleScanFilter item = *(res);
-        filters.push_back(item);
-    }
-
-    int result = ConfigScanFilter(scannerId, filters);
-    bool resultRet = reply.WriteInt32(result);
-    bool idRet = reply.WriteInt32(scannerId);
-    if (!(resultRet && idRet)) {
-        HILOGE("BluetoothBleCentralManagerStub: reply writing failed in: %{public}s.", __func__);
-        return ERR_INVALID_VALUE;
-    }
-    return NO_ERROR;
-}
 
 ErrCode BluetoothBleCentralManagerStub::RemoveScanFilterInner(MessageParcel &data, MessageParcel &reply)
 {
@@ -217,12 +188,14 @@ ErrCode BluetoothBleCentralManagerStub::RemoveScanFilterInner(MessageParcel &dat
     return NO_ERROR;
 }
 
-ErrCode BluetoothBleCentralManagerStub::ProxyUidInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothBleCentralManagerStub::FreezeByRssInner(MessageParcel &data, MessageParcel &reply)
 {
-    int32_t uid = data.ReadInt32();
+    std::vector<int> pidVec {};
+    CHECK_AND_RETURN_LOG_RET(data.ReadInt32Vector(&pidVec), ERR_INVALID_VALUE, "ipc failed");
     bool isProxy = data.ReadBool();
 
-    bool ret = ProxyUid(uid, isProxy);
+    std::set<int> pidSet(pidVec.begin(), pidVec.end());
+    bool ret = FreezeByRss(pidSet, isProxy);
     if (!reply.WriteBool(ret)) {
         return ERR_INVALID_VALUE;
     }

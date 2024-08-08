@@ -28,15 +28,15 @@ ohos_fuzztest("SetBluetoothScanModeFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
   include_dirs =
-      [ "//foundation/communication/bluetooth/frameworks/inner/common" ]
+      [ "//foundation/communication/bluetooth/frameworks/inner/include" ]
 
   sources = [ "setbluetoothscanmode_fuzzer.cpp" ]
 
-  deps = [ ]
+  deps = []
 
   external_deps = [
     "bluetooth:btframework",
-    "hilog:libhilog"
+    "hilog:libhilog",
   ]
 }
 

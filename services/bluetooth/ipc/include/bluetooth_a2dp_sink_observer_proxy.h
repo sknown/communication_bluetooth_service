@@ -27,7 +27,7 @@ public:
         : IRemoteProxy<IBluetoothA2dpSinkObserver>(impl) {}
     ~BluetoothA2dpSinkObserverProxy() {}
 
-    void OnConnectionStateChanged(const RawAddress &device, int state) override;
+    void OnConnectionStateChanged(const RawAddress &device, int state, int cause) override;
 
 private:
     static inline BrokerDelegator<BluetoothA2dpSinkObserverProxy> delegator_;

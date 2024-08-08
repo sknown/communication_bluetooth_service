@@ -32,7 +32,7 @@ public:
     A2dpSourceObserverCommon() = default;
     virtual ~A2dpSourceObserverCommon() = default;
     
-    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state){}
+    virtual void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
     virtual void OnConfigurationChanged(const BluetoothRemoteDevice &device, const A2dpCodecInfo &info, int error){}
     virtual void OnPlayingStatusChanged(const BluetoothRemoteDevice &device, int playingState, int error){}
 
@@ -40,7 +40,7 @@ private:
 };
 
 
-static A2dpSourceObserverCommon observer_;
+static std::shared_ptr<A2dpSourceObserverCommon> observer_ = std::make_shared<A2dpSourceObserverCommon>();
 static A2dpSource *profile_;
 static BluetoothHost *host_;
 
@@ -122,7 +122,7 @@ HWTEST_F(A2dpSourceTest, A2dpSource_UnitTest_RegisterObserver, TestSize.Level1)
     GTEST_LOG_(INFO) << "A2dpSource_UnitTest_RegisterObserver start";
  
     profile_ = A2dpSource::GetProfile();
-    profile_->RegisterObserver(&observer_);
+    profile_->RegisterObserver(observer_);
     GTEST_LOG_(INFO) << "A2dpSource_UnitTest_RegisterObserver end";
 }
 
@@ -136,7 +136,7 @@ HWTEST_F(A2dpSourceTest, A2dpSource_UnitTest_DeregisterObserver, TestSize.Level1
     GTEST_LOG_(INFO) << "A2dpSource_UnitTest_DeregisterObserver start";
  
     profile_ = A2dpSource::GetProfile();
-    profile_->DeregisterObserver(&observer_);
+    profile_->DeregisterObserver(observer_);
     GTEST_LOG_(INFO) << "A2dpSource_UnitTest_DeregisterObserver end";
 }
 

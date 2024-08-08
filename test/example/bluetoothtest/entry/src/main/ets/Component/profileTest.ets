@@ -21,13 +21,13 @@ import { TestList } from './testList';
  */
 @Component
 export struct ProfileTest {
-  private testItems: TestData[]
+  private testItems!: TestData[]
 
   build() {
     Column() {
-      TestList( {
+      TestList({
         testItems : this.testItems
-      } )
+      })
     }
   }
 }

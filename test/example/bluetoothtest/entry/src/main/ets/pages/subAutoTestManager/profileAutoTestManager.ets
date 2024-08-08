@@ -13,10 +13,9 @@
  * limitations under the License.
  */
 
-// @ts-nocheck
-
+import { myParams } from '../../Utils/common'
 import ConfigData from '../../Utils/ConfigData';
-import router from '@system.router';
+import router from '@ohos.router';
 import { TestData } from '../../MainAbility/model/testData'
 import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
@@ -30,34 +29,32 @@ import { TestListItem } from '../../Component/testListItems';
 @Entry
 @Component
 struct ProfileAutoTestManager {
-  @State message: string = 'ProfileAutoTestManager';
-  @State textMessage: string = 'null';
   private profileAutoTestItems: TestData[] = initProfileManagerAutoTestData();
-  private testItem: TestData = router.getParams().testId;
-  @StorageLink( "autoTestMessage" ) autoTestMessage: string = ""
+  private testItem: TestData = (router.getParams() as myParams).testItem
+  @StorageLink("autoTestMessage") autoTestMessage: string = ""
 
   build() {
     Column() {
-      Stack( { alignContent : Alignment.TopStart } ) {
-        TestImageDisplay( { testItem : this.testItem } )
-        PageTitle( { testItem : this.testItem } )
+      Stack({ alignContent : Alignment.TopStart }) {
+        TestImageDisplay({ testItem : this.testItem })
+        PageTitle({ testItem : this.testItem })
       }
 
       List() {
-        ForEach( this.profileAutoTestItems , item => {
+        ForEach(this.profileAutoTestItems , (item: TestData) => {
           ListItem() {
-            TestListItem( {
+            TestListItem({
               testItem : item
-            } )
+            })
           }
-        } , item => item.id.toString() )
+        } , (item: TestData) => item.id)
       }
-      .height( '80%' )
-      .backgroundColor( $r( "app.color.lead" ) )
+      .height('80%')
+      .backgroundColor($r("app.color.lead"))
     }
-    .backgroundColor( $r( "sys.color.ohos_id_color_sub_background" ) )
-    .width( ConfigData.WH_100_100 )
-    .height( ConfigData.WH_100_100 );
+    .backgroundColor($r("sys.color.ohos_id_color_sub_background"))
+    .width(ConfigData.WH_100_100)
+    .height(ConfigData.WH_100_100);
   }
 }
 

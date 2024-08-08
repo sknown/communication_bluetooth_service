@@ -16,6 +16,9 @@
 #ifndef BLUETOOTH_UTILS_SERVER_H
 #define BLUETOOTH_UTILS_SERVER_H
 
+#include <algorithm>
+#include <set>
+#include <sstream>
 #include <string>
 
 namespace OHOS {
@@ -25,6 +28,14 @@ std::string GetScanModeName(int mode);
 
 #define GET_ENCRYPT_ADDR(device) (GetEncryptAddr((device).GetAddress()).c_str())
 #define GET_ENCRYPT_GATT_ADDR(device) (GetEncryptAddr((device).addr_.GetAddress()).c_str())
+
+template <typename T>
+std::string ToLogString(std::set<T> vec)
+{
+    std::stringstream result;
+    std::copy(vec.begin(), vec.end(), std::ostream_iterator<T>(result, " "));
+    return result.str();
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
 

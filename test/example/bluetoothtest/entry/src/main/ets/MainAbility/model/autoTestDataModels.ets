@@ -12,11 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
-import {
-  TestAuto ,
-  AutoCategory
-} from './testData'
+
+import { TestAuto , AutoCategory } from './testData'
 import {
   testEnableBluetooth ,
   testDisableBluetooth ,
@@ -109,7 +106,16 @@ import {
 } from './a2dpSinkProfileInterface'
 import BluetoothModel from './BluetoothModel'
 
-export const BrAutoTestCase: [] = [
+interface AutoTest {
+  name: string;
+  detail: string;
+  method: string;
+  api: Function;
+  result: string;
+  category: AutoCategory;
+}
+
+export const BrAutoTestCase: AutoTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '注册状态变化' ,
@@ -266,7 +272,7 @@ export const BrAutoTestCase: [] = [
   },
 ]
 
-export const BleAutoTestCase: [] = [
+export const BleAutoTestCase: AutoTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -315,8 +321,6 @@ export const BleAutoTestCase: [] = [
     'result' : 'None' ,
     'category' : AutoCategory.BleAuto
   },
-  //  { 'name': '创建Gatt服务器', 'detail': '创建Gatt服务器', 'method': 'createGattServer', 'api':testCreateGattServerDevice, 'result': 'None', 'category': AutoCategory.BleAuto },
-  //  { 'name': '创建Gatt客户端', 'detail': '创建Gatt客户端', 'method': 'createGattClient', 'api':testCreateGattClientDevice, 'result': 'None', 'category': AutoCategory.BleAuto },
   {
     'name' : '获取连接的Ble设备' ,
     'detail' : '获取连接的Ble设备信息' ,
@@ -359,7 +363,7 @@ export const BleAutoTestCase: [] = [
   },
 ]
 
-export const GattClientAutoTestCase: [] = [
+export const GattClientAutoTestCase: AutoTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -578,7 +582,7 @@ export const GattClientAutoTestCase: [] = [
   },
 ]
 
-export const GattServerAutoTestCase: [] = [
+export const GattServerAutoTestCase: AutoTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -725,7 +729,7 @@ export const GattServerAutoTestCase: [] = [
   },
 ]
 
-export const SppClientAutoTestCase: [] = [
+export const SppClientAutoTestCase: AutoTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -840,7 +844,7 @@ export const SppClientAutoTestCase: [] = [
   },
 ]
 
-export const SppServerAutoTestCase: [] = [
+export const SppServerAutoTestCase: AutoTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -971,7 +975,7 @@ export const SppServerAutoTestCase: [] = [
   },
 ]
 
-export const A2dpSourceProfileAutoTestCase: [] = [
+export const A2dpSourceProfileAutoTestCase: AutoTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -1062,7 +1066,7 @@ export const A2dpSourceProfileAutoTestCase: [] = [
   },
 ]
 
-export const HandsFreeAudioGatewayProfileAutoTestCase: [] = [
+export const HandsFreeAudioGatewayProfileAutoTestCase: AutoTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -1145,7 +1149,7 @@ export const HandsFreeAudioGatewayProfileAutoTestCase: [] = [
   },
 ]
 
-export const HitHostProfileAutoTestCase: [] = [
+export const HitHostProfileAutoTestCase: AutoTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -1228,7 +1232,7 @@ export const HitHostProfileAutoTestCase: [] = [
   },
 ]
 
-export const PanNetworkProfileAutoTestCase: [] = [
+export const PanNetworkProfileAutoTestCase: AutoTest[] = [
   {
     'name' : '开蓝牙' ,
     'detail' : '使能蓝牙' ,
@@ -1305,84 +1309,84 @@ export const PanNetworkProfileAutoTestCase: [] = [
 
 export function initBrAutoData(): Array<TestAuto> {
   let TestAutoArray: Array<TestAuto> = []
-  BrAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  BrAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
 export function initBleAutoData(): Array<TestAuto> {
   let TestAutoArray: Array<TestAuto> = []
-  BleAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  BleAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
 export function initGattClientAutoData(): Array<TestAuto> {
   let TestAutoArray: Array<TestAuto> = []
-  GattClientAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  GattClientAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
 export function initGattServerAutoData(): Array<TestAuto> {
   let TestAutoArray: Array<TestAuto> = []
-  GattServerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  GattServerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
 export function initSppClientAutoData(): Array<TestAuto> {
   let TestAutoArray: Array<TestAuto> = []
-  SppClientAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  SppClientAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
 export function initSppServerAutoData(): Array<TestAuto> {
   let TestAutoArray: Array<TestAuto> = []
-  SppServerAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  SppServerAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
 
 export function initA2dpSourceProfileAutoData(): Array<TestAuto> {
   let TestAutoArray: Array<TestAuto> = []
-  A2dpSourceProfileAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  A2dpSourceProfileAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
 
 export function initHandsFreeAudioGatewayProfileAutoData(): Array<TestAuto> {
   let TestAutoArray: Array<TestAuto> = []
-  HandsFreeAudioGatewayProfileAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  HandsFreeAudioGatewayProfileAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
 
 export function initHitHostProfileAutoData(): Array<TestAuto> {
   let TestAutoArray: Array<TestAuto> = []
-  HitHostProfileAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  HitHostProfileAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 
 export function initPanNetworkProfileAutoData(): Array<TestAuto> {
   let TestAutoArray: Array<TestAuto> = []
-  PanNetworkProfileAutoTestCase.forEach( item => {
-    TestAutoArray.push( new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  PanNetworkProfileAutoTestCase.forEach(item => {
+    TestAutoArray.push(new TestAuto(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestAutoArray;
 }
 

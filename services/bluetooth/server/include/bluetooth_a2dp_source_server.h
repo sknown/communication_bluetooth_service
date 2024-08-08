@@ -44,6 +44,7 @@ public:
     int SetActiveSinkDevice(const RawAddress &device) override;
     RawAddress GetActiveSinkDevice() override;
     BluetoothA2dpCodecStatus GetCodecStatus(const RawAddress &device) override;
+    int GetCodecPreference(const RawAddress &device, BluetoothA2dpCodecInfo &info) override;
     int SetCodecPreference(const RawAddress &device, const BluetoothA2dpCodecInfo &info) override;
     void SwitchOptionalCodecs(const RawAddress &device, bool isEnable) override;
     int GetOptionalCodecsSupportState(const RawAddress &device ) override;
@@ -51,7 +52,16 @@ public:
     int SuspendPlaying(const RawAddress &device) override;
     int StopPlaying(const RawAddress &device) override;
     int WriteFrame(const uint8_t *data, uint32_t size) override;
-    void GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp) override;
+    int GetRenderPosition(const RawAddress &device, uint32_t &delayValue, uint64_t &sendDataSize,
+                          uint32_t &timeStamp) override;
+    int OffloadStartPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId) override;
+    int OffloadStopPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId) override;
+    int A2dpOffloadSessionPathRequest(const RawAddress &device,
+        const std::vector<BluetoothA2dpStreamInfo> &info) override;
+    BluetoothA2dpOffloadCodecStatus GetOffloadCodecStatus(const RawAddress &device) override;
+    int EnableAutoPlay(const RawAddress &device) override;
+    int DisableAutoPlay(const RawAddress &device, const int duration) override;
+    int GetAutoPlayDisabledDuration(const RawAddress &device, int &duration) override;
 
 private:
     BLUETOOTH_DECLARE_IMPL();
