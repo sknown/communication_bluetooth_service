@@ -56,7 +56,7 @@ ohos_unittest("btfw_opp_unit_test") {
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "resource_management:global_resmgr"
+    "resource_management:global_resmgr",
   ]
 }
 

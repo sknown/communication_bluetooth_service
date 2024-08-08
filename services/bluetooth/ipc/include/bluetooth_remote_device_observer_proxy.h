@@ -29,12 +29,16 @@ public:
     explicit BluetoothRemoteDeviceObserverproxy(const sptr<IRemoteObject> &impl);
     ~BluetoothRemoteDeviceObserverproxy();
 
-    void OnPairStatusChanged(const int32_t transport, const BluetoothRawAddress &device, int32_t status) override;
+    void OnPairStatusChanged(const int32_t transport, const BluetoothRawAddress &device,
+        int32_t status, int32_t cause) override;
     void OnRemoteUuidChanged(const BluetoothRawAddress &device, const std::vector<bluetooth::Uuid> uuids) override;
     void OnRemoteNameChanged(const BluetoothRawAddress &device, const std::string deviceName) override;
     void OnRemoteAliasChanged(const BluetoothRawAddress &device, const std::string alias) override;
     void OnRemoteCodChanged(const BluetoothRawAddress &device, int32_t cod) override;
-    void OnRemoteBatteryLevelChanged(const BluetoothRawAddress &device, int32_t batteryLevel) override;
+    void OnRemoteBatteryChanged(const BluetoothRawAddress &device,
+        const BluetoothBatteryInfo &batteryInfo) override;
+    void OnRemoteDeviceCommonInfoReport(const BluetoothRawAddress &device,
+        const std::vector<uint8_t> &value) override;
     void OnAclStateChanged(const BluetoothRawAddress &device, int state, unsigned int reason) override;
 
 private:

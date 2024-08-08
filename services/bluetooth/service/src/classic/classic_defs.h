@@ -94,7 +94,7 @@ constexpr int BT_PROPERTY_ADAPTER_BONDED_MODE = 0x04;
 constexpr int BT_PROPERTY_ADAPTER_DISCOVERABLE_TIMEOUT = 0x05;
 
 /// Bluetooth device name's max length
-constexpr int MAX_LOC_BT_NAME_LEN = 248;
+constexpr int MAX_LOC_BT_NAME_LEN = 30;
 
 /// Extend inquiry response max length
 constexpr int MAX_EXTEND_INQUIRY_RESPONSE_LEN = 240;
@@ -113,7 +113,7 @@ constexpr uint16_t PNP_SERVICE_CLASS_UUID = 0x1200;
 constexpr int CLASS_OF_DEVICE_RANGE = 0xFFFFFF;
 
 /// Class of Device defines
-constexpr uint32_t CLASS_OF_DEVICE_MASK = 0x07FF;
+constexpr uint32_t CLASS_OF_DEVICE_MASK = 0X1FFC;
 constexpr uint32_t CLASS_OF_DEVICE_UNCLASSIFIED = ((0x1F) << 8);
 constexpr uint32_t CLASS_OF_DEVICE_HID_KEYBOARD = 0x0540;
 constexpr uint32_t CLASS_OF_DEVICE_HID_POINTING = 0x0580;

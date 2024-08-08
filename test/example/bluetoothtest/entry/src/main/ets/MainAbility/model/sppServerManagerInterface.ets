@@ -12,200 +12,192 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
 
-import prompt from '@system.prompt';
 import bluetoothManager from '@ohos.bluetoothManager';
+import promptAction from '@ohos.promptAction';
 
 let serverNumber: number = - 1;
 
-export function testSppServerCreateSafeManager(): String {
+export function testSppServerCreateSafeManager(): string {
   try {
     let message = "sppServerCreateSafe test"
-    console.log( 'spp server socketId(safe mode) create! ' );
-    let uuid = AppStorage.Get( 'inputUuid' )
+    console.log('spp server socketId(safe mode) create! ');
+    let uuid: string = AppStorage.get('inputUuid') !
     if ( uuid == '' ) {
       message = 'uuid为空';
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     }
     // 创建蓝牙服务器侦听套接字, 返回服务端ID
-    bluetoothManager.sppListen( 'BluetoothDevice' , {
+    bluetoothManager.sppListen('BluetoothDevice' , {
       uuid : uuid ,
       secure : true ,
       type : 0
-    } , ( code , serverSocketID ) => {
-      console.log( 'bluetoothManager error code: ' + code.code );
-      if ( code.code == 0 ) {
-        console.log( 'spp server: serverSocketID(safe mode) - ' + serverSocketID );
+    } , (code , serverSocketID) => {
+      console.log('bluetooth error code: ' + typeof code + " ; " + JSON.stringify(code));
+      if ( !code || code.code == 0 ) {
+        console.log('spp server: serverSocketID(safe mode) - ' + serverSocketID);
         serverNumber = serverSocketID;
         message = "创建server成功";
-        //      AppStorage.SetOrCreate("serverNumber",serverNumber)
-        prompt.showToast( { message : message } )
-        return message
+        promptAction.showToast({ message : message })
       }
-    } );
-    prompt.showToast( { message : message } )
+    });
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testSppServerCreateSafeManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testSppServerCreateSafeManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testSppServerCreateSafeManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
 
-export function testSppServerCreateUnSafeManager(): String {
+export function testSppServerCreateUnSafeManager(): string {
   try {
     let message = "sppServerCreateUnSafe test"
-    let uuid = AppStorage.Get( 'inputUuid' )
-    console.log( 'spp server socketId(non-safe mode) create! ' );
+    let uuid: string = AppStorage.get('inputUuid') !
+    console.log('spp server socketId(non-safe mode) create! ');
     if ( uuid == '' ) {
       message = 'uuid为空';
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
     }
     // 创建蓝牙服务器侦听套接字, 返回服务端ID
-    bluetoothManager.sppListen( 'BluetoothDevice' , {
+    bluetoothManager.sppListen('BluetoothDevice' , {
       uuid : uuid ,
       secure : false ,
       type : 0
-    } , ( code , serverSocketID ) => {
-      console.log( 'bluetoothManager error code: ' + code.code );
-      if ( code.code == 0 ) {
-        console.log( 'spp server: serverSocketID(non-safe mode) ' + serverSocketID );
+    } , (code , serverSocketID) => {
+      console.log('bluetooth error code: ' + typeof code + " ; " + JSON.stringify(code));
+      if ( !code || code.code == 0 ) {
+        console.log('spp server: serverSocketID(non-safe mode) ' + serverSocketID);
         serverNumber = serverSocketID;
         message = "创建server成功";
-        prompt.showToast( { message : message } )
-        return message
+        promptAction.showToast({ message : message })
       }
-    } );
-    prompt.showToast( { message : message } )
+    });
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testSppServerCreateUnSafeManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testSppServerCreateUnSafeManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testSppServerCreateUnSafeManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
 let clientNumber: number = - 1;
 
-export function testSppServerAcceptManager(): String {
+export function testSppServerAcceptManager(): string {
   try {
     let message = "testSppServerAccept test"
-    //  serverNumber = AppStorage.Get("serverNumber")
-    console.log( 'testSppServerAccept test' )
-    console.log( 'testSppServerAccept serverNumber ' + serverNumber )
-    bluetoothManager.sppAccept( serverNumber , ( code , clientSocketID ) => {
-      if ( code.code == 0 ) {
-        console.log( 'spp server: clientSocketID - ' + clientSocketID );
-        console.log( 'test serverNumber ' + serverNumber );
+    let serverNumber: number = AppStorage.get("serverNumber") !
+    console.log('testSppServerAccept test')
+    console.log('testSppServerAccept serverNumber ' + serverNumber)
+    bluetoothManager.sppAccept(serverNumber , (code , clientSocketID) => {
+      console.log('bluetooth error code: ' + typeof code + " ; " + JSON.stringify(code));
+      if ( !code || code.code == 0 ) {
+        console.log('spp server: clientSocketID - ' + clientSocketID);
+        console.log('test serverNumber ' + serverNumber);
         clientNumber = clientSocketID;
-        //      AppStorage.SetOrCreate("clientNumber",clientNumber)
+        //      AppStorage.setOrCreate("clientNumber",clientNumber)
         message = "接受客户端成功";
-        bluetoothManager.on( 'sppRead' , clientNumber ,
-          ( dataBuffer: ArrayBuffer ) => {
+        bluetoothManager.on('sppRead' , clientNumber ,
+          (dataBuffer: ArrayBuffer) => {
             const data = new Uint8Array(dataBuffer);
-            console.log( 'spp bluetoothManager read is: ' + data );
+            console.log('spp bluetoothManager read is: ' + data);
             if ( data != null ) {
-              message = "读取成功" + JSON.stringify( data );
+              message = "读取成功" + JSON.stringify(data);
             } else {
               message = "读取失败";
             }
-            AppStorage.SetOrCreate( "dataReadMessage" , message )
-          } )
+            AppStorage.setOrCreate("dataReadMessage" , message)
+          })
       }
-      prompt.showToast( { message : message } )
+      promptAction.showToast({ message : message })
       return message
-    } )
-    prompt.showToast( { message : message } )
+    })
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testSppServerAcceptManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testSppServerAcceptManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testSppServerAcceptManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testSppServerWriteManager(): String {
+export function testSppServerWriteManager(): string {
   try {
     let message = "sppServerWrite test"
-    console.log( MODEL + 'sppWrite clientNumber: ' + JSON.stringify( clientNumber ) );
-    let writeServerData = AppStorage.Get( "writeServerData" )
-    let writeArrayBuffer = strToArrayBuffer( writeServerData )
-    const sppWriteSuccess = bluetoothManager.sppWrite( clientNumber , writeArrayBuffer );
-    if ( sppWriteSuccess ) {
-      console.log( 'sppWrite successfully' );
-      message = "写入成功 ";
-    } else {
-      console.log( 'sppWrite failed' );
-      message = "写入失败";
-    }
-    prompt.showToast( { message : message } )
+    console.log(MODEL + 'sppWrite clientNumber: ' + JSON.stringify(clientNumber));
+    let writeServerData: string = AppStorage.get("writeServerData") !
+    let writeArrayBuffer: ArrayBuffer = strToArrayBuffer(writeServerData) as ArrayBuffer;
+    bluetoothManager.sppWrite(clientNumber , writeArrayBuffer);
+    console.log('sppWrite successfully');
+    message = "写入成功 ";
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testSppServerWriteManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testSppServerWriteManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testSppServerWriteManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
 
-export function testSppServerReadOnManager(): String {
+export function testSppServerReadOnManager(): string {
   try {
     let message = "sppServerReadOn test"
-    bluetoothManager.on( 'sppRead' , clientNumber ,
-      ( dataBuffer: ArrayBuffer ) => {
+    bluetoothManager.on('sppRead' , clientNumber ,
+      (dataBuffer: ArrayBuffer) => {
         const data = new Uint8Array(dataBuffer);
-        console.log( 'spp bluetoothManager read is: ' + data );
+        console.log('spp bluetoothManager read is: ' + data);
         if ( data != null ) {
-          message = "读取成功" + JSON.stringify( data );
+          message = "读取成功" + JSON.stringify(data);
         } else {
           message = "读取失败";
         }
-        AppStorage.SetOrCreate( "dataReadMessage" , message )
-        prompt.showToast( { message : message } )
+        AppStorage.setOrCreate("dataReadMessage" , message)
+        promptAction.showToast({ message : message })
         return message
       }
     );
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testSppServerReadOnManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testSppServerReadOnManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testSppServerReadOnManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-export function testSppServerReadOffManager(): String {
+export function testSppServerReadOffManager(): string {
   try {
     let message = "sppServerReadOff test"
-    bluetoothManager.off( 'sppRead' , clientNumber ,
-      ( dataBuffer: ArrayBuffer ) => {
+    bluetoothManager.off('sppRead' , clientNumber ,
+      (dataBuffer: ArrayBuffer) => {
         const data = new Uint8Array(dataBuffer);
-        console.log( 'spp bluetoothManager read is: ' + data );
+        console.log('spp bluetoothManager read is: ' + data);
         if ( data != null ) {
-          message = "读取成功" + JSON.stringify( data );
+          message = "读取成功" + JSON.stringify(data);
         } else {
           message = "读取失败";
         }
-        AppStorage.SetOrCreate( "dataReadMessage" , message )
-        prompt.showToast( { message : message } )
+        AppStorage.setOrCreate("dataReadMessage" , message)
+        promptAction.showToast({ message : message })
         return message
       }
     );
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testSppServerReadOffManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testSppServerReadOffManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testSppServerReadOffManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -216,15 +208,15 @@ let MODEL = "bluetoothModel:"
 export function testSppCloseServerSocketManager(): String {
   try {
     let message = "sppServerClose test"
-    console.log( MODEL + 'sppCloseServerSocket serverNumber: ' + serverNumber )
-    bluetoothManager.sppCloseServerSocket( serverNumber );
+    console.log(MODEL + 'sppCloseServerSocket serverNumber: ' + serverNumber)
+    bluetoothManager.sppCloseServerSocket(serverNumber);
     message = "关闭服务端";
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testSppCloseServerSocketManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testSppCloseServerSocketManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testSppCloseServerSocketManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
@@ -233,23 +225,23 @@ export function testSppCloseServerSocketManager(): String {
 export function testSppCloseClientSocketManager(): String {
   try {
     let message = "sppCloseClientSocket test"
-    console.log( MODEL + 'sppCloseClientSocket clientNumber: ' + clientNumber )
-    bluetoothManager.sppCloseClientSocket( clientNumber );
+    console.log(MODEL + 'sppCloseClientSocket clientNumber: ' + clientNumber)
+    bluetoothManager.sppCloseClientSocket(clientNumber);
     message = "关闭客户端";
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   } catch( e ) {
-    console.log( `Failed to testSppCloseClientSocketManager. message: ${ e.message }, code: ${ e.code }` )
+    console.log(`Failed to testSppCloseClientSocketManager. message: ${ e.message }, code: ${ e.code }`)
     let message = `Failed to testSppCloseClientSocketManager. message: ${ e.message }, code: ${ e.code }`
-    prompt.showToast( { message : message } )
+    promptAction.showToast({ message : message })
     return message
   }
 }
 
-function strToArrayBuffer( str ) {
+function strToArrayBuffer(str: string) {
   let array = new Uint8Array(str.length);
-  for ( var i = 0 ; i < str.length ; i ++ ) {
-    array[i] = str.charCodeAt( i );
+  for ( let i = 0 ; i < str.length ; i ++ ) {
+    array[ i ] = str.charCodeAt(i);
   }
   return array.buffer
 }

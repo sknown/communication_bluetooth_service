@@ -218,6 +218,16 @@ private:
     void SetRemoteAddr(std::string addr);
 
     /**
+     * @brief Send connection scn to app.
+     *
+     * @param fd socket fd.
+     * @param scn socket scn.
+     * @return true
+     * @return false
+     */
+    static bool SendAppConnectScn(int fd, int scn);
+
+    /**
      * @brief Send connection information to app.
      *
      * @param fd socket fd.
@@ -227,7 +237,7 @@ private:
      * @return true
      * @return false
      */
-    static bool SendAppConnectInfo(int fd, BtAddr addr, bool status, int acceptFd);
+    static bool SendAppConnectInfo(int fd, int acceptFd, const SocketConnectInfo &connectInfo);
 
     /**
      * @brief When server accept a connection request, generate a new socket.

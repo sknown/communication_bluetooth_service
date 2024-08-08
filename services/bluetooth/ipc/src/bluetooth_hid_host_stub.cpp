@@ -78,6 +78,9 @@ int BluetoothHidHostStub::OnRemoteRequest(
 int32_t BluetoothHidHostStub::ConnectInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
+    if (!device) {
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
     HILOGD("BluetoothHidHostStub::ConnectInner");
     int32_t errCode = Connect(*device);
     // write error code
@@ -91,6 +94,9 @@ int32_t BluetoothHidHostStub::ConnectInner(MessageParcel &data, MessageParcel &r
 int32_t BluetoothHidHostStub::DisconnectInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
+    if (!device) {
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
     HILOGD("BluetoothHidHostStub::DisconnectInner");
     int32_t errCode = Disconnect(*device);
     // write error code
@@ -104,6 +110,9 @@ int32_t BluetoothHidHostStub::DisconnectInner(MessageParcel &data, MessageParcel
 int32_t BluetoothHidHostStub::GetDeviceStateInner(MessageParcel &data, MessageParcel &reply)
 {
     std::shared_ptr<BluetoothRawAddress> device(data.ReadParcelable<BluetoothRawAddress>());
+    if (!device) {
+        return BT_ERR_IPC_TRANS_FAILED;
+    }
     HILOGD("BluetoothHidHostStub::GetDeviceStateInner");
     int32_t state;
     int32_t errCode = GetDeviceState(*device, state);
@@ -214,10 +223,9 @@ ErrCode BluetoothHidHostStub::HidHostSetReportInner(MessageParcel &data, Message
     HILOGD("BluetoothHidHostStub::HidHostSetReportInner");
     std::string device = data.ReadString();
     uint8_t type = data.ReadUint8();
-    uint16_t size = data.ReadUint16();
-    uint8_t report = data.ReadUint8();
+    std::string report = data.ReadString();
     int result;
-    ErrCode ec = HidHostSetReport(device, type, size, report, result);
+    ErrCode ec = HidHostSetReport(device, type, report, result);
     if (SUCCEEDED(ec)) {
         reply.WriteInt32(result);
     }
@@ -241,6 +249,14 @@ ErrCode BluetoothHidHostStub::HidHostGetReportInner(MessageParcel &data, Message
 
 ErrCode BluetoothHidHostStub::HidHostSetConnectStrategyInner(MessageParcel &data, MessageParcel &reply)
 {
+    std::string addr = data.ReadString();
+    int strategy = data.ReadInt32();
+
+    int result = SetConnectStrategy(RawAddress(addr), strategy);
+    if (!reply.WriteInt32(result)) {
+        HILOGE("BluetoothHidHostStub: reply writing failed in: %{public}s.", __func__);
+        return ERR_INVALID_VALUE;
+    }
     return NO_ERROR;
 }
 

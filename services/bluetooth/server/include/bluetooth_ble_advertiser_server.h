@@ -33,7 +33,9 @@ public:
     virtual void DeregisterBleAdvertiserCallback(const sptr<IBluetoothBleAdvertiseCallback> &callback) override;
     virtual int StartAdvertising(const BluetoothBleAdvertiserSettings &settings,
         const BluetoothBleAdvertiserData &advData, const BluetoothBleAdvertiserData &scanResponse,
-        int32_t advHandle, bool isRawData) override;
+        int32_t advHandle, uint16_t duration, bool isRawData) override;
+    virtual int EnableAdvertising(uint8_t advHandle, uint16_t duration) override;
+    virtual int DisableAdvertising(uint8_t advHandle) override;
     virtual int StopAdvertising(int32_t advHandle) override;
     virtual void Close(int32_t advHandle) override;
     virtual int32_t GetAdvertiserHandle(int32_t &advHandle) override;

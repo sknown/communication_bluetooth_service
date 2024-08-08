@@ -12,77 +12,81 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
-import { TestScenario , ScenarioCategory } from './testData'
+
+import { ScenarioCategory , TestScenario } from './testData'
 import {
-  testOnStateChange ,
-  testEnableBluetooth ,
-  testGetState ,
-  testSetLocalName ,
-  testGetLocalName ,
-  testSetBluetoothScanMode ,
-  testGetBluetoothScanMode ,
   subscribeBluetoothDeviceFind ,
-  testStopBluetoothDiscovery ,
   testDisableBluetooth ,
+  testEnableBluetooth ,
+  testGetBluetoothScanMode ,
   testGetBtConnectionState ,
+  testGetLocalName ,
+  testGetState ,
   testOnPinRequired ,
-  testPairDevice
+  testOnStateChange ,
+  testPairDevice ,
+  testSetBluetoothScanMode ,
+  testSetLocalName ,
+  testStopBluetoothDiscovery
 } from './brInterface'
+import { testGetConnectedBLEDevices , testOnBLEDeviceFind , testStartBLEScan , testStopBLEScan } from './bleInterface'
 import {
-  testGetConnectedBLEDevices ,
-  testStartBLEScan ,
-  testStopBLEScan ,
-  testOnBLEDeviceFind
-} from './bleInterface'
-import {
-  testCreateGattClient ,
   testConnect ,
+  testCreateGattClient ,
   testDisconnect ,
-  testOnBLEConnectionStateChange ,
   testGattClientClose ,
+  testGetDeviceNameCallback ,
+  testGetRssiValueCallback ,
   testGetServicesCallback ,
+  testOnBLECharacteristicChange ,
+  testOnBLEConnectionStateChange ,
   testReadCharacteristicValueCallback ,
   testReadDescriptorValueCallback ,
-  testWriteCharacteristicValue ,
-  testWriteDescriptorValue ,
-  testOnBLECharacteristicChange ,
   testSetNotifyCharacteristicChanged ,
-  testGetDeviceNameCallback ,
-  testGetRssiValueCallback
+  testWriteCharacteristicValue ,
+  testWriteDescriptorValue
 } from './gattClientInterface'
 import {
-  testCreateGattServer ,
-  testStartAdvertising ,
-  testStopAdvertising ,
   testAddService ,
-  testRemoveService ,
+  testCreateGattServer ,
   testGattServerClose ,
-  testOnConnectStateChange ,
   testOnCharacteristicRead ,
   testOnCharacteristicWrite ,
+  testOnConnectStateChange ,
   testOnDescriptorRead ,
-  testOnDescriptorWrite
+  testOnDescriptorWrite ,
+  testRemoveService ,
+  testStartAdvertising ,
+  testStopAdvertising
 } from './gattServerInterface'
 import {
+  testSppClientClose ,
   testSppClientConnectSafe ,
-  testSppClientWrite ,
-  testSppClientReadOn ,
   testSppClientReadOff ,
-  testSppClientClose
+  testSppClientReadOn ,
+  testSppClientWrite
 } from './sppClientInterface'
 import {
-  testSppServerCreateSafe ,
-  testSppServerAccept ,
-  testSppServerWrite ,
-  testSppServerReadOn ,
-  testSppServerReadOff ,
+  testSppCloseClientSocket ,
   testSppCloseServerSocket ,
-  testSppCloseClientSocket
+  testSppServerAccept ,
+  testSppServerCreateSafe ,
+  testSppServerReadOff ,
+  testSppServerReadOn ,
+  testSppServerWrite
 } from './sppServerInterface'
 import BluetoothModel from './BluetoothModel'
 
-export const BrFoundScenarioTestCase: [] = [
+interface ScenarioTest {
+  name: string;
+  detail: string;
+  method: string;
+  api: Function;
+  result: string;
+  category: ScenarioCategory;
+}
+
+export const BrFoundScenarioTestCase: ScenarioTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '1' ,
@@ -157,7 +161,7 @@ export const BrFoundScenarioTestCase: [] = [
   },
 ]
 
-export const BleFoundScenarioTestCase: [] = [
+export const BleFoundScenarioTestCase: ScenarioTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '1' ,
@@ -240,7 +244,7 @@ export const BleFoundScenarioTestCase: [] = [
   },
 ]
 
-export const GattClientScenarioTestCase: [] = [
+export const GattClientScenarioTestCase: ScenarioTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '1' ,
@@ -371,7 +375,7 @@ export const GattClientScenarioTestCase: [] = [
   }
 ]
 
-export const GattServerScenarioTestCase: [] = [
+export const GattServerScenarioTestCase: ScenarioTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '1' ,
@@ -494,7 +498,7 @@ export const GattServerScenarioTestCase: [] = [
   }
 ]
 
-export const SppClientScenarioTestCase: [] = [
+export const SppClientScenarioTestCase: ScenarioTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '1' ,
@@ -593,7 +597,7 @@ export const SppClientScenarioTestCase: [] = [
   },
 ]
 
-export const SppServerScenarioTestCase: [] = [
+export const SppServerScenarioTestCase: ScenarioTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '1' ,
@@ -716,51 +720,50 @@ export const SppServerScenarioTestCase: [] = [
   },
 ]
 
-
 export function initBRFoundScenarioData(): Array<TestScenario> {
   let TestScenarioArray: Array<TestScenario> = []
-  BrFoundScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  BrFoundScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
 
 export function initBleFoundScenarioData(): Array<TestScenario> {
   let TestScenarioArray: Array<TestScenario> = []
-  BleFoundScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  BleFoundScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
 
 export function initGattClientScenarioData(): Array<TestScenario> {
   let TestScenarioArray: Array<TestScenario> = []
-  GattClientScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  GattClientScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
 
 export function initGattServerScenarioData(): Array<TestScenario> {
   let TestScenarioArray: Array<TestScenario> = []
-  GattServerScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  GattServerScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
 
 export function initSppClientScenarioData(): Array<TestScenario> {
   let TestScenarioArray: Array<TestScenario> = []
-  SppClientScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  SppClientScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }
 
 export function initSppServerScenarioData(): Array<TestScenario> {
   let TestScenarioArray: Array<TestScenario> = []
-  SppServerScenarioTestCase.forEach( item => {
-    TestScenarioArray.push( new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  SppServerScenarioTestCase.forEach(item => {
+    TestScenarioArray.push(new TestScenario(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestScenarioArray;
 }

@@ -12,11 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
-import {
-  TestBenchmark ,
-  BenchmarkCategory
-} from './testData'
+
+import { TestBenchmark , BenchmarkCategory } from './testData'
 import {
   testOnStateChange ,
   testEnableBluetooth ,
@@ -46,8 +43,16 @@ import {
 } from './gattServerInterface'
 import { testSppClientConnectSafe } from './sppClientInterface'
 
+interface BenchmarkTest {
+  name: string;
+  detail: string;
+  method: string;
+  api: Function;
+  result: string;
+  category: BenchmarkCategory;
+}
 
-export const BrBenchmarkTestCase: [] = [
+export const BrBenchmarkTestCase: BenchmarkTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '1' ,
@@ -106,7 +111,7 @@ export const BrBenchmarkTestCase: [] = [
   },
 ]
 
-export const BleBenchmarkTestCase: [] = [
+export const BleBenchmarkTestCase: BenchmarkTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '1' ,
@@ -166,7 +171,7 @@ export const BleBenchmarkTestCase: [] = [
 
 ]
 
-export const GattClientBenchmarkTestCase: [] = [
+export const GattClientBenchmarkTestCase: BenchmarkTest[] = [
   {
     'name' : '创建Gatt客户端' ,
     'detail' : '1' ,
@@ -233,7 +238,7 @@ export const GattClientBenchmarkTestCase: [] = [
   },
 ]
 
-export const GattServerBenchmarkTestCase: [] = [
+export const GattServerBenchmarkTestCase: BenchmarkTest[] = [
   {
     'name' : '创建Gatt服务器' ,
     'detail' : '1' ,
@@ -284,7 +289,7 @@ export const GattServerBenchmarkTestCase: [] = [
   },
 ]
 
-export const SppClientBenchmarkTestCase: [] = [
+export const SppClientBenchmarkTestCase: BenchmarkTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '1' ,
@@ -351,7 +356,7 @@ export const SppClientBenchmarkTestCase: [] = [
   },
 ]
 
-export const SppServerBenchmarkTestCase: [] = [
+export const SppServerBenchmarkTestCase: BenchmarkTest[] = [
   {
     'name' : '注册状态变化' ,
     'detail' : '1' ,
@@ -410,51 +415,50 @@ export const SppServerBenchmarkTestCase: [] = [
   },
 ]
 
-
 export function initBrBenchmarkData(): Array<TestBenchmark> {
   let TestBenchmarkArray: Array<TestBenchmark> = []
-  BrBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  BrBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }
 
 export function initBleBenchmarkData(): Array<TestBenchmark> {
   let TestBenchmarkArray: Array<TestBenchmark> = []
-  BleBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  BleBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }
 
 export function initGattClientBenchmarkData(): Array<TestBenchmark> {
   let TestBenchmarkArray: Array<TestBenchmark> = []
-  GattClientBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  GattClientBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }
 
 export function initGattServerBenchmarkData(): Array<TestBenchmark> {
   let TestBenchmarkArray: Array<TestBenchmark> = []
-  GattServerBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  GattServerBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }
 
 export function initSppClientBenchmarkData(): Array<TestBenchmark> {
   let TestBenchmarkArray: Array<TestBenchmark> = []
-  SppClientBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  SppClientBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }
 
 export function initSppServerBenchmarkData(): Array<TestBenchmark> {
   let TestBenchmarkArray: Array<TestBenchmark> = []
-  SppServerBenchmarkTestCase.forEach( item => {
-    TestBenchmarkArray.push( new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.Category) );
-  } )
+  SppServerBenchmarkTestCase.forEach(item => {
+    TestBenchmarkArray.push(new TestBenchmark(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestBenchmarkArray;
 }

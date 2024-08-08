@@ -26,12 +26,13 @@ ohos_shared_library("bluetooth_server") {
   stack_protector_ret = true
   include_dirs = [
     "include",
-    "//foundation/communication/bluetooth/frameworks/inner/common",
+    "//foundation/communication/bluetooth/frameworks/inner/include",
     "//foundation/communication/bluetooth/interfaces/inner_api/include",
     "//foundation/communication/bluetooth_service/services/bluetooth/service/include",
     "//foundation/communication/bluetooth_service/services/bluetooth/service/src/ble",
     "//foundation/communication/bluetooth_service/services/bluetooth/service/src/permission",
     "//foundation/communication/bluetooth_service/services/bluetooth/stack/include",
+    "$BT_ROOT/common",
   ]
 
   sources = [
@@ -104,6 +105,7 @@ ohos_shared_library("bluetooth_server") {
   ]
 
   external_deps = [
+    "ability_base:base",
     "access_token:libaccesstoken_sdk",
     "bluetooth:btcommon",
     "c_utils:utils",

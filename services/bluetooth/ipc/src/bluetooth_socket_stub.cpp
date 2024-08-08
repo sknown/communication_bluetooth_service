@@ -13,11 +13,12 @@
  * limitations under the License.
  */
 
-#include "bluetooth_socket_stub.h"
-#include "bluetooth_socket_observer_proxy.h"
 #include "bluetooth_bt_uuid.h"
+#include "bluetooth_errorcode.h"
 #include "bluetooth_log.h"
+#include "bluetooth_socket_observer_proxy.h"
 #include "ipc_types.h"
+#include "bluetooth_socket_stub.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -28,8 +29,14 @@ BluetoothSocketStub::BluetoothSocketStub()
         &BluetoothSocketStub::ConnectInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::SOCKET_LISTEN)] =
         &BluetoothSocketStub::ListenInner;
-    memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::REMOVE_OBSERVER)] =
-        &BluetoothSocketStub::RemoveObserverInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::DEREGISTER_SERVER_OBSERVER)] =
+        &BluetoothSocketStub::DeregisterServerObserverInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::REGISTER_CLIENT_OBSERVER)] =
+        &BluetoothSocketStub::RegisterClientObserverInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::DEREGISTER_SERVER_OBSERVER)] =
+        &BluetoothSocketStub::DeregisterClientObserverInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothSocketInterfaceCode::SOCKET_UPDATE_COC_PARAMS)] =
+        &BluetoothSocketStub::UpdateCocConnectionParamsInner;
 }
 
 BluetoothSocketStub::~BluetoothSocketStub()
@@ -76,8 +83,7 @@ ErrCode BluetoothSocketStub::ConnectInner(MessageParcel &data, MessageParcel &re
         .uuid = *uuid,
         .securityFlag = data.ReadInt32(),
         .type = data.ReadInt32(),
-        .psm = data.ReadInt32(),
-        .observer = OHOS::iface_cast<IBluetoothSocketObserver>(data.ReadRemoteObject())
+        .psm = data.ReadInt32()
     };
     int fd = -1;
     int ret = Connect(param, fd);
@@ -109,7 +115,7 @@ ErrCode BluetoothSocketStub::ListenInner(MessageParcel &data, MessageParcel &rep
         .uuid = *uuid,
         .securityFlag = data.ReadInt32(),
         .type = data.ReadInt32(),
-        .observer = OHOS::iface_cast<IBluetoothSocketObserver>(data.ReadRemoteObject())
+        .observer = OHOS::iface_cast<IBluetoothServerSocketObserver>(data.ReadRemoteObject())
     };
 
     int fd = -1;
@@ -127,13 +133,29 @@ ErrCode BluetoothSocketStub::ListenInner(MessageParcel &data, MessageParcel &rep
     return NO_ERROR;
 }
 
-ErrCode BluetoothSocketStub::RemoveObserverInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothSocketStub::DeregisterServerObserverInner(MessageParcel &data, MessageParcel &reply)
 {
-    HILOGI("RemoveObserverInner starts");
-    sptr<IBluetoothSocketObserver> observer = OHOS::iface_cast<IBluetoothSocketObserver>(data.ReadRemoteObject());
-    RemoveObserver(observer);
+    HILOGI("DeregisterServerObserverInner starts");
+    sptr<IBluetoothServerSocketObserver> observer =
+        OHOS::iface_cast<IBluetoothServerSocketObserver>(data.ReadRemoteObject());
+    DeregisterServerObserver(observer);
 
     return NO_ERROR;
+}
+
+ErrCode BluetoothSocketStub::RegisterClientObserverInner(MessageParcel &data, MessageParcel &reply)
+{
+    return reply.WriteInt32(BT_NO_ERROR);
+}
+
+ErrCode BluetoothSocketStub::DeregisterClientObserverInner(MessageParcel &data, MessageParcel &reply)
+{
+    return reply.WriteInt32(BT_NO_ERROR);
+}
+
+ErrCode BluetoothSocketStub::UpdateCocConnectionParamsInner(MessageParcel &data, MessageParcel &reply)
+{
+    return reply.WriteInt32(BT_ERR_API_NOT_SUPPORT);
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

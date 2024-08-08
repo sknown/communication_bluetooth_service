@@ -30,7 +30,7 @@ public:
     MapServerObserverCommon() = default;
     virtual ~MapServerObserverCommon() = default;
     
-    void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state) {}
+    void OnConnectionStateChanged(const BluetoothRemoteDevice &device, int state, int cause) {}
     void OnPermission(const BluetoothRemoteDevice &device) {}
 
 private:

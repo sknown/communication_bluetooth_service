@@ -31,7 +31,8 @@ public:
 
     // ON_DIS_STA_CHANGE_CODE
     void OnDiscoveryStateChanged(int32_t status) override;
-    void OnDiscoveryResult(const BluetoothRawAddress &device) override;
+    void OnDiscoveryResult(
+        const BluetoothRawAddress &device, int rssi, const std::string deviceName, int deviceClass) override;
     void OnPairRequested(const int32_t transport, const BluetoothRawAddress &device) override;
     void OnPairConfirmed(const int32_t transport, const BluetoothRawAddress &device, int reqType, int number) override;
     virtual void OnScanModeChanged(int32_t mode) override;

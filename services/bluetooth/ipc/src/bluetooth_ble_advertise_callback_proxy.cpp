@@ -51,9 +51,96 @@ void BluetoothBleAdvertiseCallbackProxy::OnStartResultEvent(int32_t result, int3
     MessageParcel reply;
     MessageOption option = {MessageOption::TF_ASYNC};
     int error = InnerTransact(
-        BluetoothBleAdvertiseCallbackInterfaceCode::BT_BLE_ADVERTISE_CALLBACK_RESULT_EVENT, option, data, reply);
+        BluetoothBleAdvertiseCallbackInterfaceCode::BT_BLE_ADVERTISE_CALLBACK_START_RESULT_EVENT, option, data, reply);
     if (error != NO_ERROR) {
-        HILOGE("BleCentralManagerCallBackProxy::OnScanCallback done fail, error: %{public}d", error);
+        HILOGE("failed, error: %{public}d", error);
+        return;
+    }
+}
+
+void BluetoothBleAdvertiseCallbackProxy::OnEnableResultEvent(int32_t result, int32_t advHandle)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothBleAdvertiseCallbackProxy::GetDescriptor())) {
+        HILOGE("[OnEnableResultEvent] fail: write interface token failed.");
+        return;
+    }
+
+    if (!data.WriteInt32(result)) {
+        HILOGE("[OnEnableResultEvent] fail: write result failed");
+        return;
+    }
+
+    if (!data.WriteInt32(advHandle)) {
+        HILOGE("[OnEnableResultEvent] fail: write advHandle failed");
+        return;
+    }
+
+    MessageParcel reply;
+    MessageOption option = {MessageOption::TF_ASYNC};
+    int error = InnerTransact(
+        BluetoothBleAdvertiseCallbackInterfaceCode::BT_BLE_ADVERTISE_CALLBACK_ENABLE_RESULT_EVENT,
+        option, data, reply);
+    if (error != NO_ERROR) {
+        HILOGE("failed, error: %{public}d", error);
+        return;
+    }
+}
+
+void BluetoothBleAdvertiseCallbackProxy::OnDisableResultEvent(int32_t result, int32_t advHandle)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothBleAdvertiseCallbackProxy::GetDescriptor())) {
+        HILOGE("[OnDisableResultEvent] fail: write interface token failed.");
+        return;
+    }
+
+    if (!data.WriteInt32(result)) {
+        HILOGE("[OnDisableResultEvent] fail: write result failed");
+        return;
+    }
+
+    if (!data.WriteInt32(advHandle)) {
+        HILOGE("[OnDisableResultEvent] fail: write advHandle failed");
+        return;
+    }
+
+    MessageParcel reply;
+    MessageOption option = {MessageOption::TF_ASYNC};
+    int error = InnerTransact(
+        BluetoothBleAdvertiseCallbackInterfaceCode::BT_BLE_ADVERTISE_CALLBACK_DISABLE_RESULT_EVENT,
+        option, data, reply);
+    if (error != NO_ERROR) {
+        HILOGE("failed, error: %{public}d", error);
+        return;
+    }
+}
+
+void BluetoothBleAdvertiseCallbackProxy::OnStopResultEvent(int32_t result, int32_t advHandle)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothBleAdvertiseCallbackProxy::GetDescriptor())) {
+        HILOGE("[OnStopResultEvent] fail: write interface token failed.");
+        return;
+    }
+
+    if (!data.WriteInt32(result)) {
+        HILOGE("[OnStopResultEvent] fail: write result failed");
+        return;
+    }
+
+    if (!data.WriteInt32(advHandle)) {
+        HILOGE("[OnStopResultEvent] fail: write advHandle failed");
+        return;
+    }
+
+    MessageParcel reply;
+    MessageOption option = {MessageOption::TF_ASYNC};
+    int error = InnerTransact(
+        BluetoothBleAdvertiseCallbackInterfaceCode::BT_BLE_ADVERTISE_CALLBACK_STOP_RESULT_EVENT,
+        option, data, reply);
+    if (error != NO_ERROR) {
+        HILOGE("failed, error: %{public}d", error);
         return;
     }
 }

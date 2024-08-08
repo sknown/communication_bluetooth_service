@@ -37,8 +37,7 @@ public:
     int GetScoState(const BluetoothRawAddress &device) override;
     bool ConnectSco() override;
     bool DisconnectSco() override;
-    void PhoneStateChanged(int numActive, int numHeld, int callState, const std::string &number, int type,
-        const std::string &name) override;
+    void PhoneStateChanged(BluetoothPhoneState &phoneState) override;
     void ClccResponse(int index, int direction, int status, int mode, bool mpty, const std::string &number,
         int type) override;
     bool OpenVoiceRecognition(const BluetoothRawAddress &device) override;
@@ -51,6 +50,12 @@ public:
     void DeregisterObserver(const sptr<IBluetoothHfpAgObserver> &observer) override;
     int SetConnectStrategy(const BluetoothRawAddress &device, int strategy) override;
     int GetConnectStrategy(const BluetoothRawAddress &device, int &strategy) override;
+    int IsInbandRingingEnabled(bool &isEnabled) override;
+    void CallDetailsChanged(int callId, int callState) override;
+    int32_t IsVgsSupported(const BluetoothRawAddress &device, bool &isSupported) override;
+    int32_t ConnectSco(uint8_t callType) override;
+    int32_t DisconnectSco(uint8_t callType) override;
+    void EnableBtCallLog(bool state) override;
 
 private:
     BLUETOOTH_DECLARE_IMPL();

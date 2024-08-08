@@ -18,7 +18,7 @@
 
 namespace OHOS {
 namespace Bluetooth {
-void BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged(const RawAddress &device, int state)
+void BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged(const RawAddress &device, int state, int cause)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothA2dpSrcObserverProxy::GetDescriptor())) {
@@ -31,6 +31,10 @@ void BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged(const RawAddress &d
     }
     if (!data.WriteInt32(state)) {
         HILOGE("BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged state error");
+        return;
+    }
+    if (!data.WriteInt32(cause)) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged cause error");
         return;
     }
 
@@ -108,6 +112,35 @@ void BluetoothA2dpSrcObserverProxy::OnConfigurationChanged(
     ErrCode result = InnerTransact(BT_A2DP_SRC_OBSERVER_CONFIGURATION_CHANGED, option, data, reply);
     if (result != NO_ERROR) {
         HILOGE("BluetoothA2dpSrcObserverProxy::OnConfigurationChanged done fail, error: %{public}d", result);
+        return;
+    }
+}
+
+void BluetoothA2dpSrcObserverProxy::OnMediaStackChanged(
+    const RawAddress &device, int action)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothA2dpSrcObserverProxy::GetDescriptor())) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnMediaStackChanged WriteInterfaceToken error");
+        return;
+    }
+    if (!data.WriteString(device.GetAddress())) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnMediaStackChanged write device error");
+        return;
+    }
+    if (!data.WriteInt32(action)) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnMediaStackChanged error error");
+        return;
+    }
+
+    MessageParcel reply;
+    MessageOption option {
+        MessageOption::TF_ASYNC
+    };
+
+    ErrCode result = InnerTransact(BT_A2DP_SRC_OBSERVER_MEDIASTACK_CHANGED, option, data, reply);
+    if (result != NO_ERROR) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnMediaStackChanged done fail, error: %{public}d", result);
         return;
     }
 }

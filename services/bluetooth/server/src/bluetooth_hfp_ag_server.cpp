@@ -47,15 +47,16 @@ public:
                 OHOS::HiviewDFX::HiSysEvent::EventType::STATISTIC, "STATE", state);
         }
         observers_->ForEach([device, state](IBluetoothHfpAgObserver* observer) {
-            observer->OnConnectionStateChanged(device, state);
+            observer->OnConnectionStateChanged(device, state,
+                static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
         });
     }
 
-    void OnScoStateChanged(const RawAddress& device, int state) override
+    void OnScoStateChanged(const RawAddress& device, int state, int reason) override
     {
-        HILOGI("device:%{public}s, state:%{public}d", GET_ENCRYPT_ADDR(device), state);
-        observers_->ForEach([device, state](IBluetoothHfpAgObserver* observer) {
-            observer->OnScoStateChanged(device, state);
+        HILOGI("device:%{public}s, state:%{public}d, reason:%{public}d", GET_ENCRYPT_ADDR(device), state, reason);
+        observers_->ForEach([device, state, reason](IBluetoothHfpAgObserver* observer) {
+            observer->OnScoStateChanged(device, state, reason);
         });
     }
 
@@ -73,6 +74,11 @@ public:
         observers_->ForEach([device, indValue](IBluetoothHfpAgObserver* observer) {
             observer->OnHfEnhancedDriverSafetyChanged(device, indValue);
         });
+    }
+
+    void OnHfpStackChanged(const RawAddress &device, int action) override
+    {
+        HILOGI("addr: %{public}s, action: %{public}d", GET_ENCRYPT_ADDR(device), action);
     }
 
     void SetObserver(RemoteObserverList<IBluetoothHfpAgObserver>* observers)
@@ -211,6 +217,10 @@ int32_t BluetoothHfpAgServer::GetDeviceState(const BluetoothRawAddress &device, 
 int32_t BluetoothHfpAgServer::Connect(const BluetoothRawAddress &device)
 {
     HILOGI("target device:%{public}s()", GET_ENCRYPT_ADDR(device));
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("Connect error, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
@@ -228,6 +238,10 @@ int32_t BluetoothHfpAgServer::Connect(const BluetoothRawAddress &device)
 int32_t BluetoothHfpAgServer::Disconnect(const BluetoothRawAddress &device)
 {
     HILOGI("target device:%{public}s()", GET_ENCRYPT_ADDR(device));
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("Disconnect error, check permission failed");
         return BT_ERR_PERMISSION_FAILED;
@@ -271,13 +285,12 @@ bool BluetoothHfpAgServer::DisconnectSco()
     return false;
 }
 
-void BluetoothHfpAgServer::PhoneStateChanged(int numActive, int numHeld, int callState, const std::string &number,
-    int type, const std::string &name)
+void BluetoothHfpAgServer::PhoneStateChanged(BluetoothPhoneState &phoneState)
 {
     HILOGI("numActive:%{public}d, numHeld:%{public}d, callState:%{public}d, type:%{public}d",
-        numActive, numHeld, callState, type);
+        phoneState.GetActiveNum(), phoneState.GetHeldNum(), phoneState.GetCallState(), phoneState.GetCallType());
     if (pimpl->HfpAgService_ != nullptr) {
-        pimpl->HfpAgService_->PhoneStateChanged(numActive, numHeld, callState, number, type, name);
+        pimpl->HfpAgService_->PhoneStateChanged(phoneState);
     }
 }
 
@@ -352,9 +365,32 @@ std::string BluetoothHfpAgServer::GetActiveDevice()
     return dev;
 }
 
+int BluetoothHfpAgServer::IsInbandRingingEnabled(bool &isEnabled)
+{
+    return true;
+}
+
+void BluetoothHfpAgServer::CallDetailsChanged(int callId, int callState)
+{
+    HILOGI("enter");
+}
+
+int32_t BluetoothHfpAgServer::IsVgsSupported(const BluetoothRawAddress &device, bool &isSupported)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
 void BluetoothHfpAgServer::RegisterObserver(const sptr<IBluetoothHfpAgObserver> &observer)
 {
     HILOGD("Enter!");
+    if (observer == nullptr) {
+        HILOGE("observer is null");
+        return ;
+    }
+    if (pimpl == nullptr) {
+        HILOGE("pimpl is null");
+        return ;
+    }
     auto func = std::bind(&BluetoothHfpAgServer::DeregisterObserver, this, std::placeholders::_1);
     pimpl->observers_.Register(observer, func);
 }
@@ -362,17 +398,45 @@ void BluetoothHfpAgServer::RegisterObserver(const sptr<IBluetoothHfpAgObserver> 
 void BluetoothHfpAgServer::DeregisterObserver(const sptr<IBluetoothHfpAgObserver> &observer)
 {
     HILOGD("Enter!");
+    if (observer == nullptr) {
+        HILOGE("observer is null");
+        return ;
+    }
+    if (pimpl == nullptr) {
+        HILOGE("pimpl is null");
+        return ;
+    }
     pimpl->observers_.Deregister(observer);
 }
 
 int BluetoothHfpAgServer::SetConnectStrategy(const BluetoothRawAddress &device, int strategy)
 {
+    HILOGI("target device:%{public}s()", GET_ENCRYPT_ADDR(device));
+    if (!PermissionUtils::CheckSystemHapApp()) {
+        HILOGE("check system api failed.");
+        return BT_ERR_SYSTEM_PERMISSION_FAILED;
+    }
     return NO_ERROR;
 }
 
 int BluetoothHfpAgServer::GetConnectStrategy(const BluetoothRawAddress &device, int &strategy)
 {
     return NO_ERROR;
+}
+
+int BluetoothHfpAgServer::ConnectSco(uint8_t callType)
+{
+    return NO_ERROR;
+}
+
+int BluetoothHfpAgServer::DisconnectSco(uint8_t callType)
+{
+    return NO_ERROR;
+}
+
+void BluetoothHfpAgServer::EnableBtCallLog(bool state)
+{
+    HILOGI("enter");
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

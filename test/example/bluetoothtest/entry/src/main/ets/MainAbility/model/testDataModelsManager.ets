@@ -12,112 +12,124 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
+
+import { CaseCategory , Category , TestApi , TestData } from './testData'
 import {
-  TestDataManager ,
-  TestApiManager ,
-  CategoryManager ,
-  CaseCategoryManager
-} from './testDataManager'
-import {
-  testEnableBluetoothManager ,
   testDisableBluetoothManager ,
-  testGetStateManager ,
-  testGetBtConnectionStateManager ,
-  testSetLocalNameManager ,
-  testGetLocalNameManager ,
-  testSetBluetoothScanModeManager ,
+  testEnableBluetoothManager ,
   testGetBluetoothScanModeManager ,
-  testStartBluetoothDiscoveryManager ,
-  testStopBluetoothDiscoveryManager ,
-  testPairDeviceManager ,
-  testGetRemoteDeviceNameManager ,
-  testGetRemoteDeviceClassManager ,
+  testGetBtConnectionStateManager ,
+  testGetLocalNameManager ,
   testGetPairedDevicesManager ,
-  testUnPairedDeviceManager ,
   testGetProfileConnStateManager1 ,
   testGetProfileConnStateManager2 ,
-  testOnStateChangeManager ,
+  testGetRemoteDeviceClassManager ,
+  testGetRemoteDeviceNameManager ,
+  testGetStateManager ,
+  testOnBondStateChangeManager ,
   testOnPinRequiredManager ,
-  testOnBondStateChangeManager
-} from "./brManagerInterface"
+  testOnStateChangeManager ,
+  testPairDeviceManager ,
+  testSetBluetoothScanModeManager ,
+  testSetLocalNameManager ,
+  testStartBluetoothDiscoveryManager ,
+  testStopBluetoothDiscoveryManager ,
+  testUnPairedDeviceManager
+} from './brManagerInterface'
 import {
-  testCreateGattServerDeviceManager ,
   testCreateGattClientDeviceManager ,
+  testCreateGattServerDeviceManager ,
   testGetConnectedBLEDevicesManager ,
+  testOnBLEDeviceFindManager ,
   testStartBLEScanManager ,
-  testStopBLEScanManager ,
-  testOnBLEDeviceFindManager
+  testStopBLEScanManager
 } from './bleManagerInterface'
 import {
-  testCreateGattClientManager ,
   testConnectManager ,
+  testCreateGattClientManager ,
   testDisconnectManager ,
-  testOnBLEConnectionStateChangeManager ,
   testGattClientCloseManager ,
+  testGetDeviceNameCallbackManager ,
+  testGetDeviceNamePromiseManager ,
+  testGetRssiValueCallbackManager ,
+  testGetRssiValuePromiseManager ,
   testGetServicesCallbackManager ,
   testGetServicesPromiseManager ,
+  testOnBLECharacteristicChangeManager ,
+  testOnBLEConnectionStateChangeManager ,
   testReadCharacteristicValueCallbackManager ,
   testReadCharacteristicValuePromiseManager ,
   testReadDescriptorValueCallbackManager ,
   testReadDescriptorValuePromiseManager ,
-  testWriteCharacteristicValueManager ,
-  testWriteDescriptorValueManager ,
-  testOnBLECharacteristicChangeManager ,
   testSetBLEMtuSizeManager ,
   testSetNotifyCharacteristicChangedManager ,
-  testGetDeviceNameCallbackManager ,
-  testGetDeviceNamePromiseManager ,
-  testGetRssiValueCallbackManager ,
-  testGetRssiValuePromiseManager
+  testWriteCharacteristicValueManager ,
+  testWriteDescriptorValueManager
 } from './gattClientManagerInterface'
 import {
-  testCreateGattServerManager ,
-  testStartAdvertisingManager ,
-  testStopAdvertisingManager ,
   testAddServiceManager ,
-  testRemoveServiceManager ,
+  testCreateGattServerManager ,
   testGattServerCloseManager ,
-  testOnConnectStateChangeManager ,
   testOnCharacteristicReadManager ,
   testOnCharacteristicWriteManager ,
+  testOnConnectStateChangeManager ,
   testOnDescriptorReadManager ,
-  testOnDescriptorWriteManager
+  testOnDescriptorWriteManager ,
+  testRemoveServiceManager ,
+  testStartAdvertisingManager ,
+  testStopAdvertisingManager
 } from './gattServerManagerInterface'
 import {
+  testSppClientCloseManager ,
   testSppClientConnectSafeManager ,
   testSppClientConnectUnSafeManager ,
-  testSppClientWriteManager ,
-  testSppClientReadOnManager ,
   testSppClientReadOffManager ,
-  testSppClientCloseManager
+  testSppClientReadOnManager ,
+  testSppClientWriteManager
 } from './sppClientManagerInterface'
 import {
+  testSppCloseClientSocketManager ,
+  testSppCloseServerSocketManager ,
+  testSppServerAcceptManager ,
   testSppServerCreateSafeManager ,
   testSppServerCreateUnSafeManager ,
-  testSppServerAcceptManager ,
-  testSppServerWriteManager ,
-  testSppServerReadOnManager ,
   testSppServerReadOffManager ,
-  testSppCloseServerSocketManager ,
-  testSppCloseClientSocketManager
+  testSppServerReadOnManager ,
+  testSppServerWriteManager
 } from './sppServerManagerInterface'
 import {
   testProfileConnectManager ,
   testProfileDisConnectManager ,
-  testProfileGetPlayingStateManager ,
   testProfileGetConnectionDevicesManager ,
-  testProfileGetDeviceStateManager
+  testProfileGetDeviceStateManager ,
+  testProfileGetPlayingStateManager
 } from './a2dpSinkProfileManagerInterface'
 
-const BRManagerTestCase: [] = [
+interface BRManagerTest {
+  name: string;
+  detail: string;
+  method: string;
+  api: Function;
+  result: string;
+  category: CaseCategory;
+}
+
+interface BRManagerTestComposition {
+  name: string;
+  detail: string;
+  url: string;
+  image: Resource;
+  category: Category;
+}
+
+const BRManagerTestCase: BRManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -125,7 +137,7 @@ const BRManagerTestCase: [] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -133,7 +145,7 @@ const BRManagerTestCase: [] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '获取当前连接状态Manager' ,
@@ -141,7 +153,7 @@ const BRManagerTestCase: [] = [
     'method' : 'getBtConnectionStateManager' ,
     'api' : testGetBtConnectionStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '设置本地名称Manager' ,
@@ -149,7 +161,7 @@ const BRManagerTestCase: [] = [
     'method' : 'setLocalNameManager' ,
     'api' : testSetLocalNameManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '获取本地名称Manager' ,
@@ -157,7 +169,7 @@ const BRManagerTestCase: [] = [
     'method' : 'getLocalNameManager' ,
     'api' : testGetLocalNameManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '设置扫描模式Manager' ,
@@ -165,7 +177,7 @@ const BRManagerTestCase: [] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -173,7 +185,7 @@ const BRManagerTestCase: [] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '开始蓝牙发现Manager' ,
@@ -181,7 +193,7 @@ const BRManagerTestCase: [] = [
     'method' : 'startBluetoothDiscoveryManager' ,
     'api' : testStartBluetoothDiscoveryManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '停止蓝牙发现Manager' ,
@@ -189,7 +201,7 @@ const BRManagerTestCase: [] = [
     'method' : 'stopBluetoothDiscoveryManager' ,
     'api' : testStopBluetoothDiscoveryManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '配对设备Manager' ,
@@ -197,7 +209,7 @@ const BRManagerTestCase: [] = [
     'method' : 'pairDeviceManager' ,
     'api' : testPairDeviceManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '取消配对设备Manager' ,
@@ -205,7 +217,7 @@ const BRManagerTestCase: [] = [
     'method' : 'unpairDeviceManager' ,
     'api' : testUnPairedDeviceManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '获取远程设备名称Manager' ,
@@ -213,7 +225,7 @@ const BRManagerTestCase: [] = [
     'method' : 'getDeviceNameManager' ,
     'api' : testGetRemoteDeviceNameManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '获取远程设备类型Manager' ,
@@ -221,7 +233,7 @@ const BRManagerTestCase: [] = [
     'method' : 'getDeviceTypeManager' ,
     'api' : testGetRemoteDeviceClassManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '获取配对设备Manager' ,
@@ -229,7 +241,7 @@ const BRManagerTestCase: [] = [
     'method' : 'getPairedDeviceIdsManager' ,
     'api' : testGetPairedDevicesManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '获取配置文件连接状态Manager1' ,
@@ -237,7 +249,7 @@ const BRManagerTestCase: [] = [
     'method' : 'getProfileConnStateManager' ,
     'api' : testGetProfileConnStateManager1 ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '获取配置文件连接状态Manager2' ,
@@ -245,7 +257,7 @@ const BRManagerTestCase: [] = [
     'method' : 'getDeviceStateManager' ,
     'api' : testGetProfileConnStateManager2 ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '注册状态变化Manager' ,
@@ -253,7 +265,7 @@ const BRManagerTestCase: [] = [
     'method' : 'on.stateChangeManager' ,
     'api' : testOnStateChangeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '注册pin码变化Manager' ,
@@ -261,7 +273,7 @@ const BRManagerTestCase: [] = [
     'method' : 'on.pinRequiredManager' ,
     'api' : testOnPinRequiredManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   },
   {
     'name' : '注册绑定状态变化Manager' ,
@@ -269,18 +281,18 @@ const BRManagerTestCase: [] = [
     'method' : 'on.bondStateChangeManager' ,
     'api' : testOnBondStateChangeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BRManager
+    'category' : CaseCategory.BRManager
   }
 ]
 
-const BleManagerTestCase: any[] = [
+const BleManagerTestCase: BRManagerTest[] = [
   {
     'name' : '创建Gatt服务器Manager' ,
     'detail' : '创建GattManager服务器' ,
     'method' : 'createGattServerManager' ,
     'api' : testCreateGattServerDeviceManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BLEManager
+    'category' : CaseCategory.BLEManager
   },
   {
     'name' : '创建Gatt客户端Manager' ,
@@ -288,7 +300,7 @@ const BleManagerTestCase: any[] = [
     'method' : 'createGattClientManager' ,
     'api' : testCreateGattClientDeviceManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BLEManager
+    'category' : CaseCategory.BLEManager
   },
   {
     'name' : '获取连接的BLE设备Manager' ,
@@ -296,7 +308,7 @@ const BleManagerTestCase: any[] = [
     'method' : 'getConnectedBLEDevicesManager' ,
     'api' : testGetConnectedBLEDevicesManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BLEManager
+    'category' : CaseCategory.BLEManager
   },
   {
     'name' : '开始BLE扫描Manager' ,
@@ -304,7 +316,7 @@ const BleManagerTestCase: any[] = [
     'method' : 'startBLEScanManager' ,
     'api' : testStartBLEScanManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BLEManager
+    'category' : CaseCategory.BLEManager
   },
   {
     'name' : '停止BLE扫描Manager' ,
@@ -312,7 +324,7 @@ const BleManagerTestCase: any[] = [
     'method' : 'stopBLEScanManager' ,
     'api' : testStopBLEScanManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BLEManager
+    'category' : CaseCategory.BLEManager
   },
   {
     'name' : '注册BLE查找状态变化Manager' ,
@@ -320,52 +332,52 @@ const BleManagerTestCase: any[] = [
     'method' : 'on.BLEDeviceFindManager' ,
     'api' : testOnBLEDeviceFindManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.BLEManager
+    'category' : CaseCategory.BLEManager
   }
 ]
 
-const GattManagerTestComposition: any[] = [
+const GattManagerTestComposition: BRManagerTestComposition[] = [
   {
     'name' : 'GattClientManager' ,
     'detail' : 'Gatt客户端Manager测试' ,
     'url' : 'pages/subManualApiTestManager/subGattTestManager/gattClientManager' ,
-    'image' : $r( 'app.media.Gatt' ) ,
-    'category' : CategoryManager.GattManager
+    'image' : $r('app.media.Gatt') ,
+    'category' : Category.GattManager
   },
   {
     'name' : 'GattServerManager' ,
     'detail' : 'Gatt服务器Manager测试' ,
     'url' : 'pages/subManualApiTestManager/subGattTestManager/gattServerManager' ,
-    'image' : $r( 'app.media.Gatt' ) ,
-    'category' : CategoryManager.GattManager
+    'image' : $r('app.media.Gatt') ,
+    'category' : Category.GattManager
   },
 ]
 
-const SppManagerTestComposition: any[] = [
+const SppManagerTestComposition: BRManagerTestComposition[] = [
   {
     'name' : 'SppClientManager' ,
     'detail' : 'Spp客户端Manager测试' ,
     'url' : 'pages/subManualApiTestManager/subSppTestManager/sppClientManager' ,
-    'image' : $r( 'app.media.spp' ) ,
-    'category' : CategoryManager.SPPManager
+    'image' : $r('app.media.spp') ,
+    'category' : Category.SPPManager
   },
   {
     'name' : 'SppServerManager' ,
     'detail' : 'Spp服务器Manager测试' ,
     'url' : 'pages/subManualApiTestManager/subSppTestManager/sppServerManager' ,
-    'image' : $r( 'app.media.spp' ) ,
-    'category' : CategoryManager.SPPManager
+    'image' : $r('app.media.spp') ,
+    'category' : Category.SPPManager
   },
 ]
 
-const GattClientManagerTestCase: any[] = [
+const GattClientManagerTestCase: BRManagerTest[] = [
   {
     'name' : '创造Gatt客户端Manager' ,
     'detail' : '创造Gatt客户端' ,
     'method' : 'createGattClientManager' ,
     'api' : testCreateGattClientManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '连接Manager' ,
@@ -373,7 +385,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'connectManager' ,
     'api' : testConnectManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '取消连接Manager' ,
@@ -381,7 +393,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'disconnectManager' ,
     'api' : testDisconnectManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : 'BLE连接状态Manager' ,
@@ -389,7 +401,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'on.BLEConnectionStateChangeManager' ,
     'api' : testOnBLEConnectionStateChangeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '关闭Manager' ,
@@ -397,7 +409,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'closeManager' ,
     'api' : testGattClientCloseManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '获取服务callbackManager' ,
@@ -405,7 +417,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'getServices(callback)Manager' ,
     'api' : testGetServicesCallbackManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '获取服务promiseManager' ,
@@ -413,7 +425,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'getServices(promise)Manager' ,
     'api' : testGetServicesPromiseManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '读取特征值callbackManager' ,
@@ -421,7 +433,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'readCharacteristicValue(callback)Manager' ,
     'api' : testReadCharacteristicValueCallbackManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '读取特征值promiseManager' ,
@@ -429,7 +441,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'readCharacteristicValue(promise)Manager' ,
     'api' : testReadCharacteristicValuePromiseManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '读取描述符值callbackManager' ,
@@ -437,7 +449,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'readDescriptorValue(callback)Manager' ,
     'api' : testReadDescriptorValueCallbackManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '读取描述符值promiseManager' ,
@@ -445,7 +457,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'readDescriptorValue(promise)Manager' ,
     'api' : testReadDescriptorValuePromiseManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '写入特征值Manager' ,
@@ -453,7 +465,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'writeCharacteristicValueManager' ,
     'api' : testWriteCharacteristicValueManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '写入描述符值Manager' ,
@@ -461,7 +473,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'writeDescriptorValueManager' ,
     'api' : testWriteDescriptorValueManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : 'BLE特征值变化Manager' ,
@@ -469,7 +481,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'on.BLECharacteristicChangeManager' ,
     'api' : testOnBLECharacteristicChangeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '设定BLEMtu尺寸Manager' ,
@@ -477,7 +489,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'setBLEMtuSizeManager' ,
     'api' : testSetBLEMtuSizeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '设置通知特性更改Manager' ,
@@ -485,7 +497,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'setNotifyCharacteristicChangedManager' ,
     'api' : testSetNotifyCharacteristicChangedManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '获取设备名称callbackManager' ,
@@ -493,7 +505,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'getDeviceName(callback)Manager' ,
     'api' : testGetDeviceNameCallbackManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '获取设备名称promiseManager' ,
@@ -501,7 +513,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'getDeviceName(promise)Manager' ,
     'api' : testGetDeviceNamePromiseManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '获取Rssi值callbackManager' ,
@@ -509,7 +521,7 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'getRssiValue(callback)Manager' ,
     'api' : testGetRssiValueCallbackManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
   {
     'name' : '获取Rssi值promiseManager' ,
@@ -517,18 +529,18 @@ const GattClientManagerTestCase: any[] = [
     'method' : 'getRssiValue(promise)Manager' ,
     'api' : testGetRssiValuePromiseManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattClientManager
+    'category' : CaseCategory.GattClientManager
   },
 ]
 
-const GattServerManagerTestCase: any[] = [
+const GattServerManagerTestCase: BRManagerTest[] = [
   {
     'name' : '创建Gatt服务器Manager' ,
     'detail' : '创建Gatt服务器' ,
     'method' : 'createGattServerManager' ,
     'api' : testCreateGattServerManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
   {
     'name' : '添加服务Manager' ,
@@ -536,7 +548,7 @@ const GattServerManagerTestCase: any[] = [
     'method' : 'addServiceManager' ,
     'api' : testAddServiceManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
   {
     'name' : '删除服务Manager' ,
@@ -544,7 +556,7 @@ const GattServerManagerTestCase: any[] = [
     'method' : 'removeServiceManager' ,
     'api' : testRemoveServiceManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
   {
     'name' : '开始广播Manager' ,
@@ -552,7 +564,7 @@ const GattServerManagerTestCase: any[] = [
     'method' : 'startAdvertisingManager' ,
     'api' : testStartAdvertisingManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
   {
     'name' : '停止广播Manager' ,
@@ -560,7 +572,7 @@ const GattServerManagerTestCase: any[] = [
     'method' : 'stopAdvertisingManager' ,
     'api' : testStopAdvertisingManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
   {
     'name' : '关闭Manager' ,
@@ -568,7 +580,7 @@ const GattServerManagerTestCase: any[] = [
     'method' : 'closeManager' ,
     'api' : testGattServerCloseManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
   {
     'name' : '连接状态Manager' ,
@@ -576,7 +588,7 @@ const GattServerManagerTestCase: any[] = [
     'method' : 'on.connectStateChangeManager' ,
     'api' : testOnConnectStateChangeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
   {
     'name' : '读取特征值Manager' ,
@@ -584,7 +596,7 @@ const GattServerManagerTestCase: any[] = [
     'method' : 'on.characteristicReadManager' ,
     'api' : testOnCharacteristicReadManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
   {
     'name' : '写入特征值Manager' ,
@@ -592,7 +604,7 @@ const GattServerManagerTestCase: any[] = [
     'method' : 'on.characteristicWriteManager' ,
     'api' : testOnCharacteristicWriteManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
   {
     'name' : '读取描述符Manager' ,
@@ -600,7 +612,7 @@ const GattServerManagerTestCase: any[] = [
     'method' : 'on.descriptorRead' ,
     'api' : testOnDescriptorReadManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
   {
     'name' : '写入描述符Manager' ,
@@ -608,18 +620,18 @@ const GattServerManagerTestCase: any[] = [
     'method' : 'on.descriptorWrite' ,
     'api' : testOnDescriptorWriteManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.GattServerManager
+    'category' : CaseCategory.GattServerManager
   },
 ]
 
-const SppClientManagerTestCase: any[] = [
+const SppClientManagerTestCase: BRManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -627,7 +639,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : '设置SPP扫描模式Manager' ,
@@ -635,7 +647,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -643,7 +655,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -651,7 +663,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : '获取当前连接状态Manager' ,
@@ -659,7 +671,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'getBtConnectionStateManager' ,
     'api' : testGetBtConnectionStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : 'Spp客户端连接(安全模式)Manager' ,
@@ -667,7 +679,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'sppConnectManager' ,
     'api' : testSppClientConnectSafeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : 'Spp客户端连接(非安全模式)Manager' ,
@@ -675,7 +687,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'sppConnectManager' ,
     'api' : testSppClientConnectUnSafeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : '配对设备Manager' ,
@@ -683,7 +695,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'pairDeviceManager' ,
     'api' : testPairDeviceManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : 'Spp客户端写入Manager' ,
@@ -691,7 +703,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'sppWriteManager' ,
     'api' : testSppClientWriteManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : 'Spp客户端读取打开Manager' ,
@@ -699,7 +711,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'on.sppReadManager' ,
     'api' : testSppClientReadOnManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : 'Spp客户端读取关闭Manager' ,
@@ -707,7 +719,7 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'off.sppReadManager' ,
     'api' : testSppClientReadOffManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
   {
     'name' : 'Spp客户端关闭Manager' ,
@@ -715,18 +727,18 @@ const SppClientManagerTestCase: any[] = [
     'method' : 'sppCloseClientSocketManager' ,
     'api' : testSppClientCloseManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPClientManager
+    'category' : CaseCategory.SPPClientManager
   },
 ]
 
-const SppServerManagerTestCase: any[] = [
+const SppServerManagerTestCase: BRManagerTest[] = [
   {
     'name' : '开蓝牙Manager' ,
     'detail' : '使能蓝牙' ,
     'method' : 'enableBluetoothManager' ,
     'api' : testEnableBluetoothManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : '关蓝牙Manager' ,
@@ -734,7 +746,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'disableBluetoothManager' ,
     'api' : testDisableBluetoothManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : '设置SPP扫描模式Manager' ,
@@ -742,7 +754,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'setBluetoothScanModeManager' ,
     'api' : testSetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : '获取状态Manager' ,
@@ -750,7 +762,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'getStateManager' ,
     'api' : testGetStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : '获取扫描模式Manager' ,
@@ -758,7 +770,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'getBluetoothScanModeManager' ,
     'api' : testGetBluetoothScanModeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : '获取当前连接状态Manager' ,
@@ -766,7 +778,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'getBtConnectionStateManager' ,
     'api' : testGetBtConnectionStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : 'Spp服务器创建(安全模式)Manager' ,
@@ -774,7 +786,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'sppListenManager' ,
     'api' : testSppServerCreateSafeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : 'Spp服务器创建(非安全模式)Manager' ,
@@ -782,7 +794,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'sppListenManager' ,
     'api' : testSppServerCreateUnSafeManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : '注册pin码变化Manager' ,
@@ -790,16 +802,16 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'on.pinRequiredManager' ,
     'api' : testOnPinRequiredManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
-  //  { 'name': 'SPP客户端写入', 'detail': '使能蓝牙', 'method': 'spp_Client_Write', 'api': testSppClientWriteManager, 'result': 'None', 'category': CaseCategoryManager.SPPServer },
+  //  { 'name': 'SPP客户端写入', 'detail': '使能蓝牙', 'method': 'spp_Client_Write', 'api': testSppClientWriteManager, 'result': 'None', 'category': CaseCategory.SPPServer },
   {
     'name' : 'Spp服务器写入Manager' ,
     'detail' : 'Spp服务器写入' ,
     'method' : 'sppWriteManager' ,
     'api' : testSppServerWriteManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : 'Spp服务器接受Manager' ,
@@ -807,7 +819,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'sppAcceptManager' ,
     'api' : testSppServerAcceptManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : 'Spp服务器读取打开Manager' ,
@@ -815,7 +827,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'on.sppReadManager' ,
     'api' : testSppServerReadOnManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : 'Spp服务器读取关闭Manager' ,
@@ -823,7 +835,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'off.sppReadManager' ,
     'api' : testSppServerReadOffManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : 'Spp服务器关闭Manager' ,
@@ -831,7 +843,7 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'sppCloseServerSocketManager' ,
     'api' : testSppCloseServerSocketManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
   {
     'name' : 'Spp客户端关闭Manager' ,
@@ -839,18 +851,18 @@ const SppServerManagerTestCase: any[] = [
     'method' : 'sppCloseClientSocketManager' ,
     'api' : testSppCloseClientSocketManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.SPPServerManager
+    'category' : CaseCategory.SPPServerManager
   },
 ]
 
-const A2dpSourceProfileManagerTestCase: any [] = [
+const A2dpSourceProfileManagerTestCase: BRManagerTest[] = [
   {
     'name' : '连接Manager' ,
     'detail' : 'Profile连接Manager' ,
     'method' : 'connect' ,
     'api' : testProfileConnectManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileA2dpSourceManager
+    'category' : CaseCategory.ProfileA2dpSourceManager
   },
   {
     'name' : '取消连接Manager' ,
@@ -858,7 +870,7 @@ const A2dpSourceProfileManagerTestCase: any [] = [
     'method' : 'disconnect' ,
     'api' : testProfileDisConnectManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileA2dpSourceManager
+    'category' : CaseCategory.ProfileA2dpSourceManager
   },
   {
     'name' : '获取播放状态Manager' ,
@@ -866,7 +878,7 @@ const A2dpSourceProfileManagerTestCase: any [] = [
     'method' : 'getPlayingState' ,
     'api' : testProfileGetPlayingStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileA2dpSourceManager
+    'category' : CaseCategory.ProfileA2dpSourceManager
   },
   {
     'name' : '获取连接设备Manager' ,
@@ -874,7 +886,7 @@ const A2dpSourceProfileManagerTestCase: any [] = [
     'method' : 'getConnectionDevices' ,
     'api' : testProfileGetConnectionDevicesManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileA2dpSourceManager
+    'category' : CaseCategory.ProfileA2dpSourceManager
   },
   {
     'name' : '获取设备状态Manager' ,
@@ -882,18 +894,18 @@ const A2dpSourceProfileManagerTestCase: any [] = [
     'method' : 'getDeviceState' ,
     'api' : testProfileGetDeviceStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileA2dpSourceManager
+    'category' : CaseCategory.ProfileA2dpSourceManager
   },
 ]
 
-const HandsFreeAudioGatewayProfileManagerTestCase: any[] = [
+const HandsFreeAudioGatewayProfileManagerTestCase: BRManagerTest[] = [
   {
     'name' : '连接Manager' ,
     'detail' : 'Profile连接Manager' ,
     'method' : 'connect' ,
     'api' : testProfileConnectManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileHandsFreeAudioGatewayManager
+    'category' : CaseCategory.ProfileHandsFreeAudioGatewayManager
   },
   {
     'name' : '取消连接Manager' ,
@@ -901,7 +913,7 @@ const HandsFreeAudioGatewayProfileManagerTestCase: any[] = [
     'method' : 'disconnect' ,
     'api' : testProfileDisConnectManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileHandsFreeAudioGatewayManager
+    'category' : CaseCategory.ProfileHandsFreeAudioGatewayManager
   },
   {
     'name' : '获取连接设备Manager' ,
@@ -909,7 +921,7 @@ const HandsFreeAudioGatewayProfileManagerTestCase: any[] = [
     'method' : 'getConnectionDevices' ,
     'api' : testProfileGetConnectionDevicesManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileHandsFreeAudioGatewayManager ,
+    'category' : CaseCategory.ProfileHandsFreeAudioGatewayManager ,
   },
   {
     'name' : '获取设备状态Manager' ,
@@ -917,18 +929,18 @@ const HandsFreeAudioGatewayProfileManagerTestCase: any[] = [
     'method' : 'getDeviceState' ,
     'api' : testProfileGetDeviceStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileHandsFreeAudioGatewayManager ,
+    'category' : CaseCategory.ProfileHandsFreeAudioGatewayManager ,
   },
 ]
 
-const HitHostProfileManagerTestCase: any[] = [
+const HitHostProfileManagerTestCase: BRManagerTest[] = [
   {
     'name' : '连接Manager' ,
     'detail' : 'Profile连接Manager' ,
     'method' : 'connect' ,
     'api' : testProfileConnectManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileHitHostManager
+    'category' : CaseCategory.ProfileHitHostManager
   },
   {
     'name' : '取消连接Manager' ,
@@ -936,7 +948,7 @@ const HitHostProfileManagerTestCase: any[] = [
     'method' : 'disconnect' ,
     'api' : testProfileDisConnectManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileHitHostManager
+    'category' : CaseCategory.ProfileHitHostManager
   },
   {
     'name' : '获取连接设备Manager' ,
@@ -944,7 +956,7 @@ const HitHostProfileManagerTestCase: any[] = [
     'method' : 'getConnectionDevices' ,
     'api' : testProfileGetConnectionDevicesManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileHitHostManager
+    'category' : CaseCategory.ProfileHitHostManager
   },
   {
     'name' : '获取设备状态Manager' ,
@@ -952,18 +964,18 @@ const HitHostProfileManagerTestCase: any[] = [
     'method' : 'getDeviceState' ,
     'api' : testProfileGetDeviceStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfileHitHostManager
+    'category' : CaseCategory.ProfileHitHostManager
   },
 ]
 
-const PanNetworkProfileManagerTestCase: any[] = [
+const PanNetworkProfileManagerTestCase: BRManagerTest[] = [
   {
     'name' : '取消连接Manager' ,
     'detail' : '取消Profile连接Manager' ,
     'method' : 'disconnect' ,
     'api' : testProfileDisConnectManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfilePanNetworkManager
+    'category' : CaseCategory.ProfilePanNetworkManager
   },
   {
     'name' : '获取连接设备Manager' ,
@@ -971,7 +983,7 @@ const PanNetworkProfileManagerTestCase: any[] = [
     'method' : 'getConnectionDevices' ,
     'api' : testProfileGetConnectionDevicesManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfilePanNetworkManager
+    'category' : CaseCategory.ProfilePanNetworkManager
   },
   {
     'name' : '获取设备状态Manager' ,
@@ -979,192 +991,191 @@ const PanNetworkProfileManagerTestCase: any[] = [
     'method' : 'getDeviceState' ,
     'api' : testProfileGetDeviceStateManager ,
     'result' : 'None' ,
-    'category' : CaseCategoryManager.ProfilePanNetworkManager
+    'category' : CaseCategory.ProfilePanNetworkManager
   },
 ]
 
-const GattManagerAutoTestComposition: any[] = [
+const GattManagerAutoTestComposition: BRManagerTestComposition[] = [
   {
     'name' : 'GattClientAutoTestManager' ,
     'detail' : 'GattClientManager自动测试' ,
     'url' : 'pages/subAutoTestManager/subGattAutoTestManager/gattClientAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
-    'category' : CategoryManager.GattAutoTestManager
+    'image' : $r("app.media.AutoTestIcon") ,
+    'category' : Category.GattAutoTestManager
   },
   {
     'name' : 'GattServerAutoTestManager' ,
     'detail' : 'GattServerManager自动测试' ,
     'url' : 'pages/subAutoTestManager/subGattAutoTestManager/gattServerAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
-    'category' : CategoryManager.GattAutoTestManager
+    'image' : $r("app.media.AutoTestIcon") ,
+    'category' : Category.GattAutoTestManager
   },
 ]
 
-const SppManagerAutoTestComposition: any[] = [
+const SppManagerAutoTestComposition: BRManagerTestComposition[] = [
   {
     'name' : 'SppClientAutoTestManager' ,
     'detail' : 'SppClientManager自动测试' ,
     'url' : 'pages/subAutoTestManager/subSppAutoTestManager/sppClientAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
-    'category' : CategoryManager.SppAutoTestManager
+    'image' : $r("app.media.AutoTestIcon") ,
+    'category' : Category.SppAutoTestManager
   },
   {
     'name' : 'SppServerAutoTest' ,
     'detail' : 'SppServer自动测试' ,
     'url' : 'pages/subAutoTest/subSppAutoTest/sppServerAutoTest' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
-    'category' : CategoryManager.SppAutoTestManager
+    'image' : $r("app.media.AutoTestIcon") ,
+    'category' : Category.SppAutoTestManager
   },
 ]
 
-const ProfileManagerAutoTestComposition: any[] = [
+const ProfileManagerAutoTestComposition: BRManagerTestComposition[] = [
   {
     'name' : 'A2dpSourceAutoTestManager' ,
     'detail' : 'A2dpSourceManager自动测试' ,
     'url' : 'pages/subAutoTestManager/subProfileAutoTestManager/a2dpSourceAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
-    'category' : CategoryManager.ProfileAutoTestManager
+    'image' : $r("app.media.AutoTestIcon") ,
+    'category' : Category.ProfileAutoTestManager
   },
   {
     'name' : 'HFAudioGatewayAutoTestManager' ,
     'detail' : 'HFAudioGatewayManager自动测试' ,
     'url' : 'pages/subAutoTestManager/subProfileAutoTestManager/handsFreeAudioGatewayAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
-    'category' : CategoryManager.ProfileAutoTestManager
+    'image' : $r("app.media.AutoTestIcon") ,
+    'category' : Category.ProfileAutoTestManager
   },
   {
     'name' : 'HitHostAutoTestManager' ,
     'detail' : 'HitHostManager自动测试' ,
     'url' : 'pages/subAutoTestManager/subProfileAutoTestManager/hitHostAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
-    'category' : CategoryManager.ProfileAutoTestManager
+    'image' : $r("app.media.AutoTestIcon") ,
+    'category' : Category.ProfileAutoTestManager
   },
   {
     'name' : 'PanNetworkAutoTestManager' ,
     'detail' : 'PanNetworkManager自动测试' ,
     'url' : 'pages/subAutoTestManager/subProfileAutoTestManager/panNetworkAutoTestManager' ,
-    'image' : $r( "app.media.AutoTestIcon" ) ,
-    'category' : CategoryManager.ProfileAutoTestManager
+    'image' : $r("app.media.AutoTestIcon") ,
+    'category' : Category.ProfileAutoTestManager
   },
 ]
 
-
-export function initBRManagerApiData(): Array<TestApiManager> {
-  let TestApiArray: Array<TestApiManager> = []
-  BRManagerTestCase.forEach( item => {
-    TestApiArray.push( new TestApiManager(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+export function initBRManagerApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  BRManagerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
-export function initBleManagerApiData(): Array<TestApiManager> {
-  let TestApiArray: Array<TestApiManager> = []
-  BleManagerTestCase.forEach( item => {
-    TestApiArray.push( new TestApiManager(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+export function initBleManagerApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  BleManagerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
-export function initGattManagerApiTestData(): Array<TestDataManager> {
-  let TestDataArray: Array<TestDataManager> = []
-  GattManagerTestComposition.forEach( item => {
-    TestDataArray.push( new TestDataManager(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+export function initGattManagerApiTestData(): Array<TestData> {
+  let TestDataArray: Array<TestData> = []
+  GattManagerTestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }
 
-export function initSppManagerApiTestData(): Array<TestDataManager> {
-  let TestDataArray: Array<TestDataManager> = []
-  SppManagerTestComposition.forEach( item => {
-    TestDataArray.push( new TestDataManager(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+export function initSppManagerApiTestData(): Array<TestData> {
+  let TestDataArray: Array<TestData> = []
+  SppManagerTestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }
 
-export function initGattClientManagerApiData(): Array<TestApiManager> {
-  let TestApiArray: Array<TestApiManager> = []
-  GattClientManagerTestCase.forEach( item => {
-    TestApiArray.push( new TestApiManager(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+export function initGattClientManagerApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  GattClientManagerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
-export function initGattServerManagerApiData(): Array<TestApiManager> {
-  let TestApiArray: Array<TestApiManager> = []
-  GattServerManagerTestCase.forEach( item => {
-    TestApiArray.push( new TestApiManager(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+export function initGattServerManagerApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  GattServerManagerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
-export function initSppClientManagerApiData(): Array<TestApiManager> {
-  let TestApiArray: Array<TestApiManager> = []
-  SppClientManagerTestCase.forEach( item => {
-    TestApiArray.push( new TestApiManager(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+export function initSppClientManagerApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  SppClientManagerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
-export function initSppServerManagerApiData(): Array<TestApiManager> {
-  let TestApiArray: Array<TestApiManager> = []
-  SppServerManagerTestCase.forEach( item => {
-    TestApiArray.push( new TestApiManager(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+export function initSppServerManagerApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  SppServerManagerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
-export function initA2dpSourceProfileManagerApiData(): Array<TestApiManager> {
-  let TestApiArray: Array<TestApiManager> = []
-  A2dpSourceProfileManagerTestCase.forEach( item => {
-    TestApiArray.push( new TestApiManager(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+export function initA2dpSourceProfileManagerApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  A2dpSourceProfileManagerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
-export function initHandsFreeAudioGatewayProfileManagerApiData(): Array<TestApiManager> {
-  let TestApiArray: Array<TestApiManager> = []
-  HandsFreeAudioGatewayProfileManagerTestCase.forEach( item => {
-    TestApiArray.push( new TestApiManager(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+export function initHandsFreeAudioGatewayProfileManagerApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  HandsFreeAudioGatewayProfileManagerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
-export function initHitHostProfileManagerApiData(): Array<TestApiManager> {
-  let TestApiArray: Array<TestApiManager> = []
-  HitHostProfileManagerTestCase.forEach( item => {
-    TestApiArray.push( new TestApiManager(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+export function initHitHostProfileManagerApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  HitHostProfileManagerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
-export function initPanNetworkProfileManagerApiData(): Array<TestApiManager> {
-  let TestApiArray: Array<TestApiManager> = []
-  PanNetworkProfileManagerTestCase.forEach( item => {
-    TestApiArray.push( new TestApiManager(item.name , item.detail , item.method , item.api , item.result , item.category) );
-  } )
+export function initPanNetworkProfileManagerApiData(): Array<TestApi> {
+  let TestApiArray: Array<TestApi> = []
+  PanNetworkProfileManagerTestCase.forEach(item => {
+    TestApiArray.push(new TestApi(item.name , item.detail , item.method , item.api , item.result , item.category));
+  })
   return TestApiArray;
 }
 
-export function initGattManagerAutoTestData(): Array<TestDataManager> {
-  let TestDataArray: Array<TestDataManager> = []
-  GattManagerAutoTestComposition.forEach( item => {
-    TestDataArray.push( new TestDataManager(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+export function initGattManagerAutoTestData(): Array<TestData> {
+  let TestDataArray: Array<TestData> = []
+  GattManagerAutoTestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }
 
-export function initSppManagerAutoTestData(): Array<TestDataManager> {
-  let TestDataArray: Array<TestDataManager> = []
-  SppManagerAutoTestComposition.forEach( item => {
-    TestDataArray.push( new TestDataManager(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+export function initSppManagerAutoTestData(): Array<TestData> {
+  let TestDataArray: Array<TestData> = []
+  SppManagerAutoTestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }
 
-export function initProfileManagerAutoTestData(): Array<TestDataManager> {
-  let TestDataArray: Array<TestDataManager> = []
-  ProfileManagerAutoTestComposition.forEach( item => {
-    TestDataArray.push( new TestDataManager(item.name , item.detail , item.url , item.image , item.category) );
-  } )
+export function initProfileManagerAutoTestData(): Array<TestData> {
+  let TestDataArray: Array<TestData> = []
+  ProfileManagerAutoTestComposition.forEach(item => {
+    TestDataArray.push(new TestData(item.name , item.detail , item.url , item.image , item.category));
+  })
   return TestDataArray;
 }

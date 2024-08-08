@@ -18,17 +18,31 @@
 
 #include "i_bluetooth_socket_observer.h"
 #include "iremote_proxy.h"
+#include "bluetooth_raw_address.h"
+#include "bluetooth_bt_uuid.h"
 
 namespace OHOS {
 namespace Bluetooth {
-class BluetoothSocketObserverProxy : public IRemoteProxy<IBluetoothSocketObserver> {
+class BluetoothClientSocketObserverProxy : public IRemoteProxy<IBluetoothClientSocketObserver> {
 public:
-    explicit BluetoothSocketObserverProxy(const sptr<IRemoteObject> &impl)
-        : IRemoteProxy<IBluetoothSocketObserver>(impl) {}
-    ~BluetoothSocketObserverProxy() {}
+    explicit BluetoothClientSocketObserverProxy(const sptr<IRemoteObject> &impl)
+        : IRemoteProxy<IBluetoothClientSocketObserver>(impl) {}
+    ~BluetoothClientSocketObserverProxy() {}
+
+    void OnConnectionStateChanged(CallbackParam callbackParam) override;
 
 private:
-    static inline BrokerDelegator<BluetoothSocketObserverProxy> delegator_;
+    static inline BrokerDelegator<BluetoothClientSocketObserverProxy> delegator_;
+};
+
+class BluetoothServerSocketObserverProxy : public IRemoteProxy<IBluetoothServerSocketObserver> {
+public:
+    explicit BluetoothServerSocketObserverProxy(const sptr<IRemoteObject> &impl)
+        : IRemoteProxy<IBluetoothServerSocketObserver>(impl) {}
+    ~BluetoothServerSocketObserverProxy() {}
+
+private:
+    static inline BrokerDelegator<BluetoothServerSocketObserverProxy> delegator_;
 };
 }  // namespace Bluetooth
 }  // namespace OHOS

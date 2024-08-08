@@ -27,7 +27,7 @@ public:
         : IRemoteProxy<IBluetoothAvrcpTgObserver>(impl) {}
     ~BluetoothAvrcpTgObserverProxy() {}
 
-    void OnConnectionStateChanged(const BluetoothRawAddress &device, int32_t state) override;
+    void OnConnectionStateChanged(const BluetoothRawAddress &device, int32_t state, int32_t cause) override;
 
 private:
     static inline BrokerDelegator<BluetoothAvrcpTgObserverProxy> delegator_;

@@ -54,6 +54,16 @@ std::string GetScanModeName(int mode)
             return "SCAN_MODE_OP_P25_60_240(5)";
         case SCAN_MODE_OP_P100_1000_1000:
             return "SCAN_MODE_OP_P100_1000_1000(6)";
+        case SCAN_MODE_OP_P50_100_200:
+            return "SCAN_MODE_OP_P50_100_200(7)";
+        case SCAN_MODE_OP_P10_30_300:
+            return "SCAN_MODE_OP_P10_30_300(8)";
+        case SCAN_MODE_OP_P2_30_1500:
+            return "SCAN_MODE_OP_P2_30_1500(9)";
+        case SCAN_MODE_OP_P75_30_40:
+            return "SCAN_MODE_OP_P75_30_40(A)";
+        case SCAN_MODE_OP_P50_30_60:
+            return "SCAN_MODE_OP_P50_30_60(B)";
         default:
             return "Unknown";
     }

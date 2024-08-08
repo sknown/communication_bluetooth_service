@@ -19,6 +19,7 @@
 		<T1 property="BtsnoopOutputPath">/data/bluetooth/log/snoop.log</T1>
 		<T1 property="HciLogOutput">false</T1>
 		<T1 property="Desensitization">false</T1>
+		<T1 property="BtOutputMaxSize">0x64</T1>
 	</T1>
 	<T1 section="BleAdapter">
 		<T1 property="GattClientService">true</T1>

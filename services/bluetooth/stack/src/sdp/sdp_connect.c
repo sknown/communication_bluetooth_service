@@ -480,6 +480,10 @@ static void SdpConfigRspCallbackTask(uint16_t lcid, int result)
         if (connect->flag) {
             // Send client packet
             request = SdpFindRequestByAddress(&connect->addr);
+            if (request == NULL) {
+                LOG_ERROR("[%{public}s][%{public}d] SdpFindRequestByAddress() return nullptr", __FUNCTION__, __LINE__);
+                return;
+            }
             request->packetState = SDP_PACKET_SEND;
             SdpSendRequest(lcid, request->transactionId, 0, NULL, request->packet);
         }
@@ -853,6 +857,10 @@ static void SdpReceiveConfigResponseTask(uint16_t lcid, const L2capConfigInfo *c
         if (connect->flag) {
             // Send client packet
             request = SdpFindRequestByAddress(&connect->addr);
+            if (request == NULL) {
+                LOG_ERROR("[%{public}s][%{public}d] SdpFindRequestByAddress() return nullptr", __FUNCTION__, __LINE__);
+                return;
+            }
             request->packetState = SDP_PACKET_SEND;
             SdpSendRequest(connect->lcid, request->transactionId, 0, NULL, request->packet);
         }
@@ -1057,6 +1065,10 @@ static void SdpDisconnectAbnormalTask(uint16_t lcid, uint8_t reason, void *conte
     if (connect->flag) {
         if (reason == HCI_COMMAND_DISALLOWED) {
             request = SdpFindRequestByAddress(&connect->addr);
+            if (request == NULL) {
+                LOG_ERROR("[%{public}s][%{public}d] SdpFindRequestByAddress() return nullptr", __FUNCTION__, __LINE__);
+                return;
+            }
             if (!request->resentFlag) {
                 ListRemoveNode(g_connectList, connect);
                 SdpSendConnectRequest(&request->addr);
@@ -1065,6 +1077,10 @@ static void SdpDisconnectAbnormalTask(uint16_t lcid, uint8_t reason, void *conte
             }
         } else if (reason == L2CAP_STATE_COLLISION) {
             request = SdpFindRequestByAddress(&connect->addr);
+            if (request == NULL) {
+                LOG_ERROR("[%{public}s][%{public}d] SdpFindRequestByAddress() return nullptr", __FUNCTION__, __LINE__);
+                return;
+            }
             ListRemoveNode(g_connectList, connect);
             SdpSendConnectRequest(&request->addr);
             return;

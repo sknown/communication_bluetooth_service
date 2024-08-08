@@ -12,40 +12,41 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// @ts-nocheck
 
-import router from '@system.router';
+import { myParams } from '../../Utils/common'
+import router from '@ohos.router';
 import ConfigData from '../../Utils/ConfigData';
 import { TestData } from '../../MainAbility/model/testData'
 import { PageTitle } from '../../Component/pageTitle';
 import { TestImageDisplay } from '../../Component/testImageDisplay';
 import { initSppManagerAutoTestData } from '../../MainAbility/model/testDataModelsManager'
 import { TestListItem } from '../../Component/testListItems';
+
 /**
  *  SppAutoTest Manager Page Of Bluetooth test
  */
 @Entry
 @Component
 struct SppAutoTestManager {
-  @State message: string = 'SppAutoTestManager';
-  @State textMessage: string = 'null';
-  private sppAutoTestItems: TestData[]=initSppManagerAutoTestData();
-  private testItem: TestData = router.getParams().testId;
-  @StorageLink ("autoTestMessage") autoTestMessage:string =""
+  private sppAutoTestItems: TestData[] = initSppManagerAutoTestData();
+  private testItem: TestData = (router.getParams() as myParams).testItem
+  @StorageLink("autoTestMessage") autoTestMessage: string = ""
+
   build() {
     Column() {
-      Stack({ alignContent: Alignment.TopStart }) {
-        TestImageDisplay({ testItem: this.testItem })
-        PageTitle({ testItem: this.testItem })
+      Stack({ alignContent : Alignment.TopStart }) {
+        TestImageDisplay({ testItem : this.testItem })
+        PageTitle({ testItem : this.testItem })
       }
-      List(){
-        ForEach(this.sppAutoTestItems,item =>{
+
+      List() {
+        ForEach(this.sppAutoTestItems , (item: TestData) => {
           ListItem() {
             TestListItem({
-              testItem: item
+              testItem : item
             })
           }
-        },item=> item.id.toString())
+        } , (item: TestData) => item.id)
       }
       .height('93%')
       .backgroundColor($r("app.color.lead"))

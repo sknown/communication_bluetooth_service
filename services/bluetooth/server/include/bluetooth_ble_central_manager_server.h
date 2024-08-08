@@ -37,14 +37,13 @@ public:
         const sptr<IBluetoothBleCentralManagerCallback> &callback) override;
     void DeregisterBleCentralManagerCallback(int32_t scannerId,
         const sptr<IBluetoothBleCentralManagerCallback> &callback) override;
-    int StartScan(int32_t scannerId) override;
-    int StartScan(int32_t scannerId, const BluetoothBleScanSettings &settings) override;
+    int StartScan(int32_t scannerId, const BluetoothBleScanSettings &settings,
+        const std::vector<BluetoothBleScanFilter> &filters) override;
     int StopScan(int32_t scannerId) override;
-    int ConfigScanFilter(int32_t scannerId, const std::vector<BluetoothBleScanFilter> &filters) override;
     void RemoveScanFilter(int32_t scannerId) override;
-    bool ProxyUid(int32_t uid, bool isProxy) override;
+    bool FreezeByRss(std::set<int> pidSet, bool isProxy) override;
     bool ResetAllProxy() override;
-    static bool IsProxyUid(int32_t uid);
+    static bool IsResourceScheduleControlApp(int32_t pid);
     int SetLpDeviceAdvParam(int duration, int maxExtAdvEvents, int window, int interval, int advHandle) override;
     int SetScanReportChannelToLpDevice(int32_t scannerId, bool enable) override;
     int EnableSyncDataToLpDevice() override;
@@ -59,11 +58,13 @@ private:
     BLUETOOTH_DECLARE_IMPL();
     BLUETOOTH_DISALLOW_COPY_AND_ASSIGN(BluetoothBleCentralManagerServer);
     static std::mutex proxyMutex_;
-    static std::set<int32_t> proxyUids_;
+    static std::set<int32_t> proxyPids_;
     void SetScanParams(const BluetoothBleScanSettings &settings);
     void SetWindowAndInterval(const int mode, uint16_t &window, uint16_t &interval);
+    void SetOtherWindowAndInterval(const int mode, uint16_t &window, uint16_t &interval);
     bool IsNewScanParams();
     bool IsAllStop();
+    int ConfigScanFilterInner(int32_t scannerId, const std::vector<BluetoothBleScanFilter> &filters);
 };
 }  // namespace Bluetooth
 }  // namespace OHOS

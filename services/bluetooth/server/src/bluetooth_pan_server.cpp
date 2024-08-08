@@ -35,7 +35,8 @@ public:
     {
         HILOGI("addr:%{public}s, state:%{public}d", GET_ENCRYPT_ADDR(device), state);
         observers_->ForEach([device, state](sptr<IBluetoothPanObserver> observer) {
-            observer->OnConnectionStateChanged(device, state);
+            observer->OnConnectionStateChanged(device, state,
+                static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
         });
     }
 
@@ -60,6 +61,7 @@ struct BluetoothPanServer::impl {
     std::unique_ptr<BluetoothPanCallback> observerImp_ = std::make_unique<BluetoothPanCallback>();
     IProfilePan *panService_ = nullptr;
     std::vector<sptr<IBluetoothPanObserver>> advCallBack_;
+    std::mutex advCallBackMutex;
 
     IProfilePan *GetServicePtr()
     {
@@ -140,6 +142,7 @@ ErrCode BluetoothPanServer::RegisterObserver(const sptr<IBluetoothPanObserver> o
     }
     auto func = std::bind(&BluetoothPanServer::DeregisterObserver, this, std::placeholders::_1);
     pimpl->observers_.Register(observer, func);
+    std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
     pimpl->advCallBack_.push_back(observer);
     return ERR_OK;
 }
@@ -155,12 +158,15 @@ ErrCode BluetoothPanServer::DeregisterObserver(const sptr<IBluetoothPanObserver>
         HILOGE("pimpl is null");
         return ERR_NO_INIT;
     }
-    for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
-        if ((*iter)->AsObject() == observer->AsObject()) {
-            if (pimpl != nullptr) {
-                pimpl->observers_.Deregister(*iter);
-                pimpl->advCallBack_.erase(iter);
-                break;
+    {
+        std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
+        for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
+            if ((*iter)->AsObject() == observer->AsObject()) {
+                if (pimpl != nullptr) {
+                    pimpl->observers_.Deregister(*iter);
+                    pimpl->advCallBack_.erase(iter);
+                    break;
+                }
             }
         }
     }

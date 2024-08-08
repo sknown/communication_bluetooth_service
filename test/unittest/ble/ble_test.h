@@ -28,7 +28,12 @@ public:
     ~BleAdvertiseCallbackTest(){};
 
 private:
-    void OnStartResultEvent(int result);
+    void OnStartResultEvent(int result, int advHandle) {}
+    void OnEnableResultEvent(int result, int advHandle) {}
+    void OnDisableResultEvent(int result, int advHandle) {}
+    void OnStopResultEvent(int result, int advHandle) {}
+    void OnSetAdvDataEvent(int result) {}
+    void OnGetAdvHandleEvent(int result, int advHandle) {}
 };
 
 class BleHostObserverTest : public Bluetooth::BluetoothHostObserver {
@@ -40,7 +45,8 @@ private:
     void OnStateChanged(const int transport, const int status);
     void OnDiscoveryStateChanged(int status)
     {}
-    void OnDiscoveryResult(const BluetoothRemoteDevice &device)
+    void OnDiscoveryResult(
+        const BluetoothRemoteDevice &device, int rssi, const std::string deviceName, int deviceClass)
     {}
     void OnPairRequested(const BluetoothRemoteDevice &device)
     {}
@@ -62,6 +68,8 @@ public:
 private:
     void OnScanCallback(const Bluetooth::BleScanResult &result)
     {}
+    void OnFoundOrLostCallback(const BleScanResult &result, uint8_t callbackType)
+    {}
     void OnBleBatchScanResultsEvent(const std::vector<Bluetooth::BleScanResult> &results)
     {}
     void OnStartOrStopScanEvent(int resultCode, bool isStartScan)
@@ -78,7 +86,7 @@ public:
     Bluetooth::BleAdvertiserSettings bleAdvertiserSettings_ {};
     BleCentralManagerCallbackTest bleCentralManagerCallbackTest_ {};
     BleAdvertiseCallbackTest bleAdvertiseCallbackTest_ {};
-    BleHostObserverTest bleHostObserverTest_ {};
+    std::shared_ptr<BleHostObserverTest> bleHostObserverTest_ = nullptr;
     Bluetooth::BleScanSettings bleScanSettings_ {};
 
     static void SetUpTestCase(void);

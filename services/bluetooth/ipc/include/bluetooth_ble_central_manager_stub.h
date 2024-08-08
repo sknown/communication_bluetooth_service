@@ -40,11 +40,9 @@ private:
     ErrCode RegisterBleCentralManagerCallbackInner(MessageParcel &data, MessageParcel &reply);
     ErrCode DeregisterBleCentralManagerCallbackInner(MessageParcel &data, MessageParcel &reply);
     ErrCode StartScanInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode StartScanWithSettingsInner(MessageParcel &data, MessageParcel &reply);
     ErrCode StopScanInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode ConfigScanFilterInner(MessageParcel &data, MessageParcel &reply);
     ErrCode RemoveScanFilterInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode ProxyUidInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode FreezeByRssInner(MessageParcel &data, MessageParcel &reply);
     ErrCode ResetAllProxyInner(MessageParcel &data, MessageParcel &reply);
     ErrCode SetLpDeviceAdvParamInner(MessageParcel &data, MessageParcel &reply);
     ErrCode SetScanReportChannelToLpDeviceInner(MessageParcel &data, MessageParcel &reply);

@@ -24,6 +24,7 @@
 #include "if_system_ability_manager.h"
 #include "iservice_registry.h"
 #include "system_ability.h"
+#include "bluetooth_remote_device_info.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -46,10 +47,10 @@ public:
     int32_t EnableBt() override;
     int32_t DisableBt() override;
     int32_t GetBtState(int32_t &state) override;
-    bool BluetoothFactoryReset() override;
+    int32_t BluetoothFactoryReset() override;
     int32_t GetDeviceType(int32_t transport, const std::string &address) override;
 
-    std::string GetLocalAddress() override;
+    int32_t GetLocalAddress(std::string &addr) override;
     sptr<IRemoteObject> GetProfile(const std::string &name) override;
     sptr<IRemoteObject> GetBleRemote(const std::string &name) override;
 
@@ -62,6 +63,8 @@ public:
     void Stop();
     int32_t DisableBle() override;
     int32_t EnableBle() override;
+    int32_t RestrictBluetooth() override;
+    int32_t SatelliteControl(int state) override;
     bool IsBrEnabled() override;
     bool IsBleEnabled() override;
     std::vector<uint32_t> GetProfileList() override;
@@ -78,9 +81,9 @@ public:
     bool SetBondableMode(int32_t transport, int32_t mode) override;
     int32_t StartBtDiscovery() override;
     int32_t CancelBtDiscovery() override;
-    bool IsBtDiscovering(const int32_t transport) override;
+    int32_t IsBtDiscovering(bool &isDiscovering, const int32_t transport) override;
     long GetBtDiscoveryEndMillis() override;
-    int32_t GetPairedDevices(const int32_t transport, std::vector<BluetoothRawAddress> &pairedAddr) override;
+    int32_t GetPairedDevices(std::vector<BluetoothRawAddress> &pairedAddr) override;
     int32_t RemovePair(const int32_t transport, const sptr<BluetoothRawAddress> &device) override;
     bool RemoveAllPairs() override;
     void RegisterRemoteDeviceObserver(const sptr<IBluetoothRemoteDeviceObserver> &observer) override;
@@ -93,9 +96,9 @@ public:
     int32_t GetPowerMode(const std::string &address) override;
     int32_t GetDeviceName(int32_t transport, const std::string &address, std::string &name) override;
     std::string GetDeviceAlias(const std::string &address) override;
-    bool SetDeviceAlias(const std::string &address, const std::string &aliasName) override;
-    int32_t GetDeviceBatteryLevel(const std::string &address) override;
-    int32_t GetPairState(int32_t transport, const std::string &address) override;
+    int32_t SetDeviceAlias(const std::string &address, const std::string &aliasName) override;
+    int32_t GetRemoteDeviceBatteryInfo(const std::string &address, BluetoothBatteryInfo &batteryInfo) override;
+    int32_t GetPairState(int32_t transport, const std::string &address, int32_t &pairState) override;
     int32_t StartPair(int32_t transport, const std::string &address) override;
     bool CancelPairing(int32_t transport, const std::string &address) override;
     bool IsBondedFromLocal(int32_t transport, const std::string &address) override;
@@ -120,6 +123,13 @@ public:
     int32_t SyncRandomAddress(const std::string &realAddr, const std::string &randomAddr) override;
     int32_t StartCrediblePair(int32_t transport, const std::string &address) override;
     int32_t CountEnableTimes(bool enable) override;
+    int32_t ConnectAllowedProfiles(const std::string &address) override;
+    int32_t DisconnectAllowedProfiles(const std::string &address) override;
+    int32_t SetDeviceCustomType(const std::string &address, int32_t deviceType) override;
+    int32_t GetRemoteDeviceInfo(const std::string &address,
+        std::shared_ptr<BluetoothRemoteDeviceInfo> &deviceInfo, int type) override;
+    void RegisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer) override;
+    void DeregisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer) override;
 
 private:
     static sptr<BluetoothHostServer> instance;
@@ -130,9 +140,12 @@ private:
     bool registeredToService_ = false;
     ServiceRunningState state_ = ServiceRunningState::STATE_IDLE;
 
+    int GetTransportByDeviceType(int32_t transport, const std::string &address);
+
     BLUETOOTH_DISALLOW_COPY_AND_ASSIGN(BluetoothHostServer);
     BLUETOOTH_DECLARE_IMPL();
     bool IsBtEnabled();
+    std::mutex oblock_ {};
 };
 }  // namespace Bluetooth
 }  // namespace OHOS

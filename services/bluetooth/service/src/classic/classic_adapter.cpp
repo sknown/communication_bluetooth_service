@@ -1017,7 +1017,7 @@ void ClassicAdapter::HandleInquiryResult(
         }
     }
 
-    SendDiscoveryResult(device);
+    SendDiscoveryResult(device, rssi, remoteDevice->GetRemoteName(), cod);
 }
 
 std::shared_ptr<ClassicRemoteDevice> ClassicAdapter::FindRemoteDevice(const RawAddress &device)
@@ -1147,12 +1147,15 @@ void ClassicAdapter::SendDiscoveryStateChanged(int discoveryState) const
         [discoveryState](IAdapterClassicObserver &observer) { observer.OnDiscoveryStateChanged(discoveryState); });
 }
 
-void ClassicAdapter::SendDiscoveryResult(const RawAddress &device) const
+void ClassicAdapter::SendDiscoveryResult(
+    const RawAddress &device, int rssi, const std::string deviceName, int deviceClass) const
 {
     HILOGI("address: %{public}s", GetEncryptAddr(device.GetAddress()).c_str());
 
     pimpl->adapterObservers_.ForEach(
-        [device](IAdapterClassicObserver &observer) { observer.OnDiscoveryResult(device); });
+        [device, rssi, deviceName, deviceClass](IAdapterClassicObserver &observer) {
+            observer.OnDiscoveryResult(device, rssi, deviceName, deviceClass);
+        });
 }
 
 void ClassicAdapter::SendRemoteCodChanged(const RawAddress &device, int cod) const
@@ -2261,7 +2264,7 @@ int ClassicAdapter::ClassicAdapter::GetDeviceType(const RawAddress &device) cons
     HILOGI("enter");
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
-    int type = INVALID_VALUE;
+    int type = INVALID_TYPE;
     auto it = devices_.find(device.GetAddress());
     if (it != devices_.end()) {
         type = it->second->GetDeviceType();
@@ -2387,18 +2390,6 @@ int ClassicAdapter::CheckSspConfirmType(int remoteIo, int type) const
     return confirmType;
 }
 
-int ClassicAdapter::GetDeviceBatteryLevel(const RawAddress &device) const
-{
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
-    int batteryLevel = 0;
-    auto it = devices_.find(device.GetAddress());
-    if (it != devices_.end()) {
-        batteryLevel = it->second->GetBatteryLevel();
-    }
-    HILOGI("batteryLevel: %{public}d", batteryLevel);
-    return batteryLevel;
-}
-
 void ClassicAdapter::SetDeviceBatteryLevel(const RawAddress &device, int batteryLevel) const
 {
     HILOGI("addr: %{public}s, batteryLevel: %{public}d", GetEncryptAddr(device.GetAddress()).c_str(), batteryLevel);
@@ -2415,12 +2406,22 @@ void ClassicAdapter::SetDeviceBatteryLevel(const RawAddress &device, int battery
 void ClassicAdapter::SendRemoteBatteryLevelChanged(const RawAddress &device, int batteryLevel) const
 {
     HILOGI("addr: %{public}s, batteryLevel: %{public}d", GetEncryptAddr(device.GetAddress()).c_str(), batteryLevel);
-
-    pimpl->remoteObservers_.ForEach([device, batteryLevel](IClassicRemoteDeviceObserver &observer) {
-        observer.OnRemoteBatteryLevelChanged(device, batteryLevel);
-    });
 }
 
+bool ClassicAdapter::IsHfpCodSupported(const RawAddress &device)
+{
+    std::shared_ptr<ClassicRemoteDevice> remoteDevice = FindRemoteDevice(device);
+    if (remoteDevice == nullptr) {
+        HILOGE("remoteDevice is nullptr");
+        return false;
+    }
+    int cod = remoteDevice->GetDeviceClass();
+    if ((cod & CLASS_OF_DEVICE_MASK) == CLASS_OF_DEVICE_AV_HEADSETS ||
+        (cod & CLASS_OF_DEVICE_MASK) == CLASS_OF_DEVICE_AV_HANDSFREE) {
+            return true;
+    }
+    return false;
+}
 REGISTER_CLASS_CREATOR(ClassicAdapter);
 }  // namespace bluetooth
 }  // namespace OHOS

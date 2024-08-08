@@ -75,6 +75,22 @@ int AuthCenter::VerifyApproximatelyPermission(const int &pid, const int &uid)
     return PERMISSION_GRANTED;
 }
 
+int AuthCenter::VerifyAccessBluetoothPermission(const int &pid, const int &uid)
+{
+    if (g_permissionAlwaysGrant) {
+        return PERMISSION_GRANTED;
+    }
+    return PermissionHelper::VerifyAccessBluetoothPermission(pid, uid);
+}
+
+int AuthCenter::VerifyGetBluetoothLocalMacPermission(const int &pid, const int &uid)
+{
+    if (g_permissionAlwaysGrant) {
+        return PERMISSION_GRANTED;
+    }
+    return PermissionHelper::VerifyGetBluetoothLocalMacPermission(pid, uid);
+}
+
 int AuthCenter::VerifyUseBluetoothPermission(const std::uint32_t  &tokenID)
 {
     if (g_permissionAlwaysGrant) {
