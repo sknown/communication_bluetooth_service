@@ -324,7 +324,7 @@ bool A2dpStateConfigure::Dispatch(const utility::Message &msg)
             ProcessDelayReportInd(msgData, role);
             break;
         default:
-            ProcessSubOpenState(msgData, role, msg.what_);        
+            ProcessSubOpenState(msgData, role, msg.what_);
             break;
     }
     return true;
@@ -551,7 +551,7 @@ bool A2dpStateOpening::Dispatch(const utility::Message &msg)
             ProcessSubOpenState(msgData, role, msg.what_);
             break;
     }
-    return true;    
+    return true;
 }
 
 void A2dpStateOpening::ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, int cmd)
