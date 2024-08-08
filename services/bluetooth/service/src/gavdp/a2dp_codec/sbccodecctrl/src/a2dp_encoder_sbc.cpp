@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include <inttypes.h>
 #include "../include/a2dp_encoder_sbc.h"
 #include <cmath>
 #include <cstring>
@@ -96,6 +96,8 @@ void A2dpSbcEncoder::GetRenderPosition(uint64_t &sendDataSize, uint32_t &timeSta
     std::lock_guard<std::recursive_mutex> lock(g_sbcMutex);
     sendDataSize = a2dpSbcEncoderCb_.sendDataSize;
     timeStamp = a2dpSbcEncoderCb_.timestamp;
+    LOG_INFO("[A2dpSbcEncoder] %{public}s sendDataSize = %{public}"PRIu64", timeStamp = %{public}u\n",
+        __func__, sendDataSize, timeStamp);
 }
 
 void A2dpSbcEncoder::SendFrames(uint64_t timeStampUs)
