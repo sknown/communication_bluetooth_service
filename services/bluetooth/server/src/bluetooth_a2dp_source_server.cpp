@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include <cinttypes>
 #include "bluetooth_def.h"
 #include "bluetooth_errorcode.h"
 #include "bluetooth_hitrace.h"
@@ -421,8 +421,8 @@ int BluetoothA2dpSourceServer::GetRenderPosition(const RawAddress &device, uint3
 {
     HILOGI("starts");
     int ret = pimpl->a2dpSrcService_->GetRenderPosition(device, delayValue, sendDataSize, timeStamp);
-    HILOGI("delayValue = %{public}u, sendDataSize = %{public}llu, timeStamp = %{public}u", delayValue, sendDataSize,
-        timeStamp);
+    HILOGI("delayValue = %{public}u, sendDataSize = %{public}" PRIu64 ", timeStamp = %{public}u", delayValue,
+        sendDataSize, timeStamp);
     return ret;
 }
 
