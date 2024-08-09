@@ -462,5 +462,15 @@ int BluetoothA2dpSourceServer::GetAutoPlayDisabledDuration(const RawAddress &dev
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
+
+void BluetoothA2dpSourceServer::GetVirtualDeviceList(std::vector<std::string> &devices)
+{
+    return;
+}
+
+void BluetoothA2dpSourceServer::UpdateVirtualDevice(int32_t action, const std::string &address)
+{
+    return;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

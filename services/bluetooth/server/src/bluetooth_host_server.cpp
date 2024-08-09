@@ -1838,5 +1838,8 @@ void BluetoothHostServer::RegisterBtResourceManagerObserver(const sptr<IBluetoot
 
 void BluetoothHostServer::DeregisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer)
 {}
+
+void BluetoothHostServer::UpdateVirtualDevice(int32_t action, const std::string &address)
+{}
 }  // namespace Bluetooth
 }  // namespace OHOS
