@@ -61,6 +61,8 @@ public:
     int EnableAutoPlay(const RawAddress &device) override;
     int DisableAutoPlay(const RawAddress &device, const int duration) override;
     int GetAutoPlayDisabledDuration(const RawAddress &device, int &duration) override;
+    void GetVirtualDeviceList(std::vector<std::string> &devices) override;
+    void UpdateVirtualDevice(int32_t action, const std::string &address) override;
 
 private:
     BLUETOOTH_DECLARE_IMPL();
