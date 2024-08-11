@@ -97,7 +97,7 @@ bool ClassicAdapterProperties::SetLocalName(const std::string &name)
     std::lock_guard<std::recursive_mutex> lock(propertiesMutex_);
 
     int length = name.length();
-    if (length >= MAX_LOC_BT_NAME_LEN) {
+    if (length > MAX_LOC_BT_NAME_LEN) {
         std::string ellipsis = "...";
         int limitLength = MAX_LOC_BT_NAME_LEN - ellipsis.length();
         deviceName_ = name.substr(0, limitLength);

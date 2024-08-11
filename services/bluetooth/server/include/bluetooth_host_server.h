@@ -130,6 +130,7 @@ public:
         std::shared_ptr<BluetoothRemoteDeviceInfo> &deviceInfo, int type) override;
     void RegisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer) override;
     void DeregisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer) override;
+    void UpdateVirtualDevice(int32_t action, const std::string &address) override;
 
 private:
     static sptr<BluetoothHostServer> instance;

@@ -74,7 +74,10 @@ BluetoothHfpAgStub::BluetoothHfpAgStub() {
         &BluetoothHfpAgStub::IsVgsSupportedInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_CALL_LOG)] =
         &BluetoothHfpAgStub::EnableBtCallLogInner;
-
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_GET_VIRTUALDEVICE_LIST)] =
+        &BluetoothHfpAgStub::GetVirtualDeviceListInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothHfpAgInterfaceCode::BT_HFP_AG_UPDATE_VIRTUALDEVICE)] =
+        &BluetoothHfpAgStub::UpdateVirtualDeviceInner;
     HILOGI("%{public}s ends.", __func__);
 }
 
@@ -416,6 +419,16 @@ int32_t BluetoothHfpAgStub::IsVgsSupportedInner(MessageParcel &data, MessageParc
     CHECK_AND_RETURN_LOG_RET(reply.WriteInt32(result), BT_ERR_INTERNAL_ERROR, "reply WriteInt32 failed");
     CHECK_AND_RETURN_LOG_RET(reply.WriteBool(isSupported), BT_ERR_INTERNAL_ERROR, "reply WriteBool failed");
     return NO_ERROR;
+}
+
+int32_t BluetoothHfpAgStub::UpdateVirtualDeviceInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHfpAgStub::GetVirtualDeviceListInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

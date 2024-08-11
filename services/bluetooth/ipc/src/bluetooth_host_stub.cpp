@@ -248,6 +248,9 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::BT_DEREGISTER_RESOURCE_MANAGER_OBSERVER,
             std::bind(&BluetoothHostStub::DeregisterBtResourceManagerObserverInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::UPDATE_VIRTUAL_DEVICE,
+            std::bind(&BluetoothHostStub::UpdateVirtualDeviceInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -1361,6 +1364,11 @@ int32_t BluetoothHostStub::DeregisterBtResourceManagerObserverInner(MessageParce
     CHECK_AND_RETURN_LOG_RET(observer != nullptr, ERR_INVALID_VALUE, "observer is nullptr");
     DeregisterBtResourceManagerObserver(observer);
     return NO_ERROR;
+}
+
+int32_t BluetoothHostStub::UpdateVirtualDeviceInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS
