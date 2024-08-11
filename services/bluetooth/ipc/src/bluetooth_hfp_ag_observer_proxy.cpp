@@ -158,5 +158,31 @@ void BluetoothHfpAgObserverProxy::OnHfpStackChanged(const BluetoothRawAddress &d
     } 
 }
 
+void BluetoothHfpAgObserverProxy::OnVirtualDeviceChanged(int32_t action, std::string address)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothHfpAgObserverProxy::GetDescriptor())) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnVirtualDeviceChanged WriteInterfaceToken error");
+        return;
+    }
+    if (!data.WriteInt32(action)) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnVirtualDeviceChanged WriteInt32 error");
+        return;
+    }
+    if (!data.WriteString(address)) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnVirtualDeviceChanged WriteString error");
+        return;
+    }
+    MessageParcel reply;
+    MessageOption option {
+        MessageOption::TF_ASYNC
+    };
+    int error = Remote()->SendRequest(
+        BluetoothHfpAgObserverInterfaceCode::BT_HFP_AG_OBSERVER_VIRTUALDEVICE_CHANGED, data, reply, option);
+    if (error != NO_ERROR) {
+        HILOGE("BluetoothHfpAgObserverProxy::OnVirtualDeviceChanged done fail, error: %{public}d", error);
+        return;
+    }
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
