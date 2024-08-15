@@ -251,6 +251,15 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::UPDATE_VIRTUAL_DEVICE,
             std::bind(&BluetoothHostStub::UpdateVirtualDeviceInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::GET_VIRTUAL_AUTO_CONN_SWITCH,
+            std::bind(&BluetoothHostStub::IsSupportVirtualAutoConnectInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::SET_VIRTUAL_AUTO_CONN_TYPE,
+            std::bind(&BluetoothHostStub::SetVirtualAutoConnectTypeInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::SET_FAST_SCAN_LEVEL,
+            std::bind(&BluetoothHostStub::SetFastScanLevelInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -1367,6 +1376,21 @@ int32_t BluetoothHostStub::DeregisterBtResourceManagerObserverInner(MessageParce
 }
 
 int32_t BluetoothHostStub::UpdateVirtualDeviceInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::IsSupportVirtualAutoConnectInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::SetVirtualAutoConnectTypeInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::SetFastScanLevelInner(MessageParcel &data, MessageParcel &reply)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
