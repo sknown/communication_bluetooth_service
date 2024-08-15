@@ -1,0 +1,12 @@
+import("//build/ohos.gni")
+import("config.gni")
+
+group("bluetooth_tools") {
+  deps = []
+
+  if (enable_bluetooth_hcitool) {
+    deps += [
+      "hcitool:hci_tool",
+    ]
+  }
+}

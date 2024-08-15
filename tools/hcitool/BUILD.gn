@@ -1,0 +1,50 @@
+import("//build/ohos.gni")
+import("//foundation/communication/bluetooth_service/tools/paths.gni")
+
+config("configs") {
+  cflags = [
+    "-Wall",
+    "-Werror",
+    "-Wno-switch",
+    "-Wno-pragma-pack",
+    "-Wno-unused-function",
+    "-Wno-unused-parameter",
+    "-Wno-unused-variable",
+    "-Wno-implicit-function-declaration",
+    "-Wno-incompatible-pointer-types",
+  ]
+}
+
+ohos_prebuilt_etc("hcitool_menus_cfg") {
+  source = "hcitool_menus.json"
+  module_install_dir = "data/bluetooth/etc"
+  part_name = "bluetooth_service"
+  subsystem_name = "communication"
+}
+
+ohos_executable("hci_tool") {
+  sources = [
+    "main.cpp",
+    "hcitool_cmds.cpp",
+  ]
+
+  include_dirs = [
+    "$menu_path/include",
+    "$bluetooth_stack_path/include",
+    "//third_party/json/include",
+  ]
+
+  deps = [
+    ":hcitool_menus_cfg",
+    "$menu_path:libmenu",
+    "$bluetooth_stack_path:btstack",
+  ]
+
+  configs = [ ":configs" ]
+
+  use_rtti = true
+  use_exceptions = true
+  install_images = [ "system" ]
+  part_name = "bluetooth_service"
+  subsystem_name = "communication"
+}
