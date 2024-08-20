@@ -1807,7 +1807,7 @@ int32_t BluetoothHostServer::RestrictBluetooth()
     return BT_ERR_API_NOT_SUPPORT;
 }
 
-int32_t BluetoothHostServer::SatelliteControl(int state)
+int32_t BluetoothHostServer::SatelliteControl(int type, int state)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
