@@ -348,6 +348,7 @@ ohos_shared_library("btservice") {
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",
+    "jsoncpp:jsoncpp",
     "samgr:samgr_proxy",
   ]
 
