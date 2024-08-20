@@ -40,6 +40,7 @@
 #define HCI_TX_QUEUE_SIZE INT32_MAX
 #define HCI_RX_QUEUE_SIZE INT32_MAX
 #define HCI_WAIT_HDI_INIT_TIME 2000
+#define HCI_RETRY_HDI_INIT_MAX_COUNT 3
 
 static BtHciCallbacks g_hdiCallacks;
 
@@ -52,6 +53,7 @@ static ReactorItem *g_hciRxReactorItem = NULL;
 static Semaphore *g_waitHdiInit;
 static BtInitStatus g_hdiInitStatus = UNKNOWN;
 static Alarm *g_waitHdiInitAlarm = NULL;
+static uint8_t g_retryHdiInitCount = 0;
 
 static HDILib *g_hdiLib = NULL;
 
@@ -76,7 +78,20 @@ static void HciFreePacket(void *packet)
 
 static void HciOnHDIInitedTimerTimeout(void *param)
 {
-    HciOnHDIInited(INITIALIZATION_ERROR);
+    LOG_DEBUG("%{public}s g_retryHdiInitCount:%{public}d", __FUNCTION__, g_retryHdiInitCount);
+    if (g_retryHdiInitCount > HCI_RETRY_HDI_INIT_MAX_COUNT) {
+        HciOnHDIInited(INITIALIZATION_ERROR);
+    } else {
+        if (g_hdiLib->hdiClose != NULL) {
+            g_hdiLib->hdiClose();
+        }
+
+        g_hdiLib->hdiInit(&g_hdiCallacks);
+        if (g_waitHdiInitAlarm != NULL) {
+            AlarmSet(g_waitHdiInitAlarm, HCI_WAIT_HDI_INIT_TIME, HciOnHDIInitedTimerTimeout, NULL);
+        }
+        g_retryHdiInitCount++;
+    }
 }
 
 static int HciInitQueue()
@@ -118,6 +133,7 @@ NO_SANITIZE("cfi") static int HciInitHal()
         if (g_waitHdiInitAlarm == NULL) {
             LOG_ERROR("HdiInited alarm create failed");
         } else {
+            g_retryHdiInitCount = 0;
             AlarmSet(g_waitHdiInitAlarm, HCI_WAIT_HDI_INIT_TIME, HciOnHDIInitedTimerTimeout, NULL);
         }
         SemaphoreWait(g_waitHdiInit);
@@ -263,6 +279,7 @@ NO_SANITIZE("cfi") void HCI_Close()
         AlarmDelete(g_waitHdiInitAlarm);
         g_waitHdiInitAlarm = NULL;
     }
+    g_retryHdiInitCount = 0;
 
     if (g_hciTxReactorItem != NULL) {
         ReactorUnregister(g_hciTxReactorItem);
@@ -318,6 +335,7 @@ static void HciOnHDIInited(BtInitStatus status)
         AlarmDelete(g_waitHdiInitAlarm);
         g_waitHdiInitAlarm = NULL;
     }
+    g_retryHdiInitCount = 0;
     g_hdiInitStatus = status;
     SemaphorePost(g_waitHdiInit);
 }
