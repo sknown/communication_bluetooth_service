@@ -86,7 +86,7 @@ int HidHostHogp::Connect()
         return RET_BAD_STATUS;
     }
 
-    int ret = gattClientService_->Connect(appId_, false);
+    int ret = gattClientService_->Connect(appId_, true);
     if (ret != BT_SUCCESS) {
         LOG_ERROR("[HOGP] %{public}s:gatt connect faild ret = %{public}d", __func__, ret);
         return ret;

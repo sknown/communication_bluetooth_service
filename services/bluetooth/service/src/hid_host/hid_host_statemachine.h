@@ -87,6 +87,8 @@ public:
 
     void ConnectionTimeout() const;
     void DisonnectionTimeout() const;
+    void setReconnectFlag(bool flag);
+    bool getReconnectFlag() const;
     void StartConnectionTimer() const;
     void StopConnectionTimer() const;
     void StartDisconnectionTimer() const;
@@ -126,6 +128,7 @@ private:
 
     std::string address_;
     bool isRemoving_ {false};
+    bool isReconnect_ {false};
     int preState_ {0};
     int deviceType_ {HID_HOST_DEVICE_TYPE_UNKNOWN};
     std::list<HidHostMessage> deferMsgs_ {};

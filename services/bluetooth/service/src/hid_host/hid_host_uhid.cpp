@@ -421,6 +421,8 @@ void HidHostUhid::ReadUhidOutPut(uhid_event ev)
         HidHostService::GetService()->HidHostSetReport(address_, HID_HOST_INPUT_REPORT, ev.u.output.size,
             ev.u.output.data);
     }
+    task_id_ = ev.u.feature.id;
+    task_type_ = HID_HOST_DATA_TYPE_SET_REPORT;
 }
 
 void HidHostUhid::ReadUhidFeature(uhid_event ev)
