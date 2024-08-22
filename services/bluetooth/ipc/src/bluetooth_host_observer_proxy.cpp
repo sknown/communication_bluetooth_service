@@ -249,6 +249,28 @@ void BluetoothHostObserverProxy::OnDeviceAddrChanged(const std::string &address)
     }
 }
 
+void BluetoothHostObserverProxy::OnBluetoothStateChanged(int32_t state)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothHostObserverProxy::GetDescriptor())) {
+        HILOGE("BluetoothHostObserverProxy::OnBluetoothStateChanged WriteInterfaceToken error");
+        return;
+    }
+
+    if (!data.WriteInt32(state)) {
+        HILOGE("BluetoothHostObserverProxy::OnBluetoothStateChanged WriteInt32 error");
+        return;
+    }
+
+    MessageParcel reply;
+    MessageOption option = {MessageOption::TF_ASYNC};
+    ErrCode result = InnerTransact(BT_HOST_OBSERVER_STATE_CHANGE_V2, option, data, reply);
+    if (result != NO_ERROR) {
+        HILOGE("BluetoothHostProxy::OnBluetoothStateChanged done fail, error: %{public}d", result);
+        return;
+    }
+}
+
 ErrCode BluetoothHostObserverProxy::InnerTransact(
     uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply)
 {

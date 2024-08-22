@@ -36,7 +36,6 @@ private:
     ErrCode DeregisterObserverInner(MessageParcel &data, MessageParcel &reply);
     ErrCode EnableBtInner(MessageParcel &data, MessageParcel &reply);
     int32_t DisableBtInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode RestrictBluetoothInner(MessageParcel &data, MessageParcel &reply);
     ErrCode SatelliteControlInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetProfileInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetBleRemoteInner(MessageParcel &data, MessageParcel &reply);
@@ -102,7 +101,6 @@ private:
     ErrCode GetRandomAddressInner(MessageParcel &data, MessageParcel &reply);
     ErrCode SyncRandomAddressInner(MessageParcel &data, MessageParcel &reply);
     ErrCode StartCrediblePairInner(MessageParcel &data, MessageParcel &reply);
-    ErrCode CountEnableTimesInner(MessageParcel &data, MessageParcel &reply);
     int32_t ConnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply);
     int32_t DisconnectAllowedProfilesInner(MessageParcel &data, MessageParcel &reply);
     int32_t SetDeviceCustomTypeInner(MessageParcel &data, MessageParcel &reply);
@@ -112,6 +110,7 @@ private:
     int32_t SetFastScanLevelInner(MessageParcel &data, MessageParcel &reply);
     int32_t RegisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply);
     int32_t DeregisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply);
+    int32_t EnableBluetoothToRestrictModeInner(MessageParcel &data, MessageParcel &reply);
 
     static const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParcel &, MessageParcel &)>>
         memberFuncMap_;
