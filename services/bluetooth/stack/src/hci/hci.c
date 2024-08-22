@@ -37,10 +37,13 @@
 #include "hci_internal.h"
 #include "hci_vendor_if.h"
 
+#include <unistd.h>
+#include <sys/wait.h>
+#include "securec.h"
+
 #define HCI_TX_QUEUE_SIZE INT32_MAX
 #define HCI_RX_QUEUE_SIZE INT32_MAX
-#define HCI_WAIT_HDI_INIT_TIME 2000
-#define HCI_RETRY_HDI_INIT_MAX_COUNT 3
+#define HCI_WAIT_HDI_INIT_TIME 5000
 
 static BtHciCallbacks g_hdiCallacks;
 
@@ -53,7 +56,6 @@ static ReactorItem *g_hciRxReactorItem = NULL;
 static Semaphore *g_waitHdiInit;
 static BtInitStatus g_hdiInitStatus = UNKNOWN;
 static Alarm *g_waitHdiInitAlarm = NULL;
-static uint8_t g_retryHdiInitCount = 0;
 
 static HDILib *g_hdiLib = NULL;
 
@@ -65,7 +67,6 @@ static Thread *g_hciTxThread = NULL;
 // Function Declare
 static void HciSendPacketCallback(void *param);
 static void HciRecvPacketCallback(void *param);
-static void HciOnHDIInited(BtInitStatus status);
 
 static void HciFreePacket(void *packet)
 {
@@ -78,19 +79,17 @@ static void HciFreePacket(void *packet)
 
 static void HciOnHDIInitedTimerTimeout(void *param)
 {
-    LOG_DEBUG("%{public}s g_retryHdiInitCount:%{public}d", __FUNCTION__, g_retryHdiInitCount);
-    if (g_retryHdiInitCount > HCI_RETRY_HDI_INIT_MAX_COUNT) {
-        HciOnHDIInited(INITIALIZATION_ERROR);
-    } else {
-        if (g_hdiLib->hdiClose != NULL) {
-            g_hdiLib->hdiClose();
+    pid_t pid = getpid();
+    LOG_DEBUG("%{public}s pid:%{public}d", __FUNCTION__, pid);
+    if (kill(pid, SIGKILL) == -1) {
+        if (ESRCH == errno) {
+            LOG_INFO("kill [%{public}d] success, pid no exist", pid);
         }
+        LOG_ERROR("kill [%{public}d] failed", pid);
+    }
 
-        g_hdiLib->hdiInit(&g_hdiCallacks);
-        if (g_waitHdiInitAlarm != NULL) {
-            AlarmSet(g_waitHdiInitAlarm, HCI_WAIT_HDI_INIT_TIME, HciOnHDIInitedTimerTimeout, NULL);
-        }
-        g_retryHdiInitCount++;
+    if (g_waitHdiInitAlarm != NULL) {
+        AlarmSet(g_waitHdiInitAlarm, HCI_WAIT_HDI_INIT_TIME, HciOnHDIInitedTimerTimeout, NULL);
     }
 }
 
@@ -133,7 +132,6 @@ NO_SANITIZE("cfi") static int HciInitHal()
         if (g_waitHdiInitAlarm == NULL) {
             LOG_ERROR("HdiInited alarm create failed");
         } else {
-            g_retryHdiInitCount = 0;
             AlarmSet(g_waitHdiInitAlarm, HCI_WAIT_HDI_INIT_TIME, HciOnHDIInitedTimerTimeout, NULL);
         }
         SemaphoreWait(g_waitHdiInit);
@@ -279,7 +277,6 @@ NO_SANITIZE("cfi") void HCI_Close()
         AlarmDelete(g_waitHdiInitAlarm);
         g_waitHdiInitAlarm = NULL;
     }
-    g_retryHdiInitCount = 0;
 
     if (g_hciTxReactorItem != NULL) {
         ReactorUnregister(g_hciTxReactorItem);
@@ -335,7 +332,6 @@ static void HciOnHDIInited(BtInitStatus status)
         AlarmDelete(g_waitHdiInitAlarm);
         g_waitHdiInitAlarm = NULL;
     }
-    g_retryHdiInitCount = 0;
     g_hdiInitStatus = status;
     SemaphorePost(g_waitHdiInit);
 }
