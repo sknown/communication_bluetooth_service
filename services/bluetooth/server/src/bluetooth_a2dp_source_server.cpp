@@ -248,7 +248,7 @@ int BluetoothA2dpSourceServer::GetDevicesByStates(const std::vector<int32_t> &st
     HILOGI("starts");
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
-        return RET_NO_SUPPORT;
+        return BT_ERR_PERMISSION_FAILED;
     }
     std::vector<int> tmpStates;
     for (int32_t state : states) {
