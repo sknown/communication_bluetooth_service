@@ -25,12 +25,18 @@ using namespace OHOS;
 const int API_VERSION_INVALID = -1;
 int PermissionUtils::VerifyUseBluetoothPermission()
 {
+    if (GetApiVersion() >= 10) { // 10:api version
+        return VerifyAccessBluetoothPermission();
+    }
     return AuthCenter::GetInstance().VerifyUseBluetoothPermission(
         IPCSkeleton::GetCallingPid(), IPCSkeleton::GetCallingUid());
 }
 
 int PermissionUtils::VerifyDiscoverBluetoothPermission()
 {
+    if (GetApiVersion() >= 10) { // 10:api version
+        return VerifyAccessBluetoothPermission();
+    }
     return AuthCenter::GetInstance().VerifyDiscoverBluetoothPermission(
         IPCSkeleton::GetCallingPid(), IPCSkeleton::GetCallingUid());
 }
@@ -43,12 +49,18 @@ int PermissionUtils::VerifyManageBluetoothPermission()
 
 int PermissionUtils::VerifyLocationPermission()
 {
+    if (GetApiVersion() >= 10) { // 10:api version
+        return VerifyAccessBluetoothPermission();
+    }
     return AuthCenter::GetInstance().VerifyLocationPermission(
         IPCSkeleton::GetCallingPid(), IPCSkeleton::GetCallingUid());
 }
 
 int PermissionUtils::VerifyApproximatelyPermission()
 {
+    if (GetApiVersion() >= 10) { // 10:api version
+        return VerifyAccessBluetoothPermission();
+    }
     return AuthCenter::GetInstance().VerifyApproximatelyPermission(
         IPCSkeleton::GetCallingPid(), IPCSkeleton::GetCallingUid());
 }
@@ -67,11 +79,17 @@ int PermissionUtils::VerifyGetBluetoothLocalMacPermission()
 
 int PermissionUtils::VerifyUseBluetoothPermission(const std::uint32_t  &tokenID)
 {
+    if (GetApiVersion() >= 10) { // 10:api version
+        return VerifyAccessBluetoothPermission();
+    }
     return AuthCenter::GetInstance().VerifyUseBluetoothPermission(tokenID);
 }
 
 int PermissionUtils::VerifyDiscoverBluetoothPermission(const std::uint32_t  &tokenID)
 {
+    if (GetApiVersion() >= 10) { // 10:api version
+        return VerifyAccessBluetoothPermission();
+    }
     return AuthCenter::GetInstance().VerifyDiscoverBluetoothPermission(tokenID);
 }
 
