@@ -754,10 +754,10 @@ int A2dpService::SetCodecPreference(const RawAddress &device, const A2dpSrcCodec
     LOG_INFO("[A2dpService] %{public}s\n", __func__);
     std::string addr = device.GetAddress();
 
-    if (!strcmp(INVALID_MAC_ADDRESS.c_str(), device.GetAddress().c_str())) {
+    if (!strcmp(INVALID_MAC_ADDRESS, device.GetAddress().c_str())) {
         addr = GetActiveSinkDevice().GetAddress();
     }
-    if (!strcmp(INVALID_MAC_ADDRESS.c_str(), addr.c_str())) {
+    if (!strcmp(INVALID_MAC_ADDRESS, addr.c_str())) {
         LOG_INFO("[A2dpService] %{public}s : invalid device\n", __func__);
         return RET_BAD_PARAM;
     }
@@ -796,10 +796,10 @@ void A2dpService::SwitchOptionalCodecs(const RawAddress &device, bool isEnable)
     }
 
     std::string addr = device.GetAddress();
-    if (!strcmp(INVALID_MAC_ADDRESS.c_str(), device.GetAddress().c_str())) {
+    if (!strcmp(INVALID_MAC_ADDRESS, device.GetAddress().c_str())) {
         addr = GetActiveSinkDevice().GetAddress();
     }
-    if (!strcmp(INVALID_MAC_ADDRESS.c_str(), addr.c_str())) {
+    if (!strcmp(INVALID_MAC_ADDRESS, addr.c_str())) {
         LOG_ERROR("[A2dpService] %{public}s : invalid device\n", __func__);
         return;
     }

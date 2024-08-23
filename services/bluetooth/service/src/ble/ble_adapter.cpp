@@ -448,7 +448,8 @@ int BleAdapter::SetLocalIrkAndIdentityAddrToBtm() const
     /// check public address
     std::string addr = BleConfig::GetInstance().GetLocalAddress();
     int ret = BT_SUCCESS;
-    if ((addr.empty()) || (INVALID_MAC_ADDRESS.compare(addr) == 0)) {
+    std::string invalidMacAddress(INVALID_MAC_ADDRESS);
+    if ((addr.empty()) || (invalidMacAddress.compare(addr) == 0)) {
         std::vector<uint8_t>().swap(vec);
         BleUtils::GetRandomAddress(vec, false);
         addr = RawAddress::ConvertToString(&vec[0]).GetAddress();
@@ -1103,7 +1104,8 @@ void BleAdapter::ReadPeerDeviceInfoFromConf(const std::vector<std::string> &pair
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
     for (auto addr : pairedAddrList) {
         RawAddress rawAddr(addr);
-        if ((!INVALID_MAC_ADDRESS.compare(rawAddr.GetAddress())) || (rawAddr.GetAddress().empty())) {
+        std::string invalidMacAddress(INVALID_MAC_ADDRESS);
+        if ((!invalidMacAddress.compare(rawAddr.GetAddress())) || (rawAddr.GetAddress().empty())) {
             continue;
         }
         BlePeripheralDevice remote;
@@ -1188,7 +1190,8 @@ void BleAdapter::SavePeerDevices2BTM(const std::map<std::string, BlePeripheralDe
         RawAddress device(it->second.GetRawAddress());
         device.ConvertToUint8(btAddr.addr);
 
-        if ((INVALID_MAC_ADDRESS.compare(device.GetAddress()) == 0) || (device.GetAddress().empty()) ||
+        std::string invalidMacAddress(INVALID_MAC_ADDRESS);
+        if ((invalidMacAddress.compare(device.GetAddress()) == 0) || (device.GetAddress().empty()) ||
             (BleConfig::GetInstance().GetPeerIrk(device.GetAddress()).empty()) ||
             (BleConfig::GetInstance().GetPeerIdentityAddr(device.GetAddress()).empty())) {
             continue;
