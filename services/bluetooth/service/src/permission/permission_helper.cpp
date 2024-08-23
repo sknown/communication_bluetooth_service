@@ -117,7 +117,7 @@ int PermissionHelper::VerifyApproximatelyPermission(const int &pid, const int &u
 int PermissionHelper::VerifyAccessBluetoothPermission(const int &pid, const int &uid)
 {
     if (VerifyPermission("ohos.permission.ACCESS_BLUETOOTH", pid, uid) == PERMISSION_DENIED) {
-        return PERMISSION_GRANTED;
+        return PERMISSION_DENIED;
     }
 
     return PERMISSION_GRANTED;

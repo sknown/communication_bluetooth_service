@@ -1389,7 +1389,6 @@ int32_t BluetoothHostServer::GetPairState(int32_t transport, const std::string &
         pairState = bleService->GetPairState(addr);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
-        return BT_ERR_INVALID_STATE;
     }
     return BT_NO_ERROR;
 }
