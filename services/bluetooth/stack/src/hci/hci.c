@@ -81,15 +81,25 @@ static void HciOnHDIInitedTimerTimeout(void *param)
 {
     pid_t pid = getpid();
     LOG_DEBUG("%{public}s pid:%{public}d", __FUNCTION__, pid);
-    if (kill(pid, SIGKILL) == -1) {
+    if (kill(pid, SIGTERM) == -1) {
         if (ESRCH == errno) {
             LOG_INFO("kill [%{public}d] success, pid no exist", pid);
         }
         LOG_ERROR("kill [%{public}d] failed", pid);
     }
-
-    if (g_waitHdiInitAlarm != NULL) {
-        AlarmSet(g_waitHdiInitAlarm, HCI_WAIT_HDI_INIT_TIME, HciOnHDIInitedTimerTimeout, NULL);
+    // Add a sleep or wait for the process to exit gracefully
+    sleep(1); // Wait for 1 second
+    // Check if the process is alive
+    if (kill(pid, 0) != 0) {
+        // The process has exited
+        LOG_INFO("Process [%{public}d] has exited gracefully", pid); 
+    } else {
+        // The is still alive, kill it forcefully
+        if (kill(pid, SIGKILL) == -1) {
+            LOG_ERROR("kill [%{public}d] failed", pid);
+        } else {
+            LOG_INFO("kill [%{public}d] success", pid);
+        }
     }
 }
 
