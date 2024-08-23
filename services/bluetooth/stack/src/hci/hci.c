@@ -87,20 +87,6 @@ static void HciOnHDIInitedTimerTimeout(void *param)
         }
         LOG_ERROR("kill [%{public}d] failed", pid);
     }
-    // Add a sleep or wait for the process to exit gracefully
-    sleep(1); // Wait for 1 second
-    // Check if the process is alive
-    if (kill(pid, 0) != 0) {
-        // The process has exited
-        LOG_INFO("Process [%{public}d] has exited gracefully", pid); 
-    } else {
-        // The is still alive, kill it forcefully
-        if (kill(pid, SIGKILL) == -1) {
-            LOG_ERROR("kill [%{public}d] failed", pid);
-        } else {
-            LOG_INFO("kill [%{public}d] success", pid);
-        }
-    }
 }
 
 static int HciInitQueue()
