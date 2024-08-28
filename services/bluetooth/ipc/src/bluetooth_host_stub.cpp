@@ -19,6 +19,7 @@
 #include "ipc_types.h"
 #include "raw_address.h"
 #include "string_ex.h"
+#include "permission_utils.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -353,7 +354,13 @@ ErrCode BluetoothHostStub::GetBtStateInner(MessageParcel &data, MessageParcel &r
 {
     HILOGI("BluetoothHostStub::GetBtStateInner starts");
     int32_t state = 0;
-    int32_t result = GetBtState(state);
+    int32_t result = 0;
+    if (bluetooth::PermissionUtils::VerifyUseBluetoothPermission() == bluetooth::PERMISSION_DENIED) {
+        HILOGE("false, check permission failed");
+        result = BT_ERR_PERMISSION_FAILED;
+    } else {
+        result = GetBtState(state);
+    }
     (void)reply.WriteInt32(result);
     (void)reply.WriteInt32(state);
     return NO_ERROR;
