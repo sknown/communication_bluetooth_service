@@ -43,6 +43,7 @@ struct BleAdvertiserImplWrapData {
     {
         advStatus_ = advStatus;
         stopAllAdvType_ = isUserStopAdv;
+        advHandleStatus_ = ADV_STATUS_DEFAULT;
     }
 
     BleAdvertiserSettingsImpl settings_ {};
@@ -51,6 +52,13 @@ struct BleAdvertiserImplWrapData {
     std::unique_ptr<utility::Timer> timer_ {};
     int advStatus_ {};
     STOP_ALL_ADV_TYPE stopAllAdvType_ {};
+    ADV_HANDLE_STATUS advHandleStatus_ {};
+};
+struct BleAdvertiserImplOp {
+    BleAdvertiserImplOp(uint8_t advHandle, ADV_HANDLE_STATUS advStatus):advHandle_(advHandle), advStatus_(advStatus)
+    {}
+    uint8_t advHandle_ {};
+    ADV_HANDLE_STATUS advStatus_ {};
 };
 /**
  * @brief BLE advertiser.
@@ -197,7 +205,7 @@ private:
      *
      * @return @c status.
      */
-    int SetExAdvParamToGap(const BleAdvertiserSettingsImpl &settings) const;
+    int SetExAdvParamToGap(uint8_t advHandle, const BleAdvertiserSettingsImpl &settings) const;
 
     /**
      * @brief Set avertising parameter
