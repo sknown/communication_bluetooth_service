@@ -22,7 +22,6 @@
 #include "platform/include/allocator.h"
 #include "platform/include/event.h"
 #include "platform/include/module.h"
-#include "platform/include/mutex.h"
 #include "platform/include/queue.h"
 #include "platform/include/reactor.h"
 #include "platform/include/semaphore.h"
@@ -57,7 +56,6 @@ static ReactorItem *g_hciRxReactorItem = NULL;
 static Semaphore *g_waitHdiInit;
 static BtInitStatus g_hdiInitStatus = UNKNOWN;
 static Alarm *g_waitHdiInitAlarm = NULL;
-static Mutex *g_waithdiInitAlarmMutex = NULL;
 
 static HDILib *g_hdiLib = NULL;
 
@@ -127,13 +125,10 @@ NO_SANITIZE("cfi") static int HciInitHal()
     int ret = g_hdiLib->hdiInit(&g_hdiCallacks);
     if (ret == SUCCESS) {
         g_waitHdiInitAlarm = AlarmCreate(NULL, false);
-        g_waithdiInitAlarmMutex = MutexCreate();
         if (g_waitHdiInitAlarm == NULL) {
             LOG_ERROR("HdiInited alarm create failed");
         } else {
-            MutexLock(g_waithdiInitAlarmMutex);
             AlarmSet(g_waitHdiInitAlarm, HCI_WAIT_HDI_INIT_TIME, HciOnHDIInitedTimerTimeout, NULL);
-            MutexUnlock(g_waithdiInitAlarmMutex);
         }
         SemaphoreWait(g_waitHdiInit);
         if (g_hdiInitStatus != SUCCESS) {
@@ -279,11 +274,6 @@ NO_SANITIZE("cfi") void HCI_Close()
         g_waitHdiInitAlarm = NULL;
     }
 
-    if (g_waithdiInitAlarmMutex != NULL) {
-        MutexDelete(g_waithdiInitAlarmMutex);
-        g_waithdiInitAlarmMutex = NULL;
-    }
-
     if (g_hciTxReactorItem != NULL) {
         ReactorUnregister(g_hciTxReactorItem);
         g_hciTxReactorItem = NULL;
@@ -337,11 +327,6 @@ static void HciOnHDIInited(BtInitStatus status)
         AlarmCancel(g_waitHdiInitAlarm);
         AlarmDelete(g_waitHdiInitAlarm);
         g_waitHdiInitAlarm = NULL;
-    }
-
-    if (g_waithdiInitAlarmMutex != NULL) {
-        MutexDelete(g_waithdiInitAlarmMutex);
-        g_waithdiInitAlarmMutex = NULL;
     }
     g_hdiInitStatus = status;
     SemaphorePost(g_waitHdiInit);
