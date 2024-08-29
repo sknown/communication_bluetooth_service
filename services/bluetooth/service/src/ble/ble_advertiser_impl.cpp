@@ -1862,9 +1862,6 @@ void BleAdvertiserImpl::HandleGapExAdvEvent(const BLE_GAP_CB_EVENT &event, int s
 {
     HILOGI("event no: %{public}d.", static_cast<int>(event));
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
-    if (pimpl->advHandleQue_.empty()) {
-        return;
-    }
     switch (event) {
         case BLE_GAP_EX_ADV_SET_RAND_ADDR_RESULT_EVT:
             GapExAdvSetRandAddrResultEvt(status);
