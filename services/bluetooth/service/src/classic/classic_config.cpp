@@ -395,7 +395,7 @@ int ClassicConfig::GetRemoteHidVendorId(const std::string &subSection) const
     return vendorId;
 }
 
-bool ClassicConfig::SetRemoteHidProductId(const std::string &subSection,int productId) const
+bool ClassicConfig::SetRemoteHidProductId(const std::string &subSection, int productId) const
 {
     if (!config_->SetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_PRODUCT_ID, productId)) {
         LOG_WARN("[ClassicConfig]::%{public}s failed!", __func__);

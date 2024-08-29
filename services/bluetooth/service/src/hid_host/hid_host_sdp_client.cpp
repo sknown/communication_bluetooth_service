@@ -185,7 +185,8 @@ void HidHostSdpClient::SaveHidSdpInfo()
             LOG_ERROR("[HIDH SDP]%{public}s() SetHidPnpInfo is error!", __FUNCTION__);
         }
 
-        ret = classicAdapter->SetHidDescInfo(currentAddr_, hidInf_.ctryCode, hidInf_.descInfo.get(), hidInf_.descLength);
+        ret = classicAdapter->SetHidDescInfo(
+            currentAddr_, hidInf_.ctryCode, hidInf_.descInfo.get(), hidInf_.descLength);
         if (!ret) {
             LOG_ERROR("[HIDH SDP]%{public}s() SetHidDescInfo is error!", __FUNCTION__);
         }
