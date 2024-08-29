@@ -1,0 +1,388 @@
+diff --git a/services/bluetooth/service/include/interface_adapter_classic.h b/services/bluetooth/service/include/interface_adapter_classic.h
+index fc2cd33..1b91874 100644
+--- a/services/bluetooth/service/include/interface_adapter_classic.h
++++ b/services/bluetooth/service/include/interface_adapter_classic.h
+@@ -372,6 +372,11 @@ public:
+      * @since 6
+      */
+     virtual bool IsHfpCodSupported(const RawAddress &device) = 0;
++
++    virtual bool SetHidPnpInfo(const std::string &remoteAddr, int vendorId, int productId, int version) = 0;
++    virtual bool SetHidDescInfo(const std::string &remoteAddr, int ctryCode, uint8_t *descData, int descLength) = 0;
++    virtual void GetHidPnpInfo(const std::string &remoteAddr, int &vendorId, int &productId, int &version) = 0;
++    virtual uint8_t* GetHidDescInfo(const std::string &remoteAddr, int &ctryCode, int &descLength) = 0;
+ };
+ }  // namespace bluetooth
+ }  // namespace OHOS
+diff --git a/services/bluetooth/service/src/classic/classic_adapter.cpp b/services/bluetooth/service/src/classic/classic_adapter.cpp
+index 2029a18..b25f599 100644
+--- a/services/bluetooth/service/src/classic/classic_adapter.cpp
++++ b/services/bluetooth/service/src/classic/classic_adapter.cpp
+@@ -2455,6 +2455,35 @@ bool ClassicAdapter::IsHfpCodSupported(const RawAddress &device)
+     }
+     return false;
+ }
++
++bool ClassicAdapter::SetHidPnpInfo(const std::string &remoteAddr, int vendorId, int productId, int version)
++{
++    return adapterProperties_.SetHidPnpInfo(remoteAddr, vendorId, productId, version);
++}
++
++bool ClassicAdapter::SetHidDescInfo(const std::string &remoteAddr, int ctryCode, uint8_t *descData, int descLength)
++{
++    std::vector<uint8_t> descKey = std::vector<uint8_t>(descData, descData + descLength);
++    return adapterProperties_.SetHidDescInfo(remoteAddr, ctryCode, ClassicUtils::ConvertIntToHexString(descKey));
++}
++
++void ClassicAdapter::GetHidPnpInfo(const std::string &remoteAddr, int &vendorId, int &productId, int &version)
++{
++    adapterProperties_.GetHidPnpInfo(remoteAddr, vendorId, productId, version);
++}
++
++uint8_t* ClassicAdapter::GetHidDescInfo(const std::string &remoteAddr, int &ctryCode, int &descLength)
++{
++    std::string descInfo = "";
++    std::vector<uint8_t> descKey;
++    adapterProperties_.GetHidDescInfo(remoteAddr, ctryCode, descInfo);
++    ClassicUtils::ConvertHexStringToInt(descInfo, descKey);
++    descLength = descKey.size();
++    if (descLength > 0) {
++        return &descKey[0];
++    }
++    return nullptr;
++}
+ REGISTER_CLASS_CREATOR(ClassicAdapter);
+ }  // namespace bluetooth
+ }  // namespace OHOS
+diff --git a/services/bluetooth/service/src/classic/classic_adapter.h b/services/bluetooth/service/src/classic/classic_adapter.h
+index e485cf5..4f68bab 100644
+--- a/services/bluetooth/service/src/classic/classic_adapter.h
++++ b/services/bluetooth/service/src/classic/classic_adapter.h
+@@ -404,6 +404,11 @@ public:
+     void SetDeviceBatteryLevel(const RawAddress &device, int batteryLevel) const override;
+     bool IsHfpCodSupported(const RawAddress &device) override;
+ 
++    bool SetHidPnpInfo(const std::string &remoteAddr, int vendorId, int productId, int version) override;
++    bool SetHidDescInfo(const std::string &remoteAddr, int ctryCode, uint8_t *descData, int descLength) override;
++    void GetHidPnpInfo(const std::string &remoteAddr, int &vendorId, int &productId, int &version) override;
++    uint8_t* GetHidDescInfo(const std::string &remoteAddr, int &ctryCode, int &descLength) override;
++
+ private:
+     /**
+      * @brief Inquiry result callback.
+diff --git a/services/bluetooth/service/src/classic/classic_adapter_properties.cpp b/services/bluetooth/service/src/classic/classic_adapter_properties.cpp
+index 517981d..06ddb67 100644
+--- a/services/bluetooth/service/src/classic/classic_adapter_properties.cpp
++++ b/services/bluetooth/service/src/classic/classic_adapter_properties.cpp
+@@ -551,5 +551,51 @@ bool ClassicAdapterProperties::SaveSupportUuids(const std::vector<Uuid> &uuids)
+ 
+     return ret;
+ }
++
++bool ClassicAdapterProperties::SetHidPnpInfo(const std::string &addr, int vendorId, int productId, int version)
++{
++    bool retVendorId = config_.SetRemoteHidVendorId(addr, vendorId);
++    ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidVendorId", retVendorId);
++
++    bool retProductId = config_.SetRemoteHidProductId(addr, productId);
++    ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidProductId", retProductId);
++
++    bool retVersion = config_.SetRemoteHidVersion(addr, version);
++    ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidVersion", retVersion);
++
++    if (retVendorId && retProductId && retVersion) {
++        return true;
++    }
++    return false;
++}
++
++bool ClassicAdapterProperties::SetHidDescInfo(const std::string &addr, int ctryCode, const std::string &descInfo)
++{
++    bool retCtryCode = config_.SetRemoteHidCtryCode(addr, ctryCode);
++    ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidCtryCode", retCtryCode);
++
++    bool retDescInfo = config_.SetRemoteHidDescInfo(addr, descInfo);
++    ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidProductId", retDescInfo);
++
++    SaveConfigFile();
++
++    if (retCtryCode && retDescInfo) {
++        return true;
++    }
++    return false;
++}
++
++void ClassicAdapterProperties::GetHidPnpInfo(const std::string &addr, int &vendorId, int &productId, int &version)
++{
++    vendorId = config_.GetRemoteHidVendorId(addr);
++    productId = config_.GetRemoteHidProductId(addr);
++    version = config_.GetRemoteHidVersion(addr);
++}
++
++void ClassicAdapterProperties::GetHidDescInfo(const std::string &addr, int &ctryCode, std::string &descInfo)
++{
++    ctryCode = config_.GetRemoteHidCtryCode(addr);
++    descInfo = config_.GetRemoteHidDescInfo(addr);
++}
+ }  // namespace bluetooth
+ }  // namespace OHOS
+\ No newline at end of file
+diff --git a/services/bluetooth/service/src/classic/classic_adapter_properties.h b/services/bluetooth/service/src/classic/classic_adapter_properties.h
+index 88c5e96..5d1c95e 100644
+--- a/services/bluetooth/service/src/classic/classic_adapter_properties.h
++++ b/services/bluetooth/service/src/classic/classic_adapter_properties.h
+@@ -262,6 +262,11 @@ public:
+      */
+     bool SaveSupportUuids(const std::vector<Uuid> &uuids);
+ 
++    bool SetHidPnpInfo(const std::string &addr, int vendorId, int productId, int version);
++    bool SetHidDescInfo(const std::string &addr, int ctryCode, const std::string &descInfo);
++    void GetHidPnpInfo(const std::string &addr, int &vendorId, int &productId, int &version);
++    void GetHidDescInfo(const std::string &addr, int &ctryCode, std::string &descInfo);
++
+ private:
+     /**
+      * @brief A constructor used to create a <b>ClassicAdapterProperties</b> instance.
+diff --git a/services/bluetooth/service/src/classic/classic_config.cpp b/services/bluetooth/service/src/classic/classic_config.cpp
+index 820230c..bc50ceb 100644
+--- a/services/bluetooth/service/src/classic/classic_config.cpp
++++ b/services/bluetooth/service/src/classic/classic_config.cpp
+@@ -374,5 +374,105 @@ std::string ClassicConfig::GetRemoteUuids(const std::string &subSection) const
+ 
+     return uuids;
+ }
++
++bool ClassicConfig::SetRemoteHidVendorId(const std::string &subSection, int vendorId) const
++{
++    if (!config_->SetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_VENDOR_ID, vendorId)) {
++        LOG_WARN("[ClassicConfig]::%{public}s failed!", __func__);
++        return false;
++    }
++
++    return true;
++}
++
++int ClassicConfig::GetRemoteHidVendorId(const std::string &subSection) const
++{
++    int vendorId = 0;
++    if (!config_->GetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_VENDOR_ID, vendorId)) {
++        LOG_INFO("[ClassicConfig]::%{public}s failed!", __func__);
++    }
++
++    return vendorId;
++}
++
++bool ClassicConfig::SetRemoteHidProductId(const std::string &subSection,int productId) const
++{
++    if (!config_->SetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_PRODUCT_ID, productId)) {
++        LOG_WARN("[ClassicConfig]::%{public}s failed!", __func__);
++        return false;
++    }
++
++    return true;
++}
++
++int ClassicConfig::GetRemoteHidProductId(const std::string &subSection) const
++{
++    int productId = 0;
++    if (!config_->GetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_PRODUCT_ID, productId)) {
++        LOG_INFO("[ClassicConfig]::%{public}s failed!", __func__);
++    }
++
++    return productId;
++}
++
++bool ClassicConfig::SetRemoteHidVersion(const std::string &subSection, int version) const
++{
++    if (!config_->SetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_VERSION, version)) {
++        LOG_WARN("[ClassicConfig]::%{public}s failed!", __func__);
++        return false;
++    }
++
++    return true;
++}
++
++int ClassicConfig::GetRemoteHidVersion(const std::string &subSection) const
++{
++    int version = 0;
++    if (!config_->GetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_VERSION, version)) {
++        LOG_INFO("[ClassicConfig]::%{public}s failed!", __func__);
++    }
++
++    return version;
++}
++
++bool ClassicConfig::SetRemoteHidCtryCode(const std::string &subSection, int ctryCode) const
++{
++    if (!config_->SetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_CTRY_CODE, ctryCode)) {
++        LOG_WARN("[ClassicConfig]::%{public}s failed!", __func__);
++        return false;
++    }
++
++    return true;
++}
++
++int ClassicConfig::GetRemoteHidCtryCode(const std::string &subSection) const
++{
++    int ctryCode = 0;
++    if (!config_->GetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_CTRY_CODE, ctryCode)) {
++        LOG_INFO("[ClassicConfig]::%{public}s failed!", __func__);
++    }
++
++    return ctryCode;
++}
++
++bool ClassicConfig::SetRemoteHidDescInfo(const std::string &subSection, const std::string &descInfo) const
++{
++    if (!config_->SetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_DESC_INFO, descInfo)) {
++        LOG_WARN("[ClassicConfig]::%{public}s failed!", __func__);
++        return false;
++    }
++
++    return true;
++}
++
++std::string ClassicConfig::GetRemoteHidDescInfo(const std::string &subSection) const
++{
++    std::string descInfo = "";
++    if (!config_->GetValue(SECTION_BREDR_PAIRED_LIST, subSection, PROPERTY_HID_DESC_INFO, descInfo)) {
++        LOG_INFO("[ClassicConfig]::%{public}s failed!", __func__);
++    }
++
++    return descInfo;
++}
+ }  // namespace bluetooth
+ }  // namespace OHOS
+\ No newline at end of file
+diff --git a/services/bluetooth/service/src/classic/classic_config.h b/services/bluetooth/service/src/classic/classic_config.h
+index a31a918..bca6511 100644
+--- a/services/bluetooth/service/src/classic/classic_config.h
++++ b/services/bluetooth/service/src/classic/classic_config.h
+@@ -341,6 +341,17 @@ public:
+      */
+     std::string GetRemoteUuids(const std::string &subSection) const;
+ 
++    bool SetRemoteHidVendorId(const std::string &subSection, int vendorId) const;
++    int GetRemoteHidVendorId(const std::string &subSection) const;
++    bool SetRemoteHidProductId(const std::string &subSection, int productId) const;
++    int GetRemoteHidProductId(const std::string &subSection) const;
++    bool SetRemoteHidVersion(const std::string &subSection, int version) const;
++    int GetRemoteHidVersion(const std::string &subSection) const;
++    bool SetRemoteHidCtryCode(const std::string &subSection, int ctryCode) const;
++    int GetRemoteHidCtryCode(const std::string &subSection) const;
++    bool SetRemoteHidDescInfo(const std::string &subSection, const std::string &descInfo) const;
++    std::string GetRemoteHidDescInfo(const std::string &subSection) const;
++
+ private:
+     /**
+      * @brief A constructor used to create a <b>ClassicConfig</b> instance.
+diff --git a/services/bluetooth/service/src/common/adapter_device_config.h b/services/bluetooth/service/src/common/adapter_device_config.h
+index d2b942b..05aa1b4 100644
+--- a/services/bluetooth/service/src/common/adapter_device_config.h
++++ b/services/bluetooth/service/src/common/adapter_device_config.h
+@@ -88,6 +88,12 @@ const std::string PROPERTY_GATT_TRANSPORT = "GattTransport";
+ const std::string PROPERTY_GATTS_START_HANDLE = "GattsStartHandle";
+ const std::string PROPERTY_GATTS_END_HANDLE = "GattsEndHandle";
+ 
++const std::string PROPERTY_HID_VENDOR_ID = "HidVendorId";
++const std::string PROPERTY_HID_PRODUCT_ID = "HidProductId";
++const std::string PROPERTY_HID_VERSION = "HidVersion";
++const std::string PROPERTY_HID_CTRY_CODE = "HidCtryCode";
++const std::string PROPERTY_HID_DESC_INFO = "HidDescInfo";
++
+ /**
+  * @brief BREDR/BLE config.
+  */
+diff --git a/services/bluetooth/service/src/hid_host/hid_host_sdp_client.cpp b/services/bluetooth/service/src/hid_host/hid_host_sdp_client.cpp
+index 65bbfbc..b5fc628 100644
+--- a/services/bluetooth/service/src/hid_host/hid_host_sdp_client.cpp
++++ b/services/bluetooth/service/src/hid_host/hid_host_sdp_client.cpp
+@@ -17,12 +17,14 @@
+ 
+ #include "hid_host_service.h"
+ #include "hid_host_sdp_client.h"
++#include "interface_adapter_manager.h"
+ 
+ namespace OHOS {
+ namespace bluetooth {
+ HidHostSdpClient::HidHostSdpClient(std::string address)
+ {
+     currentAddr_ = address;
++    GetConfigHidSdpInfo();
+ }
+ 
+ HidHostSdpClient::~HidHostSdpClient()
+@@ -79,6 +81,7 @@ void HidHostSdpClient::SdpCallback_(const BtAddr *addr, const SdpService *servic
+         result = HID_HOST_SDP_SUCCESS;
+         isSdpDone_ = true;
+         printHidSdpInfo();
++        SaveHidSdpInfo();
+     }
+     SendSdpComplete(result);
+ }
+@@ -172,6 +175,52 @@ void HidHostSdpClient::printHidSdpInfo()
+         hidInf_.serviceName.c_str(), hidInf_.serviceDescription.c_str(), hidInf_.providerName.c_str());
+ }
+ 
++void HidHostSdpClient::SaveHidSdpInfo()
++{
++    LOG_DEBUG("[HIDH SDP]%{public}s() enter!", __FUNCTION__);
++    auto classicAdapter = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
++    if (classicAdapter) {
++        bool ret = classicAdapter->SetHidPnpInfo(currentAddr_, pnpInf_.vendorId, pnpInf_.productId, pnpInf_.version);
++        if (!ret) {
++            LOG_ERROR("[HIDH SDP]%{public}s() SetHidPnpInfo is error!", __FUNCTION__);
++        }
++
++        ret = classicAdapter->SetHidDescInfo(currentAddr_, hidInf_.ctryCode, hidInf_.descInfo.get(), hidInf_.descLength);
++        if (!ret) {
++            LOG_ERROR("[HIDH SDP]%{public}s() SetHidDescInfo is error!", __FUNCTION__);
++        }
++    }
++}
++
++void HidHostSdpClient::GetConfigHidSdpInfo()
++{
++    auto classicAdapter = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
++    int vendorId = 0;
++    int productId = 0;
++    int version = 0;
++    int ctryCode = 0;
++    int descLength = 0;
++    if (classicAdapter) {
++        classicAdapter->GetHidPnpInfo(currentAddr_, vendorId, productId, version);
++
++        uint8_t *descData = classicAdapter->GetHidDescInfo(currentAddr_, ctryCode, descLength);
++        if (descData != nullptr && descLength > 0) {
++            hidInf_.descInfo = std::make_unique<uint8_t[]>(descLength);
++            if (memcpy_s(hidInf_.descInfo.get(), descLength, descData, descLength) != EOK) {
++                LOG_ERROR("[HIDH SDP]%{public}s() memcpy error", __FUNCTION__);
++                return;
++            }
++            pnpInf_.vendorId = vendorId;
++            pnpInf_.productId = productId;
++            pnpInf_.version = version;
++            hidInf_.ctryCode = ctryCode;
++            hidInf_.descLength = descLength;
++            isSdpDone_ = true;
++        }
++    }
++    LOG_DEBUG("[HIDH SDP]%{public}s() isSdpDone_:%{public}d end !", __FUNCTION__, isSdpDone_);
++}
++
+ void HidHostSdpClient::SdpPnpCallback(const BtAddr *addr, const SdpService *serviceAry,
+     uint16_t serviceNum, void *context)
+ {
+diff --git a/services/bluetooth/service/src/hid_host/hid_host_sdp_client.h b/services/bluetooth/service/src/hid_host/hid_host_sdp_client.h
+index c3ab035..880570f 100644
+--- a/services/bluetooth/service/src/hid_host/hid_host_sdp_client.h
++++ b/services/bluetooth/service/src/hid_host/hid_host_sdp_client.h
+@@ -91,6 +91,8 @@ private:
+     bool ParseHidDescInfo(const SdpService *serviceAry);
+     uint8_t CheckAttributeValueLengthAvalid(SdpSequenceAttribute attribute);
+     void printHidSdpInfo();
++    void SaveHidSdpInfo();
++    void GetConfigHidSdpInfo();
+     // Current remote device address
+     std::string currentAddr_ {""};
+ 

@@ -38,7 +38,6 @@
 #include "raw_address.h"
 #include "hid_host_message.h"
 #include "base_def.h"
-#include "hid_host_sdp_client.h"
 #include "hid_host_statemachine.h"
 
 namespace OHOS {
@@ -91,8 +90,6 @@ public:
     int HidHostSetReport(std::string device, uint8_t type, uint16_t size, const uint8_t* report) override;
     int HidHostGetReport(std::string device, uint8_t id, uint16_t size, uint8_t type) override;
 
-    std::shared_ptr<HidHostSdpClient> FindSdpClient(const std::string &address);
-
 private:
     /**
      * @brief Service startup.
@@ -116,7 +113,6 @@ private:
     void ProcessConnectEvent(const HidHostMessage &event);
     void ProcessDefaultEvent(const HidHostMessage &event) const;
     void ProcessRemoveStateMachine(const std::string &address);
-    void RemoveSdpClient(const std::string &address);
     //  service status
     bool isStarted_ {false};
     //  service status
@@ -131,7 +127,6 @@ private:
     BaseObserverList<IHidHostObserver> hidHostObservers_ {};
     // the map of the device and sate machine
     std::map<const std::string, std::unique_ptr<HidHostStateMachine>> stateMachines_ {};
-    std::map<const std::string, std::shared_ptr<HidHostSdpClient>> sdpClient_ {};
     // const state map
     const std::map<const int, const int> stateMap_ = {
         {HID_HOST_STATE_DISCONNECTED, static_cast<int>(BTConnectState::DISCONNECTED)},
