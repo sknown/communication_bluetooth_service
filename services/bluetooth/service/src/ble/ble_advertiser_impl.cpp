@@ -465,7 +465,8 @@ void BleAdvertiserImpl::StopAllAdvertising(const STOP_ALL_ADV_TYPE &stopAllAdvTy
                 UpdateAllAdvertisingStatus(ADVERTISE_NOT_STARTED);
             }
             auto iter = pimpl->advHandleSettingDatas_.begin();
-            pimpl->advHandleQue_.push(BleAdvertiserImplOp(iter->first, isStartAdv?ADV_STATUS_STARTING:ADV_STATUS_STOPING));
+            pimpl->advHandleQue_.push(BleAdvertiserImplOp(iter->first,
+                isStartAdv?ADV_STATUS_STARTING:ADV_STATUS_STOPING));
             for (; iter != pimpl->advHandleSettingDatas_.end(); ++iter) {
                 iter->second.stopAllAdvType_ = stopAllAdvType;
             }
@@ -484,7 +485,8 @@ void BleAdvertiserImpl::StopAllAdvertising(const STOP_ALL_ADV_TYPE &stopAllAdvTy
             LOG_ERROR("[BleAdvertiserImpl] %{public}s:Stop advertising failed! handle = %u.", __func__, iter->first);
         } else {
             iter->second.stopAllAdvType_ = stopAllAdvType;
-            pimpl->advHandleQue_.push(BleAdvertiserImplOp(iter->first, isStartAdv?ADV_STATUS_STARTING:ADV_STATUS_STOPING));
+            pimpl->advHandleQue_.push(BleAdvertiserImplOp(iter->first,
+                isStartAdv?ADV_STATUS_STARTING:ADV_STATUS_STOPING));
             if (stopAllAdvType != STOP_ADV_TYPE_RESOLVING_LIST) {
                 iter->second.advStatus_ = ADVERTISE_NOT_STARTED;
             }
@@ -945,9 +947,6 @@ int BleAdvertiserImpl::ExAdvDataFragment(const BleAdvertiserDataImpl &data) cons
                     .c_str());
         }
     }
-    if (ret == BT_SUCCESS) {
-        pimpl->advHandleQue_.push(BleAdvertiserImplOp(advStartHandle, ADV_STATUS_SET_ADV_DATA));
-    }
     return ret;
 }
 
@@ -975,9 +974,7 @@ int BleAdvertiserImpl::ExResDataFragment(const BleAdvertiserDataImpl &data) cons
         pimpl->operationLast_ = true;
         operation = GAP_ADVERTISING_DATA_OPERATION_LAST;
         ret &= GAPIF_LeExAdvSetScanRspData(advStartHandle,
-            operation,
-            fragmentPreference,
-            payloadLen - maxlen,
+            operation, fragmentPreference, payloadLen - maxlen,
             (uint8_t *)payload.substr(maxlen, payloadLen - maxlen).c_str());
     } else if (payloadLen / maxlen > 1) {
         uint8_t operation = GAP_ADVERTISING_DATA_OPERATION_FIRST;
@@ -987,16 +984,13 @@ int BleAdvertiserImpl::ExResDataFragment(const BleAdvertiserDataImpl &data) cons
         operation = GAP_ADVERTISING_DATA_OPERATION_INTERMEDIATE;
         for (size_t i = 0; i < (payloadLen / maxlen - 1); i++) {
             ret &= GAPIF_LeExAdvSetScanRspData(advStartHandle,
-                operation,
-                fragmentPreference,
-                maxlen * (i + 1),
+                operation, fragmentPreference, maxlen * (i + 1),
                 (uint8_t *)payload.substr(maxlen * (i + 1), maxlen).c_str());
         }
         pimpl->operationLast_ = true;
         operation = GAP_ADVERTISING_DATA_OPERATION_LAST;
         ret &= GAPIF_LeExAdvSetScanRspData(advStartHandle,
-            operation,
-            fragmentPreference,
+            operation, fragmentPreference,
             data.GetPayload().size() - maxlen * (payloadLen / maxlen),
             (uint8_t *)payload.substr(maxlen * (payloadLen / maxlen), payloadLen - maxlen * (payloadLen / maxlen))
                 .c_str());
@@ -1573,6 +1567,7 @@ void BleAdvertiserImpl::GapExAdvParamSetCompleteEvt(int status, int8_t txPower) 
             RemoveAdvHandle(advStartHandle);
             return;
         }
+        pimpl->advHandleQue_.push(BleAdvertiserImplOp(advStartHandle, ADV_STATUS_SET_ADV_DATA));
     } else {
         int ret = SetExAdvScanRspDataToGap(iter->second.rspData_, iter->second.settings_, txPower);
         pimpl->advHandleQue_.pop();
@@ -1591,9 +1586,6 @@ void BleAdvertiserImpl::GapExAdvDataSetCompleteEvt(int status, int8_t txPower)
 {
     LOG_DEBUG("[BleAdvertiserImpl] %{public}s,%{public}zu", __func__, pimpl->advHandleQue_.size());
 
-    if (pimpl->advHandleQue_.empty()) {
-        return;
-    }
     uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
     auto exAdvDataIter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (exAdvDataIter == pimpl->advHandleSettingDatas_.end()) {
@@ -1870,6 +1862,10 @@ void BleAdvertiserImpl::HandleGapExAdvEvent(const BLE_GAP_CB_EVENT &event, int s
 {
     HILOGI("event no: %{public}d.", static_cast<int>(event));
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
+    if (pimpl->advHandleQue_.empty()) {
+        HILOGE("[BleAdvertiserImpl] %{public}s advHandleQue_ is empty", __func__);
+        return;
+    }
     switch (event) {
         case BLE_GAP_EX_ADV_SET_RAND_ADDR_RESULT_EVT:
             GapExAdvSetRandAddrResultEvt(status);
