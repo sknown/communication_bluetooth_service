@@ -1863,7 +1863,6 @@ void BleAdvertiserImpl::HandleGapExAdvEvent(const BLE_GAP_CB_EVENT &event, int s
     HILOGI("event no: %{public}d.", static_cast<int>(event));
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
     if (pimpl->advHandleQue_.empty()) {
-        HILOGE("[BleAdvertiserImpl] %{public}s advHandleQue_ is empty", __func__);
         return;
     }
     switch (event) {
