@@ -2456,11 +2456,11 @@ bool ClassicAdapter::SetHidPnpInfo(const std::string &remoteAddr, int vendorId, 
 bool ClassicAdapter::SetHidDescInfo(
     const std::string &remoteAddr, int ctryCode, const std::vector<uint8_t> &descData, int descLength)
 {
-     bool ret = adapterProperties_.SetHidDescInfo(remoteAddr, ctryCode, ClassicUtils::ConvertIntToHexString(descData));
-     if (ret) {
+    bool ret = adapterProperties_.SetHidDescInfo(remoteAddr, ctryCode, ClassicUtils::ConvertIntToHexString(descData));
+    if (ret) {
         adapterProperties_.SaveConfigFile();
-     }
-     return ret;
+    }
+    return ret;
 }
 
 void ClassicAdapter::GetHidPnpInfo(const std::string &remoteAddr, int &vendorId, int &productId, int &version)
