@@ -55,8 +55,8 @@ struct BleAdvertiserImplWrapData {
 struct BleAdvertiserImplOp {
     BleAdvertiserImplOp(uint8_t advHandle, ADV_HANDLE_STATUS advStatus):advHandle_(advHandle), advStatus_(advStatus)
     {}
-    uint8_t advHandle_ {};
-    ADV_HANDLE_STATUS advStatus_ {};
+    uint8_t advHandle {};
+    ADV_HANDLE_STATUS advOpStatus {};
 };
 /**
  * @brief BLE advertiser.

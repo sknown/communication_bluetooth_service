@@ -139,9 +139,9 @@ void BleAdvertiserImpl::AdvSetEnableResultTask(uint8_t status)
         LOG_DEBUG("[BleAdvertiserImpl] %{public}s,error", __func__);
         return;
     }
-    auto iter = pimpl->advHandleSettingDatas_.find(pimpl->advHandleQue_.front().advHandle_);
+    auto iter = pimpl->advHandleSettingDatas_.find(pimpl->advHandleQue_.front().advHandle);
     if (iter != pimpl->advHandleSettingDatas_.end()) {
-        tempAdvStatus = pimpl->advHandleQue_.front().advStatus_;
+        tempAdvStatus = pimpl->advHandleQue_.front().advOpStatus;
     } else {
         LOG_DEBUG("[BleAdvertiserImpl] %{public}s,error", __func__);
         pimpl->advHandleQue_.pop();
@@ -613,9 +613,9 @@ void BleAdvertiserImpl::ExAdvSetEnableResultTask(uint8_t status)
         LOG_ERROR("[BleAdvertiserImpl] %{public}s,error", __func__);
         return;
     }
-    auto iter = pimpl->advHandleSettingDatas_.find(pimpl->advHandleQue_.front().advHandle_);
+    auto iter = pimpl->advHandleSettingDatas_.find(pimpl->advHandleQue_.front().advHandle);
     if (iter != pimpl->advHandleSettingDatas_.end()) {
-        tempAdvStatus = pimpl->advHandleQue_.front().advStatus_;
+        tempAdvStatus = pimpl->advHandleQue_.front().advOpStatus;
     } else {
         LOG_ERROR("[BleAdvertiserImpl] %{public}s,error", __func__);
         pimpl->advHandleQue_.pop();
@@ -900,7 +900,7 @@ int BleAdvertiserImpl::SetAdvDataToGap(
 int BleAdvertiserImpl::ExAdvDataFragment(const BleAdvertiserDataImpl &data) const
 {
     pimpl->operationLast_ = false;
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     size_t payloadLen = data.GetPayload().size();
     std::string payload = data.GetPayload();
     uint8_t maxlen = BLE_EX_ADV_PAYLOAD_DATA_LEN;
@@ -953,7 +953,7 @@ int BleAdvertiserImpl::ExAdvDataFragment(const BleAdvertiserDataImpl &data) cons
 int BleAdvertiserImpl::ExResDataFragment(const BleAdvertiserDataImpl &data) const
 {
     pimpl->operationLast_ = false;
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     size_t payloadLen = data.GetPayload().size();
     std::string payload = data.GetPayload();
     uint8_t fragmentPreference = GAP_CONTROLLER_SHOULD_NOT_FRAGMENT;
@@ -1067,7 +1067,7 @@ int BleAdvertiserImpl::SetExAdvScanRspDataToGap(
     if (pimpl->advHandleQue_.empty()) {
         return BT_BAD_PARAM;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     BleAdvertiserDataImpl exAdvScandata = static_cast<BleAdvertiserDataImpl>(scanResponse);
     auto iter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (iter == pimpl->advHandleSettingDatas_.end()) {
@@ -1247,7 +1247,7 @@ void BleAdvertiserImpl::AddCharacteristicValue(uint8_t adtype, const std::string
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     auto iter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (iter == pimpl->advHandleSettingDatas_.end()) {
         LOG_ERROR("[BleAdvertiserImpl] %{public}s:invalid handle! %u.", __func__, advStartHandle);
@@ -1262,7 +1262,7 @@ void BleAdvertiserImpl::GapAdvParamSetCompleteEvt(int status) const
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     pimpl->advHandleQue_.pop();
     auto paraIter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (paraIter == pimpl->advHandleSettingDatas_.end()) {
@@ -1293,7 +1293,7 @@ void BleAdvertiserImpl::GapAdvReadTxPowerEvt(int status, int8_t txPower) const
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     pimpl->advHandleQue_.pop();
     auto txPowerIter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (txPowerIter == pimpl->advHandleSettingDatas_.end()) {
@@ -1324,7 +1324,7 @@ void BleAdvertiserImpl::GapAdvDataSetCompleteEvt(int status, int8_t txPower) con
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     pimpl->advHandleQue_.pop();
     auto dataIter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (dataIter == pimpl->advHandleSettingDatas_.end()) {
@@ -1355,9 +1355,9 @@ void BleAdvertiserImpl::GapAdvScanRspDataSetCompleteEvt(int status) const
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     pimpl->advHandleQue_.pop();
-    auto scanResIter = pimpl->advHandleSettingDatas_.find(pimpl->advHandleQue_.front().advHandle_);
+    auto scanResIter = pimpl->advHandleSettingDatas_.find(pimpl->advHandleQue_.front().advHandle);
     if (scanResIter == pimpl->advHandleSettingDatas_.end()) {
         LOG_ERROR("[BleAdvertiserImpl] %{public}s:invalid handle! %u.", __func__, advStartHandle);
         return;
@@ -1386,8 +1386,8 @@ void BleAdvertiserImpl::GapAdvStartCompleteEvt(int status)
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
-    auto startIter = pimpl->advHandleSettingDatas_.find(pimpl->advHandleQue_.front().advHandle_);
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
+    auto startIter = pimpl->advHandleSettingDatas_.find(pimpl->advHandleQue_.front().advHandle);
     pimpl->advHandleQue_.pop();
     if (startIter == pimpl->advHandleSettingDatas_.end()) {
         LOG_ERROR("[BleAdvertiserImpl] %{public}s:invalid handle! %u.", __func__, advStartHandle);
@@ -1432,7 +1432,7 @@ void BleAdvertiserImpl::GapAdvStopCompleteEvt(int status) const
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStopHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStopHandle = pimpl->advHandleQue_.front().advHandle;
     pimpl->advHandleQue_.pop();
     auto stopIter = pimpl->advHandleSettingDatas_.find(advStopHandle);
     if (stopIter == pimpl->advHandleSettingDatas_.end()) {
@@ -1505,7 +1505,7 @@ void BleAdvertiserImpl::GapExAdvSetRandAddrResultEvt(int status) const
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     pimpl->advHandleQue_.pop();
     pimpl->cvfull_.notify_all();
     auto iter = pimpl->advHandleSettingDatas_.find(advStartHandle);
@@ -1541,7 +1541,7 @@ void BleAdvertiserImpl::GapExAdvParamSetCompleteEvt(int status, int8_t txPower) 
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     auto iter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (iter == pimpl->advHandleSettingDatas_.end()) {
         LOG_ERROR("[BleAdvertiserImpl] %{public}s:invalid handle! %u.", __func__, advStartHandle);
@@ -1586,7 +1586,7 @@ void BleAdvertiserImpl::GapExAdvDataSetCompleteEvt(int status, int8_t txPower)
 {
     LOG_DEBUG("[BleAdvertiserImpl] %{public}s,%{public}zu", __func__, pimpl->advHandleQue_.size());
 
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     auto exAdvDataIter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (exAdvDataIter == pimpl->advHandleSettingDatas_.end()) {
         pimpl->advHandleQue_.pop();
@@ -1644,7 +1644,7 @@ void BleAdvertiserImpl::GapExAdvScanRspDataSetCompleteEvt(int status)
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     auto exAdvScanDataIter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (exAdvScanDataIter == pimpl->advHandleSettingDatas_.end()) {
         LOG_ERROR("[BleAdvertiserImpl] %{public}s:invalid handle! %u.", __func__, advStartHandle);
@@ -1690,7 +1690,7 @@ void BleAdvertiserImpl::GapExAdvStartCompleteEvt(int status)
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     pimpl->advHandleQue_.pop();
     auto exAdvStartIter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (exAdvStartIter == pimpl->advHandleSettingDatas_.end()) {
@@ -1791,7 +1791,7 @@ void BleAdvertiserImpl::GapExAdvStopCompleteEvt(int status) const
         LOG_ERROR("[BleAdvertiserImpl] %{public}s advHandleQue_ empty .", __func__);
         return;
     }
-    uint8_t tempHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t tempHandle = pimpl->advHandleQue_.front().advHandle;
     pimpl->advHandleQue_.pop();
     auto exAdvStopIter = pimpl->advHandleSettingDatas_.find(tempHandle);
     if (exAdvStopIter == pimpl->advHandleSettingDatas_.end()) {
@@ -1814,7 +1814,7 @@ void BleAdvertiserImpl::GapExAdvRemoveHandleResultEvt(int status) const
         LOG_ERROR("[BleAdvertiserImpl] %{public}s advHandleQue_ empty .", __func__);
         return;
     }
-    uint8_t tempHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t tempHandle = pimpl->advHandleQue_.front().advHandle;
     pimpl->advHandleQue_.pop();
     auto exAdvRemoveIter = pimpl->advHandleSettingDatas_.find(tempHandle);
     if (exAdvRemoveIter == pimpl->advHandleSettingDatas_.end()) {
@@ -1975,7 +1975,7 @@ void BleAdvertiserImpl::GenResPriAddrResultTask(uint8_t result, BtAddr btAddr) c
     if (pimpl->advHandleQue_.empty()) {
         return;
     }
-    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle_;
+    uint8_t advStartHandle = pimpl->advHandleQue_.front().advHandle;
     auto iter = pimpl->advHandleSettingDatas_.find(advStartHandle);
     if (iter == pimpl->advHandleSettingDatas_.end()) {
         LOG_ERROR("[BleAdvertiserImpl] %{public}s:AdvHandleSettingDatas is empty!", __func__);
