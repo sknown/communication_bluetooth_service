@@ -185,8 +185,10 @@ void HidHostSdpClient::SaveHidSdpInfo()
             LOG_ERROR("[HIDH SDP]%{public}s() SetHidPnpInfo is error!", __FUNCTION__);
         }
 
+        std::vector<uint8_t> descData = std::vector<uint8_t>(
+            hidInf_.descInfo.get(), hidInf_.descInfo.get() + hidInf_.descLength);
         ret = classicAdapter->SetHidDescInfo(
-            currentAddr_, hidInf_.ctryCode, hidInf_.descInfo.get(), hidInf_.descLength);
+            currentAddr_, hidInf_.ctryCode, descData, hidInf_.descLength);
         if (!ret) {
             LOG_ERROR("[HIDH SDP]%{public}s() SetHidDescInfo is error!", __FUNCTION__);
         }
