@@ -576,8 +576,6 @@ bool ClassicAdapterProperties::SetHidDescInfo(const std::string &addr, int ctryC
     bool retDescInfo = config_.SetRemoteHidDescInfo(addr, descInfo);
     ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidProductId", retDescInfo);
 
-    SaveConfigFile();
-
     if (retCtryCode && retDescInfo) {
         return true;
     }

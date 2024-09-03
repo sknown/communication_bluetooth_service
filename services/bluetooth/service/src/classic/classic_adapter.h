@@ -405,9 +405,11 @@ public:
     bool IsHfpCodSupported(const RawAddress &device) override;
 
     bool SetHidPnpInfo(const std::string &remoteAddr, int vendorId, int productId, int version) override;
-    bool SetHidDescInfo(const std::string &remoteAddr, int ctryCode, uint8_t *descData, int descLength) override;
+    bool SetHidDescInfo(
+        const std::string &remoteAddr, int ctryCode, const std::vector<uint8_t> &descData, int descLength) override;
     void GetHidPnpInfo(const std::string &remoteAddr, int &vendorId, int &productId, int &version) override;
-    uint8_t* GetHidDescInfo(const std::string &remoteAddr, int &ctryCode, int &descLength) override;
+    void GetHidDescInfo(
+        const std::string &remoteAddr, int &ctryCode, std::vector<uint8_t> &descData, int &descLength) override;
 
 private:
     /**

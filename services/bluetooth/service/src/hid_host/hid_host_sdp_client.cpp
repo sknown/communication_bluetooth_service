@@ -201,16 +201,18 @@ void HidHostSdpClient::GetConfigHidSdpInfo()
     int version = 0;
     int ctryCode = 0;
     int descLength = 0;
+    std::vector<uint8_t> descData;
     if (classicAdapter) {
         classicAdapter->GetHidPnpInfo(currentAddr_, vendorId, productId, version);
 
-        uint8_t *descData = classicAdapter->GetHidDescInfo(currentAddr_, ctryCode, descLength);
-        if (descData != nullptr && descLength > 0) {
+        classicAdapter->GetHidDescInfo(currentAddr_, ctryCode, descData, descLength);
+        if (!descData.empty() && descLength > 0) {
             hidInf_.descInfo = std::make_unique<uint8_t[]>(descLength);
-            if (memcpy_s(hidInf_.descInfo.get(), descLength, descData, descLength) != EOK) {
+            if (memcpy_s(hidInf_.descInfo.get(), descLength, &descData[0], descLength) != EOK) {
                 LOG_ERROR("[HIDH SDP]%{public}s() memcpy error", __FUNCTION__);
                 return;
             }
+
             pnpInf_.vendorId = vendorId;
             pnpInf_.productId = productId;
             pnpInf_.version = version;

@@ -2453,10 +2453,14 @@ bool ClassicAdapter::SetHidPnpInfo(const std::string &remoteAddr, int vendorId, 
     return adapterProperties_.SetHidPnpInfo(remoteAddr, vendorId, productId, version);
 }
 
-bool ClassicAdapter::SetHidDescInfo(const std::string &remoteAddr, int ctryCode, uint8_t *descData, int descLength)
+bool ClassicAdapter::SetHidDescInfo(
+    const std::string &remoteAddr, int ctryCode, const std::vector<uint8_t> &descData, int descLength)
 {
-    std::vector<uint8_t> descKey = std::vector<uint8_t>(descData, descData + descLength);
-    return adapterProperties_.SetHidDescInfo(remoteAddr, ctryCode, ClassicUtils::ConvertIntToHexString(descKey));
+     bool ret = adapterProperties_.SetHidDescInfo(remoteAddr, ctryCode, ClassicUtils::ConvertIntToHexString(descData));
+     if (ret) {
+        adapterProperties_.SaveConfigFile();
+     }
+     return ret;
 }
 
 void ClassicAdapter::GetHidPnpInfo(const std::string &remoteAddr, int &vendorId, int &productId, int &version)
@@ -2464,17 +2468,13 @@ void ClassicAdapter::GetHidPnpInfo(const std::string &remoteAddr, int &vendorId,
     adapterProperties_.GetHidPnpInfo(remoteAddr, vendorId, productId, version);
 }
 
-uint8_t* ClassicAdapter::GetHidDescInfo(const std::string &remoteAddr, int &ctryCode, int &descLength)
+void ClassicAdapter::GetHidDescInfo(
+    const std::string &remoteAddr, int &ctryCode, std::vector<uint8_t> &descData, int &descLength)
 {
     std::string descInfo = "";
-    std::vector<uint8_t> descKey;
     adapterProperties_.GetHidDescInfo(remoteAddr, ctryCode, descInfo);
-    ClassicUtils::ConvertHexStringToInt(descInfo, descKey);
-    descLength = descKey.size();
-    if (descLength > 0) {
-        return &descKey[0];
-    }
-    return nullptr;
+    ClassicUtils::ConvertHexStringToInt(descInfo, descData);
+    descLength = descData.size();
 }
 REGISTER_CLASS_CREATOR(ClassicAdapter);
 }  // namespace bluetooth
