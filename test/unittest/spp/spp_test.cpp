@@ -106,8 +106,8 @@ HWTEST_F(SocketTest, Spp_UnitTest_GetInputStream, TestSize.Level1)
     int DATASIZE = 1024;
     ssize_t returnInput = 0;
     GTEST_LOG_(INFO) << "SppClientSocket::GetInputStream starts";
-    InputStream input = pfd_SppClientSocket->GetInputStream();
-    returnInput = input.Read(receive, DATASIZE);
+    std::shared_ptr<InputStream> input = pfd_SppClientSocket->GetInputStream();
+    returnInput = input->Read(receive, DATASIZE);
     GTEST_LOG_(INFO) << "SppClientSocket::GetInputStream ends";
 }
 
@@ -123,9 +123,9 @@ HWTEST_F(SocketTest, Spp_UnitTest_GetOutputStream, TestSize.Level1)
     int fd = 37;
     BluetoothRemoteDevice device_;
     ClientSocket *pfd_SppClientSocket = new ClientSocket(fd, device_.GetDeviceAddr(), TYPE_RFCOMM);
-    OutputStream output = pfd_SppClientSocket->GetOutputStream();
+    std::shared_ptr<OutputStream> output = pfd_SppClientSocket->GetOutputStream();
     size_t returnOutput = 0;
-    returnOutput = output.Write(multiChar, 10);
+    returnOutput = output->Write(multiChar, 10);
     GTEST_LOG_(INFO) << "SppClientSocket::GetOutputStream ends";
 }
 
