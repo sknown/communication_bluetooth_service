@@ -237,13 +237,6 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SATELLITE_CONTROL,
             std::bind(&BluetoothHostStub::SatelliteControlInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-<<<<<<< HEAD
-        {BluetoothHostInterfaceCode::BT_REGISTER_RESOURCE_MANAGER_OBSERVER,
-            std::bind(&BluetoothHostStub::RegisterBtResourceManagerObserverInner,
-                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::BT_DEREGISTER_RESOURCE_MANAGER_OBSERVER,
-            std::bind(&BluetoothHostStub::DeregisterBtResourceManagerObserverInner,
-                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
         {BluetoothHostInterfaceCode::UPDATE_VIRTUAL_DEVICE,
             std::bind(&BluetoothHostStub::UpdateVirtualDeviceInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
@@ -256,8 +249,6 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SET_FAST_SCAN_LEVEL,
             std::bind(&BluetoothHostStub::SetFastScanLevelInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
-=======
->>>>>>> parent of 88b8af4 (!253 【开发自提】bluetooth_host新增通信协议资源管控回调)
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
