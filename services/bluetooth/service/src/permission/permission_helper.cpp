@@ -119,7 +119,8 @@ int PermissionHelper::VerifyAccessBluetoothPermission(const int &pid, const int 
     HapTokenInfo hapTokenInfo;
     auto callerToken = IPCSkeleton::GetCallingTokenID();
     if (Security::AccessToken::AccessTokenKit::GetHapTokenInfo(callerToken, hapTokenInfo) == RET_SUCCESS) {
-        if (hapTokenInfo.bundleName == "com.ohos.settings" || hapTokenInfo.bundleName == "com.ohos.systemui") {
+        if (PermissionUtils::CheckSystemHapApp() &&
+            (hapTokenInfo.bundleName == "com.ohos.settings" || hapTokenInfo.bundleName == "com.ohos.systemui")) {
             return PERMISSION_GRANTED;
         }
     }
