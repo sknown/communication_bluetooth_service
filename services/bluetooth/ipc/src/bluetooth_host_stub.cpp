@@ -237,12 +237,6 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SATELLITE_CONTROL,
             std::bind(&BluetoothHostStub::SatelliteControlInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::BT_REGISTER_RESOURCE_MANAGER_OBSERVER,
-            std::bind(&BluetoothHostStub::RegisterBtResourceManagerObserverInner,
-                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::BT_DEREGISTER_RESOURCE_MANAGER_OBSERVER,
-            std::bind(&BluetoothHostStub::DeregisterBtResourceManagerObserverInner,
-                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
         {BluetoothHostInterfaceCode::UPDATE_VIRTUAL_DEVICE,
             std::bind(&BluetoothHostStub::UpdateVirtualDeviceInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
@@ -1344,26 +1338,6 @@ int32_t BluetoothHostStub::SetDeviceCustomTypeInner(MessageParcel &data, Message
         return TRANSACTION_ERR;
     }
     return BT_ERR_API_NOT_SUPPORT;
-}
-
-int32_t BluetoothHostStub::RegisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply)
-{
-    auto tempObject = data.ReadRemoteObject();
-    sptr<IBluetoothResourceManagerObserver> observer;
-    observer = iface_cast<IBluetoothResourceManagerObserver>(tempObject);
-    CHECK_AND_RETURN_LOG_RET(observer != nullptr, ERR_INVALID_VALUE, "observer is nullptr");
-    RegisterBtResourceManagerObserver(observer);
-    return NO_ERROR;
-}
-
-int32_t BluetoothHostStub::DeregisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply)
-{
-    auto tempObject = data.ReadRemoteObject();
-    sptr<IBluetoothResourceManagerObserver> observer;
-    observer = iface_cast<IBluetoothResourceManagerObserver>(tempObject);
-    CHECK_AND_RETURN_LOG_RET(observer != nullptr, ERR_INVALID_VALUE, "observer is nullptr");
-    DeregisterBtResourceManagerObserver(observer);
-    return NO_ERROR;
 }
 
 int32_t BluetoothHostStub::UpdateVirtualDeviceInner(MessageParcel &data, MessageParcel &reply)
