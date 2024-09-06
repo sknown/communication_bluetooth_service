@@ -14,6 +14,7 @@
  */
 
 #include "permission_helper.h"
+#include "permission_utils.h"
 #include "accesstoken_kit.h"
 #include "ipc_skeleton.h"
 #include "log.h"
