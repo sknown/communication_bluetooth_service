@@ -14,6 +14,7 @@
  */
 
 #include "permission_helper.h"
+#include "permission_utils.h"
 #include "accesstoken_kit.h"
 #include "ipc_skeleton.h"
 #include "log.h"
@@ -119,7 +120,8 @@ int PermissionHelper::VerifyAccessBluetoothPermission(const int &pid, const int 
     HapTokenInfo hapTokenInfo;
     auto callerToken = IPCSkeleton::GetCallingTokenID();
     if (Security::AccessToken::AccessTokenKit::GetHapTokenInfo(callerToken, hapTokenInfo) == RET_SUCCESS) {
-        if (hapTokenInfo.bundleName == "com.ohos.settings" || hapTokenInfo.bundleName == "com.ohos.systemui") {
+        if (PermissionUtils::CheckSystemHapApp() &&
+            (hapTokenInfo.bundleName == "com.ohos.settings" || hapTokenInfo.bundleName == "com.ohos.systemui")) {
             return PERMISSION_GRANTED;
         }
     }
