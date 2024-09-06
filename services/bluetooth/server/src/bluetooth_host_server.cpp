@@ -1832,11 +1832,5 @@ int32_t BluetoothHostServer::GetRemoteDeviceInfo(const std::string &address,
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
-
-void BluetoothHostServer::RegisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer)
-{}
-
-void BluetoothHostServer::DeregisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer)
-{}
 }  // namespace Bluetooth
 }  // namespace OHOS
