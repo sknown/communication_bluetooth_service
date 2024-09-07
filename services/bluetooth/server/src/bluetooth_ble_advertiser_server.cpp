@@ -286,7 +286,10 @@ void BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback(const sptr<IB
 int32_t BluetoothBleAdvertiserServer::GetAdvertiserHandle(int32_t &advHandle)
 {
     HILOGI("enter");
-
+    if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
+        HILOGE("check permission failed");
+        return BT_ERR_PERMISSION_FAILED;
+    }
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     if (bleService == nullptr) {
         return BT_ERR_INTERNAL_ERROR;
