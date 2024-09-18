@@ -35,6 +35,7 @@ typedef struct {
 } HfpAgSdpAttribute;
 
 typedef struct {
+    std::vector<BtUuid> classIds {};                          // HF class id
     std::vector<SdpProtocolDescriptor> descriptors {};        // HF protocol descriptor
     std::vector<SdpProfileDescriptor> profileDescriptors {};  // HF profile descriptor
     std::vector<HfpAgSdpAttribute> attributes {};             // HF attribute descriptor
@@ -166,6 +167,14 @@ private:
      * @return Returns <b>true</b> if the operation is successful; returns <b>false</b> if the operation fails.
      */
     static bool FindProfileFeatures(const std::vector<HfpAgSdpAttribute> &attributes, uint16_t &features);
+
+    /**
+     * @brief Find out remote HF class id.
+     *
+     * @param classIds Service class id list.
+     * @return Returns <b>true</b> if the operation is successful; returns <b>false</b> if the operation fails.
+     */
+    static bool FindClassId(const std::vector<BtUuid> &classIds);
 
     inline static constexpr uint16_t HFP_AG_CLIENT_CLASSID_NUM = 1;
     inline static constexpr uint16_t HFP_AG_CLIENT_INITIATOR_ATTR_NUM = 4;
