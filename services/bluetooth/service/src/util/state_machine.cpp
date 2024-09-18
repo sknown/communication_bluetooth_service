@@ -61,7 +61,8 @@ void StateMachine::Transition(const std::string &name)
 {
     auto it = states_.find(name);
     if (it != states_.end()) {
-        std::array<State *, STACK_DEPTH> dstStack { nullptr, nullptr, nullptr, nullptr, nullptr };
+        std::array<State *, stackDepth> dstStack {  nullptr, nullptr, nullptr, nullptr, nullptr,
+        nullptr, nullptr, nullptr, nullptr, nullptr  };
 
         int dstDepth = GetStateDepth(*it->second);
         State *tmp = it->second.get();
@@ -71,7 +72,7 @@ void StateMachine::Transition(const std::string &name)
         }
 
         int sameDepth;
-        for (sameDepth = 0; sameDepth < STACK_DEPTH; sameDepth++) {
+        for (sameDepth = 0; sameDepth < stackDepth; sameDepth++) {
             if (dstStack[sameDepth] != stack_[sameDepth]) {
                 break;
             }

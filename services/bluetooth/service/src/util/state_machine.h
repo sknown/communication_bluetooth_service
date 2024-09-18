@@ -138,13 +138,13 @@ public:
     const State *GetState() const;
 
 private:
-    const static int STACK_DEPTH = 5;
+    const static int stackDepth = 10;
     void Transition(const std::string &name);
     inline int GetStateDepth(State &state);
 
     int top_ {0};
     State* current_ {nullptr};
-    std::array<State*, STACK_DEPTH> stack_ {};
+    std::array<State*, stackDepth> stack_ {};
     std::map<std::string, std::unique_ptr<State>> states_ {};
 
     BT_DISALLOW_COPY_AND_ASSIGN(StateMachine);
