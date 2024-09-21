@@ -392,6 +392,30 @@ private:
      * @since 6.0
      */
     void ProcessStartCfm(BtAddr addr, uint8_t role);
+    
+    /**
+     * @brief Process the requirement of suspend.
+     * @param[in] handle The handle of stream
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessSuspendReq(uint16_t handle, uint8_t role);
+
+    /**
+     * @brief Process the confirm of suspend.
+     * @param[in] msgData The information of message
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessSuspendCfm(A2dpAvdtMsgData msgData, uint8_t role);
+
+    /**
+     * @brief Process the indication of suspend.
+     * @param[in] msgData The information of message
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessSuspendInd(A2dpAvdtMsgData msgData, uint8_t role);
 
     /**
      * @brief Process the indication of close.
@@ -499,6 +523,31 @@ public:
     bool Dispatch(const utility::Message &msg);
 
 private:
+
+    /**
+     * @brief Process the indication of start.
+     * @param[in] msgData The information of message
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessStartInd(A2dpAvdtMsgData msgData, uint8_t role);
+
+    /**
+     * @brief Process the confirm of start.
+     * @param[in] addr The address of peer device
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */
+    void ProcessStartCfm(BtAddr addr, uint8_t role);
+
+    /**
+     * @brief Process the other cmd of streaming state.
+     * @param[in] msgData The information of message
+     * @param[in] role The role of local profile
+     * @since 6.0
+     */   
+    void ProcessSubStreamingState(A2dpAvdtMsgData msgData, uint8_t role, int cmd);
+
     /**
      * @brief Process the confirm of close.
      * @param[in] addr The address of peer device
