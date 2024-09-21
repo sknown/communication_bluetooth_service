@@ -687,7 +687,8 @@ int A2dpProfile::Stop(const uint16_t handle, const bool suspend)
         return ret;
     }
 
-    if (strcmp(A2DP_PROFILE_STREAMING.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0) {
+    if ((strcmp(A2DP_PROFILE_OPEN.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0) ||
+        (strcmp(A2DP_PROFILE_STREAMING.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0)) {
         LOG_INFO("[A2dpProfile]%{public}s streaming exited now\n", __func__);
         peer->GetStateMachine()->ProcessMessage(msg);
     } else {
@@ -727,6 +728,7 @@ int A2dpProfile::Start(const uint16_t handle)
         } else {
             LOG_ERROR("[A2dpProfile]%{public}s Audio data is not ready\n", __func__);
         }
+        peer->GetStateMachine()->ProcessMessage(msg);
         return BT_SUCCESS;
     }
     if (!JudgeAllowedStreaming()) {
