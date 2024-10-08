@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2021 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -113,7 +113,7 @@ int HfpAgSdpClient::DoHfpDiscovery(const std::string &remoteAddr, int role)
 
     SdpAttributeIdList attributeIdList;
     attributeIdList.type = SDP_TYPE_LIST;
-    if (HFP_AG_INITIATOR == role) {
+    if (role == HFP_AG_INITIATOR) {
         attributeIdList.attributeIdList.attributeIdNumber = HFP_AG_CLIENT_INITIATOR_ATTR_NUM;
         attributeIdList.attributeIdList.attributeId[SERVICE_CLASS_ID_LIST_INDEX] =
             SDP_ATTRIBUTE_SERVICE_CLASS_ID_LIST;
