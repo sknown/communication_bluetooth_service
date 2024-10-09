@@ -561,6 +561,22 @@ public:
      * @since 6.0
      */
     bool GetPeerCapComplete(uint8_t role) const;
+        
+    /**
+     * @brief A function to set the startCommandFlag
+     *
+     * @param[in] The value of startCommandFlag
+     * @since 6.0
+     */
+    void SetStartCommandFlag(bool value);
+
+    /**
+     * @brief A function to get the startCommandFlag
+     *
+     * @return The value of startCommandFlag
+     * @since 6.0
+     */
+    bool GetStartCommandFlag() const;
 
     /**
      * @brief A function to set the number of capability is got
@@ -714,6 +730,7 @@ private:
     uint8_t edr_ = 0;
     bool codecAACConfig = false;
     bool reconfigTag_ = false;
+    bool startCommandFlag = false;
 };
 }  // namespace bluetooth
 }  // namespace OHOS

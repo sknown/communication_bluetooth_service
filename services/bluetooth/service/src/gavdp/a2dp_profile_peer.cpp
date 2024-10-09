@@ -347,6 +347,20 @@ void A2dpProfilePeer::SetIntSeid(uint8_t seid)
     intId_ = seid;
 }
 
+void A2dpProfilePeer::SetStartCommandFlag(bool value)
+{
+    std::lock_guard<std::recursive_mutex> lock(g_peerMutex);
+    LOG_INFO("[A2dpProfilePeer] %{public}s SetStartCommandFlag(%u)\n", __func__, value);
+    startCommandFlag = value;
+}
+
+bool A2dpProfilePeer::GetStartCommandFlag() const
+{
+    std::lock_guard<std::recursive_mutex> lock(g_peerMutex);
+    LOG_INFO("[A2dpProfilePeer] %{public}s GetStartCommandFlag(%u)\n", __func__, startCommandFlag);
+    return startCommandFlag;
+}
+
 uint8_t A2dpProfilePeer::GetAcpSeid() const
 {
     std::lock_guard<std::recursive_mutex> lock(g_peerMutex);
