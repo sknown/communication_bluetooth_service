@@ -689,6 +689,7 @@ int A2dpProfile::Stop(const uint16_t handle, const bool suspend)
 
     if (strcmp(A2DP_PROFILE_STREAMING.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0) {
         LOG_INFO("[A2dpProfile]%{public}s streaming exited now\n", __func__);
+        peer->SetStartCommandFlag(false);
         peer->GetStateMachine()->ProcessMessage(msg);
     } else {
         LOG_ERROR("[A2dpProfile]%{public}s Not streaming status now\n", __func__);
@@ -727,10 +728,16 @@ int A2dpProfile::Start(const uint16_t handle)
         } else {
             LOG_ERROR("[A2dpProfile]%{public}s Audio data is not ready\n", __func__);
         }
-        return BT_SUCCESS;
     }
     if (!JudgeAllowedStreaming()) {
         return AVDT_NO_RESOURCES;
+    }
+    if (peer->GetStartCommandFlag() == false)
+    {
+        peer->SetStartCommandFlag(true);
+    } else {
+        LOG_INFO("[A2dpProfile]%{public}s EVT_START_REQ is not allowed. \n", __func__);
+        return AVDT_FAILED;
     }
     peer->GetStateMachine()->ProcessMessage(msg);
 
@@ -776,6 +783,7 @@ int A2dpProfile::Close(const uint16_t handle) const
     if (strcmp(A2DP_PROFILE_OPEN.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0 ||
         strcmp(A2DP_PROFILE_STREAMING.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0) {
         LOG_INFO("[A2dpProfile]%{public}s open/streaming exited now\n", __func__);
+        peer->SetStartCommandFlag(false);
         peer->GetStateMachine()->ProcessMessage(msg);
     } else {
         LOG_ERROR("[A2dpProfile]%{public}s Not open/streaming status now\n", __func__);
