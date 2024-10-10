@@ -168,5 +168,31 @@ ErrCode BluetoothA2dpSrcObserverProxy::InnerTransact(
         }
     }
 }
+
+void BluetoothA2dpSrcObserverProxy::OnVirtualDeviceChanged(int32_t action, std::string &address)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothA2dpSrcObserverProxy::GetDescriptor())) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnVirtualDeviceChanged WriteInterfaceToken error");
+        return;
+    }
+    if (!data.WriteInt32(action)) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnVirtualDeviceChanged WriteInt32 error");
+        return;
+    }
+    if (!data.WriteString(address)) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnVirtualDeviceChanged WriteString error");
+        return;
+    }
+    MessageParcel reply;
+    MessageOption option {
+        MessageOption::TF_ASYNC
+    };
+    ErrCode result = InnerTransact(BT_A2DP_SRC_OBSERVER_VIRTUALDEVICE_CHANGED, option, data, reply);
+    if (result != NO_ERROR) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnVirtualDeviceChanged done fail, error: %{public}d", result);
+        return;
+    }
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
