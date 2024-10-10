@@ -128,6 +128,7 @@ public:
     int32_t SetDeviceCustomType(const std::string &address, int32_t deviceType) override;
     int32_t GetRemoteDeviceInfo(const std::string &address,
         std::shared_ptr<BluetoothRemoteDeviceInfo> &deviceInfo, int type) override;
+    void UpdateVirtualDevice(int32_t action, const std::string &address) override;
 
 private:
     static sptr<BluetoothHostServer> instance;

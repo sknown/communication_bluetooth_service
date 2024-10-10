@@ -243,6 +243,9 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SATELLITE_CONTROL,
             std::bind(&BluetoothHostStub::SatelliteControlInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::UPDATE_VIRTUAL_DEVICE,
+            std::bind(&BluetoothHostStub::UpdateVirtualDeviceInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -1341,6 +1344,11 @@ int32_t BluetoothHostStub::SetDeviceCustomTypeInner(MessageParcel &data, Message
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
     }
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::UpdateVirtualDeviceInner(MessageParcel &data, MessageParcel &reply)
+{
     return BT_ERR_API_NOT_SUPPORT;
 }
 }  // namespace Bluetooth

@@ -56,6 +56,8 @@ public:
     int32_t ConnectSco(uint8_t callType) override;
     int32_t DisconnectSco(uint8_t callType) override;
     void EnableBtCallLog(bool state) override;
+    void GetVirtualDeviceList(std::vector<std::string> &devices) override;
+    void UpdateVirtualDevice(int32_t action, const std::string &address) override;
 
 private:
     BLUETOOTH_DECLARE_IMPL();
