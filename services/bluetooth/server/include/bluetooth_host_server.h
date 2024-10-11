@@ -129,6 +129,9 @@ public:
     int32_t GetRemoteDeviceInfo(const std::string &address,
         std::shared_ptr<BluetoothRemoteDeviceInfo> &deviceInfo, int type) override;
     void UpdateVirtualDevice(int32_t action, const std::string &address) override;
+    int32_t IsSupportVirtualAutoConnect(const std::string &address, bool &outSupport) override;
+    int32_t SetVirtualAutoConnectType(const std::string &address, int connType, int businessType) override;
+    int32_t SetFastScanLevel(int level) override;
 
 private:
     static sptr<BluetoothHostServer> instance;
