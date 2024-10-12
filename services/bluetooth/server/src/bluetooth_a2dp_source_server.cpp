@@ -248,7 +248,7 @@ int BluetoothA2dpSourceServer::GetDevicesByStates(const std::vector<int32_t> &st
     HILOGI("starts");
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
-        return RET_NO_SUPPORT;
+        return BT_ERR_PERMISSION_FAILED;
     }
     std::vector<int> tmpStates;
     for (int32_t state : states) {
@@ -461,6 +461,16 @@ int BluetoothA2dpSourceServer::DisableAutoPlay(const RawAddress &device, const i
 int BluetoothA2dpSourceServer::GetAutoPlayDisabledDuration(const RawAddress &device, int &duration)
 {
     return BT_ERR_API_NOT_SUPPORT;
+}
+
+void BluetoothA2dpSourceServer::GetVirtualDeviceList(std::vector<std::string> &devices)
+{
+    return;
+}
+
+void BluetoothA2dpSourceServer::UpdateVirtualDevice(int32_t action, const std::string &address)
+{
+    return;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

@@ -59,6 +59,7 @@ private:
     ErrCode EnableAutoPlayInner(MessageParcel &data, MessageParcel &reply);
     ErrCode DisableAutoPlayInner(MessageParcel &data, MessageParcel &reply);
     ErrCode GetAutoPlayDisabledDurationInner(MessageParcel &data, MessageParcel &reply);
+    ErrCode GetVirtualDeviceListInner(MessageParcel &data, MessageParcel &reply);
 
     using BluetoothA2dpSrcServerFunc = ErrCode (BluetoothA2dpSrcStub::*)(MessageParcel &data, MessageParcel &reply);
     std::map<uint32_t, BluetoothA2dpSrcServerFunc> memberFuncMap_;

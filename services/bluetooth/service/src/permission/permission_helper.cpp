@@ -14,6 +14,7 @@
  */
 
 #include "permission_helper.h"
+#include "permission_utils.h"
 #include "accesstoken_kit.h"
 #include "ipc_skeleton.h"
 #include "log.h"
@@ -72,7 +73,7 @@ int PermissionHelper::VerifyPermission(const std::string &permissionName, const 
 int PermissionHelper::VerifyUseBluetoothPermission(const int &pid, const int &uid)
 {
     if (VerifyPermission("ohos.permission.USE_BLUETOOTH", pid, uid) == PERMISSION_DENIED) {
-        return PERMISSION_GRANTED;
+        return PERMISSION_DENIED;
     }
 
     return PERMISSION_GRANTED;
@@ -81,7 +82,7 @@ int PermissionHelper::VerifyUseBluetoothPermission(const int &pid, const int &ui
 int PermissionHelper::VerifyDiscoverBluetoothPermission(const int &pid, const int &uid)
 {
     if (VerifyPermission("ohos.permission.DISCOVER_BLUETOOTH", pid, uid) == PERMISSION_DENIED) {
-        return PERMISSION_GRANTED;
+        return PERMISSION_DENIED;
     }
 
     return PERMISSION_GRANTED;
@@ -90,7 +91,7 @@ int PermissionHelper::VerifyDiscoverBluetoothPermission(const int &pid, const in
 int PermissionHelper::VerifyManageBluetoothPermission(const int &pid, const int &uid)
 {
     if (VerifyPermission("ohos.permission.MANAGE_BLUETOOTH", pid, uid) == PERMISSION_DENIED) {
-        return PERMISSION_GRANTED;
+        return PERMISSION_DENIED;
     }
 
     return PERMISSION_GRANTED;
@@ -99,7 +100,7 @@ int PermissionHelper::VerifyManageBluetoothPermission(const int &pid, const int 
 int PermissionHelper::VerifyLocationPermission(const int &pid, const int &uid)
 {
     if (VerifyPermission("ohos.permission.LOCATION", pid, uid) == PERMISSION_DENIED) {
-        return PERMISSION_GRANTED;
+        return PERMISSION_DENIED;
     }
 
     return PERMISSION_GRANTED;
@@ -108,7 +109,7 @@ int PermissionHelper::VerifyLocationPermission(const int &pid, const int &uid)
 int PermissionHelper::VerifyApproximatelyPermission(const int &pid, const int &uid)
 {
     if (VerifyPermission("ohos.permission.APPROXIMATELY_LOCATION", pid, uid) == PERMISSION_DENIED) {
-        return PERMISSION_GRANTED;
+        return PERMISSION_DENIED;
     }
 
     return PERMISSION_GRANTED;
@@ -116,8 +117,16 @@ int PermissionHelper::VerifyApproximatelyPermission(const int &pid, const int &u
 
 int PermissionHelper::VerifyAccessBluetoothPermission(const int &pid, const int &uid)
 {
+    HapTokenInfo hapTokenInfo;
+    auto callerToken = IPCSkeleton::GetCallingTokenID();
+    if (Security::AccessToken::AccessTokenKit::GetHapTokenInfo(callerToken, hapTokenInfo) == RET_SUCCESS) {
+        if (PermissionUtils::CheckSystemHapApp() &&
+            (hapTokenInfo.bundleName == "com.ohos.settings" || hapTokenInfo.bundleName == "com.ohos.systemui")) {
+            return PERMISSION_GRANTED;
+        }
+    }
     if (VerifyPermission("ohos.permission.ACCESS_BLUETOOTH", pid, uid) == PERMISSION_DENIED) {
-        return PERMISSION_GRANTED;
+        return PERMISSION_DENIED;
     }
 
     return PERMISSION_GRANTED;
@@ -126,7 +135,7 @@ int PermissionHelper::VerifyAccessBluetoothPermission(const int &pid, const int 
 int PermissionHelper::VerifyGetBluetoothLocalMacPermission(const int &pid, const int &uid)
 {
     if (VerifyPermission("ohos.permission.GET_BLUETOOTH_LOCAL_MAC", pid, uid) == PERMISSION_DENIED) {
-        return PERMISSION_GRANTED;
+        return PERMISSION_DENIED;
     }
 
     return PERMISSION_GRANTED;
@@ -135,7 +144,7 @@ int PermissionHelper::VerifyGetBluetoothLocalMacPermission(const int &pid, const
 int PermissionHelper::VerifyUseBluetoothPermission(const std::uint32_t  &tokenID)
 {
     if (VerifyPermission("ohos.permission.USE_BLUETOOTH", tokenID) == PERMISSION_DENIED) {
-        return PERMISSION_GRANTED;
+        return PERMISSION_DENIED;
     }
 
     return PERMISSION_GRANTED;
@@ -144,7 +153,7 @@ int PermissionHelper::VerifyUseBluetoothPermission(const std::uint32_t  &tokenID
 int PermissionHelper::VerifyDiscoverBluetoothPermission(const std::uint32_t  &tokenID)
 {
     if (VerifyPermission("ohos.permission.DISCOVER_BLUETOOTH", tokenID) == PERMISSION_DENIED) {
-        return PERMISSION_GRANTED;
+        return PERMISSION_DENIED;
     }
 
     return PERMISSION_GRANTED;

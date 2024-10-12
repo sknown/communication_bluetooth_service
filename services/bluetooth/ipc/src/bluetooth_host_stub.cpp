@@ -19,6 +19,7 @@
 #include "ipc_types.h"
 #include "raw_address.h"
 #include "string_ex.h"
+#include "permission_utils.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -242,11 +243,17 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SATELLITE_CONTROL,
             std::bind(&BluetoothHostStub::SatelliteControlInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::BT_REGISTER_RESOURCE_MANAGER_OBSERVER,
-            std::bind(&BluetoothHostStub::RegisterBtResourceManagerObserverInner,
+        {BluetoothHostInterfaceCode::UPDATE_VIRTUAL_DEVICE,
+            std::bind(&BluetoothHostStub::UpdateVirtualDeviceInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::BT_DEREGISTER_RESOURCE_MANAGER_OBSERVER,
-            std::bind(&BluetoothHostStub::DeregisterBtResourceManagerObserverInner,
+        {BluetoothHostInterfaceCode::GET_VIRTUAL_AUTO_CONN_SWITCH,
+            std::bind(&BluetoothHostStub::IsSupportVirtualAutoConnectInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::SET_VIRTUAL_AUTO_CONN_TYPE,
+            std::bind(&BluetoothHostStub::SetVirtualAutoConnectTypeInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::SET_FAST_SCAN_LEVEL,
+            std::bind(&BluetoothHostStub::SetFastScanLevelInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
 };
 
@@ -353,7 +360,13 @@ ErrCode BluetoothHostStub::GetBtStateInner(MessageParcel &data, MessageParcel &r
 {
     HILOGI("BluetoothHostStub::GetBtStateInner starts");
     int32_t state = 0;
-    int32_t result = GetBtState(state);
+    int32_t result = 0;
+    if (bluetooth::PermissionUtils::VerifyUseBluetoothPermission() == bluetooth::PERMISSION_DENIED) {
+        HILOGE("false, check permission failed");
+        result = BT_ERR_PERMISSION_FAILED;
+    } else {
+        result = GetBtState(state);
+    }
     (void)reply.WriteInt32(result);
     (void)reply.WriteInt32(state);
     return NO_ERROR;
@@ -1343,24 +1356,24 @@ int32_t BluetoothHostStub::SetDeviceCustomTypeInner(MessageParcel &data, Message
     return BT_ERR_API_NOT_SUPPORT;
 }
 
-int32_t BluetoothHostStub::RegisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothHostStub::UpdateVirtualDeviceInner(MessageParcel &data, MessageParcel &reply)
 {
-    auto tempObject = data.ReadRemoteObject();
-    sptr<IBluetoothResourceManagerObserver> observer;
-    observer = iface_cast<IBluetoothResourceManagerObserver>(tempObject);
-    CHECK_AND_RETURN_LOG_RET(observer != nullptr, ERR_INVALID_VALUE, "observer is nullptr");
-    RegisterBtResourceManagerObserver(observer);
-    return NO_ERROR;
+    return BT_ERR_API_NOT_SUPPORT;
 }
 
-int32_t BluetoothHostStub::DeregisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply)
+int32_t BluetoothHostStub::IsSupportVirtualAutoConnectInner(MessageParcel &data, MessageParcel &reply)
 {
-    auto tempObject = data.ReadRemoteObject();
-    sptr<IBluetoothResourceManagerObserver> observer;
-    observer = iface_cast<IBluetoothResourceManagerObserver>(tempObject);
-    CHECK_AND_RETURN_LOG_RET(observer != nullptr, ERR_INVALID_VALUE, "observer is nullptr");
-    DeregisterBtResourceManagerObserver(observer);
-    return NO_ERROR;
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::SetVirtualAutoConnectTypeInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::SetFastScanLevelInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

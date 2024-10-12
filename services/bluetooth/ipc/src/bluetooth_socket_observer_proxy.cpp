@@ -18,7 +18,7 @@
 
 namespace OHOS {
 namespace Bluetooth {
-void BluetoothClientSocketObserverProxy::OnConnectionStateChanged(CallbackParam callbackParam)
+void BluetoothClientSocketObserverProxy::OnConnectionStateChanged(const CallbackParam &callbackParam)
 {
     MessageParcel data;
     MessageParcel reply;

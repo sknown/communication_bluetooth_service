@@ -43,7 +43,6 @@
 #include "interface_adapter_classic.h"
 #include "interface_profile_manager.h"
 #include "ipc_skeleton.h"
-#include "permission_utils.h"
 #include "raw_address.h"
 #include "remote_observer_list.h"
 #include "string_ex.h"
@@ -790,10 +789,6 @@ int32_t BluetoothHostServer::DisableBt()
 
 int32_t BluetoothHostServer::GetBtState(int32_t &state)
 {
-    if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
-        HILOGE("false, check permission failed");
-        return BT_ERR_PERMISSION_FAILED;
-    }
     state = IAdapterManager::GetInstance()->GetState(bluetooth::BTTransport::ADAPTER_BREDR);
     HILOGI("state: %{public}d", state);
     return NO_ERROR;
@@ -1136,6 +1131,10 @@ int32_t BluetoothHostServer::CancelBtDiscovery()
 int32_t BluetoothHostServer::IsBtDiscovering(bool &isDisCovering, int32_t transport)
 {
     HILOGI("transport: %{public}d", transport);
+    if (PermissionUtils::VerifyAccessBluetoothPermission() == PERMISSION_DENIED) {
+        HILOGE("false, check permission failed");
+        return BT_ERR_PERMISSION_FAILED;
+    }
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
@@ -1389,7 +1388,6 @@ int32_t BluetoothHostServer::GetPairState(int32_t transport, const std::string &
         pairState = bleService->GetPairState(addr);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
-        return BT_ERR_INVALID_STATE;
     }
     return BT_NO_ERROR;
 }
@@ -1833,10 +1831,23 @@ int32_t BluetoothHostServer::GetRemoteDeviceInfo(const std::string &address,
     return BT_ERR_API_NOT_SUPPORT;
 }
 
-void BluetoothHostServer::RegisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer)
+void BluetoothHostServer::UpdateVirtualDevice(int32_t action, const std::string &address)
 {}
 
-void BluetoothHostServer::DeregisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer)
-{}
+int32_t BluetoothHostServer::IsSupportVirtualAutoConnect(const std::string &address, bool &outSupport)
+{
+    outSupport = false;
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostServer::SetVirtualAutoConnectType(const std::string &address, int connType, int businessType)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostServer::SetFastScanLevel(int level)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
