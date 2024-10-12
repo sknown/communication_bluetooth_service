@@ -122,6 +122,14 @@ public:
      * @since 11.0
      */
     virtual void OnMediaStackChanged(const RawAddress &remoteAddr, int action) {};
+
+    /**
+     * @brief virtual device changed observer.
+     * @param action add or remove virtual device.
+     * @param address address on the virtual device.
+     * @since 12.0
+     */
+    virtual void OnVirtualDeviceChanged(int32_t action, std::string address) {};
 };
 
 /**
@@ -325,12 +333,32 @@ public:
 
     /**
      * @brief Get the current rendered position.
+     * @param device The address of the bluetooth device.
      * @param[out] delayValue: The delayed time
      * @param[out] sendDataSize: The size of the data sent
      * @param[out] timeStamp: The time of the current position
+     * @return Returns <b>RET_NO_ERROR</b> if the operation is successful.
      * @since 6.0
      */
-    virtual void GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp) = 0;
+    virtual int GetRenderPosition(const RawAddress &device, uint32_t &delayValue, uint64_t &sendDataSize,
+                                  uint32_t &timeStamp) = 0;
+    
+    /**
+     * @brief update a2dp virtual device.
+     *
+     * @param actiion 0:add, 1:remove.
+     * @param address address of virtual device
+     * @since 12.0
+     */
+    virtual void UpdateVirtualDevice(int32_t action, const std::string &address) {};
+
+    /**
+     * @brief get a2dp virtual device list.
+     *
+     * @param devices address of virtual device list.
+     * @since 12.0
+     */
+    virtual void GetVirtualDeviceList(std::vector<std::string> &devices) {};
 };
 /**
  * @brief This class provides functions called by Framework API for a2dp source.

@@ -1830,5 +1830,24 @@ int32_t BluetoothHostServer::GetRemoteDeviceInfo(const std::string &address,
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
+
+void BluetoothHostServer::UpdateVirtualDevice(int32_t action, const std::string &address)
+{}
+
+int32_t BluetoothHostServer::IsSupportVirtualAutoConnect(const std::string &address, bool &outSupport)
+{
+    outSupport = false;
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostServer::SetVirtualAutoConnectType(const std::string &address, int connType, int businessType)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostServer::SetFastScanLevel(int level)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
