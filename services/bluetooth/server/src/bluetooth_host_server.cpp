@@ -1849,5 +1849,11 @@ int32_t BluetoothHostServer::SetFastScanLevel(int level)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
+
+void BluetoothHostServer::RegisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer)
+{}
+
+void BluetoothHostServer::DeregisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer)
+{}
 }  // namespace Bluetooth
 }  // namespace OHOS
