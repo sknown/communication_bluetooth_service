@@ -412,15 +412,18 @@ ErrCode BluetoothA2dpSrcStub::WriteFrameInner(MessageParcel &data, MessageParcel
 
 ErrCode BluetoothA2dpSrcStub::GetRenderPositionInner(MessageParcel &data, MessageParcel &reply)
 {
-    uint16_t delayValue;
-    uint16_t sendDataSize;
+    uint32_t delayValue;
+    uint64_t sendDataSize;
     uint32_t timeStamp;
-    GetRenderPosition(delayValue, sendDataSize, timeStamp);
-    if (!reply.WriteUint16(delayValue)) {
+    int result = GetRenderPosition(RawAddress(data.ReadString()), delayValue, sendDataSize, timeStamp);
+    if (!reply.WriteUint32(result)) {
+        return TRANSACTION_ERR;
+    }
+    if (!reply.WriteUint32(delayValue)) {
         HILOGE("BluetoothA2dpSrcStub: GetRenderPositionInner reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
     }
-    if (!reply.WriteUint16(sendDataSize)) {
+    if (!reply.WriteUint64(sendDataSize)) {
         HILOGE("BluetoothA2dpSrcStub: GetRenderPositionInner reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
     }

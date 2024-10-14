@@ -333,12 +333,15 @@ public:
 
     /**
      * @brief Get the current rendered position.
+     * @param device The address of the bluetooth device.
      * @param[out] delayValue: The delayed time
      * @param[out] sendDataSize: The size of the data sent
      * @param[out] timeStamp: The time of the current position
+     * @return Returns <b>RET_NO_ERROR</b> if the operation is successful.
      * @since 6.0
      */
-    virtual void GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp) = 0;
+    virtual int GetRenderPosition(const RawAddress &device, uint32_t &delayValue, uint64_t &sendDataSize,
+                                  uint32_t &timeStamp) = 0;
     
     /**
      * @brief update a2dp virtual device.
