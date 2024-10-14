@@ -646,6 +646,15 @@ void A2dpStateOpen::ProcessSubOpenState(A2dpAvdtMsgData msgData, uint8_t role, i
         case EVT_TIME_OUT:
             ProcessTimeout(msgData.stream.addr, role);
             break;
+        case EVT_SUSPEND_REQ:
+            ProcessSuspendReq(msgData.stream.handle, role);
+            break;
+        case EVT_SUSPEND_IND:
+            ProcessSuspendInd(msgData, role);
+            break;
+        case EVT_SUSPEND_CFM:
+            ProcessSuspendCfm(msgData, role);
+            break;
         default:
             break;
     }
@@ -811,6 +820,67 @@ void A2dpStateOpen::ProcessTimeout(BtAddr addr, uint8_t role)
     avdtp.DisconnectReq(addr);
 }
 
+void A2dpStateOpen::ProcessSuspendReq(uint16_t handle, uint8_t role)
+{
+    LOG_INFO("[A2dpStateOpen]%{public}s role(%u)\n", __func__, role);
+
+    A2dpAvdtp avdtp(role);
+    avdtp.SuspendReq(handle, label_);
+}
+
+void A2dpStateOpen::ProcessSuspendInd(A2dpAvdtMsgData msgData, uint8_t role)
+{
+    LOG_INFO("[A2dpStateOpen]%{public}s\n", __func__);
+
+    A2dpProfile *profile = GetProfileInstance(role);
+    uint8_t gavdpRole = A2DP_ROLE_ACP;
+    A2dpAvdtp avdtp(role);
+    if (profile == nullptr) {
+        LOG_ERROR("[A2dpStateOpen]%{public}s Failed to get profile instance\n", __func__);
+        return;
+    }
+
+    /// check the stream status
+    if (avdtp.SuspendRsp(msgData.stream.handle, msgData.stream.label, 0, 0) == AVDT_SUCCESS) {
+        profile->AudioStateChangedNotify(msgData.stream.addr, A2DP_NOT_PLAYING, (void *)&gavdpRole);
+    }
+}
+
+void A2dpStateOpen::ProcessSuspendCfm(A2dpAvdtMsgData msgData, uint8_t role)
+{
+    LOG_INFO("[A2dpStateOpen]%{public}s\n", __func__);
+
+    A2dpProfile *profile = GetProfileInstance(role);
+    uint8_t gavdpRole = A2DP_ROLE_INT;
+    A2dpAvdtp avdtp(role);
+    if (profile == nullptr) {
+        LOG_ERROR("[A2dpStateOpen]%{public}s Failed to get profile instance\n", __func__);
+        return;
+    }
+
+    if (role == A2DP_ROLE_SOURCE) {
+        IPowerManager::GetInstance().StatusUpdate(RequestStatus::CONNECT_ON,
+            PROFILE_NAME_A2DP_SRC,
+            bluetooth::RawAddress::ConvertToString(msgData.stream.addr.addr));
+    }
+    
+    profile->AudioStateChangedNotify(msgData.stream.addr, A2DP_NOT_PLAYING, (void *)&gavdpRole);
+    A2dpService *service = GetServiceInstance(role);
+    if (service != nullptr) {
+        std::string addr = service->GetActiveSinkDevice().GetAddress();
+        if (strcmp(addr.c_str(), RawAddress::ConvertToString(msgData.stream.addr.addr).GetAddress().c_str()) != 0) {
+            service->ActiveDevice();
+        }
+    }
+    if (profile->GetDisalbeTag()) {
+        profile->CloseAll();
+    }
+    if (profile->FindPeerByAddress(msgData.stream.addr)->GetRestart()) {
+        avdtp.ReconfigureReq(
+            msgData.stream.handle, profile->FindPeerByAddress(msgData.stream.addr)->GetReconfig(), label_);
+    }
+}
+
 void A2dpStateStreaming::Entry()
 {
     LOG_INFO("[A2dpStateStreaming]%{public}s\n", __func__);
@@ -883,10 +953,8 @@ bool A2dpStateStreaming::Dispatch(const utility::Message &msg)
         case EVT_WRITE_CFM:
             ProcessWriteCfm(msgData, role);
             break;
-        case EVT_DELAY_IND:
-            ProcessDelayReportInd(msgData, role);
-            break;
         default:
+            ProcessSubStreamingState(msgData, role, msg.what_);
             break;
     }
     return true;
@@ -896,6 +964,76 @@ void A2dpStateStreaming::SetStateName(std::string state)
 {
     std::lock_guard<std::recursive_mutex> lock(g_stateMutex);
     Transition(state);
+}
+
+void A2dpStateStreaming::ProcessSubStreamingState(A2dpAvdtMsgData msgData, uint8_t role, int cmd)
+{
+    LOG_INFO("[A2dpStateStreaming]%{public}s cmd(%{public}d)\n", __func__, cmd);
+
+    A2dpAvdtp avdtp(role);
+    switch (cmd) {
+        case EVT_DELAY_IND:
+            ProcessDelayReportInd(msgData, role);
+            break;
+        case EVT_START_REQ:
+            LOG_INFO("[A2dpStateStreaming]%{public}s EVT_START_REQ\n", __func__);
+            avdtp.StartReq(msgData.stream.handle, label_);
+            break;
+        case EVT_START_IND:
+            LOG_INFO("[A2dpStateStreaming]%{public}s EVT_START_IND)\n", __func__);
+            ProcessStartInd(msgData, role);
+            break;
+        case EVT_START_CFM:
+            LOG_INFO("[A2dpStateStreaming]%{public}s EVT_START_CFM)\n", __func__);
+            ProcessStartCfm(msgData.stream.addr, role);
+            break;
+        default:
+            break;
+    }
+}
+
+void A2dpStateStreaming::ProcessStartInd(A2dpAvdtMsgData msgData, uint8_t role)
+{
+    LOG_INFO("[A2dpStateStreaming] ProcessStartInd %{public}s\n", __func__);
+
+    A2dpProfile *profile = GetProfileInstance(role);
+    uint8_t gavdpRole = A2DP_ROLE_ACP;
+    A2dpAvdtp avdtp(role);
+    if (profile == nullptr) {
+        LOG_ERROR("[A2dpStateStreaming]%{public}s Failed to get profile instance\n", __func__);
+        return;
+    }
+
+    if (avdtp.StartRsp(msgData.stream.handle, msgData.stream.label, 0, 0) == AVDT_SUCCESS) {
+        profile->AudioStateChangedNotify(msgData.stream.addr, A2DP_IS_PLAYING, (void *)&gavdpRole);
+        if (role == A2DP_ROLE_SOURCE) {
+            profile->NotifyEncoder(msgData.stream.addr);
+        } else {
+            profile->NotifyDecoder(msgData.stream.addr);
+        }
+    } else {
+        SetStateName(A2DP_PROFILE_OPEN);
+    }
+}
+
+void A2dpStateStreaming::ProcessStartCfm(BtAddr addr, uint8_t role)
+{
+    LOG_INFO("[A2dpStateStreaming] ProcessStartCfm %{public}s\n", __func__);
+
+    A2dpProfile *profile = GetProfileInstance(role);
+    uint8_t gavdpRole = A2DP_ROLE_INT;
+    if (profile == nullptr) {
+        LOG_ERROR("[A2dpStateStreaming]%{public}s Failed to get profile instance\n", __func__);
+        return;
+    }
+
+    profile->AudioStateChangedNotify(addr, A2DP_IS_PLAYING, (void *)&gavdpRole);
+
+    if (role == A2DP_ROLE_SOURCE) {
+        profile->NotifyEncoder(addr);
+    } else {
+        profile->NotifyDecoder(addr);
+    }
 }
 
 void A2dpStateStreaming::ProcessSuspendInd(A2dpAvdtMsgData msgData, uint8_t role)
