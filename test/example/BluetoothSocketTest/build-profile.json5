@@ -1,0 +1,49 @@
+{
+  "app": {
+    "signingConfigs": [
+      {
+        "name": "default",
+        "material": {
+          "certpath": "C:/Users/zxj/.ohos/config/openharmony/default_BluetoothSocket3_LUv2_etETeHIl1vpG64jTAN7uYZaBGaJlIvhf86fUeE=.cer",
+          "storePassword": "0000001AF42F09C2996897179A9DBDDF54E62D233983900F261538AA575464B941F3A8D495E52282DB0A",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001A6DC25A7AF45F76ECB89526A7B56DDC54A6FE3F799B5EA695A1BA539354D3322134FECC348258",
+          "profile": "C:/Users/zxj/.ohos/config/openharmony/default_BluetoothSocket3_LUv2_etETeHIl1vpG64jTAN7uYZaBGaJlIvhf86fUeE=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:/Users/zxj/.ohos/config/openharmony/default_BluetoothSocket3_LUv2_etETeHIl1vpG64jTAN7uYZaBGaJlIvhf86fUeE=.p12"
+        }
+      }
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compileSdkVersion": 11,
+        "compatibleSdkVersion": 11,
+        "runtimeOS": "OpenHarmony",
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}
