@@ -1,8 +1,22 @@
+/*
+ * Copyright (c) 2024 Huawei Device Co., Ltd.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 import socket from '@ohos.bluetooth.socket';
 import { BusinessError } from '@ohos.base';
 import worker, { MessageEvents, ErrorEvent } from '@ohos.worker';
 import { WorkerParam, WorkParam } from '.././workers/Worker';
-import promptAction from '@ohos.promptAction';
 import bluetooth from '@ohos.bluetooth.connection';
 import abilityAccessCtrl, { Context, PermissionRequestResult } from '@ohos.abilityAccessCtrl';
 import common from '@ohos.app.ability.common';
@@ -40,15 +54,6 @@ function backgroundStyle() {
   .justifyContent(FlexAlign.SpaceAround)
 }
 
-@Extend(Text)
-function listItemTextStyle() {
-  .width('100%')
-  .height(20)
-  .fontSize(15)
-  .borderRadius(8)
-  .textAlign(TextAlign.Center)
-  .backgroundColor('#0d000000')
-}
 
 @Entry
 @Component
@@ -117,7 +122,6 @@ struct Index {
   @State logCnt: number = 0;
   @State starttime: number = 0;
   @State endtime: number = 0;
-  @State iiiii: number = 0;
   private data: Uint8Array = new Uint8Array();
 
   print(msg: string) {
@@ -199,26 +203,22 @@ struct Index {
     if (this.data.includes(0) || this.data.includes(1)) {
       if (this.starttime == 0) {
         if (this.data.includes(0) && this.data.includes(1)) {
-          // 既包含0又包含1
           this.startInit();
           this.len = this.data.length - this.data.indexOf(1);
           this.printMess();
           this.print(`starttime is ${this.starttime}`);
           return true;
         } else if (this.data[0] === 1) {
-          // 全是1
           this.startInit();
           this.len += this.data.length;
           this.printMess();
           this.print(`starttime is ${this.starttime}`);
           return true;
         } else {
-          // 全是0，无效头
           this.printMess();
           return true;
         }
       } else {
-        // 不包含第一个1，是后面的1，不是头
         return false;
       }
     } else {
@@ -230,19 +230,16 @@ struct Index {
     if (this.data.includes(101)) {
       if (this.starttime !== 0) {
         if (this.data.includes(100)) {
-          // 包含100和101
           this.len += this.data.indexOf(101);
           this.packageNum++;
         }
         this.endCalculate();
         return true;
       } else {
-        // 无效尾巴，全是后面的101
         this.printMess();
         return true;
       }
     } else {
-      // 不是尾巴
       return false;
     }
   }
@@ -468,7 +465,7 @@ struct Index {
                             }
                             return;
                           } else {
-                            this.clientNumber = cliendId; // 获取的clientNumber用作客户端后续读/写操作socket的id。
+                            this.clientNumber = cliendId;
                             this.print(`服务端等待连接成功, clientNumber = ${this.clientNumber}`);
                             try {
                               let dataRead = this.onRead;
