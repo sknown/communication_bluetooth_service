@@ -239,6 +239,14 @@ public:
     static uint8_t GetOpCode(Packet *pkt);
 
     /**
+     * @brief Gets the response code of the specified command frame.
+     *
+     * @param[in] pkt The packet of the specified command frame.
+     * @return The response code of the specified command frame.
+     */
+    static uint8_t GetCrCode(Packet *pkt) ;
+
+    /**
      * @brief Gets the PDU ID of the VENDOR DEPENDENT command frame.
      *
      * @param[in] pkt he packet of the VENDOR DEPENDENT command frame.

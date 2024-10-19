@@ -62,6 +62,16 @@ public:
         std::function<void(const RawAddress &rawAddr)> findCtService;
 
         /**
+         * @brief Informs that want to find the AVRCP CT record of the specified device.
+         *
+         * SDP_ATTRIBUTE_SERVICE_CLASS_ID_LIST
+         * SDP_ATTRIBUTE_BLUETOOTH_PROFILE_DESCRIPTOR_LIST
+         * AVRC_TG_ATTRIBUTE_ID_SUPPORTED_FEATURES
+         * @param[in] rawAddr The address of the peer bluetooth device.
+         */
+        std::function<void(const RawAddress &rawAddr)> findService;
+
+        /**
          * @brief Informs that the button is pressed.
          *
          * @param[in] rawAddr The address of the bluetooth device.
@@ -344,6 +354,8 @@ public:
          * @param[in] rawAddr  The address of the bluetooth device.
          */
         std::function<void(const RawAddress &rawAddr)> setActiveDevice;
+
+        std::function<void(const RawAddress &rawAddr, uint8_t volume)> handleVolumeChanged;
     };
 
     /**
@@ -537,6 +549,30 @@ public:
     /******************************************************************
      * VENDOR COMMAND                                                 *
      ******************************************************************/
+
+    /**
+     * @brief Sends the command of the <b>RegisterNotification</b>.
+     *
+     * @param[in] rawAddr  The address of the bluetooth device.
+     * @param[in] events   The event for which the requires notification. Refer to <b>events</b>.
+     */
+    void RegisterNotification(const RawAddress &rawAddr, const std::vector<uint8_t> &events);
+
+    /**
+     * @brief Sends the command of the <b>UnRegisterNotification</b>.
+     *
+     * @param[in] rawAddr  The address of the bluetooth device.
+     * @param[in] events   The event for which the requires unotification. Refer to <b>events</b>.
+     */
+    static void UnRegisterNotification(const RawAddress &rawAddr, const std::vector<uint8_t> &events);
+
+    /**
+     * @brief Sends the command of the <b>VENDOR DEPENDENT</b>.
+     *
+     * @param[in] rawAddr The address of the bluetooth device.
+     * @param[in] pkt     The frame packet.
+     */
+    void SendVendorCmd(const RawAddress &rawAddr, const std::shared_ptr<AvrcTgVendorPacket> &pkt, AvrcTgSmEvent event);
 
     /**
      * @brief Sends the response of the <b>GetCapabilities</b>.
@@ -739,6 +775,22 @@ public:
      *            @a RET_BAD_STATUS : Rejected.
      */
     void SendAddToNowPlayingRsp(const RawAddress &rawAddr, int status, uint8_t label, int result);
+
+    /**
+     * @brief Sends the command of the <b>SetAbsoluteVolume</b>.
+     *
+     * @param[in] rawAddr The address of the bluetooth device.
+     * @param[in] volume  The percentage of the absolute volume. Refer to <b>AvrcAbsoluteVolume</b>.
+     */
+    void SendSetAbsoluteVolumeCmd(const RawAddress &rawAddr, uint8_t volume);
+
+    /**
+     * @brief Sends the command of the <b>SetAbsoluteVolume</b>.
+     *
+     * @param[in] rawAddr The address of the bluetooth device.
+     * @param[in] pkt  The packet of the frame.
+     */
+    void ReceiveSetAbsoluteVolumeRsp(const RawAddress &rawAddr, Packet *pkt);
 
     /**
      * @brief Sends the response of the <b>SetAbsoluteVolume</b>.
@@ -989,6 +1041,9 @@ public:
      */
     void SetNotificationLabel(uint8_t event, uint8_t label);
 
+    // Set avrcp_tg feature by SDP_SERVICE_SEARCH_ATTR_RSP
+    void SetFeatures(const RawAddress &rawAddr, uint16_t features);
+
 private:
     /// The flag is used to indicate that the AVRCP TG profile is enabled or not.
     static bool g_isEnabled;
@@ -1019,6 +1074,8 @@ private:
     AvctMsgCallback msgCallback_ {nullptr};
     // Locks the local variable in a multi-threaded environment.
     std::recursive_mutex mutex_ {};
+
+    int8_t volume_ = -1;
     /**
      * @brief A deleted default constructor.
      */
@@ -1384,6 +1441,15 @@ private:
     {
         return ((features_ & AVRC_TG_FEATURE_BROWSING) == AVRC_TG_FEATURE_BROWSING);
     }
+
+    /**
+     * @brief Checks  the AVRCP AbsoluteVolume is Supported or not.
+     *
+     * @return The result of the method execution.
+     * @retval true  The AbsoluteVolume Supported.
+     * @retval false The AbsoluteVolume is not Supported.
+     */
+    bool IsAbsoluteVolumeSupported(const RawAddress &rawAddr);
 
     /**
      * @brief Explains the response of the <b>AVCTP</b> function to the result.

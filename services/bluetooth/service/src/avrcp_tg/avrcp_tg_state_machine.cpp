@@ -504,7 +504,13 @@ void AvrcTgStateMachineManager::StateMachine::CtConnected::ToCommonEvent()
     std::shared_ptr<AvrcTgVendorPacket> packet = cnManager->GetVendorPacket(rawAddr_);
     Packet *pkt = packet->PopAssembledPacket();
 
-    AVCT_SendMsgReq(cnManager->GetConnectId(rawAddr_), packet->GetLabel(), AVCT_RESPONSE, pkt);
+    uint8_t crCode = packet->GetCrCode();
+    HILOGI("CrCode: 0X%{public}2x ", crCode);
+    if(crCode == AVRC_TG_CMD_CODE_NOTIFY || crCode == AVRC_TG_CMD_CODE_CONTROL) {
+        AVCT_SendMsgReq(cnManager->GetConnectId(rawAddr_), packet->GetLabel(), AVCT_COMMAND, pkt);
+    } else {
+        AVCT_SendMsgReq(cnManager->GetConnectId(rawAddr_), packet->GetLabel(), AVCT_RESPONSE, pkt);
+    }
     PacketFree(pkt);
 
     if (packet->IsPacketExist()) {

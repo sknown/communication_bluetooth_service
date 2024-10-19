@@ -25,9 +25,13 @@
 #include "avrcp_tg_vendor_player_application_settings.h"
 #include "power_manager.h"
 #include "log_util.h"
+#include "audio_info.h"
+#include "audio_system_manager.h"
 
 namespace OHOS {
 namespace bluetooth {
+#define VOL_NOT_SUPPORTED -1
+
 bool AvrcTgProfile::g_isEnabled = false;
 
 AvrcTgProfile::AvrcTgProfile(uint16_t features, uint32_t companyId, uint16_t controlMtu, uint16_t browseMtu,
@@ -243,6 +247,7 @@ int AvrcTgProfile::Connect(const RawAddress &rawAddr) const
     result |= AvrcTgStateMachineManager::GetInstance()->AddControlStateMachine(rawAddr);
     if (result == BT_SUCCESS) {
         myObserver_->onConnectionStateChanged(rawAddr, static_cast<int>(BTConnectState::CONNECTING));
+        myObserver_->findService(rawAddr);
     }
 
     return result;
@@ -573,6 +578,47 @@ void AvrcTgProfile::ReceiveSubUnitCmd(const RawAddress &rawAddr, uint8_t label, 
 /******************************************************************
  * VENDOR COMMAND                                                 *
  ******************************************************************/
+
+void AvrcTgProfile::SendVendorCmd(
+    const RawAddress &rawAddr, const std::shared_ptr<AvrcTgVendorPacket> &pkt, AvrcTgSmEvent event)
+{
+    HILOGI("address: %{public}s, event: %{public}x", GET_ENCRYPT_AVRCP_ADDR(rawAddr), event);
+
+    AvrcTgConnectManager *cnManager = AvrcTgConnectManager::GetInstance();
+    /// Unprocessed vendor dependent command.
+    /// Sets the information which is used in the "CONNECTED" state of the control state machine.
+    cnManager->ClearVendorInfo(rawAddr);
+    cnManager->SetVendorPacket(rawAddr, pkt);
+
+    utility::Message msg(event);
+    AvrcTgStateMachineManager::GetInstance()->SendMessageToControlStateMachine(rawAddr, msg);
+}
+
+void AvrcTgProfile::RegisterNotification(const RawAddress &rawAddr, const std::vector<uint8_t> &events)
+{
+    HILOGI("address: %{public}s, events.size: %{public}zu", GET_ENCRYPT_AVRCP_ADDR(rawAddr), events.size());
+
+    AvrcTgConnectManager *cnManager = AvrcTgConnectManager::GetInstance();
+    for (auto event : events) {
+        cnManager->EnableNotifyState(rawAddr, event);
+
+        std::shared_ptr<AvrcTgNotifyPacket> notifyPkt =
+            std::make_shared<AvrcTgNotifyPacket>(event, AVRC_TG_CMD_CODE_NOTIFY, 0x0);
+        notifyPkt->AssemblePackets();
+        std::shared_ptr<AvrcTgVendorPacket> packet = notifyPkt;
+        SendVendorCmd(rawAddr, packet, AVRC_TG_SM_EVENT_REGISTER_NOTIFICATION);
+    }
+}
+
+void AvrcTgProfile::UnRegisterNotification(const RawAddress &rawAddr, const std::vector<uint8_t> &events)
+{
+    HILOGI("address: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
+
+    AvrcTgConnectManager *cnManager = AvrcTgConnectManager::GetInstance();
+    for (auto event : events) {
+        cnManager->DisableNotifyState(rawAddr, event);
+    }
+}
 
 void AvrcTgProfile::SendVendorRsp(
     const RawAddress &rawAddr, std::shared_ptr<AvrcTgVendorPacket> &pkt, AvrcTgSmEvent event)
@@ -1027,6 +1073,26 @@ void AvrcTgProfile::ReceiveAddToNowPlayingCmd(const RawAddress &rawAddr, uint8_t
     }
 }
 
+
+void AvrcTgProfile::SendSetAbsoluteVolumeCmd(const RawAddress &rawAddr, uint8_t volume)
+{
+    HILOGI("address: %{public}s, volume: %{public}x", GET_ENCRYPT_AVRCP_ADDR(rawAddr), volume);
+
+    std::shared_ptr<AvrcTgVendorPacket> packet =
+        std::make_shared<AvrcTgSavPacket>(AVRC_TG_CMD_CODE_CONTROL, volume, 0);
+    IPowerManager::GetInstance().StatusUpdate(RequestStatus::BUSY, PROFILE_NAME_AVRCP_TG, rawAddr);
+    SendVendorCmd(rawAddr, packet, AVRC_TG_SM_EVENT_SET_ABSOLUTE_VOLUME);
+    IPowerManager::GetInstance().StatusUpdate(RequestStatus::IDLE, PROFILE_NAME_AVRCP_TG, rawAddr);
+}
+
+void AvrcTgProfile::ReceiveSetAbsoluteVolumeRsp(const RawAddress &rawAddr, Packet *pkt)
+{
+    HILOGI("address: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
+    AvrcTgSavPacket packet(pkt, 0);
+    HILOGI("address: %{public}s, volume: %{public}x, crcode: %{public}x",
+        GET_ENCRYPT_AVRCP_ADDR(rawAddr), packet.GetAbsoluteVolume(), packet.GetCrCode());
+}
+
 void AvrcTgProfile::SendSetAbsoluteVolumeRsp(const RawAddress &rawAddr, uint8_t volume, uint8_t label, int result)
 {
     HILOGI("rawAddr:%{public}s, volume:%{public}d, label:%{public}d, result:%{public}d",
@@ -1459,8 +1525,33 @@ void AvrcTgProfile::ReceiveRegisterNotificationCmd(const RawAddress &rawAddr, ui
             break;
         case AVRC_TG_EVENT_ID_VOLUME_CHANGED:
             if (notifyPkt->IsValid()) {
-                SetNotificationLabel(AVRC_TG_EVENT_ID_VOLUME_CHANGED, label);
-                myObserver_->getCurrentAbsoluteVolume(rawAddr, label);
+                HILOGI("volume:%{public}d, crCode:%{public}x",notifyPkt->GetVolume(), notifyPkt->GetCrCode());
+                switch (notifyPkt->GetCrCode()) {
+                    case AVRC_TG_RSP_CODE_INTERIM:
+                        if(volume_ == VOL_NOT_SUPPORTED) {
+                            volume_ = AudioStandard::AudioSystemManager::GetInstance()->GetVolume(
+                                AudioStandard::AudioStreamType::STREAM_MUSIC);
+                            int avrcpVolume = static_cast<int>(ceil(static_cast<double>(volume_) * 127 / 15));
+                            if (avrcpVolume > 127) avrcpVolume = 127;
+                            HILOGI("volume_:%{public}d, avrcpVolume:%{public}x", volume_, avrcpVolume);
+                            SendSetAbsoluteVolumeCmd(rawAddr, avrcpVolume);
+                        }
+                        break;
+                    case AVRC_TG_RSP_CODE_CHANGED: {
+                        volume_ = notifyPkt->GetVolume();
+                        std::vector<uint8_t> events;
+                        events.push_back(AVRC_EVENT_ID_VOLUME_CHANGED);
+                        RegisterNotification(rawAddr, events);
+                        myObserver_ ->handleVolumeChanged(rawAddr, volume_);
+                        break;
+                    }
+                    case AVRC_TG_CMD_CODE_NOTIFY:
+                        SetNotificationLabel(AVRC_TG_EVENT_ID_VOLUME_CHANGED, label);
+                        myObserver_->getCurrentAbsoluteVolume(rawAddr, label);
+                        break;
+                    default:
+                        break;
+                }
             }
             break;
         default:
@@ -1519,7 +1610,11 @@ void AvrcTgProfile::ReceiveVendorCmd(const RawAddress &rawAddr, uint8_t label, P
             ReceiveAddToNowPlayingCmd(rawAddr, label, pkt);
             break;
         case AVRC_TG_PDU_ID_SET_ABSOLUTE_VOLUME:
-            ReceiveSetAbsoluteVolumeCmd(rawAddr, label, pkt);
+            if(AvrcTgPacket::GetCrCode(pkt) == AVRC_TG_CMD_CODE_CONTROL) {
+                ReceiveSetAbsoluteVolumeCmd(rawAddr, label, pkt);
+            } else {
+                ReceiveSetAbsoluteVolumeRsp(rawAddr, pkt);
+            }
             break;
         case AVRC_TG_PDU_ID_REGISTER_NOTIFICATION:
             ReceiveRegisterNotificationCmd(rawAddr, label, pkt);
@@ -1811,6 +1906,8 @@ void AvrcTgProfile::ProcessChannelEventConnectIndEvt(
     HILOGI("rawAddr:%{public}s, connectId:%{public}d, event:%{public}d, result:%{public}d",
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), connectId, event, result);
 
+    volume_ = VOL_NOT_SUPPORTED;
+
     myObserver_->onConnectionStateChanged(rawAddr, static_cast<int>(BTConnectState::CONNECTING));
 
     result = ExpainAvctResult(result);
@@ -1831,10 +1928,7 @@ void AvrcTgProfile::ProcessChannelEventConnectIndEvt(
                 myObserver_->setActiveDevice(rawAddr);
             }
             cnManager->DeleteDisconnectedDevice(rawAddr.GetAddress());
-            if (!IsSupportedBrowsing()) {
-                myObserver_->onConnectionStateChanged(rawAddr, static_cast<int>(BTConnectState::CONNECTED));
-                IPowerManager::GetInstance().StatusUpdate(RequestStatus::CONNECT_ON, PROFILE_NAME_AVRCP_TG, rawAddr);
-            }
+            myObserver_->findService(rawAddr);
         }
     }
 }
@@ -1951,6 +2045,8 @@ void AvrcTgProfile::ProcessChannelEventConnectCfmEvt(
 {
     HILOGI("rawAddr:%{public}s, connectId:%{public}d, event:%{public}d, result:%{public}d",
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), connectId, event, result);
+    volume_ = VOL_NOT_SUPPORTED;
+
     AvrcTgConnectManager *cnManager = AvrcTgConnectManager::GetInstance();
     AvrcTgStateMachineManager *smManager = AvrcTgStateMachineManager::GetInstance();
     utility::Message msg(AVRC_TG_SM_EVENT_INVALID);
@@ -1968,6 +2064,13 @@ void AvrcTgProfile::ProcessChannelEventConnectCfmEvt(
         }
         cnManager->DeleteDisconnectedDevice(rawAddr.GetAddress());
         IPowerManager::GetInstance().StatusUpdate(RequestStatus::CONNECT_ON, PROFILE_NAME_AVRCP_TG, rawAddr);
+        // Register VOLUME_CHANGED Notification if supported Absoulute Volume
+        if(IsAbsoluteVolumeSupported(rawAddr))
+        {
+            std::vector<uint8_t> events;
+            events.push_back(AVRC_EVENT_ID_VOLUME_CHANGED);
+            RegisterNotification(rawAddr,events);
+        }
     } else {
         DeleteResource(rawAddr);
         myObserver_->onConnectionStateChanged(rawAddr, static_cast<int>(BTConnectState::DISCONNECTED));
@@ -2035,6 +2138,13 @@ void AvrcTgProfile::DeleteBrowseStateMachine(const RawAddress &rawAddr)
     HILOGI("rawAddr:%{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
 
     AvrcTgStateMachineManager::GetInstance()->DeleteBrowseStateMachine(rawAddr);
+}
+
+bool AvrcTgProfile::IsAbsoluteVolumeSupported(const RawAddress &rawAddr)
+{
+    HILOGI("rawAddr:%{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
+
+    return (features_ & AVRC_TG_FEATURE_CATEGORY_2) == AVRC_TG_FEATURE_CATEGORY_2;
 }
 
 int AvrcTgProfile::ExpainAvctResult(uint16_t avctRet)
@@ -2169,5 +2279,26 @@ void AvrcTgProfile::SetNotificationLabel(uint8_t event, uint8_t label)
             break;
     }
 }
+
+void AvrcTgProfile::SetFeatures(const RawAddress &rawAddr, uint16_t features)
+{
+    HILOGI("rawAddr:%{public}s features:%{public}x", GET_ENCRYPT_AVRCP_ADDR(rawAddr), features);
+    features_ |= features;
+    if(AvrcTgConnectManager::GetInstance()->GetConnectInfo(rawAddr)->role_ == AVCT_ACPT)
+    {
+        if (!IsSupportedBrowsing()) {
+            myObserver_->onConnectionStateChanged(rawAddr, static_cast<int>(BTConnectState::CONNECTED));
+            IPowerManager::GetInstance().StatusUpdate(RequestStatus::CONNECT_ON, PROFILE_NAME_AVRCP_TG, rawAddr);
+        }
+        // Register VOLUME_CHANGED Notification if supported Absoulute Volume
+        if(IsAbsoluteVolumeSupported(rawAddr))
+        {
+            std::vector<uint8_t> events;
+            events.push_back(AVRC_EVENT_ID_VOLUME_CHANGED); // Volume Changed
+            RegisterNotification(rawAddr,events);
+        }
+    }
+}
+
 }  // namespace bluetooth
 }  // namespace OHOS

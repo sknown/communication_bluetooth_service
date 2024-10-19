@@ -24,12 +24,17 @@
 #include "profile_service_manager.h"
 #include "securec.h"
 #include "idevmgr_hdi.h"
+#include "avrcp_tg/avrcp_tg_service.h"
 
 constexpr const char *AUDIO_BLUETOOTH_SERVICE_NAME = "audio_bluetooth_hdi_service";
 
 namespace OHOS {
 namespace bluetooth {
 std::recursive_mutex g_a2dpServiceMutex {};
+struct HDIServiceManager *g_hdiServiceManager;
+struct ServiceStatusListener *g_listener;
+BtAddr g_btAddr;
+const uint16_t AUDIO_CLASS = 0x1 << 5;
 ObserverProfile::ObserverProfile(uint8_t role)
 {
     role_ = role;
@@ -70,17 +75,63 @@ void ObserverProfile::OnConnectStateChanged(const BtAddr &addr, const int state,
         service->ConnectManager().DeleteDevice(btAddr);
     } else if (connectState == static_cast<int>(BTConnectState::CONNECTED)) {
         LOG_INFO("[ObserverProfile] %{public}s Add the active device\n", __func__);
-        service->UpdateActiveDevice(btAddr);
     }
 
-    if ((connectState == static_cast<int>(BTConnectState::CONNECTED)) ||
-        (connectState == static_cast<int>(BTConnectState::DISCONNECTED))) {
+    if (connectState == static_cast<int>(BTConnectState::DISCONNECTED)) {
         service->ProcessConnectFrameworkCallback(connectState, btAddr);
+        ProcessA2dpHdfLoad(connectState);
+    } else if (connectState == static_cast<int>(BTConnectState::CONNECTED)) {
+        memcpy_s(&g_btAddr, sizeof(BtAddr), &addr, sizeof(BtAddr));
         ProcessA2dpHdfLoad(connectState);
     }
 
     service->CheckDisable();
     return;
+}
+
+static void OnServiceStatusReceived(struct ServiceStatusListener *listener, struct ServiceStatus *serviceStatus)
+{
+    CHECK_AND_RETURN_LOG(serviceStatus != nullptr, "Invalid ServiceStatus");
+    std::string info = serviceStatus->info;
+    LOG_INFO("OnServiceStatusReceived: [service name:%{public}s] [status:%{public}d] [info:%{public}s]",
+        serviceStatus->serviceName, serviceStatus->status, info.c_str());
+    if ((strcmp(serviceStatus->serviceName, AUDIO_BLUETOOTH_SERVICE_NAME) == 0) &&
+        (serviceStatus->status == SERVIE_STATUS_START)) {
+        A2dpService *service = GetServiceInstance(A2DP_ROLE_SOURCE);
+        if (service == nullptr) {
+            LOG_ERROR("service is nullptr");
+            return;
+        }
+        RawAddress btAddr = bluetooth::RawAddress::ConvertToString(g_btAddr.addr);
+        service->ProcessConnectFrameworkCallback(static_cast<int>(BTConnectState::CONNECTED),
+            btAddr);
+        if ((g_hdiServiceManager == nullptr) || (g_listener == nullptr)) {
+            LOG_ERROR("g_hdiServiceManager or g_listener is nullptr");
+            return;
+        }
+        int32_t status = g_hdiServiceManager->UnregisterServiceStatusListener(g_hdiServiceManager, g_listener);
+        CHECK_AND_RETURN_LOG(status == HDF_SUCCESS,
+            "[DevicesStatusListener]:UnRegister service status listener failed");
+        g_hdiServiceManager = nullptr;
+        g_listener = nullptr;
+    }
+}
+
+void RegisterDeviceStatusListener()
+{
+    g_hdiServiceManager = HDIServiceManagerGet();
+    if (g_hdiServiceManager == nullptr) {
+        LOG_ERROR("HDIServiceManager Get error \n");
+        return;
+    }
+    g_listener = HdiServiceStatusListenerNewInstance();
+    if (g_listener == nullptr) {
+        LOG_ERROR("HdiServiceStatusListenerNewInstance error \n");
+        return;
+    }
+    g_listener->callback = OnServiceStatusReceived;
+    int32_t status = g_hdiServiceManager->RegisterServiceStatusListener(g_hdiServiceManager, g_listener, AUDIO_CLASS);
+    CHECK_AND_RETURN_LOG(status == HDF_SUCCESS, "RegisterServiceStatusListener failed");
 }
 
 void ObserverProfile::ProcessA2dpHdfLoad(const int state) const
@@ -94,11 +145,18 @@ void ObserverProfile::ProcessA2dpHdfLoad(const int state) const
     }
     std::vector<RawAddress> devices = service->GetDevicesByStates(states);
 
-    if (state == static_cast<int>(BTConnectState::CONNECTED) && devices.size() == 1) {
-        auto devmgr = OHOS::HDI::DeviceManager::V1_0::IDeviceManager::Get();
-        if (devmgr != nullptr) {
-            LOG_INFO("[ObserverProfile] %{public}s, loadDevice of a2dp HDF", __func__);
-            devmgr->LoadDevice(AUDIO_BLUETOOTH_SERVICE_NAME);
+    if (state == static_cast<int>(BTConnectState::CONNECTED)) {
+        if (devices.size() == 1) {
+            auto devmgr = OHOS::HDI::DeviceManager::V1_0::IDeviceManager::Get();
+            if (devmgr != nullptr) {
+                LOG_INFO("[ObserverProfile] %{public}s, loadDevice of a2dp HDF", __func__);
+                RegisterDeviceStatusListener();
+                devmgr->LoadDevice(AUDIO_BLUETOOTH_SERVICE_NAME);
+            }
+        } else {
+            RawAddress btAddr = bluetooth::RawAddress::ConvertToString(g_btAddr.addr);
+            service->ProcessConnectFrameworkCallback(static_cast<int>(BTConnectState::CONNECTED),
+                btAddr);
         }
     }
     if (state == static_cast<int>(BTConnectState::DISCONNECTED) && devices.size() == 0) {
@@ -355,6 +413,12 @@ int A2dpService::Disconnect(const RawAddress &device)
         }
     }
 
+    auto servManager = IProfileManager::GetInstance();
+    auto service = static_cast<AvrcpTgService *>(servManager->GetProfileService(PROFILE_NAME_AVRCP_TG));
+    if (service != nullptr) {
+        service->Disconnect(device);
+    }
+
     return ret;
 }
 
@@ -493,22 +557,20 @@ void A2dpService::DisableService()
         }
     }
 
-    if (GetConnectState() != PROFILE_STATE_DISCONNECTED) {
-        return;
-    }
-
-    for (auto it = a2dpDevices_.begin(); it != a2dpDevices_.end(); it++) {
-        if (it->second != nullptr) {
-            delete it->second;
-            it->second = nullptr;
+    if ((GetConnectState() == PROFILE_STATE_DISCONNECTED)||(GetConnectState() == (PROFILE_STATE_CONNECTING|PROFILE_STATE_DISCONNECTED))) {
+        for (auto it = a2dpDevices_.begin(); it != a2dpDevices_.end(); it++) {
+            if (it->second != nullptr) {
+                delete it->second;
+                it->second = nullptr;
+            }
         }
-    }
 
-    a2dpDevices_.clear();
-    instance->DeregisterObserver(&profileObserver_);
-    GetContext()->OnDisable(name_, ret);
-    isDoDisable = false;
-    instance->SetDisalbeTag(false);
+        a2dpDevices_.clear();
+        instance->DeregisterObserver(&profileObserver_);
+        GetContext()->OnDisable(name_, ret);
+        isDoDisable = false;
+        instance->SetDisalbeTag(false);
+    }
 }
 
 std::vector<RawAddress> A2dpService::GetDevicesByStates(std::vector<int>& states) const
@@ -596,16 +658,14 @@ int A2dpService::SetActiveSinkDevice(const RawAddress &device)
     }
 
     auto curDevice = a2dpDevices_.find(activeDevice_.GetAddress().c_str());
-    if (strcmp(device.GetAddress().c_str(), activeDevice_.GetAddress().c_str()) == 0) {
-        LOG_ERROR("[A2dpService]The device is already active");
-        pflA2dp->Start(curDevice->second->GetHandle());
-    } else {
+    if (strcmp(device.GetAddress().c_str(), activeDevice_.GetAddress().c_str()) != 0) {
         if (curDevice != a2dpDevices_.end() && curDevice->second != nullptr) {
-            if (pflA2dp->Stop(curDevice->second->GetHandle(), true)) {
-                pflA2dp->Start(iter->second->GetHandle());
+            A2dpProfilePeer *peer = nullptr;
+            peer = pflA2dp->FindPeerByAddress(curDevice->second->GetDevice());
+            if (peer != nullptr &&
+                strcmp(A2DP_PROFILE_STREAMING.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0) {
+                pflA2dp->Stop(curDevice->second->GetHandle(), true);
             }
-        } else {
-            pflA2dp->Start(iter->second->GetHandle());
         }
         pflA2dp->SetActivePeer(btAddr);
         UpdateActiveDevice(rawAddr);

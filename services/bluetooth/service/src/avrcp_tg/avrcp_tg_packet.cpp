@@ -138,6 +138,18 @@ uint8_t AvrcTgPacket::GetOpCode(Packet *pkt)
     return opCode;
 }
 
+uint8_t AvrcTgPacket::GetCrCode(Packet *pkt)
+{
+    HILOGI("enter");
+
+    uint8_t crCode = AVRC_TG_RSP_CODE_NOT_IMPLEMENTED;
+    if (PacketPayloadRead(pkt, &crCode, AVRC_TG_AVC_COMMON_CTYPE_OFFSET, 1) != 1) {
+        crCode = AVRC_TG_RSP_CODE_NOT_IMPLEMENTED;
+    }
+
+    return crCode;
+}
+
 uint8_t AvrcTgPacket::GetVendorPdu(Packet *pkt)
 {
     HILOGI("enter");

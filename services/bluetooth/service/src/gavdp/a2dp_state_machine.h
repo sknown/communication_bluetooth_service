@@ -58,7 +58,8 @@ public:
      * @brief Operation should be executed when Entry the state.
      * @since 6.0
      */
-    void Entry();
+    void Entry()
+    {}
 
     /**
      * @brief Operation should be executed when Exit the state.

@@ -391,7 +391,7 @@ private:
     int connectionHandle_ {};
     int pairState_ {};
     int pairConfirmType_ {PAIR_CONFIRM_TYPE_INVALID};
-    int pairConfirmState_ {PAIR_CONFIRM_STATE_INVALID};
+    int pairConfirmState_ {PAIR_CONFIRM_STATE_USER_CONFIRM_REPLY};
     int linkKeyType_ {PAIR_INVALID_LINK_KEY_TYPE};
     int ioCapability_ {};
     int batteryLevel_ {};
