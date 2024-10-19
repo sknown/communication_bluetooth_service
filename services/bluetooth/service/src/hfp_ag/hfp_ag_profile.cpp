@@ -749,13 +749,6 @@ int HfpAgProfile::ProcessCurrentCallStateIncominging(
     dataConn_.clipType_ = type;
     SendRingAndClip();
     LOG_INFO("inBandRingTone_ %{public}d", dataConn_.inBandRingTone_);
-    auto isAudioConnected = HfpAgAudioConnection::IsAudioConnected(address_);
-    if ((preNumActiveCalls_ == 0) && (preNumHeldCalls_ == 0) &&
-        (dataConn_.inBandRingTone_ == HFP_AG_INBAND_RING_ENABLE) &&
-        (isAudioConnected == false)) {
-        HfpAgProfileEventSender::GetInstance().UpdateScoConnectState(address_, HFP_AG_CONNECT_AUDIO_EVT);
-        scoPostProcess_ = true;
-    }
 
     return HFP_AG_SUCCESS;
 }

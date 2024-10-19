@@ -201,16 +201,13 @@ void A2dpProfile::ConnectStateChangedNotify(const BtAddr &addr, const int state,
     switch (state) {
         case STREAM_CONNECT_FAILED:
         case STREAM_DISCONNECT:
-            ResetDelayValue(addr);
             DeletePeer(addr);
             if (IsActiveDevice(addr)) {
+                ResetDelayValue(addr);
                 ClearActiveDevice();
+                QueueFlush(packetQueue_, CleanPacketData);
+                buffer_->Reset();
             }
-            QueueFlush(packetQueue_, CleanPacketData);
-            buffer_->Reset();
-            break;
-        case STREAM_CONNECT:
-            SetActivePeer(addr);
             break;
         default:
             break;
@@ -228,7 +225,9 @@ void A2dpProfile::AudioStateChangedNotify(const BtAddr &addr, const int state, v
     if (state == A2DP_IS_PLAYING) {
         buffer_->SetValid(true);
     } else {
-        buffer_->SetValid(false);
+        if (IsActiveDevice(addr)) {
+            buffer_->SetValid(false);
+        }
     }
     if (a2dpSvcCBack_ != nullptr) {
         a2dpSvcCBack_->OnAudioStateChanged(addr, state, context);
@@ -538,16 +537,19 @@ void A2dpProfile::Disable()
     }
     SetProfileEnable(false);
 
-    for (const auto &it : peers_) {
-        peer = it.second;
-        HILOGI("[A2dpProfile] matched peers_addr(%{public}s) [role%u]\n", GetEncryptAddr(it.first).c_str(), role);
-        if (peer != nullptr && it.first.c_str() != nullptr) {
+    std::map<std::string, A2dpProfilePeer *>::iterator it;
+    for (it = peers_.begin(); it != peers_.end();) {
+        peer = it->second;
+        if (peer != nullptr && it->first.c_str() != nullptr) {
+            HILOGI("[A2dpProfile] matched peers_addr(%{public}s) [role%u]\n", GetEncryptAddr(it->first).c_str(), role);
             data.a2dpMsg.connectInfo.addr = peer->GetPeerAddress();
             data.role = role;
             msg.arg2_ = &data;
+            it++;
             peer->GetStateMachine()->ProcessMessage(msg);
             peer->SetCurrentCmd(EVT_DISCONNECT_REQ);
-            break;
+        } else {
+            it++;
         }
     }
     if (GetGapRegisterInfo()) {
@@ -604,7 +606,6 @@ int A2dpProfile::Connect(const BtAddr &device)
     } else {
         a2dpInstance = A2dpSnkProfile::GetInstance();
     }
-    FindOrCreatePeer(device, role);
     if (GetSDPInstance().FindSnkService(device, a2dpInstance, A2dpProfilePeer::SDPServiceCallback) != BT_SUCCESS) {
         LOG_WARN("[A2dpProfile]%{public}s SDP_ServiceSearch Error\n", __func__);
     }

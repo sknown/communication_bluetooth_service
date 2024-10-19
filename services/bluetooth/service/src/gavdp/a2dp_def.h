@@ -87,7 +87,7 @@ struct CodecInfo {
     uint8_t codecInfo[A2DP_CODEC_SIZE];  // Codec codecInfo
 };
 
-enum ServiceStatus {
+enum ServiceState {
     STREAM_CONNECTING,
     STREAM_CONNECT,
     STREAM_DISCONNECTING,

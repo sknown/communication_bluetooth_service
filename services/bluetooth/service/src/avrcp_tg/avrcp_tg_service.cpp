@@ -30,6 +30,8 @@
 #include "timer.h"
 #include "log_util.h"
 
+#include "avrcp_tg_volume_interface.h"
+
 namespace OHOS {
 namespace bluetooth {
 void AvrcpTgService::ObserverImpl::OnConnectionStateChanged(const std::string &addr, int state)
@@ -371,6 +373,37 @@ IProfileAvrcpTg *AvrcpTgService::AVSessionObserverImpl::GetService(void)
     return static_cast<IProfileAvrcpTg *>(svManager->GetProfileService(PROFILE_NAME_AVRCP_TG));
 }
 
+
+void AvrcpTgService::AVControllerObserverImpl::OnAVCallMetaDataChange(const OHOS::AVSession::AVCallMetaData& avCallMetaData)
+{
+    HILOGI("enter");
+}
+
+void AvrcpTgService::AVControllerObserverImpl::OnAVCallStateChange(const OHOS::AVSession::AVCallState& avCallState)
+{
+    HILOGI("enter");
+}
+
+void AvrcpTgService::AVControllerObserverImpl::OnSessionEventChange(const std::string& event, const AAFwk::WantParams& args)
+{
+    HILOGI("enter");
+}
+
+void AvrcpTgService::AVControllerObserverImpl::OnQueueItemsChange(const std::vector<OHOS::AVSession::AVQueueItem>& items)
+{
+    HILOGI("enter");
+}
+
+void AvrcpTgService::AVControllerObserverImpl::OnQueueTitleChange(const std::string& title)
+{
+    HILOGI("enter");
+}
+
+void AvrcpTgService::AVControllerObserverImpl::OnExtrasChange(const AAFwk::WantParams& extras)
+{
+    HILOGI("enter");
+}
+
 void AvrcpTgService::AVControllerObserverImpl::OnSessionDestroy()
 {
     HILOGI("enter");
@@ -401,6 +434,11 @@ void AvrcpTgService::AVControllerObserverImpl::OnValidCommandChange(const std::v
     HILOGI("enter");
 }
 
+void AvrcpTgService::AVControllerObserverImpl::OnOutputDeviceChange(const int32_t connectionState, const OHOS::AVSession::OutputDeviceInfo &outputDeviceInfo)
+{
+    HILOGI("enter");
+}
+
 IProfileAvrcpTg *AvrcpTgService::AVControllerObserverImpl::GetService(void)
 {
     HILOGI("enter");
@@ -427,6 +465,7 @@ AvrcpTgService::AvrcpTgService() : utility::Context(PROFILE_NAME_AVRCP_TG, "1.6.
         std::bind(&AvrcpTgService::OnProfileDisabled, this, BT_SUCCESS),
         std::bind(&AvrcpTgService::OnConnectionStateChanged, this, _1, _2),
         std::bind(&AvrcpTgService::FindCtService, this, _1),
+        std::bind(&AvrcpTgService::FindService, this, _1),
         std::bind(&AvrcpTgService::OnButtonPressed, this, _1, _2, _3),
         std::bind(&AvrcpTgService::OnButtonReleased, this, _1, _2, _3),
         std::bind(&AvrcpTgService::HoldButton, this, _1, _2, _3),
@@ -454,6 +493,7 @@ AvrcpTgService::AvrcpTgService() : utility::Context(PROFILE_NAME_AVRCP_TG, "1.6.
         std::bind(&AvrcpTgService::GetCurrentAbsoluteVolume, this, _1, _2),
         std::bind(&AvrcpTgService::SetPlaybackInterval, this, _1, _2),
         std::bind(&AvrcpTgService::SetActiveDevice, this, _1),
+        std::bind(&AvrcpTgService::HandleVolumeChanged, this, _1, _2),
     };
     pfObserver_ = std::make_unique<AvrcTgProfile::Observer>(observer);
 }
@@ -491,6 +531,15 @@ void AvrcpTgService::InitFeatures()
     features_ |= AVRC_TG_FEATURE_NOTIFY_NOW_PLAYING_CONTENT_CHANGED;
     features_ |= AVRC_TG_FEATURE_NOTIFY_UIDS_CHANGED;
     features_ |= AVRC_TG_FEATURE_NOTIFY_ABSOLUTE_VOLUME_CHANGED;
+}
+
+void AvrcpTgService::SetFeatures(const RawAddress &rawAddr, uint16_t features)
+{
+    if (!IsAbsoluteVolumeEnabled(rawAddr)) {
+        features &= ~AVRC_TG_FEATURE_CATEGORY_2;
+    }
+    HILOGI("rawAddr: %{public}s features: 0X%{public}x", GET_ENCRYPT_AVRCP_ADDR(rawAddr), features);
+    profile_->SetFeatures(rawAddr, features);
 }
 
 /******************************************************************
@@ -557,6 +606,8 @@ void AvrcpTgService::EnableNative(void)
 #ifdef AVRCP_AVSESSION
     RegisterAvSessionControl();
 #endif
+    AvrcpTgVolumeInterfaceImpl::GetInstance()->RegisterVolumeEventCallback();
+
     IAdapterConfig *config = AdapterConfig::GetInstance();
     config->GetValue(SECTION_AVRCP_TG_SERVICE, PROPERTY_MAX_CONNECTED_DEVICES, maxConnection_);
 
@@ -589,6 +640,8 @@ void AvrcpTgService::EnableNative(void)
 void AvrcpTgService::DisableNative(void)
 {
     HILOGI("enter");
+
+    AvrcpTgVolumeInterfaceImpl::GetInstance()->UnregisterVolumeEventCallback();
 
     if (DisableProfile() != BT_SUCCESS) {
         OnProfileDisabled(RET_BAD_STATUS);
@@ -683,7 +736,8 @@ int AvrcpTgService::EnableProfile(void)
     config->GetValue(SECTION_AVRCP_TG_SERVICE, PROPERTY_CONTROL_MTU, controlMtu);
     config->GetValue(SECTION_AVRCP_TG_SERVICE, PROPERTY_BROWSE_MTU, browseMtu);
 
-    profile_ = std::make_unique<AvrcTgProfile>(features_,
+    // the features should be inited in ParseSDPInformation
+    profile_ = std::make_unique<AvrcTgProfile>(AVRC_TG_FEATURE_INVALID_FEATURE,
         AVRC_TG_DEFAULT_BLUETOOTH_SIG_COMPANY_ID,
         controlMtu,
         browseMtu,
@@ -752,6 +806,7 @@ void AvrcpTgService::SetActiveDevice(const RawAddress &rawAddr)
     if (IsEnabled()) {
         profile_->SetActiveDevice(rawAddr);
         stub::MediaService::GetInstance()->SetActiveDevice(rawAddr.GetAddress());
+        AvrcpTgVolumeInterfaceImpl::GetInstance()->setActiveDevice(rawAddr.GetAddress());
     }
 }
 
@@ -952,6 +1007,54 @@ void AvrcpTgService::RejectPassiveConnect(const RawAddress &rawAddr)
     } while (false);
 }
 
+// Parse AVRCP SDP Information
+// supports browsing || supports advanced control
+void AvrcpTgService::ParseSDPInformation(
+    const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum)
+{
+    HILOGI("serviceNum(%{public}d)\n", serviceNum);
+
+    uint16_t peer_features = 0;
+    uint16_t peer_avrcp_version = 0;
+
+    for (int i = 0; i < serviceNum; i++) {
+        HILOGI("uuid16: %{public}4x\n", serviceArray[i].classId->uuid16);
+        if (serviceArray[i].classId->uuid16 == UUID_SERVCLASS_AV_REMOTE_CONTROL) {
+            peer_avrcp_version = serviceArray[i].profileDescriptor->versionNumber;
+            HILOGI("peer_avrcp_version: %{public}x\n", peer_avrcp_version);
+            if(peer_avrcp_version >= AVRC_REV_1_4) {
+                uint16_t data = *(uint16_t*)serviceArray[i].attribute[0].attributeValue;
+                HILOGI("data: %{public}x\n", data);
+                if (data & AVRC_TG_FEATURE_CATEGORY_2) {
+                    peer_features |= AVRC_TG_FEATURE_CATEGORY_2;
+                }
+                if (data & AVRC_TG_FEATURE_BROWSING) {
+                    peer_features |= AVRC_TG_FEATURE_BROWSING;
+                }
+            }
+        }
+        if (serviceArray[i].classId->uuid16 == UUID_SERVCLASS_AV_REM_CTRL_TARGET) {
+            peer_avrcp_version = serviceArray[i].profileDescriptor->versionNumber;
+            HILOGI("peer_avrcp_version: %{public}x\n", peer_avrcp_version);
+            if(peer_avrcp_version >= AVRC_REV_1_4) {
+                uint16_t data = *(uint16_t*)serviceArray[i].attribute[0].attributeValue;
+                HILOGI("data: %{public}x\n", data);
+                if (data & AVRC_TG_FEATURE_CATEGORY_2) {
+                    peer_features |= AVRC_TG_FEATURE_CATEGORY_2;
+                }
+            }
+        }
+    }
+
+    HILOGI("peer_avrcp_version(%{public}x) peer_features(%{public}x)\n",peer_avrcp_version, peer_features);
+    auto servManager = IProfileManager::GetInstance();
+    auto service = static_cast<AvrcpTgService *>(servManager->GetProfileService(PROFILE_NAME_AVRCP_TG));
+    RawAddress rawAddr(RawAddress::ConvertToString(btAddr->addr));
+    if (service != nullptr) {
+        service->GetDispatcher()->PostTask(std::bind(&AvrcpTgService::SetFeatures, service, rawAddr, peer_features));
+    }
+}
+
 void AvrcpTgService::FindCtService(const RawAddress &rawAddr)
 {
     HILOGI("rawAddr: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
@@ -972,6 +1075,34 @@ void AvrcpTgService::FindCtServiceCallback(
     if (service != nullptr) {
         if (handleCount > 0) {
             service->GetDispatcher()->PostTask(std::bind(&AvrcpTgService::AcceptPassiveConnect, service, rawAddr));
+        } else {
+            service->GetDispatcher()->PostTask(std::bind(&AvrcpTgService::RejectPassiveConnect, service, rawAddr));
+        }
+    }
+}
+
+// for SDP_SERVICE_SEARCH_ATTR_REQ
+void AvrcpTgService::FindService(const RawAddress &rawAddr)
+{
+    HILOGI("rawAddr: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
+
+    if (sdpManager_->FindService(rawAddr, FindServiceCallback) != BT_SUCCESS) {
+        RejectPassiveConnect(rawAddr);
+    }
+}
+
+void AvrcpTgService::FindServiceCallback(
+   const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum, void *context)
+{
+    HILOGI("serviceNum: %{public}d", serviceNum);
+
+    auto servManager = IProfileManager::GetInstance();
+    auto service = static_cast<AvrcpTgService *>(servManager->GetProfileService(PROFILE_NAME_AVRCP_TG));
+    RawAddress rawAddr(RawAddress::ConvertToString(btAddr->addr));
+    if (service != nullptr) {
+        if (serviceNum > 0) {
+            ParseSDPInformation(btAddr, serviceArray, serviceNum);
+            // service->GetDispatcher()->PostTask(std::bind(&AvrcpTgService::AcceptPassiveConnect, service, rawAddr));
         } else {
             service->GetDispatcher()->PostTask(std::bind(&AvrcpTgService::RejectPassiveConnect, service, rawAddr));
         }
@@ -2001,6 +2132,46 @@ void AvrcpTgService::OnGetTotalNumberOfItemsNative(
  * ABSOLUTE VOLUME                                                *
  ******************************************************************/
 
+int AvrcpTgService::SetAbsoluteVolumeCmd(const RawAddress &rawAddr, uint8_t volume)
+{
+    HILOGI("addr: %{public}s, volume: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), volume);
+
+    int result = RET_BAD_STATUS;
+
+    do {
+        if (!IsEnabled()) {
+            break;
+        }
+
+        if (GetDeviceState(rawAddr) != static_cast<int>(BTConnectState::CONNECTED)) {
+            break;
+        }
+        RawAddress peerAddr(rawAddr.GetAddress());
+        GetDispatcher()->PostTask(std::bind(&AvrcpTgService::SetAbsoluteVolumeNative, this, peerAddr, volume));
+        result = BT_SUCCESS;
+    } while (false);
+
+    return result;
+}
+
+void AvrcpTgService::SetAbsoluteVolumeNative(RawAddress rawAddr, uint8_t volume)
+{
+    HILOGI("addr: %{public}s, volume: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), volume);
+
+    do {
+        if (!IsEnabled()) {
+            break;
+        }
+
+        if (GetDeviceState(rawAddr) != static_cast<int>(BTConnectState::CONNECTED)) {
+            break;
+        }
+
+        profile_->SendSetAbsoluteVolumeCmd(rawAddr, volume);
+    } while (false);
+}
+
+
 void AvrcpTgService::SetAbsoluteVolume(const RawAddress &rawAddr, uint8_t volume, uint8_t label) const
 {
     HILOGI("addr:%{public}s, volume:%{public}d, label:%{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), volume, label);
@@ -2043,6 +2214,12 @@ void AvrcpTgService::OnSetAbsoluteVolumeNative(RawAddress rawAddr, uint8_t volum
 
         profile_->SendSetAbsoluteVolumeRsp(rawAddr, volume, label, BT_SUCCESS);
     } while (false);
+}
+
+void AvrcpTgService::HandleVolumeChanged(RawAddress rawAddr, uint8_t volume)
+{
+    HILOGI("addr: %{public}s, receive frome remote volume: %{public}d", GET_ENCRYPT_AVRCP_ADDR(rawAddr), volume);
+    AvrcpTgVolumeInterfaceImpl::GetInstance()->setVolume(volume);
 }
 
 /******************************************************************
@@ -2614,6 +2791,19 @@ void AvrcpTgService::ProcessChannelEvent(
         GET_ENCRYPT_AVRCP_ADDR(rawAddr), connectId, event, result);
 
     if (!IsDisabled()) {
+        switch (event) {
+            case AVCT_CONNECT_IND_EVT:
+            case AVCT_CONNECT_CFM_EVT:
+                AvrcpTgVolumeInterfaceImpl::GetInstance()->DeviceConnected(rawAddr,
+                    [=](int volume){SetAbsoluteVolumeCmd(rawAddr, volume);});
+                break;
+            case AVCT_DISCONNECT_IND_EVT:
+            case AVCT_DISCONNECT_CFM_EVT:
+                AvrcpTgVolumeInterfaceImpl::GetInstance()->DeviceDisconnected(rawAddr);
+                break;
+            default:
+                break;
+        }
         profile_->ProcessChannelEvent(rawAddr, connectId, event, result, context);
     }
 }
@@ -2687,13 +2877,13 @@ uint8_t AvrcpTgService::ConvertPlayState(const int32_t state) const
 #ifdef AVRCP_AVSESSION
     switch (state) {
         case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_INITIAL:
-        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PREPARING:
+        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PREPARE:
         case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_MAX:
             break;
-        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PLAYING:
+        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PLAY:
             ret = AVRC_PLAY_STATUS_PLAYING;
             break;
-        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PAUSED:
+        case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_PAUSE:
             ret = AVRC_PLAY_STATUS_PAUSED;
             break;
         case OHOS::AVSession::AVPlaybackState::PLAYBACK_STATE_FAST_FORWARD:

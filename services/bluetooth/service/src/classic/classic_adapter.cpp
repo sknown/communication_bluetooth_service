@@ -997,7 +997,13 @@ void ClassicAdapter::HandleInquiryResult(
     HILOGI("enter");
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
-    discoveryState_ = DISCOVERYING;
+    if (discoveryState_ == DISCOVERY_STOPED) {
+        HILOGE("Faild, discoveryState_ == DISCOVERY_STOPED");
+        return;
+    } else if (discoveryState_ == DISCOVERY_STARTED) {
+        discoveryState_ = DISCOVERYING;
+        HILOGI("Start, change discoveryState_ from DISCOVERY_STARTED to DISCOVERYING");
+    }
 
     RawAddress device = RawAddress::ConvertToString(addr.addr);
     std::shared_ptr<ClassicRemoteDevice> remoteDevice = FindRemoteDevice(device);
@@ -1173,8 +1179,8 @@ void ClassicAdapter::SSPConfirmReq(const BtAddr &addr, int reqType, int number,
 
     RawAddress device = RawAddress::ConvertToString(addr.addr);
     std::shared_ptr<ClassicRemoteDevice> remoteDevice = FindRemoteDevice(device);
-    remoteDevice->SetPairConfirmState(PAIR_CONFIRM_STATE_USER_CONFIRM);
     remoteDevice->SetPairConfirmType(reqType);
+    pinMode_ = true;
     int remoteIo = remoteDevice->GetIoCapability();
     if (remoteDevice->GetPairedStatus() == PAIR_CANCELING) {
         UserConfirmAutoReply(device, reqType, false);
@@ -1192,7 +1198,6 @@ void ClassicAdapter::PinCodeReq(const BtAddr &addr)
 
     RawAddress device = RawAddress::ConvertToString(addr.addr);
     std::shared_ptr<ClassicRemoteDevice> remoteDevice = FindRemoteDevice(device);
-    remoteDevice->SetPairConfirmState(PAIR_CONFIRM_STATE_USER_CONFIRM);
     remoteDevice->SetPairConfirmType(PAIR_CONFIRM_TYPE_PIN_CODE);
     pinMode_ = true;
     if (remoteDevice->GetRemoteName().empty()) {
@@ -1560,6 +1565,7 @@ void ClassicAdapter::ReceiveSimplePairComplete(const BtAddr &addr, uint8_t statu
             remoteDevice->SetPairedStatus(PAIR_NONE);
             /// Send the failed notification to APP.
             SendPairStatusChanged(ADAPTER_BREDR, device, PAIR_NONE);
+            pinMode_ = false;
         }
     }
 }
@@ -1590,6 +1596,7 @@ void ClassicAdapter::ReceiveAuthenticationComplete(const BtAddr &addr, uint8_t s
         remoteDevice->SetPairedStatus(PAIR_NONE);
         /// Send the failed notification to APP.
         SendPairStatusChanged(ADAPTER_BREDR, device, PAIR_NONE);
+        pinMode_ = false;
     } else {
         if (remoteDevice->GetPairedStatus() == PAIR_PAIRING) {
             remoteDevice->SetPairedStatus(PAIR_PAIRED);
@@ -1824,7 +1831,7 @@ bool ClassicAdapter::StartPair(const RawAddress &device)
         HILOGE("GAPIF_AuthenticationReq failed!");
         return false;
     }
-
+    remoteDevice->SetPairConfirmState(PAIR_CONFIRM_STATE_USER_CONFIRM);
     DeleteLinkKey(remoteDevice);
     remoteDevice->SetPairedStatus(PAIR_PAIRING);
     SendPairStatusChanged(ADAPTER_BREDR, device, PAIR_PAIRING);
@@ -1943,14 +1950,25 @@ bool ClassicAdapter::SetDevicePairingConfirmation(const RawAddress &device, bool
         return ret;
     }
 
+    int state = it->second->GetPairConfirmType();
+    const uint8_t defPinCodeLength = 4;  //indicate the max value of the default pincode
+    const uint8_t defPinCode[defPinCodeLength] = {'0', '0', '0', '0'};  //The default pincode is "0000".
     it->second->SetPairConfirmState(PAIR_CONFIRM_STATE_USER_CONFIRM_REPLY);
     it->second->SetPairConfirmType(PAIR_CONFIRM_TYPE_INVALID);
 
     BtAddr btAddr = ConvertToBtAddr(device);
     if (it->second->GetPairedStatus() == PAIR_CANCELING || accept == false) {
-        ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_NOT_ACCEPT) == BT_SUCCESS);
+        if (state == PAIR_CONFIRM_TYPE_PIN_CODE) {
+            ret = (GAPIF_PinCodeRsp(&btAddr, GAP_NOT_ACCEPT, defPinCode, defPinCodeLength) == BT_SUCCESS);
+        } else {
+            ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_NOT_ACCEPT) == BT_SUCCESS);
+        }
     } else {
-        ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_ACCEPT) == BT_SUCCESS);
+        if (state == PAIR_CONFIRM_TYPE_PIN_CODE) {
+            ret = (GAPIF_PinCodeRsp(&btAddr, GAP_ACCEPT, defPinCode, defPinCodeLength) == BT_SUCCESS);
+        } else {
+            ret = (GAPIF_UserConfirmRsp(&btAddr, GAP_ACCEPT) == BT_SUCCESS);
+        }
     }
     ClassicUtils::CheckReturnValue("ClassicAdapter", "GAPIF_UserConfirmRsp", ret);
 
@@ -2095,12 +2113,8 @@ void ClassicAdapter::ReceiveDisconnectionComplete(uint8_t status, uint16_t conne
             /// Set the pair flag and pair state.
             device.second->SetPairedStatus(PAIR_NONE);
             /// Send the failed notification to APP.
-            bool bondFromLocal = device.second->IsBondedFromLocal();
-            HILOGI("bondFromLocal = %{public}d", bondFromLocal);
-            if (!bondFromLocal) {
-                RawAddress address(device.second->GetAddress());
-                SendPairStatusChanged(ADAPTER_BREDR, address, PAIR_NONE);
-            }
+            RawAddress address(device.second->GetAddress());
+            SendPairStatusChanged(ADAPTER_BREDR, address, PAIR_NONE);
         }
         break;
     }
@@ -2415,12 +2429,47 @@ bool ClassicAdapter::IsHfpCodSupported(const RawAddress &device)
         HILOGE("remoteDevice is nullptr");
         return false;
     }
-    int cod = remoteDevice->GetDeviceClass();
-    if ((cod & CLASS_OF_DEVICE_MASK) == CLASS_OF_DEVICE_AV_HEADSETS ||
-        (cod & CLASS_OF_DEVICE_MASK) == CLASS_OF_DEVICE_AV_HANDSFREE) {
+    uint32_t cod = (uint32_t)remoteDevice->GetDeviceClass();
+    /// Referenced from Assigned NUmbers,Class of Device format :
+    /// 23-13 bit  Major Service Classes
+    /// 12-8 bit Major Device Class
+    /// 7-2 bit Minor Device Class
+    /// 1-0 bit 0b00
+    /// The 21st bit indicates Audio.
+    const uint32_t audioSerClassMask = 0x200000;
+    if (cod & audioSerClassMask) {
             return true;
     }
     return false;
+}
+
+bool ClassicAdapter::SetHidPnpInfo(const std::string &remoteAddr, int vendorId, int productId, int version)
+{
+    return adapterProperties_.SetHidPnpInfo(remoteAddr, vendorId, productId, version);
+}
+
+bool ClassicAdapter::SetHidDescInfo(
+    const std::string &remoteAddr, int ctryCode, const std::vector<uint8_t> &descData, int descLength)
+{
+    bool ret = adapterProperties_.SetHidDescInfo(remoteAddr, ctryCode, ClassicUtils::ConvertIntToHexString(descData));
+    if (ret) {
+        adapterProperties_.SaveConfigFile();
+    }
+    return ret;
+}
+
+void ClassicAdapter::GetHidPnpInfo(const std::string &remoteAddr, int &vendorId, int &productId, int &version)
+{
+    adapterProperties_.GetHidPnpInfo(remoteAddr, vendorId, productId, version);
+}
+
+void ClassicAdapter::GetHidDescInfo(
+    const std::string &remoteAddr, int &ctryCode, std::vector<uint8_t> &descData, int &descLength)
+{
+    std::string descInfo = "";
+    adapterProperties_.GetHidDescInfo(remoteAddr, ctryCode, descInfo);
+    ClassicUtils::ConvertHexStringToInt(descInfo, descData);
+    descLength = descData.size();
 }
 REGISTER_CLASS_CREATOR(ClassicAdapter);
 }  // namespace bluetooth

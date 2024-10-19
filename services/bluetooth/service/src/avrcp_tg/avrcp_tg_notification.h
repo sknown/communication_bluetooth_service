@@ -61,6 +61,7 @@ enum AvrcTgNotify {
     AVRC_TG_NOTIFY_EVENT_PLAYER_ID_SIZE = 0x02,           // The size of the "Player Id".
     AVRC_TG_NOTIFY_EVENT_UID_COUNTER_SIZE = 0x02,         // The size of the "UID Counter".
     AVRC_TG_NOTIFY_EVENT_ID_VOLUME_SIZE = 0x01,           // The size of the "Absolute Volume".
+    AVRC_CT_NOTIFY_PARAMETER_LENGTH = 0x0005,       	  // The length of the "CT Parameter Length".
 };
 
 /**
@@ -220,6 +221,16 @@ public:
     uint8_t GetEventId(void) const
     {
         return eventId_;
+    }
+
+    /**
+    * @brief Gets the "Volume".
+    *
+    * @return The value of the "Volume".
+    */
+    uint8_t GetVolume(void) const
+    {
+        return volume_;
     }
 
     /**

@@ -14,7 +14,6 @@
  */
 
 #include "avrcp_tg_sdp.h"
-#include "sdp.h"
 
 namespace OHOS {
 namespace bluetooth {
@@ -127,6 +126,37 @@ int AvrcTgSdpManager::FindCtService(const RawAddress &rawAddr,
         .uuid = classIdList
     };
     int result = SDP_ServiceSearch(&btAddr, &sdpUuid, nullptr, callback);
+    (result == BT_SUCCESS) ? (result = BT_SUCCESS) : (result = RET_BAD_STATUS);
+
+    return result;
+}
+
+// for SDP_SERVICE_SEARCH_ATTR_REQ
+int AvrcTgSdpManager::FindService(const RawAddress &rawAddr,
+    void (*callback)(const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum, void *context))
+{
+    HILOGI("enter");
+
+    BtAddr btAddr;
+    rawAddr.ConvertToUint8(btAddr.addr);
+
+    BtUuid classIdList[AVRC_SERVICE_CLASS_ID_LIST_NUMBER];
+    classIdList[0].type = BT_UUID_16;
+    classIdList[0].uuid16 = AVRC_TG_AV_REMOTE_CONTROL;
+    SdpUuid sdpUuid = {
+        .uuidNum = AVRC_SERVICE_CLASS_ID_LIST_NUMBER,
+        .uuid = classIdList
+    };
+
+    SdpAttributeIdList attributeIdList;
+    attributeIdList.type = SDP_TYPE_LIST;
+
+    attributeIdList.attributeIdList.attributeIdNumber = AVRC_SDP_ATTRIBUTE_NUM;
+    attributeIdList.attributeIdList.attributeId[0] = SDP_ATTRIBUTE_SERVICE_CLASS_ID_LIST;
+    attributeIdList.attributeIdList.attributeId[1] = SDP_ATTRIBUTE_BLUETOOTH_PROFILE_DESCRIPTOR_LIST;
+    attributeIdList.attributeIdList.attributeId[2] = AVRC_TG_ATTRIBUTE_ID_SUPPORTED_FEATURES;
+
+    int result = SDP_ServiceSearchAttribute(&btAddr, &sdpUuid, attributeIdList, nullptr, callback);
     (result == BT_SUCCESS) ? (result = BT_SUCCESS) : (result = RET_BAD_STATUS);
 
     return result;

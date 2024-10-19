@@ -330,34 +330,65 @@ void AvrcTgNotifyPacket::AssembleVolumeChanged(Packet *pkt)
 {
     HILOGI("enter");
 
-    auto buffer = BufferMalloc(AVRC_TG_VENDOR_PACKET_TYPE_SIZE + AVRC_TG_VENDOR_PARAMETER_LENGTH_SIZE +
-                               AVRC_TG_NOTIFY_EVENT_ID_SIZE + AVRC_TG_NOTIFY_EVENT_ID_VOLUME_SIZE);
-    if (buffer == nullptr) {
-        HILOGE("BufferMalloc fail");
-        return;
+    if(crCode_ != AVRC_TG_CMD_CODE_NOTIFY) {
+        auto buffer = BufferMalloc(AVRC_TG_VENDOR_PACKET_TYPE_SIZE + AVRC_TG_VENDOR_PARAMETER_LENGTH_SIZE +
+                                   AVRC_TG_NOTIFY_EVENT_ID_SIZE + AVRC_TG_NOTIFY_EVENT_ID_VOLUME_SIZE);
+        if (buffer == nullptr) {
+            HILOGE("BufferMalloc fail");
+            return;
+        }
+        auto bufferPtr = static_cast<uint8_t *>(BufferPtr(buffer));
+        HILOGI("BufferMalloc: %{public}ju",
+            (AVRC_TG_VENDOR_PACKET_TYPE_SIZE + AVRC_TG_VENDOR_PARAMETER_LENGTH_SIZE + AVRC_TG_NOTIFY_EVENT_ID_SIZE +
+                AVRC_TG_NOTIFY_EVENT_ID_VOLUME_SIZE));
+
+        uint16_t offset = 0x0000;
+        offset += PushOctets1((bufferPtr + offset), packetType_);
+        HILOGI("packetType_: %{public}x", packetType_);
+
+        parameterLength_ = AVRC_TG_NOTIFY_EVENT_ID_SIZE + AVRC_TG_NOTIFY_EVENT_ID_VOLUME_SIZE;
+        offset += PushOctets2((bufferPtr + offset), parameterLength_);
+        HILOGI("parameterLength_: %{public}d", parameterLength_);
+
+        offset += PushOctets1((bufferPtr + offset), eventId_);
+        HILOGI("eventId_: %{public}x", eventId_);
+
+        PushOctets1((bufferPtr + offset), volume_);
+        HILOGI("volume_: %{public}x", volume_);
+
+        PacketPayloadAddLast(pkt, buffer);
+
+        BufferFree(buffer);
+    } else {
+        // Packing  Register Volume_Changed Notification command
+        size_t bufferSize = AVRC_TG_VENDOR_PACKET_TYPE_SIZE + AVRC_TG_VENDOR_PARAMETER_LENGTH_SIZE +
+            AVRC_CT_NOTIFY_PARAMETER_LENGTH;
+        HILOGI("BufferMalloc: %{public}zu", bufferSize);
+
+        auto buffer = BufferMalloc(bufferSize);
+        if (buffer == nullptr) {
+            HILOGE("BufferMalloc fail");
+            return;
+        }
+        auto bufferPtr = static_cast<uint8_t *>(BufferPtr(buffer));
+
+        uint16_t offset = 0x0000;
+        offset += PushOctets1((bufferPtr + offset), packetType_);
+        HILOGI("packetType_: %{public}x", packetType_);
+
+        offset += PushOctets2((bufferPtr + offset), AVRC_CT_NOTIFY_PARAMETER_LENGTH);
+        HILOGI("parameterLength_: %{public}d", parameterLength_);
+
+        offset += PushOctets1((bufferPtr + offset), eventId_);
+        HILOGI("eventId_: %{public}x", eventId_);
+
+        PushOctets4((bufferPtr + offset), 0);
+        HILOGI("interval_: %{public}d", interval_);
+
+        PacketPayloadAddLast(pkt, buffer);
+
+        BufferFree(buffer);
     }
-    auto bufferPtr = static_cast<uint8_t *>(BufferPtr(buffer));
-    HILOGI("BufferMalloc: %{public}ju",
-        (AVRC_TG_VENDOR_PACKET_TYPE_SIZE + AVRC_TG_VENDOR_PARAMETER_LENGTH_SIZE + AVRC_TG_NOTIFY_EVENT_ID_SIZE +
-            AVRC_TG_NOTIFY_EVENT_ID_VOLUME_SIZE));
-
-    uint16_t offset = 0x0000;
-    offset += PushOctets1((bufferPtr + offset), packetType_);
-    HILOGI("packetType_: %{public}x", packetType_);
-
-    parameterLength_ = AVRC_TG_NOTIFY_EVENT_ID_SIZE + AVRC_TG_NOTIFY_EVENT_ID_VOLUME_SIZE;
-    offset += PushOctets2((bufferPtr + offset), parameterLength_);
-    HILOGI("parameterLength_: %{public}d", parameterLength_);
-
-    offset += PushOctets1((bufferPtr + offset), eventId_);
-    HILOGI("eventId_: %{public}x", eventId_);
-
-    PushOctets1((bufferPtr + offset), volume_);
-    HILOGI("volume_: %{public}x", volume_);
-
-    PacketPayloadAddLast(pkt, buffer);
-
-    BufferFree(buffer);
 }
 
 void AvrcTgNotifyPacket::AssembleCommonChanged(Packet *pkt)
@@ -416,13 +447,19 @@ bool AvrcTgNotifyPacket::DisassembleParameters(uint8_t *buffer)
             AssembleRejectPacket();
             break;
         }
+        if(eventId_ == AVRC_TG_EVENT_ID_VOLUME_CHANGED) {
+            payload = 0x00;
+            PopOctets1((buffer + offset), payload);
+            volume_ = static_cast<uint8_t>(payload) & 0b01111111;
+            HILOGI("volume_: %{public}x", volume_);
+        }
 
         payload = 0x00;
         PopOctets4((buffer + offset), payload);
         interval_ = static_cast<uint32_t>(payload);
         HILOGI("interval_: %{public}u", interval_);
 
-        crCode_ = AVRC_TG_RSP_CODE_INTERIM;
+        // crCode_ = AVRC_TG_RSP_CODE_INTERIM;
 
         isValid_ = true;
 

@@ -31,6 +31,17 @@
 #include "avsession_manager.h"
 #include "avsession_errors.h"
 #endif
+// add for Parse AVRCP SDP search result
+/* Audio/Video Control profile */
+#define UUID_SERVCLASS_AV_REM_CTRL_TARGET 0X110C
+/* Advanced Audio Distribution profile */
+#define UUID_SERVCLASS_ADV_AUDIO_DISTRIBUTION 0X110D
+/* Audio/Video Control profile */
+#define UUID_SERVCLASS_AV_REMOTE_CONTROL 0X110E
+/* Audio/Video Control profile */
+#define UUID_SERVCLASS_AV_REM_CTRL_CONTROL 0X110F
+/* Audio/Video Remote Control profile version */
+#define AVRC_REV_1_4 0x0104
 namespace OHOS {
 namespace bluetooth {
 /**
@@ -376,13 +387,20 @@ public:
          * @brief A destructor used to delete the <b>AVControllerObserverImpl</b> instance.
          */
         ~AVControllerObserverImpl() = default;
+        void OnAVCallMetaDataChange(const OHOS::AVSession::AVCallMetaData& avCallMetaData) override;
+        void OnAVCallStateChange(const OHOS::AVSession::AVCallState& avCallState) override;
+        void OnSessionEventChange(const std::string& event, const AAFwk::WantParams& args) override;
+        void OnQueueItemsChange(const std::vector<OHOS::AVSession::AVQueueItem>& items) override;
+        void OnQueueTitleChange(const std::string& title) override;
+        void OnExtrasChange(const AAFwk::WantParams& extras) override;
 
         void OnSessionDestroy() override;
         void OnPlaybackStateChange(const OHOS::AVSession::AVPlaybackState &state) override;
         void OnMetaDataChange(const OHOS::AVSession::AVMetaData &data) override;
         void OnActiveStateChange(bool isActive) override;
         void OnValidCommandChange(const std::vector<int32_t> &cmds) override;
-        void OnOutputDeviceChange(const OHOS::AVSession::OutputDeviceInfo &outputDeviceInfo) override {};
+        void OnOutputDeviceChange(const int32_t connectionState,
+            const OHOS::AVSession::OutputDeviceInfo &outputDeviceInfo) override;
     private:
         IProfileAvrcpTg *GetService(void);
     };
@@ -822,6 +840,19 @@ public:
      ******************************************************************/
 
     /**
+     * @brief Sets an absolute volume to be used by the rendering device.
+     *
+     * @details Switch to the thread of the AVRCP CT service in this method.
+     * @param[in] rawAddr The address of the bluetooth device.
+     * @param[in] volume  The percentage of the absolute volume. Refer to <b>AvrcAbsoluteVolume</b>.
+     * @return The result of the method execution.
+     * @retval BT_SUCCESS   Execute success.
+     * @retval RET_NO_SUPPORT Not support.
+     * @retval RET_BAD_STATUS Execute failure.
+     */
+    int SetAbsoluteVolumeCmd(const RawAddress &rawAddr, uint8_t volume);
+
+    /**
      * @brief Responds the data of the <b>SetAbsoluteVolume</b>.
      *
      * @details Switch to the thread of the AVRCP TG service in this function.
@@ -830,6 +861,17 @@ public:
      * @param[in] label   The label which is used to distinguish different call.
      */
     void OnSetAbsoluteVolume(const RawAddress &rawAddr, uint8_t volume, uint8_t label) override;
+
+    /**
+     * @brief The absolute volume switch of the bluetooth device is enabled or not
+     *
+     * @details Switch to the thread of the AVRCP TG service in this function.
+     * @param[in] rawAddr The address of the bluetooth device.
+     * @return The result of the absolute volume switch.
+     * @retval true  The absolute volume switch is enabled.
+     * @retval false The absolute volume switch is not enabled.
+     */
+    bool IsAbsoluteVolumeEnabled(const RawAddress &rawAddr){return true;};
 
     /******************************************************************
      * NOTIFICATION                                                   *
@@ -1109,6 +1151,15 @@ private:
 
     void InitFeatures();
 
+    // Set avrcp_tg feature by SDP_SERVICE_SEARCH_ATTR_RSP
+    /**
+     * @brief Set the features.
+     *
+     * @param[in] rawAddr The address of the bluetooth device.
+     * @param[in] features The features of the bluetooth device.
+     */
+    void SetFeatures(const RawAddress &rawAddr, uint16_t features);
+
     /******************************************************************
      * CONNECTION                                                     *
      ******************************************************************/
@@ -1155,6 +1206,16 @@ private:
      */
     void RejectPassiveConnect(const RawAddress &rawAddr);
 
+    // parse SDP_SERVICE_SEARCH_ATTR_RSP
+    /**
+     * @brief The parse function, which parse SDP search result.
+     *
+     * @param[in] btAddr      The address of the peer Bluetooth device.
+     * @param[in] serviceArray The list of handle to a qualifying service.
+     * @param[in] serviceNum The number of handle to a qualifying service.
+     */
+    static void ParseSDPInformation(const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum);
+
     /**
      * @brief Finds the AVRCP TG record of the specified device.
      *
@@ -1172,6 +1233,27 @@ private:
      */
     static void FindCtServiceCallback(
         const BtAddr *btAddr, const uint32_t *handleArray, uint16_t handleCount, void *context);
+
+    /**
+     * @brief Finds the AVRCP TG record of the specified device.
+     *
+     * SDP_ATTRIBUTE_SERVICE_CLASS_ID_LIST
+     * SDP_ATTRIBUTE_BLUETOOTH_PROFILE_DESCRIPTOR_LIST
+     * AVRC_TG_ATTRIBUTE_ID_SUPPORTED_FEATURES
+     * @param[in] rawAddr The address of the peer bluetooth device.
+     */
+    void FindService(const RawAddress &rawAddr);
+
+    /**
+     * @brief The callback function, which register into the SDP for receiving the search result.
+     *
+     * @param[in] btAddr      The address of the peer Bluetooth device.
+     * @param[in] serviceArray The list of handle to a qualifying service.
+     * @param[in] serviceNum The number of handle to a qual ifying service.
+     * @param[in] context     The context is used to send the event in the callback.
+     */
+    static void FindServiceCallback(
+        const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum, void *context);
 
     /******************************************************************
      * PASS THROUGH COMMAND                                           *
@@ -1686,6 +1768,14 @@ private:
      *
      * @param[in] rawAddr The address of the bluetooth device.
      * @param[in] volume  The percentage of the absolute volume. Refer to <b>AvrcAbsoluteVolume</b>.
+     */
+    void SetAbsoluteVolumeNative(RawAddress rawAddr, uint8_t volume);
+
+    /**
+     * @brief Sets an absolute volume to be used by the rendering device.
+     *
+     * @param[in] rawAddr The address of the bluetooth device.
+     * @param[in] volume  The percentage of the absolute volume. Refer to <b>AvrcAbsoluteVolume</b>.
      * @param[in] label   The label which is used to distinguish different call.
      */
     void SetAbsoluteVolume(const RawAddress &rawAddr, uint8_t volume, uint8_t label) const;
@@ -1698,6 +1788,8 @@ private:
      * @param[in] label   The label which is used to distinguish different call.
      */
     void OnSetAbsoluteVolumeNative(RawAddress rawAddr, uint8_t volume, uint8_t label);
+
+    void HandleVolumeChanged(RawAddress rawAddr, uint8_t volume);
 
     /******************************************************************
      * NOTIFICATION                                                   *

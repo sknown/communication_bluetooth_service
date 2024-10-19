@@ -47,14 +47,16 @@ void HfpAgSdpClient::SdpCallback(const BtAddr *addr, const SdpService *serviceAr
         CopySdpServiceArray(address, serviceAry, serviceNum);
         msgWhat = HFP_AG_SDP_DISCOVERY_RESULT_SUCCESS;
         hfProfileState_ = HFP_AG_HF_FOUND;
-    }
-    int hspState = 1;
-    AdapterConfig::GetInstance()->GetValue(HSP_AG_STATE_SECTION_NAME, HSP_AG_STATE_PROPERY_NAME, hspState);
-    if (hspState == HSP_AG_STATE_BOTH) {
-        HfpAgSdpClient *sdpClient = static_cast<HfpAgSdpClient *>(context);
-        HfpAgService::GetService()->GetDispatcher()->PostTask(
-            std::bind(&HfpAgSdpClient::DoHspHsDiscovery, sdpClient, address));
-        return;
+    } else {
+        int hspState = 1;
+        AdapterConfig::GetInstance()->GetValue(HSP_AG_STATE_SECTION_NAME, HSP_AG_STATE_PROPERY_NAME, hspState);
+        if (hspState == HSP_AG_STATE_BOTH) {
+            HfpAgSdpClient *sdpClient = static_cast<HfpAgSdpClient *>(context);
+            HfpAgService::GetService()->GetDispatcher()->PostTask(
+                std::bind(&HfpAgSdpClient::DoHspHsDiscovery, sdpClient, address));
+            LOG_INFO("[HFP AG] start hsp hs dicovery");
+            return;
+        }
     }
     HfpAgProfileEventSender::GetInstance().ProcessSdpDiscoveryResult(address, msgWhat);
 }
@@ -62,11 +64,41 @@ void HfpAgSdpClient::SdpCallback(const BtAddr *addr, const SdpService *serviceAr
 int HfpAgSdpClient::DoDiscovery(const std::string &remoteAddr, int role)
 {
     hfProfileState_ = -1;
+    int ret = 0;
+
     AdapterConfig::GetInstance()->GetValue(HSP_AG_STATE_SECTION_NAME, HSP_AG_STATE_PROPERY_NAME, hspState_);
     if (hspState_ == HSP_AG_STATE_HSP) {
-        LOG_INFO("[HFP AG] start hsp hs dicovery");
-        return DoHspHsDiscovery(remoteAddr);
+        ret = DoHspHsDiscovery(remoteAddr);
+        LOG_INFO("[HFP AG] start hsp hs dicovery :%{public}d", ret);
+    } else {
+        ret = DoHfpDiscovery(remoteAddr, role);
+        LOG_INFO("[HFP AG] start hfp dicovery :%{public}d", ret);
     }
+    return ret;
+}
+
+void HfpAgSdpClient::SdpHspHsCallback(const BtAddr *addr, const SdpService *serviceAry,
+    uint16_t serviceNum, void *context)
+{
+    int msgWhat = HFP_AG_SDP_DISCOVERY_RESULT_FAIL;
+    std::string address = RawAddress::ConvertToString(addr->addr).GetAddress();
+    if (serviceNum > 0) {
+        CopySdpServiceArray(address, serviceAry, serviceNum);
+        msgWhat = HFP_AG_SDP_DISCOVERY_RESULT_SUCCESS;
+        if (hfProfileState_ == HFP_AG_HF_FOUND) {
+            hfProfileState_ = HFP_AG_HF_HS_FOUND;
+        } else {
+            hfProfileState_ = HFP_AG_HS_FOUND;
+        }
+    }
+    if (hfProfileState_ != -1) {
+        msgWhat = HFP_AG_SDP_DISCOVERY_RESULT_SUCCESS;
+    }
+    HfpAgProfileEventSender::GetInstance().ProcessSdpDiscoveryResult(address, msgWhat);
+}
+
+int HfpAgSdpClient::DoHfpDiscovery(const std::string &remoteAddr, int role)
+{
     BtAddr address;
     address.type = BT_PUBLIC_DEVICE_ADDRESS;
     RawAddress rawAddr(remoteAddr);
@@ -105,26 +137,6 @@ int HfpAgSdpClient::DoDiscovery(const std::string &remoteAddr, int role)
     HFP_AG_RETURN_IF_FAIL(ret);
     currentAddr_ = remoteAddr;
     return ret;
-}
-
-void HfpAgSdpClient::SdpHspHsCallback(const BtAddr *addr, const SdpService *serviceAry,
-    uint16_t serviceNum, void *context)
-{
-    int msgWhat = HFP_AG_SDP_DISCOVERY_RESULT_FAIL;
-    std::string address = RawAddress::ConvertToString(addr->addr).GetAddress();
-    if (serviceNum > 0) {
-        CopySdpServiceArray(address, serviceAry, serviceNum);
-        msgWhat = HFP_AG_SDP_DISCOVERY_RESULT_SUCCESS;
-        if (hfProfileState_ == HFP_AG_HF_FOUND) {
-            hfProfileState_ = HFP_AG_HF_HS_FOUND;
-        } else {
-            hfProfileState_ = HFP_AG_HS_FOUND;
-        }
-    }
-    if (hfProfileState_ != -1) {
-        msgWhat = HFP_AG_SDP_DISCOVERY_RESULT_SUCCESS;
-        HfpAgProfileEventSender::GetInstance().ProcessSdpDiscoveryResult(address, msgWhat);
-    }
 }
 
 int HfpAgSdpClient::DoHspHsDiscovery(const std::string &remoteAddr)
@@ -176,6 +188,11 @@ bool HfpAgSdpClient::FindAttributes(const std::string &remoteAddr, int role)
         }
     }
 
+    if (!FindClassId(it->second.services[num].classIds)) {
+        LOG_INFO("[HFP AG]%{public}s():remote don`t support hfp hf or hsp hs.", __FUNCTION__);
+        return false;
+    }
+
     if (!FindProfileVersion(it->second.services[num].profileDescriptors, info.remoteVersion)) {
         info.remoteVersion = HFP_AG_HFP_VERSION_1_1;
         LOG_INFO("[HFP AG]%{public}s():Not found peer HFP version, using default version[1.1]", __FUNCTION__);
@@ -209,6 +226,10 @@ void HfpAgSdpClient::CopySdpServiceArray(
     HfpAgRemoteSdpServiceArray array;
     for (uint16_t n = 0; n < serviceNum; n++) {
         HfpAgRemoteSdpService service;
+        for (uint16_t i = 0; i < serviceAry[n].classIdNumber; i++) {
+            BtUuid classId = serviceAry[n].classId[i];
+            service.classIds.push_back(classId);
+        }
         for (uint16_t i = 0; i < serviceAry[n].descriptorNumber; i++) {
             SdpProtocolDescriptor descriptor = serviceAry[n].descriptor[i];
             service.descriptors.push_back(descriptor);
@@ -316,6 +337,18 @@ bool HfpAgSdpClient::FindProfileFeatures(const std::vector<HfpAgSdpAttribute> &a
         if (attributes[num].attributeId == HFP_AG_SDP_ATTRIBUTE_SUPPORTED_FEATURES) {
             features = HFP_AG_HF_FEATURES_BRSF_MASK & attributes[num].attributeValue;
             LOG_INFO("[HFP AG]%{public}s():Found profile features are [%hu]", __FUNCTION__, features);
+            return true;
+        }
+        num++;
+    }
+    return false;
+}
+
+bool HfpAgSdpClient::FindClassId(const std::vector<BtUuid> &classIds)
+{
+    uint16_t num = 0;
+    while (num < classIds.size()) {
+        if ((classIds[num].uuid16 == HFP_AG_UUID_SERVCLASS_HFP_HF) || (classIds[num].uuid16 == HSP_HS_UUID_SERVCLASS)) {
             return true;
         }
         num++;

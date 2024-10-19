@@ -18,9 +18,12 @@
 
 #include "avrcp_tg_internal.h"
 #include "raw_address.h"
+#include "sdp.h"
 
 namespace OHOS {
 namespace bluetooth {
+#define AVRC_SDP_ATTRIBUTE_NUM 3
+
 /// The attribute id of the supported features.
 const uint16_t AVRC_TG_ATTRIBUTE_ID_SUPPORTED_FEATURES = 0x0311;
 
@@ -72,6 +75,18 @@ public:
      */
     static int FindCtService(const RawAddress &rawAddr,
         void (*callback)(const BtAddr *btAddr, const uint32_t *handleArray, uint16_t handleNum, void *context));
+
+    /**
+     * @brief Finds the service record from the SDP.
+     *
+     * @param[in] rawAddr  The address of the bluetooth device.
+     * @param[in] callback The callback function that receives the search result.
+     * @return The result of the method execution.
+     * @retval BT_SUCCESS   Execute success.
+     * @retval RET_BAD_STATUS Execute failure.
+     */
+    static int FindService(const RawAddress &rawAddr,
+        void (*callback)(const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum, void *context));
 
 private:
     uint32_t sdpHandle_;  // The handle got from the SDP.
