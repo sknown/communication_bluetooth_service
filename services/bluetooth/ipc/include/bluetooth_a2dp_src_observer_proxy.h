@@ -15,7 +15,7 @@
 
 #ifndef OHOS_BLUETOOTH_STANDARD_A2DP_SRC_OBSERVER_PROXY_H
 #define OHOS_BLUETOOTH_STANDARD_A2DP_SRC_OBSERVER_PROXY_H
-*
+
 #include "iremote_proxy.h"
 #include "i_bluetooth_a2dp_src_observer.h"
 

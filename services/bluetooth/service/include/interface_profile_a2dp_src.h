@@ -138,7 +138,7 @@ public:
      * @param info  the device's codec information
      * @since 6.0
      */
-    virtual void OnConnectionStateChanged(const RawAddress &remoteAddr, int state, const A2dpSrcCodecInfo &info) {};
+    virtual void OnCaptureConnectionStateChanged(const RawAddress &remoteAddr, int state, const A2dpSrcCodecInfo &info) {};
 };
 
 /**
