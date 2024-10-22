@@ -50,7 +50,7 @@ public:
     void OnCaptureConnectionStateChanged(const RawAddress &device, int state, const A2dpSrcCodecInfo &info) override
     {
         HILOGI("addr: %{public}s, state: %{public}d", GET_ENCRYPT_ADDR(device), state);
-        observers_->ForEach([device, state](sptr<IBluetoothA2dpSourceObserver> observer) {
+        observers_->ForEach([device, state, info](sptr<IBluetoothA2dpSourceObserver> observer) {
             BluetoothA2dpCodecInfo tmpInfo {};
             tmpInfo.bitsPerSample = info.bitsPerSample;
             tmpInfo.channelMode = info.channelMode;
