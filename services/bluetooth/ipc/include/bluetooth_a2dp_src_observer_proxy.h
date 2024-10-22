@@ -32,7 +32,8 @@ public:
     void OnConfigurationChanged(const RawAddress &device, const BluetoothA2dpCodecInfo &info, int error) override;
     void OnMediaStackChanged(const RawAddress &device, int action) override;
     void OnVirtualDeviceChanged(int32_t action, std::string address) override;
-    void OnCaptureConnectionStateChanged(const RawAddress &device, int state, const BluetoothA2dpCodecInfo &info) override;
+    void OnCaptureConnectionStateChanged(const RawAddress &device, int state,
+        const BluetoothA2dpCodecInfo &info) override;
 
 private:
     ErrCode InnerTransact(uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply);

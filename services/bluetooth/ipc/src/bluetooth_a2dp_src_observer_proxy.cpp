@@ -50,7 +50,8 @@ void BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged(const RawAddress &d
     }
 }
 
-void BluetoothA2dpSrcObserverProxy::OnCaptureConnectionStateChanged(const RawAddress &device, int state, const BluetoothA2dpCodecInfo &info)
+void BluetoothA2dpSrcObserverProxy::OnCaptureConnectionStateChanged(const RawAddress &device, int state,
+    const BluetoothA2dpCodecInfo &info)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothA2dpSrcObserverProxy::GetDescriptor())) {
