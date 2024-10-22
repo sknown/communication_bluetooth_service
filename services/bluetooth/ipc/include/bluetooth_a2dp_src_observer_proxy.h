@@ -15,7 +15,7 @@
 
 #ifndef OHOS_BLUETOOTH_STANDARD_A2DP_SRC_OBSERVER_PROXY_H
 #define OHOS_BLUETOOTH_STANDARD_A2DP_SRC_OBSERVER_PROXY_H
-
+*
 #include "iremote_proxy.h"
 #include "i_bluetooth_a2dp_src_observer.h"
 
@@ -32,6 +32,7 @@ public:
     void OnConfigurationChanged(const RawAddress &device, const BluetoothA2dpCodecInfo &info, int error) override;
     void OnMediaStackChanged(const RawAddress &device, int action) override;
     void OnVirtualDeviceChanged(int32_t action, std::string address) override;
+    void OnCaptureConnectionStateChanged(const RawAddress &device, int state, const BluetoothA2dpCodecInfo &info) override;
 
 private:
     ErrCode InnerTransact(uint32_t code, MessageOption &flags, MessageParcel &data, MessageParcel &reply);

@@ -130,6 +130,15 @@ public:
      * @since 12.0
      */
     virtual void OnVirtualDeviceChanged(int32_t action, std::string address) {};
+
+    /**
+     * @brief hdap ConnectionState Changed observer.
+     * @param device bluetooth device address.
+     * @param state Connection state.
+     * @param info  the device's codec information
+     * @since 6.0
+     */
+    virtual void OnConnectionStateChanged(const RawAddress &remoteAddr, int state, const A2dpSrcCodecInfo &info) {};
 };
 
 /**
