@@ -136,7 +136,7 @@ public:
      * @param device bluetooth device address.
      * @param state Connection state.
      * @param info  the device's codec information
-     * @since 6.0
+     * @since 12.0
      */
     virtual void OnCaptureConnectionStateChanged(const RawAddress &remoteAddr, int state,
         const A2dpSrcCodecInfo &info) {};
