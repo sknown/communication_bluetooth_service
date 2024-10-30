@@ -169,7 +169,7 @@ ErrCode BluetoothA2dpSrcObserverProxy::InnerTransact(
     }
 }
 
-void BluetoothA2dpSrcObserverProxy::OnVirtualDeviceChanged(int32_t action, std::string &address)
+void BluetoothA2dpSrcObserverProxy::OnVirtualDeviceChanged(int32_t action, std::string address)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothA2dpSrcObserverProxy::GetDescriptor())) {
