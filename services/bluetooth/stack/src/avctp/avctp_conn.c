@@ -122,3 +122,27 @@ AvctCbConn *AvctGetCbConnByPid(const AvctCbDev *cbDev, uint16_t pid)
     }
     return cbConn;
 }
+
+/*
+ * Function     AvctGetCbConidConn
+ * Description  This function is called to get the connection and conId by cbCtrl ,pid and startConId.
+ * Param[in]   *cbDev  point to the device block.
+ * Param[in]   pid  profile id.
+ * Param[in]   startConId indicate the starting number of cbConn
+ * Param[out]  *conid point to the connect id 
+ * Return      AvctCbConn
+ */
+AvctCbConn *AvctGetCbConidConn(const AvctCbDev *cbDev, uint16_t pid, uint8_t startConId, uint8_t *conId)
+{
+    LOG_DEBUG("[AVCT] %{public}s:pid (0x%x)", __func__, pid);
+    AvctCbConn *cbConn = NULL;
+    for (uint8_t i = startConId; i < AVCT_MAX_CONNECTS; i++) {
+        if ((g_avctMng.cbConn[i].status == AVCT_CONN_BIND) && (g_avctMng.cbConn[i].cbDev == cbDev) &&
+            (g_avctMng.cbConn[i].connParam.pid == pid)) {
+            cbConn = &g_avctMng.cbConn[i];
+            *conId = i;
+            break;
+        }
+    }
+    return cbConn;
+}
