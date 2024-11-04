@@ -129,7 +129,7 @@ AvctCbConn *AvctGetCbConnByPid(const AvctCbDev *cbDev, uint16_t pid)
  * Param[in]   *cbDev  point to the device block.
  * Param[in]   pid  profile id.
  * Param[in]   startConId indicate the starting number of cbConn
- * Param[out]  *conid point to the connect id 
+ * Param[out]   *conid point to the connect id
  * Return      AvctCbConn
  */
 AvctCbConn *AvctGetCbConidConn(const AvctCbDev *cbDev, uint16_t pid, uint8_t startConId, uint8_t *conId)
