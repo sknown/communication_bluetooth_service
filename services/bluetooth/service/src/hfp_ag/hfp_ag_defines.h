@@ -115,8 +115,7 @@ static constexpr uint32_t HFP_AG_FEATURES_DEFAULT = HFP_AG_FEATURES_THREE_WAY |
                                                     HFP_AG_FEATURES_REJECT_CALL |
                                                     HFP_AG_FEATURES_ENHANCED_CALL_STATUS |
                                                     HFP_AG_FEATURES_EXTEND_ERROR_CODE |
-                                                    HFP_AG_FEATURES_HF_INDICATORS |
-                                                    HFP_AG_FEATURES_PASS_UNKNOWN_AT;
+                                                    HFP_AG_FEATURES_HF_INDICATORS;
 
 // Specific SDP AG features
 static constexpr uint32_t HFP_AG_FEATURES_SDP_SPEC = HFP_AG_FEATURES_THREE_WAY |
