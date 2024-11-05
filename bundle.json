@@ -91,7 +91,10 @@
         "libuv",
         "libxml2",
         "openssl",
-        "bounds_checking_function"
+        "bounds_checking_function",
+        "zlib",
+        "json",
+        "jsoncpp"
       ]
     },
     "build": {
@@ -101,7 +104,8 @@
         "service_group": [
           "//foundation/communication/bluetooth_service/sa_profile:communication_bluetooth_service_sa_profile",
           "//foundation/communication/bluetooth_service/services/bluetooth/server:bluetooth_server",
-          "//foundation/communication/bluetooth_service/services/bluetooth/service:btsbc"
+          "//foundation/communication/bluetooth_service/services/bluetooth/service:btsbc",
+          "//foundation/communication/bluetooth_service/tools:bluetooth_tools"
         ]
       },
       "inner_api": [

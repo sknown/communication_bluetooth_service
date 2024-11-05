@@ -1,0 +1,75 @@
+[
+  {
+    "name": "Example",
+    "description": "Create Item Example",
+    "callback": "HciCmdExample",
+    "options": [
+      {
+        "name": "OptionTypeInt",
+        "type": "int",
+        "shortcut": "i",
+        "description": "",
+        "required": true,
+        "defaultValue": 0
+      },
+      {
+        "name": "OptionTypeString",
+        "type": "string",
+        "shortcut": "s",
+        "description": "",
+        "required": true,
+        "defaultValue": "{}"
+      }
+    ]
+  },
+  {
+    "name": "Init",
+    "description": "Hci Initialize Controller",
+    "callback": "HciCmdInitialize",
+    "options": []
+  },
+  {
+    "name": "Close",
+    "description": "Hci Close Controller",
+    "callback": "HciCmdClose",
+    "options": []
+  },
+  {
+    "name": "Enable",
+    "description": "Hci Enable Controller(BR or LE)",
+    "callback": "HciCmdEnable",
+    "options": [
+      {
+        "name": "ControllerType",
+        "type": "string",
+        "shortcut": "t",
+        "description": "BR controller or LE controller",
+        "required": true,
+        "defaultValue": "LE",
+        "allowedValues": ["BR", "LE"]
+      }
+    ]
+  },
+  {
+    "name": "Disable",
+    "description": "Hci Disable Controller(BR or LE)",
+    "callback": "HciCmdDisable",
+    "options": [
+      {
+        "name": "ControllerType",
+        "type": "string",
+        "shortcut": "t",
+        "description": "BR controller or LE controller",
+        "required": true,
+        "defaultValue": "LE",
+        "allowedValues": ["BR", "LE"]
+      }
+    ]
+  },
+  {
+    "name": "GetLocalAddr",
+    "description": "Hci Controller Get Local Addr",
+    "callback": "HciCmdGetLocalAddr",
+    "options": []
+  }
+]

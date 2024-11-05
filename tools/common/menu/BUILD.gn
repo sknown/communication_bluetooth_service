@@ -1,0 +1,16 @@
+import("//build/ohos.gni")
+
+ohos_shared_library("libmenu") {
+  sources = [
+    "src/linenoise.c",
+    "src/menu.cpp",
+  ]
+
+  include_dirs = [
+    "include",
+    "//third_party/json/include",
+  ]
+
+  use_rtti = true
+  use_exceptions = true
+}
