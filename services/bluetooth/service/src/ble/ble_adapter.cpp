@@ -130,6 +130,7 @@ struct BleAdapter::impl {
     std::unique_ptr<GattClientCallback> gattClientcallback_ {};
     IProfileGattClient *gattClientService_ {};
     std::string remoteDeviceName_ {};
+    std::recursive_mutex peerDevlistMutex_ {};
     std::map<std::string, BlePeripheralDevice> peerConnDeviceList_ {};
     bool btmEnableFlag_ = false;
     bool readCharacteristicFlag_ = false;
@@ -513,7 +514,7 @@ std::string BleAdapter::GetDeviceName(const RawAddress &device) const
     }
 
     if (remoteName.empty()) {
-        std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+        std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
         auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
         if (it != pimpl->peerConnDeviceList_.end()) {
             remoteName = it->second.GetName();
@@ -554,27 +555,33 @@ std::string BleAdapter::ReadRemoteDeviceNameByGatt(const RawAddress &addr, int a
     }
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    bool isAclConnect = false;
+
+    std::unique_lock<std::recursive_mutex> peerlk(pimpl->peerDevlistMutex_);
     auto it = pimpl->peerConnDeviceList_.find(addr.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
-        LOG_DEBUG("[BleAdapter] isAclConnect %{public}d ", it->second.IsAclConnected());
-        if (it->second.IsAclConnected()) {
-            std::unique_lock<std::mutex> lock(pimpl->mutexRemoteName_);
-            // Device name
-            LOG_DEBUG("Get device name from gatt. %{public}d", appID);
-            Uuid uuid = Uuid::ConvertFrom16Bits(GATT_UUID_GAP_DEVICE_NAME);
-            pimpl->gattClientService_->Connect(appID, true);
-            pimpl->gattClientService_->ReadCharacteristicByUuid(appID, uuid);
-            if (pimpl->cvfull_.wait_for(lock, std::chrono::seconds(BLE_THREAD_WAIT_TIMEOUT)) ==
-                std::cv_status::timeout) {
-                LOG_ERROR("[BleAdapter] %{public}s:ReadRemoteDeviceNameByGatt timeout!", __func__);
-                pimpl->gattClientService_->Disconnect(appID);
-                return name;
-            }
-            if (pimpl->readCharacteristicFlag_) {
-                pimpl->gattClientService_->Disconnect(appID);
-            }
-            return pimpl->remoteDeviceName_;
+        isAclConnect = it->second.IsAclConnected();
+        LOG_DEBUG("[BleAdapter] isAclConnect %{public}d ", isAclConnect);
+    }
+    peerlk.unlock();
+        
+    if (isAclConnect) {
+        std::unique_lock<std::mutex> lock(pimpl->mutexRemoteName_);
+        // Device name
+        LOG_DEBUG("Get device name from gatt. %{public}d", appID);
+        Uuid uuid = Uuid::ConvertFrom16Bits(GATT_UUID_GAP_DEVICE_NAME);
+        pimpl->gattClientService_->Connect(appID, true);
+        pimpl->gattClientService_->ReadCharacteristicByUuid(appID, uuid);
+        if (pimpl->cvfull_.wait_for(lock, std::chrono::seconds(BLE_THREAD_WAIT_TIMEOUT)) ==
+            std::cv_status::timeout) {
+            LOG_ERROR("[BleAdapter] %{public}s:ReadRemoteDeviceNameByGatt timeout!", __func__);
+            pimpl->gattClientService_->Disconnect(appID);
+            return name;
         }
+        if (pimpl->readCharacteristicFlag_) {
+            pimpl->gattClientService_->Disconnect(appID);
+        }
+        return pimpl->remoteDeviceName_;
     }
     return name;
 }
@@ -583,7 +590,7 @@ std::vector<Uuid> BleAdapter::GetDeviceUuids(const RawAddress &device) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     std::vector<Uuid> uuids;
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
@@ -596,7 +603,7 @@ std::vector<RawAddress> BleAdapter::GetPairedDevices() const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     std::vector<RawAddress> pairedList;
     for (auto it = pimpl->peerConnDeviceList_.begin(); it != pimpl->peerConnDeviceList_.end(); it++) {
         if (BLE_PAIR_PAIRED == it->second.GetPairedStatus()) {
@@ -611,7 +618,7 @@ std::vector<RawAddress> BleAdapter::GetConnectedDevices() const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     std::vector<RawAddress> pairedList;
     for (auto it = pimpl->peerConnDeviceList_.begin(); it != pimpl->peerConnDeviceList_.end(); it++) {
         RawAddress rawAddr(it->second.GetRawAddress());
@@ -631,6 +638,7 @@ bool BleAdapter::StartPair(const RawAddress &device)
     }
 
     uint8_t peerAddrType = GetPeerDeviceAddrType(RawAddress(device.GetAddress()));
+    std::unique_lock<std::recursive_mutex> peerlk(pimpl->peerDevlistMutex_);
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
         peerAddrType = it->second.GetAddressType();
@@ -639,6 +647,7 @@ bool BleAdapter::StartPair(const RawAddress &device)
             return false;
         }
     }
+    peerlk.unlock();
 
     int ret = pimpl->bleSecurity_->StartPair(device, peerAddrType);
     if (!ret) {
@@ -654,9 +663,11 @@ bool BleAdapter::CancelPairing(const RawAddress &device)
     HILOGI("addr: %{public}s", GetEncryptAddr(device.GetAddress()).c_str());
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::unique_lock<std::recursive_mutex> peerlk(pimpl->peerDevlistMutex_);
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
         int pairState = it->second.GetPairedStatus();
+        peerlk.unlock();
         if ((BLE_PAIR_PAIRED == pairState) || (BLE_PAIR_CANCELING == pairState) || (BLE_PAIR_NONE == pairState)) {
             HILOGE("CancelPairing failed, because of BLE_PAIR_NONE, PAIR_PAIRED or PAIR_CANCELING! %{public}d",
                 pairState);
@@ -668,7 +679,9 @@ bool BleAdapter::CancelPairing(const RawAddress &device)
         }
 
         if (BT_SUCCESS == pimpl->bleSecurity_->CancelPairing(device)) {
+            peerlk.lock();
             it->second.SetPairedStatus(BLE_PAIR_CANCELING);
+            peerlk.unlock();
         } else {
             LOG_ERROR("[BleAdapter] %{public}s:CancelPairing failed, because of gap cancel pair failed!", __func__);
             return false;
@@ -684,16 +697,21 @@ bool BleAdapter::CancelPairing(const RawAddress &device)
 bool BleAdapter::RemovePairWithDisConnect(const RawAddress &device, bool isDisconnect) const
 {
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::unique_lock<std::recursive_mutex> peerlk(pimpl->peerDevlistMutex_);
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
+    bool isAclConnect = it->second.IsAclConnected();
+    int connectionHandle = it->second.GetConnectionHandle();
+    int addrType = it->second.GetAddressType();
     if ((it == pimpl->peerConnDeviceList_.end()) || (it->second.GetPairedStatus() != BLE_PAIR_PAIRED)) {
         LOG_ERROR("[BleAdapter] %{public}s:RemovePair failed, because of not find the paired device!", __func__);
         return false;
     }
+    peerlk.unlock();
 
     BleConfig::GetInstance().RemovePairedDevice(device.GetAddress());
 
-    if ((it->second.IsAclConnected()) && (isDisconnect)) {
-        int ret = BTM_AclDisconnect(it->second.GetConnectionHandle(), BTM_ACL_DISCONNECT_REASON);
+    if (isAclConnect && isDisconnect) {
+        int ret = BTM_AclDisconnect(connectionHandle, BTM_ACL_DISCONNECT_REASON);
         if (ret != BT_SUCCESS) {
             LOG_ERROR("[BleAdapter] %{public}s:BTM_AclDisconnect failed!", __func__);
         }
@@ -703,13 +721,15 @@ bool BleAdapter::RemovePairWithDisConnect(const RawAddress &device, bool isDisco
     StartOrStopAdvAndScan(STOP_ADV_TYPE_RESOLVING_LIST, STOP_SCAN_TYPE_RESOLVING_LIST);
     BtAddr btAddr;
     (void)memset_s(&btAddr, sizeof(btAddr), 0x00, sizeof(btAddr));
-    btAddr.type = it->second.GetAddressType();
+    btAddr.type = addrType;
     device.ConvertToUint8(btAddr.addr);
     BTM_RemoveLePairedDevice(&btAddr);
     StartOrStopAdvAndScan(STOP_ADV_TYPE_RESOLVING_LIST, STOP_SCAN_TYPE_RESOLVING_LIST, true);
 
     if (isDisconnect) {
+        peerlk.lock();
         pimpl->peerConnDeviceList_.erase(device.GetAddress());
+        peerlk.unlock();
     }
     BleConfig::GetInstance().Save();
 
@@ -737,6 +757,7 @@ bool BleAdapter::RemoveAllPairs()
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::unique_lock<std::recursive_mutex> peerlk(pimpl->peerDevlistMutex_);
     std::vector<RawAddress> removeDevices;
     auto it = pimpl->peerConnDeviceList_.begin();
     while (it != pimpl->peerConnDeviceList_.end()) {
@@ -758,6 +779,7 @@ bool BleAdapter::RemoveAllPairs()
         }
         pimpl->peerConnDeviceList_.erase(it++);
     }
+    peerlk.unlock();
 
     // Del all paired devices from BTM
     StartOrStopAdvAndScan(STOP_ADV_TYPE_RESOLVING_LIST, STOP_SCAN_TYPE_RESOLVING_LIST);
@@ -775,7 +797,7 @@ bool BleAdapter::IsRemovePairedDevice(const RawAddress &device) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
         return false;
@@ -787,7 +809,7 @@ bool BleAdapter::IsBondedFromLocal(const RawAddress &device) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     bool isBondedFromLocal = false;
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
@@ -801,6 +823,7 @@ bool BleAdapter::SetDevicePasskey(const RawAddress &device, int passkey, bool ac
     LOG_DEBUG("[BleAdapter] %{public}s:%{public}d %{public}d", __func__, passkey, accept);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::unique_lock<std::recursive_mutex> peerlk(pimpl->peerDevlistMutex_);
     if (pimpl->bleSecurity_ == nullptr) {
         LOG_ERROR("[BleAdapter] %{public}s:SetDevicePasskey failed!", __func__);
         return false;
@@ -816,9 +839,11 @@ bool BleAdapter::SetDevicePasskey(const RawAddress &device, int passkey, bool ac
         LOG_ERROR("[BleAdapter] %{public}s:SetDevicePasskey failed, because of address not exist!", __func__);
         return false;
     }
+    int pairStatus = it->second.GetPairedStatus();
+    peerlk.unlock();
 
     int ret;
-    if ((BLE_PAIR_CANCELING == it->second.GetPairedStatus()) || (!accept)) {
+    if ((BLE_PAIR_CANCELING == pairStatus) || (!accept)) {
         ret = pimpl->bleSecurity_->SetDevicePasskey(device, passkey, GAP_NOT_ACCEPT);
     } else {
         ret = pimpl->bleSecurity_->SetDevicePasskey(device, passkey, GAP_ACCEPT);
@@ -845,7 +870,7 @@ bool BleAdapter::IsAclConnected(const RawAddress &device) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     bool isAclConnected = false;
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
@@ -858,7 +883,7 @@ bool BleAdapter::IsAclEncrypted(const RawAddress &device) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     bool isAclEncrypted = false;
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
@@ -876,7 +901,7 @@ int BleAdapter::GetPairState(const RawAddress &device) const
 {
     HILOGI("addr: %{public}s", GetEncryptAddr(device.GetAddress()).c_str());
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     int pairState = BLE_PAIR_NONE;
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it == pimpl->peerConnDeviceList_.end()) {
@@ -918,14 +943,17 @@ bool BleAdapter::SetDevicePairingConfirmation(const RawAddress &device, bool acc
         return false;
     }
 
+    std::unique_lock<std::recursive_mutex> peerlk(pimpl->peerDevlistMutex_);
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it == pimpl->peerConnDeviceList_.end()) {
         LOG_ERROR("[BleAdapter] %{public}s:failed, because of address not exist!", __func__);
         return false;
     }
+    int pairStatus = it->second.GetPairedStatus();
+    peerlk.unlock();
 
     int ret;
-    if ((BLE_PAIR_CANCELING == it->second.GetPairedStatus()) || (!accept)) {
+    if ((BLE_PAIR_CANCELING == pairStatus) || (!accept)) {
         ret = pimpl->bleSecurity_->SetUserConfirm(device, GAP_NOT_ACCEPT);
     } else {
         ret = pimpl->bleSecurity_->SetUserConfirm(device, GAP_ACCEPT);
@@ -1087,7 +1115,7 @@ int BleAdapter::GetPeerDeviceAddrType(const RawAddress &device) const
         type = pimpl->bleCentralManager_->GetDeviceAddrType(device.GetAddress());
     }
     if (type == BLE_ADDR_TYPE_UNKNOWN) {
-        std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+        std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
         type = BLE_ADDR_TYPE_RANDOM;
         auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
         if (it != pimpl->peerConnDeviceList_.end()) {
@@ -1101,7 +1129,6 @@ void BleAdapter::ReadPeerDeviceInfoFromConf(const std::vector<std::string> &pair
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
     for (auto addr : pairedAddrList) {
         RawAddress rawAddr(addr);
         std::string invalidMacAddress(INVALID_MAC_ADDRESS);
@@ -1119,7 +1146,8 @@ void BleAdapter::ReadPeerDeviceInfoFromConf(const std::vector<std::string> &pair
         remote.SetIoCapability(io);
 
         remote.SetPairedStatus(BLE_PAIR_PAIRED);
-
+        
+        std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
         pimpl->peerConnDeviceList_.insert(std::make_pair(addr, remote));
     }
 }
@@ -1153,7 +1181,7 @@ void BleAdapter::ClearPeerDeviceInfo() const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     pimpl->peerConnDeviceList_.clear();
 }
 
@@ -1288,6 +1316,8 @@ void BleAdapter::LeConnectionCompleteTask(
     }
 
     RawAddress peerAddr = RawAddress::ConvertToString(addr.addr);
+
+    std::unique_lock<std::recursive_mutex> peerlk(pimpl->peerDevlistMutex_);
     auto it = pimpl->peerConnDeviceList_.find(peerAddr.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
         it->second.SetConnectionHandle(connectionHandle);
@@ -1333,7 +1363,7 @@ void BleAdapter::LeDisconnectionCompleteTask(uint8_t status, uint16_t connection
 {
     LOG_DEBUG("[BleAdapter] %{public}s, handle is %{public}d", __func__, connectionHandle);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     for (auto it = pimpl->peerConnDeviceList_.begin(); it != pimpl->peerConnDeviceList_.end(); it++) {
         if (connectionHandle == it->second.GetConnectionHandle()) {
             LOG_DEBUG("[BleAdapter] handle is %{public}d disconnect ", connectionHandle);
@@ -1346,33 +1376,31 @@ void BleAdapter::LeDisconnectionCompleteTask(uint8_t status, uint16_t connection
 void BleAdapter::LePairComplete(const RawAddress &device, const int status) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s:result %{public}d.", __func__, status);
-
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::unique_lock<std::recursive_mutex> peerlk(pimpl->peerDevlistMutex_);
+    auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
+    if (it == pimpl->peerConnDeviceList_.end()) {
+        HILOGI("addr %{public}s.", GetEncryptAddr(device.GetAddress()).c_str());
+        return;
+    }
+    int pairState = BLE_PAIR_NONE;
     if (status == BT_SUCCESS) {
-        auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
-        if (it == pimpl->peerConnDeviceList_.end()) {
-            HILOGI("addr %{public}s.", GetEncryptAddr(device.GetAddress()).c_str());
-            return;
-        }
         it->second.SetPairedStatus(BLE_PAIR_PAIRED);
-
         /// Peer Identity Addr
         BtAddr btAddr;
         (void)memset_s(&btAddr, sizeof(btAddr), 0x00, sizeof(btAddr));
         device.ConvertToUint8(btAddr.addr);
         btAddr.type = it->second.GetAddressType();
-
+        peerlk.unlock();
         RawAddress peerDevice(BleConfig::GetInstance().GetPeerIdentityAddr(device.GetAddress()));
         BtAddr peerAddr;
         (void)memset_s(&peerAddr, sizeof(peerAddr), 0x00, sizeof(peerAddr));
         peerAddr.type = BleConfig::GetInstance().GetPeerDeviceType(device.GetAddress());
         peerDevice.ConvertToUint8(peerAddr.addr);
-
         BtmLePairedDevice pairedDevice;
         (void)memset_s(&pairedDevice, sizeof(pairedDevice), 0x00, sizeof(pairedDevice));
         (void)memcpy_s(&pairedDevice.addr, sizeof(BtAddr), &btAddr, sizeof(BtAddr));
         (void)memcpy_s(&pairedDevice.remoteIdentityAddress, sizeof(BtAddr), &peerAddr, sizeof(BtAddr));
-
         /// IRK
         std::string irk = BleConfig::GetInstance().GetPeerIrk(device.GetAddress());
         if (!irk.empty()) {
@@ -1384,22 +1412,15 @@ void BleAdapter::LePairComplete(const RawAddress &device, const int status) cons
         StartOrStopAdvAndScan(STOP_ADV_TYPE_RESOLVING_LIST, STOP_SCAN_TYPE_RESOLVING_LIST);
         BTM_AddLePairedDevice(&pairedDevice);
         StartOrStopAdvAndScan(STOP_ADV_TYPE_RESOLVING_LIST, STOP_SCAN_TYPE_RESOLVING_LIST, true);
-
-        if (pimpl->blePeripheralCallback_ != nullptr) {
-            pimpl->blePeripheralCallback_->ForEach([device](IBlePeripheralCallback &observer) {
-                observer.OnPairStatusChanged(ADAPTER_BLE, device, BLE_PAIR_PAIRED);
-            });
-        }
+        pairState = BLE_PAIR_PAIRED;
     } else {
-        auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
-        if (it != pimpl->peerConnDeviceList_.end()) {
-            it->second.SetPairedStatus(BLE_PAIR_NONE);
-        }
-        if (pimpl->blePeripheralCallback_ != nullptr) {
-            pimpl->blePeripheralCallback_->ForEach([device](IBlePeripheralCallback &observer) {
-                observer.OnPairStatusChanged(ADAPTER_BLE, device, BLE_PAIR_NONE);
-            });
-        }
+        it->second.SetPairedStatus(BLE_PAIR_NONE);
+        peerlk.unlock();
+    }
+    if (pimpl->blePeripheralCallback_ != nullptr) {
+        pimpl->blePeripheralCallback_->ForEach([device, pairState](IBlePeripheralCallback &observer) {
+            observer.OnPairStatusChanged(ADAPTER_BLE, device, pairState);
+        });
     }
 }
 
@@ -1408,6 +1429,7 @@ void BleAdapter::LePairingStatus(const RawAddress &device) const
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::unique_lock<std::recursive_mutex> peerlk(pimpl->peerDevlistMutex_);
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
         it->second.SetPairedStatus(BLE_PAIR_PAIRING);
@@ -1418,6 +1440,7 @@ void BleAdapter::LePairingStatus(const RawAddress &device) const
         peerDevice.SetPairedStatus(BLE_PAIR_PAIRING);
         pimpl->peerConnDeviceList_.insert(std::make_pair(device.GetAddress(), peerDevice));
     }
+    peerlk.unlock();
 
     if (pimpl->blePeripheralCallback_ != nullptr) {
         pimpl->blePeripheralCallback_->ForEach([device](IBlePeripheralCallback &observer) {
@@ -1430,7 +1453,7 @@ void BleAdapter::EncryptionComplete(const RawAddress &device) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->peerDevlistMutex_);
     auto it = pimpl->peerConnDeviceList_.find(device.GetAddress());
     if (it != pimpl->peerConnDeviceList_.end()) {
         it->second.SetAclConnectState(BLE_CONNECTION_STATE_ENCRYPTED_LE);
