@@ -95,6 +95,8 @@ public:
     void ProcessDeferredMessage();
     std::string GetDeviceAdress();
     void NotifyStateTransitions();
+    void SetReconnectFlag(bool flag);
+    bool GetReconnectFlag() const;
     static std::string GetEventName(int what);
 
     void ProcessStartSdp(const HidHostMessage &msg);
@@ -133,6 +135,7 @@ private:
     std::unique_ptr<utility::Timer> disconnTimer_ {nullptr};
     inline static const int CONNECTION_TIMEOUT_MS {60000};  // 60s
     inline static const int DISCONNECTION_TIMEOUT_MS {60000};
+    bool isReconnect_ {false};
 
     std::unique_ptr<HidHostL2capConnection> l2capConnection_ {nullptr};
     HidHostUhid uhid_;
