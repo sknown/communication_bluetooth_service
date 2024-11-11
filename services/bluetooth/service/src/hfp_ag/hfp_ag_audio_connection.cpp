@@ -25,8 +25,8 @@ namespace OHOS {
 namespace bluetooth {
 std::string HfpAgAudioConnection::g_activeAddr {NULL_ADDRESS};
 std::vector<HfpAgAudioConnection::AudioDevice> HfpAgAudioConnection::g_audioDevices {};
-std::condition_variable HfpAgAudioConnection::g_cvScoConnection {};
-std::mutex HfpAgAudioConnection::g_mutexScoConnection {};
+std::condition_variable HfpAgAudioConnection::g_cvScoConnection;
+std::mutex HfpAgAudioConnection::g_mutexScoConnection;
 bool HfpAgAudioConnection::g_isScoDisconnectCompleted {false};
 
 BtmScoCallbacks HfpAgAudioConnection::g_cbs = {
