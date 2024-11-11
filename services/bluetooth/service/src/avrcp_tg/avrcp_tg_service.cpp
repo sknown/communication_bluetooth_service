@@ -371,7 +371,8 @@ IProfileAvrcpTg *AvrcpTgService::AVSessionObserverImpl::GetService(void)
     return static_cast<IProfileAvrcpTg *>(svManager->GetProfileService(PROFILE_NAME_AVRCP_TG));
 }
 
-void AvrcpTgService::AVControllerObserverImpl::OnAVCallMetaDataChange(const OHOS::AVSession::AVCallMetaData& avCallMetaData)
+void AvrcpTgService::AVControllerObserverImpl::OnAVCallMetaDataChange(
+    const OHOS::AVSession::AVCallMetaData& avCallMetaData)
 {
     HILOGI("enter");
 }
@@ -381,12 +382,14 @@ void AvrcpTgService::AVControllerObserverImpl::OnAVCallStateChange(const OHOS::A
     HILOGI("enter");
 }
 
-void AvrcpTgService::AVControllerObserverImpl::OnSessionEventChange(const std::string& event, const AAFwk::WantParams& args)
+void AvrcpTgService::AVControllerObserverImpl::OnSessionEventChange(const std::string& event,
+    const AAFwk::WantParams& args)
 {
     HILOGI("enter");
 }
 
-void AvrcpTgService::AVControllerObserverImpl::OnQueueItemsChange(const std::vector<OHOS::AVSession::AVQueueItem>& items)
+void AvrcpTgService::AVControllerObserverImpl::OnQueueItemsChange(
+    const std::vector<OHOS::AVSession::AVQueueItem>& items)
 {
     HILOGI("enter");
 }
@@ -431,7 +434,8 @@ void AvrcpTgService::AVControllerObserverImpl::OnValidCommandChange(const std::v
     HILOGI("enter");
 }
 
-void AvrcpTgService::AVControllerObserverImpl::OnOutputDeviceChange(const int32_t connectionState, const OHOS::AVSession::OutputDeviceInfo &outputDeviceInfo)
+void AvrcpTgService::AVControllerObserverImpl::OnOutputDeviceChange(const int32_t connectionState,
+    const OHOS::AVSession::OutputDeviceInfo &outputDeviceInfo)
 {
     HILOGI("enter");
 }
