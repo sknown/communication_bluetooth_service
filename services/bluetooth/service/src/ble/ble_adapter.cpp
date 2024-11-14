@@ -131,6 +131,8 @@ struct BleAdapter::impl {
     IProfileGattClient *gattClientService_ {};
     std::string remoteDeviceName_ {};
     std::recursive_mutex peerDevlistMutex_ {};
+    std::recursive_mutex bleAdvMutex_ {};
+    std::recursive_mutex bleCenMutex_ {};
     std::map<std::string, BlePeripheralDevice> peerConnDeviceList_ {};
     bool btmEnableFlag_ = false;
     bool readCharacteristicFlag_ = false;
@@ -313,6 +315,7 @@ void BleAdapter::StartOrStopAdvAndScan(
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::unique_lock<std::recursive_mutex> bleAdvlk(pimpl->bleAdvMutex_);
     if ((pimpl->bleAdvertiser_ != nullptr) &&
         (pimpl->bleAdvertiser_->GetAdvertisingStatus() == ADVERTISE_FAILED_ALREADY_STARTED)) {
         std::unique_lock<std::mutex> lock(pimpl->mutexAdvAdnScan_);
@@ -321,7 +324,9 @@ void BleAdapter::StartOrStopAdvAndScan(
             LOG_ERROR("[BleAdapter] %{public}s:StartOrStopAdvAndScan timeout!", __func__);
         }
     }
-
+    bleAdvlk.unlock();
+    
+    std::unique_lock<std::recursive_mutex> bleCenlk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ != nullptr) {
         if (pimpl->bleCentralManager_->GetScanStatus() == SCAN_FAILED_ALREADY_STARTED) {
             std::unique_lock<std::mutex> lock(pimpl->mutexAdvAdnScan_);
@@ -332,6 +337,7 @@ void BleAdapter::StartOrStopAdvAndScan(
             }
         }
     }
+    bleCenlk.unlock();
 }
 
 void BleAdapter::ExAdvClearHandle() const
@@ -1002,7 +1008,7 @@ bool BleAdapter::IsBtDiscovering() const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ != nullptr) {
         return (SCAN_FAILED_ALREADY_STARTED == pimpl->bleCentralManager_->GetScanStatus());
     }
@@ -1032,7 +1038,7 @@ void BleAdapter::RegisterBleCentralManagerCallback(IBleCentralManagerCallback &c
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ == nullptr) {
         pimpl->bleCentralManager_ = std::make_unique<BleCentralManagerImpl>(callback, *this, *GetDispatcher());
     }
@@ -1189,7 +1195,7 @@ void BleAdapter::ClearScanResultInfo() const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ != nullptr) {
         pimpl->bleCentralManager_->ClearResults();
     }
@@ -1199,7 +1205,7 @@ void BleAdapter::ClearScannerIdInfo() const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ != nullptr) {
         pimpl->bleCentralManager_->ClearScannerIds();
     }
@@ -1310,10 +1316,12 @@ void BleAdapter::LeConnectionCompleteTask(
     LOG_DEBUG("[BleAdapter] %{public}s, handle is %{public}d", __func__, connectionHandle);
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::unique_lock<std::recursive_mutex> bleAdvlk(pimpl->bleAdvMutex_);
     if ((pimpl->bleAdvertiser_ != nullptr) && (!BleFeature::GetInstance().IsLeExtendedAdvertisingSupported()) &&
         (role == LE_CONNECTION_ROLE_SLAVE)) {
         pimpl->bleAdvertiser_->ReStartLegacyAdvertising();
     }
+    bleAdvlk.unlock();
 
     RawAddress peerAddr = RawAddress::ConvertToString(addr.addr);
 
@@ -1499,7 +1507,7 @@ int BleAdapter::GetDeviceType(const RawAddress &device) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ != nullptr) {
         return pimpl->bleCentralManager_->GetDeviceType(device.GetAddress());
     }
@@ -1510,7 +1518,7 @@ uint8_t BleAdapter::GetAdvertiserHandle() const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleAdvMutex_);
     if (pimpl->bleAdvertiser_ != nullptr) {
         return pimpl->bleAdvertiser_->CreateAdvertiserSetHandle();
     }
@@ -1522,7 +1530,7 @@ void BleAdapter::StartAdvertising(const BleAdvertiserSettingsImpl &settings, con
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleAdvMutex_);
     if (pimpl->bleAdvertiser_ != nullptr) {
         pimpl->bleAdvertiser_->StartAdvertising(settings, advData, scanResponse, advHandle);
     }
@@ -1532,7 +1540,7 @@ void BleAdapter::StopAdvertising(uint8_t advHandle) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleAdvMutex_);
     if (pimpl->bleAdvertiser_ != nullptr) {
         pimpl->bleAdvertiser_->StopAdvertising(advHandle);
     }
@@ -1542,7 +1550,7 @@ void BleAdapter::Close(uint8_t advHandle) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleAdvMutex_);
     if (pimpl->bleAdvertiser_ != nullptr) {
         pimpl->bleAdvertiser_->Close(advHandle);
     }
@@ -1552,7 +1560,7 @@ void BleAdapter::StartScan(const BleScanSettingsImpl &setting) const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ != nullptr) {
         pimpl->bleCentralManager_->StartScan(setting);
     }
@@ -1562,7 +1570,7 @@ void BleAdapter::StopScan() const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ != nullptr) {
         pimpl->bleCentralManager_->StopScan();
     }
@@ -1572,7 +1580,7 @@ int BleAdapter::ConfigScanFilter(int32_t scannerId, const std::vector<BleScanFil
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ != nullptr) {
         return pimpl->bleCentralManager_->ConfigScanFilter(scannerId, filters);
     }
@@ -1583,7 +1591,7 @@ void BleAdapter::RemoveScanFilter(int32_t scannerId)
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ != nullptr) {
         pimpl->bleCentralManager_->RemoveScanFilter(scannerId);
     }
@@ -1591,7 +1599,7 @@ void BleAdapter::RemoveScanFilter(int32_t scannerId)
 
 int32_t BleAdapter::AllocScannerId()
 {
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ == nullptr) {
         LOG_DEBUG("[BleAdapter] bleCentralManager is null.");
         return 0;
@@ -1601,7 +1609,7 @@ int32_t BleAdapter::AllocScannerId()
 
 void BleAdapter::RemoveScannerId(int32_t scannerId)
 {
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleCenMutex_);
     if (pimpl->bleCentralManager_ == nullptr) {
         LOG_DEBUG("[BleAdapter] bleCentralManager is null.");
         return;
@@ -1635,7 +1643,7 @@ int BleAdapter::GetAdvertisingStatus() const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleAdvMutex_);
     if (pimpl->bleAdvertiser_ != nullptr) {
         if (pimpl->bleAdvertiser_->GetAdvertisingStatus() == ADVERTISE_FAILED_ALREADY_STARTED) {
             return BLE_ADV_STATE_ADVERTISING;
@@ -1657,7 +1665,7 @@ void BleAdapter::AddCharacteristicValue(uint8_t adtype, const std::string &data)
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);
 
-    std::lock_guard<std::recursive_mutex> lk(pimpl->syncMutex_);
+    std::lock_guard<std::recursive_mutex> lk(pimpl->bleAdvMutex_);
     if (pimpl->bleAdvertiser_ != nullptr) {
         pimpl->bleAdvertiser_->AddCharacteristicValue(adtype, data);
     }
