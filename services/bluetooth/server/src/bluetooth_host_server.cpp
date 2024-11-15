@@ -1883,5 +1883,10 @@ int32_t BluetoothHostServer::EnableBluetoothToRestrictMode(void)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
+
+int64_t BluetoothHostServer::GetConnectionTime(const std::string &address)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

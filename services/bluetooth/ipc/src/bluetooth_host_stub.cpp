@@ -249,6 +249,9 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SET_FAST_SCAN_LEVEL,
             std::bind(&BluetoothHostStub::SetFastScanLevelInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::GET_CONNECTION_TIME,
+            std::bind(&BluetoothHostStub::GetConnectionTimeInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -1355,6 +1358,11 @@ int32_t BluetoothHostStub::SetFastScanLevelInner(MessageParcel &data, MessagePar
 int32_t BluetoothHostStub::EnableBluetoothToRestrictModeInner(MessageParcel &data, MessageParcel &reply)
 {
     return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::GetConnectionTimeInner(MessageParcel &data, MessageParcel &reply)
+{
+    return NO_ERROR;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS
