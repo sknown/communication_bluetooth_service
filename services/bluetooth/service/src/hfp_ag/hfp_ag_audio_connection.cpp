@@ -25,6 +25,9 @@ namespace OHOS {
 namespace bluetooth {
 std::string HfpAgAudioConnection::g_activeAddr {NULL_ADDRESS};
 std::vector<HfpAgAudioConnection::AudioDevice> HfpAgAudioConnection::g_audioDevices {};
+std::condition_variable HfpAgAudioConnection::g_cvScoConnection;
+std::mutex HfpAgAudioConnection::g_mutexScoConnection;
+bool HfpAgAudioConnection::g_isDisconnectCompleted {false};
 
 BtmScoCallbacks HfpAgAudioConnection::g_cbs = {
     &HfpAgAudioConnection::OnConnectCompleted,
@@ -196,6 +199,7 @@ int HfpAgAudioConnection::ConnectAudio() const
 {
     HILOGI("Connect SCO to %{public}s", GetEncryptAddr(remoteAddr_).c_str());
 
+    std::lock_guard<std::mutex> lk(g_mutexScoConnection);
     if (remoteAddr_ != g_activeAddr) {
         HILOGW("remoteAddr: %{public}s and g_activeAddr: %{public}s match failed!",
             GetEncryptAddr(remoteAddr_).c_str(), GetEncryptAddr(g_activeAddr).c_str());
@@ -261,6 +265,14 @@ int HfpAgAudioConnection::DisconnectAudio() const
     } else {
         HILOGW("%{public}s: Invalid Address", GetEncryptAddr(remoteAddr_).c_str());
         ret = BT_DEVICE_ERROR;
+    }
+
+    std::unique_lock<std::mutex> lk(g_mutexScoConnection);
+    g_isDisconnectCompleted = false;
+    if (!g_cvScoConnection.wait_for(lk, std::chrono::seconds(WAIT_SCO_DISCONNECT_TIMEOUT), [&] {
+            return g_isDisconnectCompleted;
+        })) {
+        HILOGE("Device: %{public}s SCO Disconnect Completed timeout!", GetEncryptAddr(remoteAddr_).c_str());
     }
     return ret;
 }
@@ -470,6 +482,9 @@ void HfpAgAudioConnection::ProcessOnConnectCompleted(HfpScoConnectionCompletePar
 void HfpAgAudioConnection::OnDisconnectCompleted(const BtmScoDisconnectionCompleteParam *param, void *context)
 {
     HILOGI("enter");
+
+    g_isDisconnectCompleted = true;
+    g_cvScoConnection.notify_all();
     HfpScoDisconnectionCompleteParam parameters;
     parameters.connectionHandle = param->connectionHandle;
     parameters.reason = param->reason;
