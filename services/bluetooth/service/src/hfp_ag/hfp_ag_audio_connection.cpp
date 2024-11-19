@@ -27,7 +27,7 @@ std::string HfpAgAudioConnection::g_activeAddr {NULL_ADDRESS};
 std::vector<HfpAgAudioConnection::AudioDevice> HfpAgAudioConnection::g_audioDevices {};
 std::condition_variable HfpAgAudioConnection::g_cvScoConnection;
 std::mutex HfpAgAudioConnection::g_mutexScoConnection;
-bool HfpAgAudioConnection::g_isScoDisconnectCompleted {false};
+bool HfpAgAudioConnection::g_isDisconnectCompleted {false};
 
 BtmScoCallbacks HfpAgAudioConnection::g_cbs = {
     &HfpAgAudioConnection::OnConnectCompleted,
@@ -268,9 +268,9 @@ int HfpAgAudioConnection::DisconnectAudio() const
     }
 
     std::unique_lock<std::mutex> lk(g_mutexScoConnection);
-    g_isScoDisconnectCompleted = false;
+    g_isDisconnectCompleted = false;
     if (!g_cvScoConnection.wait_for(lk, std::chrono::seconds(WAIT_SCO_DISCONNECT_TIMEOUT), [&] {
-            return g_isScoDisconnectCompleted;
+            return g_isDisconnectCompleted;
         })) {
         HILOGE("Device: %{public}s SCO Disconnect Completed timeout!", GetEncryptAddr(remoteAddr_).c_str());
     }
@@ -483,7 +483,7 @@ void HfpAgAudioConnection::OnDisconnectCompleted(const BtmScoDisconnectionComple
 {
     HILOGI("enter");
 
-    g_isScoDisconnectCompleted = true;
+    g_isDisconnectCompleted = true;
     g_cvScoConnection.notify_all();
     HfpScoDisconnectionCompleteParam parameters;
     parameters.connectionHandle = param->connectionHandle;

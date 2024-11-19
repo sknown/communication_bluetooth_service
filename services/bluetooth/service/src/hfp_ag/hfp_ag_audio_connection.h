@@ -291,7 +291,7 @@ private:
     // sco connection control
     static std::condition_variable g_cvScoConnection;
     static std::mutex g_mutexScoConnection;
-    static bool g_isScoDisconnectCompleted;
+    static bool g_isDisconnectCompleted;
 
     // Packet types
     static inline constexpr int PACKET_TYPE_HV1 = 0x00000001;
