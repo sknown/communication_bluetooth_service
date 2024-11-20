@@ -64,7 +64,7 @@ void HfpAgSystemInterface::Stop()
 {
     LOG_INFO("[HFP AG]%{public}s():enter",  __FUNCTION__);
     UnregisterObserver();
-    DelayedSingleton<BluetoothCallClient>::GetInstance()->UnInit();
+    DelayedRefSingleton<BluetoothCallClient>::GetInstance().UnInit();
     slotId_ = 0;
     serviceState_ = 0;
     signalStrength_ = 0;
@@ -112,7 +112,7 @@ void HfpAgSystemInterface::UnregisterObserver()
 void HfpAgSystemInterface::RejectCall(const std::string &address) const
 {
     LOG_INFO("[HFP AG]%{public}s():enter",  __FUNCTION__);
-    DelayedSingleton<BluetoothCallClient>::GetInstance()->RejectCall();
+    DelayedRefSingleton<BluetoothCallClient>::GetInstance().RejectCall();
 }
 
 void HfpAgSystemInterface::DialOutCall(const std::string &address, const std::string &number) const
@@ -141,20 +141,20 @@ void HfpAgSystemInterface::HangupCall(const std::string &address) const
         LOG_ERROR("[HFP AG]%{public}s():slotId_ is invalid",  __FUNCTION__);
         return;
     }
-    callList = DelayedSingleton<BluetoothCallClient>::GetInstance()->GetCurrentCallList(slotId);
+    callList = DelayedRefSingleton<BluetoothCallClient>::GetInstance().GetCurrentCallList(slotId);
     for (auto call : callList) {
         std::string number = call.accountNumber;
         LOG_INFO("[HFP AG]%{public}s():HangupCallnumbre = %{public}s, state = %{public}d id = %{public}d",
             __FUNCTION__, number.c_str(), (int)call.callState, (int)call.callId);
         if ((int)TelCallState::CALL_STATUS_ACTIVE == (int)call.callState) {
             // Should use hangup(index)
-            DelayedSingleton<BluetoothCallClient>::GetInstance()->HangUpCall();
+            DelayedRefSingleton<BluetoothCallClient>::GetInstance().HangUpCall();
             isActiveCallHangUp = true;
         }
     }
 
     if (!isActiveCallHangUp) {
-        DelayedSingleton<BluetoothCallClient>::GetInstance()->HangUpCall();
+        DelayedRefSingleton<BluetoothCallClient>::GetInstance().HangUpCall();
         LOG_INFO(", HangUpCall ");
     }
     isActiveCallHangUp = false;
@@ -163,17 +163,17 @@ void HfpAgSystemInterface::HangupCall(const std::string &address) const
 void HfpAgSystemInterface::AnswerCall(const std::string &address) const
 {
     LOG_INFO("[HFP AG]%{public}s():enter",  __FUNCTION__);
-    DelayedSingleton<BluetoothCallClient>::GetInstance()->AnswerCall();
+    DelayedRefSingleton<BluetoothCallClient>::GetInstance().AnswerCall();
 }
 
 bool HfpAgSystemInterface::SendDtmf(int dtmf, const std::string &address) const
 {
     LOG_INFO("[HFP AG]%{public}s():enter",  __FUNCTION__);
     char str = dtmf + '0';
-    if (!DelayedSingleton<BluetoothCallClient>::GetInstance()->StartDtmf(str)) {
+    if (!DelayedRefSingleton<BluetoothCallClient>::GetInstance().StartDtmf(str)) {
         return false;
     }
-    DelayedSingleton<BluetoothCallClient>::GetInstance()->StopDtmf();
+    DelayedRefSingleton<BluetoothCallClient>::GetInstance().StopDtmf();
     return true;
 }
 
@@ -233,7 +233,7 @@ bool HfpAgSystemInterface::QueryCurrentCallsList(const std::string &address)
         service->ResponesOK(address);
         return false;
     }
-    callList = DelayedSingleton<BluetoothCallClient>::GetInstance()->GetCurrentCallList(slotId_);
+    callList = DelayedRefSingleton<BluetoothCallClient>::GetInstance().GetCurrentCallList(slotId_);
     int callIndex = 0;
     for (auto call : callList) {
         callIndex++;
@@ -273,7 +273,7 @@ bool HfpAgSystemInterface::QueryCurrentCallsList(const std::string &address)
 void HfpAgSystemInterface::QueryPhoneState() const
 {
     LOG_INFO("[HFP AG]%{public}s():enter",  __FUNCTION__);
-    DelayedSingleton<BluetoothCallClient>::GetInstance()->GetCallState();
+    DelayedRefSingleton<BluetoothCallClient>::GetInstance().GetCallState();
     return;
 }
 
@@ -456,7 +456,7 @@ void HfpAgSystemInterface::UpdateCallList()
     if (slotId < 0) {
         LOG_ERROR("[HFP AG]%{public}s():slotId_ is invalid",  __FUNCTION__);
     }
-    callList = DelayedSingleton<BluetoothCallClient>::GetInstance()->GetCurrentCallList(slotId);
+    callList = DelayedRefSingleton<BluetoothCallClient>::GetInstance().GetCurrentCallList(slotId);
     if (callList.size() == 0) {
         bluetoothCallList_.clear();
         return;
@@ -513,7 +513,7 @@ void HfpAgSystemInterface::GetResponseHoldState(std::string address)
     if (slotId < 0) {
         LOG_ERROR("[HFP AG]%{public}s():slotId_ is invalid",  __FUNCTION__);
     }
-    callList = DelayedSingleton<BluetoothCallClient>::GetInstance()->GetCurrentCallList(slotId);
+    callList = DelayedRefSingleton<BluetoothCallClient>::GetInstance().GetCurrentCallList(slotId);
     bool hasHoldCall = false;
     for (auto call : callList) {
         std::string number = call.accountNumber;
@@ -543,12 +543,12 @@ void HfpAgSystemInterface::SetResponseHoldState(std::string address, int btrh)
     if (slotId < 0) {
         LOG_ERROR("[HFP AG]%{public}s():slotId_ is invalid",  __FUNCTION__);
     }
-    callList = DelayedSingleton<BluetoothCallClient>::GetInstance()->GetCurrentCallList(slotId);
+    callList = DelayedRefSingleton<BluetoothCallClient>::GetInstance().GetCurrentCallList(slotId);
     for (auto call : callList) {
         std::string number = call.accountNumber;
         if (btrh == 1) {
             if ((int)TelCallState::CALL_STATUS_INCOMING == (int)call.callState) {
-                DelayedSingleton<BluetoothCallClient>::GetInstance()->HoldCall();
+                DelayedRefSingleton<BluetoothCallClient>::GetInstance().HoldCall();
                 SendResponseHoldStateToService(HFP_AG_RESPONSE_HOLD_ACCEPT);
             }
         }
@@ -925,7 +925,7 @@ bool HfpAgSystemInterface::HandleChld(int chld) const
     if (slotId < 0) {
         LOG_ERROR("[HFP AG]%{public}s():slotId_ is invalid",  __FUNCTION__);
     }
-    callList = DelayedSingleton<BluetoothCallClient>::GetInstance()->GetCurrentCallList(slotId);
+    callList = DelayedRefSingleton<BluetoothCallClient>::GetInstance().GetCurrentCallList(slotId);
     for (auto call : callList) {
         std::string number = call.accountNumber;
         LOG_INFO("[HFP AG]%{public}s():HandleChld for number = %{public}s state = %{public}d",
@@ -933,31 +933,31 @@ bool HfpAgSystemInterface::HandleChld(int chld) const
             if (chld == ATCHLD_RELEASE_ALL_HELD_CALLS) {
                 if ((int)TelCallState::CALL_STATUS_HOLDING == (int)call.callState ||
                     (int)TelCallState::CALL_STATUS_WAITING == (int)call.callState) {
-                    DelayedSingleton<BluetoothCallClient>::GetInstance()->HangUpCall();
+                    DelayedRefSingleton<BluetoothCallClient>::GetInstance().HangUpCall();
                 }
             } else if (chld == ATCHLD_RELEASE_ACTIVE_ACCPET_OTHER) {
                 if ((int)TelCallState::CALL_STATUS_WAITING == (int)call.callState &&
                     (int)call.callDirection == (int)CallDirection::CALL_DIRECTION_IN) {
-                    DelayedSingleton<BluetoothCallClient>::GetInstance()->AnswerCall();
+                    DelayedRefSingleton<BluetoothCallClient>::GetInstance().AnswerCall();
                 } else if ((int)TelCallState::CALL_STATUS_ACTIVE == (int)call.callState) {
-                    DelayedSingleton<BluetoothCallClient>::GetInstance()->HangUpCall();
+                    DelayedRefSingleton<BluetoothCallClient>::GetInstance().HangUpCall();
                 } else if ((int)TelCallState::CALL_STATUS_HOLDING == (int)call.callState) {
-                    DelayedSingleton<BluetoothCallClient>::GetInstance()->HoldCall();
+                    DelayedRefSingleton<BluetoothCallClient>::GetInstance().HoldCall();
                 }
             } else if (chld == ATCHLD_RELEASE_HOLD_ACCPET_OTHER) {
                 if ((int)TelCallState::CALL_STATUS_WAITING == (int)call.callState) {
-                    DelayedSingleton<BluetoothCallClient>::GetInstance()->AnswerCall();
+                    DelayedRefSingleton<BluetoothCallClient>::GetInstance().AnswerCall();
                 } else if ((int)TelCallState::CALL_STATUS_ACTIVE == (int)call.callState) {
-                    DelayedSingleton<BluetoothCallClient>::GetInstance()->HoldCall();
+                    DelayedRefSingleton<BluetoothCallClient>::GetInstance().HoldCall();
                 }
             } else if (chld == ATCHLD_ADD_CALL_TO_CONVERSATION) {
                 if ((int)TelCallState::CALL_STATUS_WAITING == (int)call.callState) {
-                    DelayedSingleton<BluetoothCallClient>::GetInstance()->AnswerCall();
-                    DelayedSingleton<BluetoothCallClient>::GetInstance()->CombineConference();
+                    DelayedRefSingleton<BluetoothCallClient>::GetInstance().AnswerCall();
+                    DelayedRefSingleton<BluetoothCallClient>::GetInstance().CombineConference();
                 }
             } else if (chld == ATCHLD_CONNECT_TWO_CALL) {
-                DelayedSingleton<BluetoothCallClient>::GetInstance()->CombineConference();
-                DelayedSingleton<BluetoothCallClient>::GetInstance()->HangUpCall();
+                DelayedRefSingleton<BluetoothCallClient>::GetInstance().CombineConference();
+                DelayedRefSingleton<BluetoothCallClient>::GetInstance().HangUpCall();
             }
     }
     return true;
@@ -1008,7 +1008,7 @@ void SystemAbilityStatusChange::OnAddSystemAbility(int32_t systemAbilityId, cons
     switch (systemAbilityId) {
         case TELEPHONY_CALL_MANAGER_SYS_ABILITY_ID:
             HILOGI("OnAddSystemAbility input service start");
-            DelayedSingleton<BluetoothCallClient>::GetInstance()->Init();
+            DelayedRefSingleton<BluetoothCallClient>::GetInstance().Init();
             break;
         default:
             HILOGI("OnAddSystemAbility unhandled sysabilityId:%{public}d", systemAbilityId);
