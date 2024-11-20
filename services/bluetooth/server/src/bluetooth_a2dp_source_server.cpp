@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include <cinttypes>
 #include "bluetooth_def.h"
 #include "bluetooth_errorcode.h"
 #include "bluetooth_hitrace.h"
@@ -44,6 +44,19 @@ public:
         observers_->ForEach([device, state](sptr<IBluetoothA2dpSourceObserver> observer) {
             observer->OnConnectionStateChanged(device, state,
                 static_cast<uint32_t>(ConnChangeCause::CONNECT_CHANGE_COMMON_CAUSE));
+        });
+    }
+
+    void OnCaptureConnectionStateChanged(const RawAddress &device, int state, const A2dpSrcCodecInfo &info) override
+    {
+        HILOGI("addr: %{public}s, state: %{public}d", GET_ENCRYPT_ADDR(device), state);
+        observers_->ForEach([device, state, info](sptr<IBluetoothA2dpSourceObserver> observer) {
+            BluetoothA2dpCodecInfo tmpInfo {};
+            tmpInfo.bitsPerSample = info.bitsPerSample;
+            tmpInfo.channelMode = info.channelMode;
+            tmpInfo.codecType = info.codecType;
+            tmpInfo.sampleRate = info.sampleRate;
+            observer->OnCaptureConnectionStateChanged(device, state, tmpInfo);
         });
     }
 
@@ -248,7 +261,7 @@ int BluetoothA2dpSourceServer::GetDevicesByStates(const std::vector<int32_t> &st
     HILOGI("starts");
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
-        return RET_NO_SUPPORT;
+        return BT_ERR_PERMISSION_FAILED;
     }
     std::vector<int> tmpStates;
     for (int32_t state : states) {
@@ -416,12 +429,14 @@ int BluetoothA2dpSourceServer::WriteFrame(const uint8_t *data, uint32_t size)
     return pimpl->a2dpSrcService_->WriteFrame(data, size);
 }
 
-void BluetoothA2dpSourceServer::GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp)
+int BluetoothA2dpSourceServer::GetRenderPosition(const RawAddress &device, uint32_t &delayValue, uint64_t &sendDataSize,
+                                                 uint32_t &timeStamp)
 {
     HILOGI("starts");
-    pimpl->a2dpSrcService_->GetRenderPosition(delayValue, sendDataSize, timeStamp);
-    HILOGI("delayValue = %{public}hu, sendDataSize = %{public}hu, timeStamp = %{public}u", delayValue, sendDataSize,
-        timeStamp);
+    int ret = pimpl->a2dpSrcService_->GetRenderPosition(device, delayValue, sendDataSize, timeStamp);
+    HILOGI("delayValue = %{public}u, sendDataSize = %{public}" PRIu64 ", timeStamp = %{public}u", delayValue,
+        sendDataSize, timeStamp);
+    return ret;
 }
 
 int BluetoothA2dpSourceServer::OffloadStartPlaying(const RawAddress &device, const std::vector<int32_t> &sessionsId)
@@ -459,6 +474,16 @@ int BluetoothA2dpSourceServer::DisableAutoPlay(const RawAddress &device, const i
 int BluetoothA2dpSourceServer::GetAutoPlayDisabledDuration(const RawAddress &device, int &duration)
 {
     return BT_ERR_API_NOT_SUPPORT;
+}
+
+void BluetoothA2dpSourceServer::GetVirtualDeviceList(std::vector<std::string> &devices)
+{
+    return;
+}
+
+void BluetoothA2dpSourceServer::UpdateVirtualDevice(int32_t action, const std::string &address)
+{
+    return;
 }
 }  // namespace Bluetooth
 }  // namespace OHOS

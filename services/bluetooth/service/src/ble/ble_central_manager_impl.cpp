@@ -1,4 +1,4 @@
-﻿/*
+/*
  * Copyright (C) 2021-2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -382,6 +382,9 @@ void BleCentralManagerImpl::ExAdvertisingReportTask(uint8_t advType, const BtAdd
     const std::vector<uint8_t> &data, int8_t rssi, const BtAddr &peerCurrentAddr) const
 {
     HILOGI("Data = %{public}s", BleUtils::ConvertIntToHexString(data).c_str());
+    if (data.size() == 0) {
+        return;
+    }
 
     std::lock_guard<std::recursive_mutex> lk(pimpl->mutex_);
     RawAddress advAddress(RawAddress::ConvertToString(peerAddr.addr));
@@ -813,8 +816,15 @@ void BleCentralManagerImpl::SetScanModeDuration(int scanMode, int type) const
             break;
         case SCAN_MODE_OP_P10_30_300:
             SetDutyCycle1030Duration(type);
+            break;
         case SCAN_MODE_OP_P2_30_1500:
-            SetDutyCycle2Duration(type);
+            SetDutyCycle230Duration(type);
+            break;
+        case SCAN_MODE_OP_P75_30_40:
+            SetDutyCycle75Duration(type);
+            break;
+        case SCAN_MODE_OP_P50_30_60:
+            SetDutyCycle5030Duration(type);
             break;
         default:
             break;
@@ -955,6 +965,51 @@ void BleCentralManagerImpl::SetDutyCycle1030Duration(int type) const
         uint16_t interval = BLE_SCAN_MODE_OP_P10_30_300_INTERVAL_MS;
         SetInterval(interval);
         uint16_t window = BLE_SCAN_MODE_OP_P10_30_300_WINDOW_MS;
+        SetWindow(window);
+    }
+}
+
+void BleCentralManagerImpl::SetDutyCycle230Duration(int type) const
+{
+    if (type == CALLBACK_TYPE_ALL_MATCHES) {
+        uint16_t interval = BLE_SCAN_MODE_BATCH_OP_P2_30_1500_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_BATCH_OP_P2_30_1500_WINDOW_MS;
+        SetWindow(window);
+    } else {
+        uint16_t interval = BLE_SCAN_MODE_OP_P2_30_1500_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_OP_P2_30_1500_WINDOW_MS;
+        SetWindow(window);
+    }
+}
+
+void BleCentralManagerImpl::SetDutyCycle75Duration(int type) const
+{
+    if (type == CALLBACK_TYPE_ALL_MATCHES) {
+        uint16_t interval = BLE_SCAN_MODE_BATCH_OP_P75_30_40_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_BATCH_OP_P75_30_40_WINDOW_MS;
+        SetWindow(window);
+    } else {
+        uint16_t interval = BLE_SCAN_MODE_OP_P75_30_40_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_OP_P75_30_40_WINDOW_MS;
+        SetWindow(window);
+    }
+}
+
+void BleCentralManagerImpl::SetDutyCycle5030Duration(int type) const
+{
+    if (type == CALLBACK_TYPE_ALL_MATCHES) {
+        uint16_t interval = BLE_SCAN_MODE_BATCH_OP_P50_30_60_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_BATCH_OP_P50_30_60_WINDOW_MS;
+        SetWindow(window);
+    } else {
+        uint16_t interval = BLE_SCAN_MODE_OP_P50_30_60_INTERVAL_MS;
+        SetInterval(interval);
+        uint16_t window = BLE_SCAN_MODE_OP_P50_30_60_WINDOW_MS;
         SetWindow(window);
     }
 }

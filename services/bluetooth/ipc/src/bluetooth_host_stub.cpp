@@ -19,6 +19,7 @@
 #include "ipc_types.h"
 #include "raw_address.h"
 #include "string_ex.h"
+#include "permission_utils.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -56,12 +57,6 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
                 std::placeholders::_3)},
         {BluetoothHostInterfaceCode::BT_ENABLE_BLE,
             std::bind(&BluetoothHostStub::EnableBleInner, std::placeholders::_1, std::placeholders::_2,
-                std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::BT_IS_BR_ENABLED,
-            std::bind(&BluetoothHostStub::IsBrEnabledInner, std::placeholders::_1, std::placeholders::_2,
-                std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::BT_IS_BLE_ENABLED,
-            std::bind(&BluetoothHostStub::IsBleEnabledInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
         {BluetoothHostInterfaceCode::BT_GET_PROFILE_LIST,
             std::bind(&BluetoothHostStub::GetProfileListInner, std::placeholders::_1, std::placeholders::_2,
@@ -224,9 +219,6 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::START_CREDIBLE_PAIR,
             std::bind(&BluetoothHostStub::StartCrediblePairInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::BT_COUNT_ENABLE_TIMES,
-            std::bind(&BluetoothHostStub::CountEnableTimesInner, std::placeholders::_1, std::placeholders::_2,
-                std::placeholders::_3)},
         {BluetoothHostInterfaceCode::CONNECT_ALLOWED_PROFILES,
             std::bind(&BluetoothHostStub::ConnectAllowedProfilesInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
@@ -236,9 +228,27 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SET_CUSTOM_TYPE,
             std::bind(&BluetoothHostStub::SetDeviceCustomTypeInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
-        {BluetoothHostInterfaceCode::RESTRICT_BLUETOOTH,
-            std::bind(&BluetoothHostStub::RestrictBluetoothInner, std::placeholders::_1, std::placeholders::_2,
+        {BluetoothHostInterfaceCode::SATELLITE_CONTROL,
+            std::bind(&BluetoothHostStub::SatelliteControlInner, std::placeholders::_1, std::placeholders::_2,
                 std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::BT_REGISTER_RESOURCE_MANAGER_OBSERVER,
+            std::bind(&BluetoothHostStub::RegisterBtResourceManagerObserverInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::BT_DEREGISTER_RESOURCE_MANAGER_OBSERVER,
+            std::bind(&BluetoothHostStub::DeregisterBtResourceManagerObserverInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::UPDATE_VIRTUAL_DEVICE,
+            std::bind(&BluetoothHostStub::UpdateVirtualDeviceInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::GET_VIRTUAL_AUTO_CONN_SWITCH,
+            std::bind(&BluetoothHostStub::IsSupportVirtualAutoConnectInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::SET_VIRTUAL_AUTO_CONN_TYPE,
+            std::bind(&BluetoothHostStub::SetVirtualAutoConnectTypeInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::SET_FAST_SCAN_LEVEL,
+            std::bind(&BluetoothHostStub::SetFastScanLevelInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -379,28 +389,6 @@ int32_t BluetoothHostStub::EnableBleInner(MessageParcel &data, MessageParcel &re
     if (!ret) {
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return BT_ERR_IPC_TRANS_FAILED;
-    }
-    return NO_ERROR;
-}
-
-ErrCode BluetoothHostStub::IsBrEnabledInner(MessageParcel &data, MessageParcel &reply)
-{
-    bool result = IsBrEnabled();
-    bool ret = reply.WriteBool(result);
-    if (!ret) {
-        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
-    }
-    return NO_ERROR;
-}
-
-ErrCode BluetoothHostStub::IsBleEnabledInner(MessageParcel &data, MessageParcel &reply)
-{
-    bool result = IsBleEnabled();
-    bool ret = reply.WriteBool(result);
-    if (!ret) {
-        HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
-        return TRANSACTION_ERR;
     }
     return NO_ERROR;
 }
@@ -1289,12 +1277,7 @@ ErrCode BluetoothHostStub::StartCrediblePairInner(MessageParcel &data, MessagePa
     return NO_ERROR;
 }
 
-ErrCode BluetoothHostStub::CountEnableTimesInner(MessageParcel &data, MessageParcel &reply)
-{
-    return NO_ERROR;
-}
-
-ErrCode BluetoothHostStub::RestrictBluetoothInner(MessageParcel &data, MessageParcel &reply)
+ErrCode BluetoothHostStub::SatelliteControlInner(MessageParcel &data, MessageParcel &reply)
 {
     return NO_ERROR;
 }
@@ -1326,6 +1309,51 @@ int32_t BluetoothHostStub::SetDeviceCustomTypeInner(MessageParcel &data, Message
         HILOGE("BluetoothHostStub: reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
     }
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::RegisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply)
+{
+    auto tempObject = data.ReadRemoteObject();
+    sptr<IBluetoothResourceManagerObserver> observer;
+    observer = iface_cast<IBluetoothResourceManagerObserver>(tempObject);
+    CHECK_AND_RETURN_LOG_RET(observer != nullptr, ERR_INVALID_VALUE, "observer is nullptr");
+    RegisterBtResourceManagerObserver(observer);
+    return NO_ERROR;
+}
+
+int32_t BluetoothHostStub::DeregisterBtResourceManagerObserverInner(MessageParcel &data, MessageParcel &reply)
+{
+    auto tempObject = data.ReadRemoteObject();
+    sptr<IBluetoothResourceManagerObserver> observer;
+    observer = iface_cast<IBluetoothResourceManagerObserver>(tempObject);
+    CHECK_AND_RETURN_LOG_RET(observer != nullptr, ERR_INVALID_VALUE, "observer is nullptr");
+    DeregisterBtResourceManagerObserver(observer);
+    return NO_ERROR;
+}
+
+int32_t BluetoothHostStub::UpdateVirtualDeviceInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::IsSupportVirtualAutoConnectInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::SetVirtualAutoConnectTypeInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::SetFastScanLevelInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::EnableBluetoothToRestrictModeInner(MessageParcel &data, MessageParcel &reply)
+{
     return BT_ERR_API_NOT_SUPPORT;
 }
 }  // namespace Bluetooth
