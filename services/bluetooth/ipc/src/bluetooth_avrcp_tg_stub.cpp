@@ -347,13 +347,13 @@ ErrCode BluetoothAvrcpTgStub::SetDeviceAbsoluteVolumeInner(MessageParcel &data, 
     HILOGI("enter");
     std::shared_ptr<BluetoothRawAddress> addr(data.ReadParcelable<BluetoothRawAddress>());
     if (!addr) {
-        return BT_ERROR_IPC_TRANS_FAILED;
+        return TRANSACTION_ERR;
     }
     int32_t volumeLevel = data.ReadInt32();
 
     int32_t result = SetDeviceAbsoluteVolume(*addr, volumeLevel);
     if (!reply.WriteInt32(result)) {
-        return BT_ERROR_IPC_TRANS_FAILED;
+        return TRANSACTION_ERR;
     }
     return NO_ERROR;
 }
@@ -362,12 +362,12 @@ ErrCode BluetoothAvrcpTgStub::SetDeviceAbsVolumeAbilityInner(MessageParcel &data
     HILOGI("enter");
     std::shared_ptr<BluetoothRawAddress> addr(data.ReadParcelable<BluetoothRawAddress>());
     if (!addr) {
-        return BT_ERROR_IPC_TRANS_FAILED;
+        return TRANSACTION_ERR;
     }
     int32_t ability = data.ReadInt32();
     int32_t result = SetDeviceAbsVolumeAbility(*addr, ability);
     if (!reply.WriteInt32(result)) {
-        return BT_ERROR_IPC_TRANS_FAILED;
+        return TRANSACTION_ERR;
     }
     return NO_ERROR;
 }
@@ -376,16 +376,16 @@ ErrCode BluetoothAvrcpTgStub::GetDeviceAbsVolumeAbilityInner(MessageParcel &data
     HILOGI("enter");
     std::shared_ptr<BluetoothRawAddress> addr(data.ReadParcelable<BluetoothRawAddress>());
     if (!addr) {
-        return BT_ERROR_IPC_TRANS_FAILED;
+        return TRANSACTION_ERR;
     }
     int32_t ability = 0;
     int32_t result = GetDeviceAbsVolumeAbility(*addr, ability);
     if (!reply.WriteInt32(result)) {
-        return BT_ERROR_IPC_TRANS_FAILED;
+        return TRANSACTION_ERR;
     }
 
     if (!reply.WriteInt32(ability)) {
-        return BT_ERROR_IPC_TRANS_FAILED;
+        return TRANSACTION_ERR;
     }
     return NO_ERROR;
 }

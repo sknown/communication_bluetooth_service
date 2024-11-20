@@ -22,6 +22,7 @@ extern "C" {
 extern AvctCbConn *AvctCbConnAlloc(const AvctConnectParam *connParm);
 extern void AvctCbConnDealloc(AvctCbConn *cbConn);
 extern AvctCbConn *AvctGetCbConnByPid(const AvctCbDev *cbDev, uint16_t pid);
+extern AvctCbConn *AvctGetCbConidConn(const AvctCbDev *cbDev, uint16_t pid, uint8_t startConId, uint8_t *conId);
 extern AvctCbConn *AvctGetCbConnByConnId(uint8_t connId);
 extern void AvctCbConnEvtCallback(const AvctCbConn *cbConn, uint8_t event, uint16_t result, const BtAddr *peerAddr);
 
