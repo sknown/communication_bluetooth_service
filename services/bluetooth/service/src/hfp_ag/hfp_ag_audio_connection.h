@@ -21,6 +21,8 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <mutex>
+#include <condition_variable>
 
 #include "base_def.h"
 #include "btm.h"
@@ -29,6 +31,7 @@
 
 namespace OHOS {
 namespace bluetooth {
+#define WAIT_SCO_DISCONNECT_TIMEOUT 1
 /**
  * @brief Class for Audio connection required by AudioGateway.
  */
@@ -284,6 +287,11 @@ private:
 
     // device vectors
     static std::vector<HfpAgAudioConnection::AudioDevice> g_audioDevices;
+
+    // sco connection control
+    static std::condition_variable g_cvAudioConnection;
+    static std::mutex g_mutexAudioConnection;
+    static bool g_isAudioDisconnected;
 
     // Packet types
     static inline constexpr int PACKET_TYPE_HV1 = 0x00000001;
