@@ -176,6 +176,11 @@ bool HfpAgSdpClient::FindAttributes(const std::string &remoteAddr, int role)
         }
     }
 
+    if (!FindClassId(it->second.services[num].classIds)) {
+        LOG_INFO("[HFP AG]%{public}s():remote don`t support hfp hf or hsp hs.", __FUNCTION__);
+        return false;
+    }
+
     if (!FindProfileVersion(it->second.services[num].profileDescriptors, info.remoteVersion)) {
         info.remoteVersion = HFP_AG_HFP_VERSION_1_1;
         LOG_INFO("[HFP AG]%{public}s():Not found peer HFP version, using default version[1.1]", __FUNCTION__);
@@ -209,6 +214,10 @@ void HfpAgSdpClient::CopySdpServiceArray(
     HfpAgRemoteSdpServiceArray array;
     for (uint16_t n = 0; n < serviceNum; n++) {
         HfpAgRemoteSdpService service;
+        for (uint16_t i = 0; i < serviceAry[n].classIdNumber; i++) {
+            BtUuid classId = serviceAry[n].classId[i];
+            service.classIds.push_back(classId);
+        }
         for (uint16_t i = 0; i < serviceAry[n].descriptorNumber; i++) {
             SdpProtocolDescriptor descriptor = serviceAry[n].descriptor[i];
             service.descriptors.push_back(descriptor);
@@ -316,6 +325,18 @@ bool HfpAgSdpClient::FindProfileFeatures(const std::vector<HfpAgSdpAttribute> &a
         if (attributes[num].attributeId == HFP_AG_SDP_ATTRIBUTE_SUPPORTED_FEATURES) {
             features = HFP_AG_HF_FEATURES_BRSF_MASK & attributes[num].attributeValue;
             LOG_INFO("[HFP AG]%{public}s():Found profile features are [%hu]", __FUNCTION__, features);
+            return true;
+        }
+        num++;
+    }
+    return false;
+}
+
+bool HfpAgSdpClient::FindClassId(const std::vector<BtUuid> &classIds)
+{
+    uint16_t num = 0;
+    while (num < classIds.size()) {
+        if ((classIds[num].uuid16 == HFP_AG_UUID_SERVCLASS_HFP_HF) || (classIds[num].uuid16 == HSP_HS_UUID_SERVCLASS)) {
             return true;
         }
         num++;

@@ -343,16 +343,22 @@ ohos_shared_library("btservice") {
     "audio_framework:audio_client",
     "bluetooth:btcommon",
     "c_utils:utils",
-    "call_manager:tel_call_manager_api",
     "common_event_service:cesfwk_innerkits",
-    "core_service:tel_core_service_api",
     "hdf_core:libhdi",
     "hilog:libhilog",
     "hisysevent:libhisysevent",
     "ipc:ipc_core",
+    "jsoncpp:jsoncpp",
     "samgr:samgr_proxy",
-    "state_registry:tel_state_registry_api",
   ]
+
+  if (bluetooth_service_hfp_ag_feature) {
+    external_deps += [
+      "call_manager:tel_call_manager_api",
+      "core_service:tel_core_service_api",
+      "state_registry:tel_state_registry_api",
+    ]
+  }
 
   if (bluetooth_service_avrcp_avsession) {
     external_deps += [
