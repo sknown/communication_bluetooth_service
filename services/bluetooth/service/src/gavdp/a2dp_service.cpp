@@ -856,11 +856,6 @@ int A2dpService::StartPlaying(const RawAddress &device)
         LOG_INFO("[A2dpService] %{public}s handle [%u]", __func__, handle);
     }
 
-    if (iter->second->GetPlayingState()) {
-        LOG_INFO("[A2dpService] Device is on playing");
-        return BT_SUCCESS;
-    }
-
     A2dpProfile *pflA2dp = GetProfileInstance(role_);
     if (pflA2dp == nullptr) {
         LOG_ERROR("[A2dpService] %{public}s Failed to get profile instance. role_(%u)\n", __func__, role_);
@@ -882,11 +877,6 @@ int A2dpService::SuspendPlaying(const RawAddress &device)
         return RET_BAD_STATUS;
     } else {
         handle = iter->second->GetHandle();
-    }
-
-    if (!iter->second->GetPlayingState()) {
-        LOG_ERROR("[A2dpService] Device is not on playing");
-        return BT_SUCCESS;
     }
 
     LOG_INFO("[A2dpService] %{public}s handle [%u]", __func__, handle);
@@ -911,11 +901,6 @@ int A2dpService::StopPlaying(const RawAddress &device)
         return RET_BAD_STATUS;
     } else {
         handle = iter->second->GetHandle();
-    }
-
-    if (!iter->second->GetPlayingState()) {
-        LOG_ERROR("[A2dpService] Device is not on playing");
-        return BT_SUCCESS;
     }
 
     LOG_INFO("[A2dpService] %{public}s handle [%u]", __func__, handle);
