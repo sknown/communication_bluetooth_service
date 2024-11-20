@@ -346,19 +346,35 @@ bool BluetoothBleCentralManagerServer::IsResourceScheduleControlApp(int32_t pid)
     return proxyPids_.find(pid) != proxyPids_.end();
 }
 
+bool CheckBleScanPermission()
+{
+    if (PermissionUtils::GetApiVersion() >= 10) { // 10:api version
+        if (PermissionUtils::VerifyAccessBluetoothPermission() == PERMISSION_DENIED) {
+            HILOGE("check access permission failed.");
+            return false;
+        }
+    } else {
+        if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED ||
+            PermissionUtils::VerifyManageBluetoothPermission() == PERMISSION_DENIED) {
+            HILOGE("check permission failed.");
+            return false;
+        }
+        if (PermissionUtils::VerifyApproximatelyPermission() == PERMISSION_DENIED &&
+            PermissionUtils::VerifyLocationPermission() == PERMISSION_DENIED) {
+            HILOGE("No location permission");
+            return false;
+        }
+    }
+    return true;
+}
+
 int BluetoothBleCentralManagerServer::StartScan(int32_t scannerId, const BluetoothBleScanSettings &settings,
     const std::vector<BluetoothBleScanFilter> &filters)
 {
     int32_t pid = IPCSkeleton::GetCallingPid();
     int32_t uid = IPCSkeleton::GetCallingUid();
-    if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED ||
-        PermissionUtils::VerifyManageBluetoothPermission() == PERMISSION_DENIED) {
+    if (!CheckBleScanPermission()) {
         HILOGE("check permission failed.");
-        return BT_ERR_PERMISSION_FAILED;
-    }
-    if (PermissionUtils::VerifyApproximatelyPermission() == PERMISSION_DENIED &&
-        PermissionUtils::VerifyLocationPermission() == PERMISSION_DENIED) {
-        HILOGE("No location permission");
         return BT_ERR_PERMISSION_FAILED;
     }
 
