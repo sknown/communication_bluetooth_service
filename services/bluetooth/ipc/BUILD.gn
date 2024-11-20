@@ -28,7 +28,10 @@ ohos_static_library("btipc_service") {
   # }
   stack_protector_ret = true
   public_configs = [ ":btipc_public_config" ]
-  include_dirs = [ "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/include" ]
+  include_dirs = [
+    "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth/service/src/permission",
+    "$SUBSYSTEM_DIR/bluetooth/frameworks/inner/include",
+  ]
   sources = [
     "src/bluetooth_ble_advertise_callback_proxy.cpp",
     "src/bluetooth_ble_advertiser_stub.cpp",
@@ -107,6 +110,7 @@ ohos_static_library("btipc_service") {
   deps = []
 
   external_deps = [
+    "access_token:libaccesstoken_sdk",
     "bluetooth:btcommon",
     "c_utils:utils",
     "hilog:libhilog",

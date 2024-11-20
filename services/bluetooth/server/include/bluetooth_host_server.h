@@ -63,10 +63,9 @@ public:
     void Stop();
     int32_t DisableBle() override;
     int32_t EnableBle() override;
-    int32_t RestrictBluetooth() override;
-    int32_t SatelliteControl(int state) override;
-    bool IsBrEnabled() override;
-    bool IsBleEnabled() override;
+    int32_t SatelliteControl(int type, int state) override;
+    bool IsBrEnabled();
+    bool IsBleEnabled();
     std::vector<uint32_t> GetProfileList() override;
     int32_t GetMaxNumConnectedAudioDevices() override;
     int32_t GetBtConnectionState(int32_t &state) override;
@@ -122,7 +121,6 @@ public:
     int32_t GetRandomAddress(const std::string &realAddr, std::string &randomAddr) override;
     int32_t SyncRandomAddress(const std::string &realAddr, const std::string &randomAddr) override;
     int32_t StartCrediblePair(int32_t transport, const std::string &address) override;
-    int32_t CountEnableTimes(bool enable) override;
     int32_t ConnectAllowedProfiles(const std::string &address) override;
     int32_t DisconnectAllowedProfiles(const std::string &address) override;
     int32_t SetDeviceCustomType(const std::string &address, int32_t deviceType) override;
@@ -131,6 +129,10 @@ public:
     void RegisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer) override;
     void DeregisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer) override;
     void UpdateVirtualDevice(int32_t action, const std::string &address) override;
+    int32_t IsSupportVirtualAutoConnect(const std::string &address, bool &outSupport) override;
+    int32_t SetVirtualAutoConnectType(const std::string &address, int connType, int businessType) override;
+    int32_t SetFastScanLevel(int level) override;
+    int32_t EnableBluetoothToRestrictMode(void) override;
 
 private:
     static sptr<BluetoothHostServer> instance;
