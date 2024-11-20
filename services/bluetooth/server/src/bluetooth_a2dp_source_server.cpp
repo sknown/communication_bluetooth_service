@@ -47,6 +47,19 @@ public:
         });
     }
 
+    void OnCaptureConnectionStateChanged(const RawAddress &device, int state, const A2dpSrcCodecInfo &info) override
+    {
+        HILOGI("addr: %{public}s, state: %{public}d", GET_ENCRYPT_ADDR(device), state);
+        observers_->ForEach([device, state, info](sptr<IBluetoothA2dpSourceObserver> observer) {
+            BluetoothA2dpCodecInfo tmpInfo {};
+            tmpInfo.bitsPerSample = info.bitsPerSample;
+            tmpInfo.channelMode = info.channelMode;
+            tmpInfo.codecType = info.codecType;
+            tmpInfo.sampleRate = info.sampleRate;
+            observer->OnCaptureConnectionStateChanged(device, state, tmpInfo);
+        });
+    }
+
     void OnPlayingStatusChaned(const RawAddress &device, int playingState, int error) override
     {
         HILOGI("addr: %{public}s, state: %{public}d, error: %{public}d",
@@ -248,7 +261,7 @@ int BluetoothA2dpSourceServer::GetDevicesByStates(const std::vector<int32_t> &st
     HILOGI("starts");
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
-        return RET_NO_SUPPORT;
+        return BT_ERR_PERMISSION_FAILED;
     }
     std::vector<int> tmpStates;
     for (int32_t state : states) {
