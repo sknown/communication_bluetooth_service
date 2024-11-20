@@ -97,9 +97,11 @@ bool ClassicAdapterProperties::SetLocalName(const std::string &name)
     std::lock_guard<std::recursive_mutex> lock(propertiesMutex_);
 
     int length = name.length();
-    if (length >= MAX_LOC_BT_NAME_LEN) {
-        length = MAX_LOC_BT_NAME_LEN;
-        deviceName_ = name.substr(0, length);
+    if (length > MAX_LOC_BT_NAME_LEN) {
+        std::string ellipsis = "...";
+        int limitLength = MAX_LOC_BT_NAME_LEN - ellipsis.length();
+        deviceName_ = name.substr(0, limitLength);
+        deviceName_ += ellipsis;
     } else {
         deviceName_ = name;
     }
@@ -549,6 +551,50 @@ bool ClassicAdapterProperties::SaveSupportUuids(const std::vector<Uuid> &uuids)
     ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetEirData", ret);
 
     return ret;
+}
+
+bool ClassicAdapterProperties::SetHidPnpInfo(const std::string &addr, int vendorId, int productId, int version)
+{
+    bool retVendorId = config_.SetRemoteHidVendorId(addr, vendorId);
+    ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidVendorId", retVendorId);
+
+    bool retProductId = config_.SetRemoteHidProductId(addr, productId);
+    ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidProductId", retProductId);
+
+    bool retVersion = config_.SetRemoteHidVersion(addr, version);
+    ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidVersion", retVersion);
+
+    if (retVendorId && retProductId && retVersion) {
+        return true;
+    }
+    return false;
+}
+
+bool ClassicAdapterProperties::SetHidDescInfo(const std::string &addr, int ctryCode, const std::string &descInfo)
+{
+    bool retCtryCode = config_.SetRemoteHidCtryCode(addr, ctryCode);
+    ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidCtryCode", retCtryCode);
+
+    bool retDescInfo = config_.SetRemoteHidDescInfo(addr, descInfo);
+    ClassicUtils::CheckReturnValue("ClassicAdapaterProperties", "SetRemoteHidProductId", retDescInfo);
+
+    if (retCtryCode && retDescInfo) {
+        return true;
+    }
+    return false;
+}
+
+void ClassicAdapterProperties::GetHidPnpInfo(const std::string &addr, int &vendorId, int &productId, int &version)
+{
+    vendorId = config_.GetRemoteHidVendorId(addr);
+    productId = config_.GetRemoteHidProductId(addr);
+    version = config_.GetRemoteHidVersion(addr);
+}
+
+void ClassicAdapterProperties::GetHidDescInfo(const std::string &addr, int &ctryCode, std::string &descInfo)
+{
+    ctryCode = config_.GetRemoteHidCtryCode(addr);
+    descInfo = config_.GetRemoteHidDescInfo(addr);
 }
 }  // namespace bluetooth
 }  // namespace OHOS

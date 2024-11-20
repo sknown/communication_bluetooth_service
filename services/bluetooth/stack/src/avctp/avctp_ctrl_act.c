@@ -189,8 +189,7 @@ uint16_t AvctCbCtrlChConnInd(AvctCbDev *cbDev, const AvctEvtData *data)
                 /* find the connection to the device and send cfm event to app */
                 bind = true;
                 AvctCbConnEvtCallback(cbConn, AVCT_CONNECT_CFM_EVT, AVCT_SUCCESS, &(cbConn->cbDev->peerAddr));
-            } else if ((cbConn->cbDev == NULL) && (cbConn->connParam.role == AVCT_ACPT) &&
-                       (AvctGetCbConnByPid(cbDev, cbConn->connParam.pid) == NULL)) {
+            } else if ((cbConn->cbDev == NULL) && (cbConn->connParam.role == AVCT_ACPT)) {
                 /* bind the connection(ACCEPT) to the device */
                 bind = true;
                 cbConn->cbDev = cbDev;
@@ -357,14 +356,18 @@ NO_SANITIZE("cfi") uint16_t AvctCbCtrlRevMsg(AvctCbDev *cbDev, const AvctEvtData
         LOG_WARN("[AVCT] %{public}s: Invalid ipid!", __func__);
         return ret;
     }
-    /* Get the conn by pid */
-    AvctCbConn *cbConn = AvctGetCbConnByPid(cbDev, pid);
-    if (cbConn != NULL) {
-        /* Send msg to app */
-        if (cbConn->connParam.msgCallback != NULL) {
+    /* call all cb of pid */
+    uint8_t conId = 255; //invalid value
+    for (uint8_t i = 0; i <= AVCT_MAX_CONNECTS;) {
+        AvctCbConn *cbConn = AvctGetCbConidConn(cbDev, pid, i, &conId);
+        if ((cbConn != NULL) && (cbConn->connParam.msgCallback != NULL)) {
             (*cbConn->connParam.msgCallback)(cbConn->connId, label, cr, AVCT_DATA_CTRL, pkt, cbConn->connParam.context);
+            i = conId + 1;
+            continue;
+        } else if (conId < AVCT_MAX_CONNECTS) {
+            return ret;
         }
-        return ret;
+        break;
     }
     LOG_DEBUG("[AVCT] %{public}s: ---------cbConn is null--------!", __func__);
     /* Don't find pid connection,send reject */

@@ -84,6 +84,8 @@ BluetoothA2dpSrcStub::BluetoothA2dpSrcStub()
         &BluetoothA2dpSrcStub::DisableAutoPlayInner;
     memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_GET_AUTO_PLAY_DISABLED_DURATION)] =
         &BluetoothA2dpSrcStub::GetAutoPlayDisabledDurationInner;
+    memberFuncMap_[static_cast<uint32_t>(BluetoothA2dpSrcInterfaceCode::BT_A2DP_SRC_GET_VIRTUALDEVICE_LIST)] =
+        &BluetoothA2dpSrcStub::GetVirtualDeviceListInner;
 }
 
 BluetoothA2dpSrcStub::~BluetoothA2dpSrcStub()
@@ -410,15 +412,18 @@ ErrCode BluetoothA2dpSrcStub::WriteFrameInner(MessageParcel &data, MessageParcel
 
 ErrCode BluetoothA2dpSrcStub::GetRenderPositionInner(MessageParcel &data, MessageParcel &reply)
 {
-    uint16_t delayValue;
-    uint16_t sendDataSize;
+    uint32_t delayValue;
+    uint64_t sendDataSize;
     uint32_t timeStamp;
-    GetRenderPosition(delayValue, sendDataSize, timeStamp);
-    if (!reply.WriteUint16(delayValue)) {
+    int result = GetRenderPosition(RawAddress(data.ReadString()), delayValue, sendDataSize, timeStamp);
+    if (!reply.WriteUint32(result)) {
+        return TRANSACTION_ERR;
+    }
+    if (!reply.WriteUint32(delayValue)) {
         HILOGE("BluetoothA2dpSrcStub: GetRenderPositionInner reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
     }
-    if (!reply.WriteUint16(sendDataSize)) {
+    if (!reply.WriteUint64(sendDataSize)) {
         HILOGE("BluetoothA2dpSrcStub: GetRenderPositionInner reply writing failed in: %{public}s.", __func__);
         return TRANSACTION_ERR;
     }
@@ -474,6 +479,16 @@ ErrCode BluetoothA2dpSrcStub::DisableAutoPlayInner(MessageParcel &data, MessageP
 }
 
 ErrCode BluetoothA2dpSrcStub::GetAutoPlayDisabledDurationInner(MessageParcel &data, MessageParcel &reply)
+{
+    HILOGI("Not Support");
+    if (!reply.WriteInt32(BT_ERR_API_NOT_SUPPORT)) {
+        HILOGE("BluetoothA2dpSrcStub: WriteFrameInner reply writing failed in: %{public}s.", __func__);
+        return TRANSACTION_ERR;
+    }
+    return NO_ERROR;
+}
+
+ErrCode BluetoothA2dpSrcStub::GetVirtualDeviceListInner(MessageParcel &data, MessageParcel &reply)
 {
     HILOGI("Not Support");
     if (!reply.WriteInt32(BT_ERR_API_NOT_SUPPORT)) {

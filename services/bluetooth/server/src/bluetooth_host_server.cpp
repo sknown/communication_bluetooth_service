@@ -43,7 +43,6 @@
 #include "interface_adapter_classic.h"
 #include "interface_profile_manager.h"
 #include "ipc_skeleton.h"
-#include "permission_utils.h"
 #include "raw_address.h"
 #include "remote_observer_list.h"
 #include "string_ex.h"
@@ -177,6 +176,16 @@ public:
     AdapterStateObserver(BluetoothHostServer::impl *impl) : impl_(impl){};
     ~AdapterStateObserver() override = default;
 
+    static void OnStateChangeV2(BTTransport transport, BTStateID state, sptr<IBluetoothHostObserver> &observer)
+    {
+        if (transport == BTTransport::ADAPTER_BREDR && state == BTStateID::STATE_TURN_ON) {
+            observer->OnBluetoothStateChanged(BluetoothSwitchState::STATE_ON);
+        }
+        if (transport == BTTransport::ADAPTER_BLE && state == BTStateID::STATE_TURN_OFF) {
+            observer->OnBluetoothStateChanged(BluetoothSwitchState::STATE_OFF);
+        }
+    }
+
     void OnStateChange(const BTTransport transport, const BTStateID state) override
     {
         if (!impl_) {
@@ -194,6 +203,7 @@ public:
                     HILOGE("false, check permission failed");
                 } else {
                     observer->OnStateChanged(transport, state);
+                    OnStateChangeV2(transport, state, observer);
                 }
             });
             if (state == BTStateID::STATE_TURN_ON || state == BTStateID::STATE_TURN_OFF) {
@@ -214,6 +224,7 @@ public:
                     HILOGE("false, check permission failed");
                 } else {
                     observer->OnStateChanged(transport, state);
+                    OnStateChangeV2(transport, state, observer);
                 }
             });
             if (state == BTStateID::STATE_TURN_ON || state == BTStateID::STATE_TURN_OFF) {
@@ -223,7 +234,7 @@ public:
                     HiviewDFX::HiSysEvent::EventType::STATISTIC, "PID", pid, "UID", uid, "STATE", state);
             }
         }
-    };
+    }
 
 private:
     BluetoothHostServer::impl *impl_ = nullptr;
@@ -788,15 +799,32 @@ int32_t BluetoothHostServer::DisableBt()
     return BT_ERR_INTERNAL_ERROR;
 }
 
+static int32_t ConvertBTStateIDToBluetoothState(int32_t brState, int32_t bleState)
+{
+    BluetoothState state = BluetoothState::STATE_OFF;
+    switch (brState) {
+        case BTStateID::STATE_TURN_ON: state = BluetoothState::STATE_ON; break;
+        case BTStateID::STATE_TURNING_ON: state = BluetoothState::STATE_TURNING_ON; break;
+        case BTStateID::STATE_TURNING_OFF: state = BluetoothState::STATE_TURNING_OFF; break;
+        case BTStateID::STATE_TURN_OFF: {
+            switch (bleState) {
+                case BTStateID::STATE_TURN_ON: state = BluetoothState::STATE_BLE_ON; break;
+                case BTStateID::STATE_TURNING_ON: state = BluetoothState::STATE_BLE_TURNING_ON; break;
+                case BTStateID::STATE_TURNING_OFF: state = BluetoothState::STATE_BLE_TURNING_OFF; break;
+                default: break;
+            }
+        }
+        default: HILOGE("Invalid bt state"); break;
+    }
+    return static_cast<int32_t>(state);
+}
+
 int32_t BluetoothHostServer::GetBtState(int32_t &state)
 {
-    if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
-        HILOGE("false, check permission failed");
-        return BT_ERR_PERMISSION_FAILED;
-    }
-    state = IAdapterManager::GetInstance()->GetState(bluetooth::BTTransport::ADAPTER_BREDR);
-    HILOGI("state: %{public}d", state);
-    return NO_ERROR;
+    int32_t brState = IAdapterManager::GetInstance()->GetState(bluetooth::BTTransport::ADAPTER_BREDR);
+    int32_t bleState = IAdapterManager::GetInstance()->GetState(bluetooth::BTTransport::ADAPTER_BLE);
+    state = ConvertBTStateIDToBluetoothState(brState, bleState);
+    return BT_NO_ERROR;
 }
 
 sptr<IRemoteObject> BluetoothHostServer::GetProfile(const std::string &name)
@@ -1136,6 +1164,10 @@ int32_t BluetoothHostServer::CancelBtDiscovery()
 int32_t BluetoothHostServer::IsBtDiscovering(bool &isDisCovering, int32_t transport)
 {
     HILOGI("transport: %{public}d", transport);
+    if (PermissionUtils::VerifyAccessBluetoothPermission() == PERMISSION_DENIED) {
+        HILOGE("false, check permission failed");
+        return BT_ERR_PERMISSION_FAILED;
+    }
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
     auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     if ((transport == BTTransport::ADAPTER_BREDR) && IsBtEnabled() && classicService) {
@@ -1389,7 +1421,6 @@ int32_t BluetoothHostServer::GetPairState(int32_t transport, const std::string &
         pairState = bleService->GetPairState(addr);
     } else {
         HILOGE("transport invalid or BT current state is not enabled!");
-        return BT_ERR_INVALID_STATE;
     }
     return BT_NO_ERROR;
 }
@@ -1676,9 +1707,9 @@ void BluetoothHostServer::DeregisterRemoteDeviceObserver(const sptr<IBluetoothRe
 
 bool BluetoothHostServer::IsBtEnabled()
 {
-    int32_t state = bluetooth::BTStateID::STATE_TURN_OFF;
+    int32_t state = static_cast<int32_t>(BluetoothState::STATE_OFF);
     GetBtState(state);
-    bool isEnabled = (state == static_cast<int32_t>(bluetooth::BTStateID::STATE_TURN_ON)) ? true : false;
+    bool isEnabled = (state == static_cast<int32_t>(BluetoothState::STATE_ON)) ? true : false;
     HILOGI("%{public}s", isEnabled ? "true" : "false");
     return isEnabled;
 }
@@ -1797,17 +1828,7 @@ int32_t BluetoothHostServer::StartCrediblePair(int32_t transport, const std::str
     return NO_ERROR;
 }
 
-int32_t BluetoothHostServer::CountEnableTimes(bool enable)
-{
-    return NO_ERROR;
-}
-
-int32_t BluetoothHostServer::RestrictBluetooth()
-{
-    return BT_ERR_API_NOT_SUPPORT;
-}
-
-int32_t BluetoothHostServer::SatelliteControl(int state)
+int32_t BluetoothHostServer::SatelliteControl(int type, int state)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
@@ -1829,6 +1850,36 @@ int32_t BluetoothHostServer::SetDeviceCustomType(const std::string &address, int
 
 int32_t BluetoothHostServer::GetRemoteDeviceInfo(const std::string &address,
     std::shared_ptr<BluetoothRemoteDeviceInfo> &deviceInfo, int type)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+void BluetoothHostServer::RegisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer)
+{}
+
+void BluetoothHostServer::DeregisterBtResourceManagerObserver(const sptr<IBluetoothResourceManagerObserver> &observer)
+{}
+
+void BluetoothHostServer::UpdateVirtualDevice(int32_t action, const std::string &address)
+{}
+
+int32_t BluetoothHostServer::IsSupportVirtualAutoConnect(const std::string &address, bool &outSupport)
+{
+    outSupport = false;
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostServer::SetVirtualAutoConnectType(const std::string &address, int connType, int businessType)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostServer::SetFastScanLevel(int level)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostServer::EnableBluetoothToRestrictMode(void)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
