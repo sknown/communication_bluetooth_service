@@ -430,7 +430,8 @@ bool BleSecurity::SavePairKeyNotify(const BleGapCallbackParam &param) const
     std::vector<std::string> pairedAddrList = BleConfig::GetInstance().GetPairedAddrList();
     for (auto address : pairedAddrList) {
         RawAddress rawAddr(address);
-        if ((!INVALID_MAC_ADDRESS.compare(rawAddr.GetAddress())) || (rawAddr.GetAddress().empty())) {
+        std::string invalidMacAddress(INVALID_MAC_ADDRESS);
+        if ((!invalidMacAddress.compare(rawAddr.GetAddress())) || (rawAddr.GetAddress().empty())) {
             continue;
         }
         std::string peerIdentityAddr = BleConfig::GetInstance().GetPeerIdentityAddr(rawAddr.GetAddress());

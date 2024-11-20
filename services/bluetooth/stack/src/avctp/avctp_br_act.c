@@ -333,14 +333,18 @@ uint16_t AvctCbBrRevMsg(AvctCbDev *cbDev, const AvctEvtData *data)
         LOG_WARN("[AVCT] %{public}s: Invalid ipid!", __func__);
         return ret;
     }
-    /* Get the conn by pid */
-    AvctCbConn *cbConn = AvctGetCbConnByPid(cbDev, pid);
-    if (cbConn != NULL) {
-        /* Send msg to app */
-        if (cbConn->connParam.msgCallback != NULL) {
+    /* call all cb */
+    uint8_t conId = 255; //invalid value
+    for (uint8_t i = 0; i <= AVCT_MAX_CONNECTS;) {
+        AvctCbConn *cbConn = AvctGetCbConidConn(cbDev, pid, i, &conId);
+        if ((cbConn != NULL) && (cbConn->connParam.msgCallback != NULL)) {
             (*cbConn->connParam.msgCallback)(cbConn->connId, label, cr, AVCT_DATA_BR, pkt, cbConn->connParam.context);
+            i = conId + 1;
+            continue;
+        } else if (conId < AVCT_MAX_CONNECTS) {
+            return ret;
         }
-        return ret;
+        break;
     }
     /* Don't find pid connection,send reject */
     if (cr == AVCT_CMD) {

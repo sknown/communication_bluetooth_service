@@ -50,6 +50,39 @@ void BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged(const RawAddress &d
     }
 }
 
+void BluetoothA2dpSrcObserverProxy::OnCaptureConnectionStateChanged(const RawAddress &device, int state,
+    const BluetoothA2dpCodecInfo &info)
+{
+    MessageParcel data;
+    if (!data.WriteInterfaceToken(BluetoothA2dpSrcObserverProxy::GetDescriptor())) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged WriteInterfaceToken error");
+        return;
+    }
+    if (!data.WriteString(device.GetAddress())) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged write device error");
+        return;
+    }
+    if (!data.WriteInt32(state)) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged state error");
+        return;
+    }
+    if (!data.WriteParcelable(&info)) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnConfigurationChanged transport error");
+        return;
+    }
+
+    MessageParcel reply;
+    MessageOption option {
+        MessageOption::TF_ASYNC
+    };
+
+    ErrCode result = InnerTransact(BT_A2DP_SRC_OBSERVER_CAPTURE_CONNECTION_STATE_CHANGED, option, data, reply);
+    if (result != NO_ERROR) {
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnCaptureConnectionStateChanged done fail, error: %{public}d", result);
+        return;
+    }
+}
+
 void BluetoothA2dpSrcObserverProxy::OnPlayingStatusChanged(const RawAddress &device, int playingState, int error)
 {
     MessageParcel data;
@@ -169,7 +202,7 @@ ErrCode BluetoothA2dpSrcObserverProxy::InnerTransact(
     }
 }
 
-void BluetoothA2dpSrcObserverProxy::OnVirtualDeviceChanged(int32_t action, std::string &address)
+void BluetoothA2dpSrcObserverProxy::OnVirtualDeviceChanged(int32_t action, std::string address)
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothA2dpSrcObserverProxy::GetDescriptor())) {
