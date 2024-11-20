@@ -55,7 +55,7 @@ ohos_moduletest("btfw_hid_unit_test") {
     "c_utils:utils",
     "hilog:libhilog",
     "ipc:ipc_core",
-    "resource_management:global_resmgr"
+    "resource_management:global_resmgr",
   ]
 }
 

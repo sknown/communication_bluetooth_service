@@ -30,7 +30,7 @@ int BluetoothSocketServer::Connect(ConnectSocketParam &param, int &fd)
 {
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
-        return RET_NO_SUPPORT;
+        return BT_ERR_INTERNAL_ERROR;
     }
     IProfileSocket *socket = (IProfileSocket *)IProfileManager::GetInstance()->GetProfileService(PROFILE_NAME_SPP);
     if (socket != nullptr) {
@@ -44,7 +44,7 @@ int BluetoothSocketServer::Listen(ListenSocketParam &param, int &fd)
 {
     if (PermissionUtils::VerifyUseBluetoothPermission() == PERMISSION_DENIED) {
         HILOGE("false, check permission failed");
-        return RET_NO_SUPPORT;
+        return BT_ERR_PERMISSION_FAILED;
     }
 
     IProfileSocket *socket = (IProfileSocket *)IProfileManager::GetInstance()->GetProfileService(PROFILE_NAME_SPP);

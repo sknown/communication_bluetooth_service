@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
+#include <cinttypes>
 #include "../include/a2dp_encoder_sbc.h"
 #include <cmath>
 #include <cstring>
@@ -91,12 +91,12 @@ void A2dpSbcEncoder::ResetFeedingState(void)
     a2dpSbcEncoderCb_.sendDataSize = 0;
 }
 
-void A2dpSbcEncoder::GetRenderPosition(uint16_t &sendDataSize, uint32_t &timeStamp)
+void A2dpSbcEncoder::GetRenderPosition(uint64_t &sendDataSize, uint32_t &timeStamp)
 {
     std::lock_guard<std::recursive_mutex> lock(g_sbcMutex);
     sendDataSize = a2dpSbcEncoderCb_.sendDataSize;
     timeStamp = a2dpSbcEncoderCb_.timestamp;
-    LOG_INFO("[A2dpSbcEncoder] %{public}s sendDataSize = %{public}hu, timeStamp = %{public}u\n",
+    LOG_INFO("[A2dpSbcEncoder] %{public}s sendDataSize = %{public}" PRIu64 ", timeStamp = %{public}u\n",
         __func__, sendDataSize, timeStamp);
 }
 
@@ -305,11 +305,7 @@ void A2dpSbcEncoder::UpdateEncoderParam(void)
     A2dpSbcUpdateEncoderParams(encParams, codecCfgInfo);
 
     const uint16_t mtu = A2DP_SBC_MAX_PACKET_SIZE - A2DP_SBC_PACKET_HEAD_SIZE - A2DP_SBC_MEDIA_PAYLOAD_HEAD_SIZE;
-    if (mtu < a2dpSbcEncoderCb_.peerMtu) {
-        a2dpSbcEncoderCb_.mtuSize = mtu;
-    } else {
-        a2dpSbcEncoderCb_.mtuSize = a2dpSbcEncoderCb_.peerMtu;
-    }
+    a2dpSbcEncoderCb_.mtuSize = a2dpSbcEncoderCb_.peerMtu < mtu ? a2dpSbcEncoderCb_.peerMtu : mtu;
 
     samplingFreq = encParams->samplingFreq;
     encParams->bitRate = A2DP_SBC_DEFAULT_BITRATE;

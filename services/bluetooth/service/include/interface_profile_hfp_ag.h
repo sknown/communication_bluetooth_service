@@ -113,6 +113,14 @@ public:
      */
     virtual void OnHfpStackChanged(const RawAddress &device, int action)
     {}
+
+    /**
+     * @brief virtual device changed observer.
+     * @param action add or remove virtual device.
+     * @param address address on the virtual device.
+     * @since 12.0
+     */
+    virtual void OnVirtualDeviceChanged(int32_t action, std::string address) {};
 };
 
 /**
@@ -264,6 +272,23 @@ public:
      * @since 6
      */
     virtual void DeregisterObserver(HfpAgServiceObserver &observer) = 0;
+
+    /**
+     * @brief update hfp virtual device.
+     *
+     * @param actiion 0:add, 1:remove.
+     * @param address address of virtual device
+     * @since 12.0
+     */
+    virtual void UpdateVirtualDevice(int32_t action, const std::string &address) {};
+
+    /**
+     * @brief get hfp virtual device list.
+     *
+     * @param devices address of virtual device list.
+     * @since 12.0
+     */
+    virtual void GetVirtualDeviceList(std::vector<std::string> &devices) {};
 };
 }  // namespace bluetooth
 }  // namespace OHOS
