@@ -438,5 +438,15 @@ void BluetoothHfpAgServer::EnableBtCallLog(bool state)
 {
     HILOGI("enter");
 }
+
+void BluetoothHfpAgServer::GetVirtualDeviceList(std::vector<std::string> &devices)
+{
+    return;
+}
+
+void BluetoothHfpAgServer::UpdateVirtualDevice(int32_t action, const std::string &address)
+{
+    return;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

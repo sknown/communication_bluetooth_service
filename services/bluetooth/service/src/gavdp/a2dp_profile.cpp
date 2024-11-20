@@ -360,7 +360,7 @@ uint32_t A2dpProfile::GetPcmData(uint8_t *buf, uint32_t size)
     return actualReadBytes;
 }
 
-void A2dpProfile::GetRenderPosition(uint16_t &delayValue, uint16_t &sendDataSize, uint32_t &timeStamp)
+void A2dpProfile::GetRenderPosition(uint32_t &delayValue, uint64_t &sendDataSize, uint32_t &timeStamp)
 {
     LOG_INFO("[A2dpProfile] %{public}s\n", __func__);
 
@@ -604,7 +604,6 @@ int A2dpProfile::Connect(const BtAddr &device)
     } else {
         a2dpInstance = A2dpSnkProfile::GetInstance();
     }
-    FindOrCreatePeer(device, role);
     if (GetSDPInstance().FindSnkService(device, a2dpInstance, A2dpProfilePeer::SDPServiceCallback) != BT_SUCCESS) {
         LOG_WARN("[A2dpProfile]%{public}s SDP_ServiceSearch Error\n", __func__);
     }
@@ -687,7 +686,8 @@ int A2dpProfile::Stop(const uint16_t handle, const bool suspend)
         return ret;
     }
 
-    if (strcmp(A2DP_PROFILE_STREAMING.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0) {
+    if ((strcmp(A2DP_PROFILE_OPEN.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0) ||
+        (strcmp(A2DP_PROFILE_STREAMING.c_str(), peer->GetStateMachine()->GetStateName().c_str()) == 0)) {
         LOG_INFO("[A2dpProfile]%{public}s streaming exited now\n", __func__);
         peer->GetStateMachine()->ProcessMessage(msg);
     } else {
@@ -727,6 +727,7 @@ int A2dpProfile::Start(const uint16_t handle)
         } else {
             LOG_ERROR("[A2dpProfile]%{public}s Audio data is not ready\n", __func__);
         }
+        peer->GetStateMachine()->ProcessMessage(msg);
         return BT_SUCCESS;
     }
     if (!JudgeAllowedStreaming()) {
