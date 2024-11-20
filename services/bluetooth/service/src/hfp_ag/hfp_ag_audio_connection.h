@@ -291,7 +291,7 @@ private:
     // sco connection control
     static std::condition_variable g_cvAudioConnection;
     static std::mutex g_mutexAudioConnection;
-    static bool g_isAudioDisconnected;
+    static bool isAudioDisconnected;
 
     // Packet types
     static inline constexpr int PACKET_TYPE_HV1 = 0x00000001;
