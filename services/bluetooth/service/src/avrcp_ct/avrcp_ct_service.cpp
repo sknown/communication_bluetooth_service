@@ -502,7 +502,7 @@ void AvrcpCtService::ParseSDPInformation(
         if (serviceArray[i].classId->uuid16 == AVRC_CT_AV_REMOTE_CONTROL_TARGET) {
             peerAvrcpVersion = serviceArray[i].profileDescriptor->versionNumber;
             HILOGI("peerAvrcpVersion: %{public}x\n", peerAvrcpVersion);
-            if(peerAvrcpVersion >= AVCT_REV_1_4) {
+            if (peerAvrcpVersion >= AVCT_REV_1_4) {
                 peerFeatures = *(uint16_t*)serviceArray[i].attribute[0].attributeValue;
                 HILOGI("peerFeatures: %{public}x\n", peerFeatures);
             }
@@ -529,8 +529,7 @@ void AvrcpCtService::FindTgServiceCallback(
         if (serviceNum > 0) {
             ParseSDPInformation(btAddr, serviceArray, serviceNum);
             service->GetDispatcher()->PostTask(std::bind(&AvrcpCtService::AcceptActiveConnect, service, rawAddr));
-        }
-        else {
+        } else {
             service->GetDispatcher()->PostTask(std::bind(&AvrcpCtService::RejectActiveConnect, service, rawAddr));
         }
     }
