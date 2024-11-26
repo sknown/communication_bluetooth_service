@@ -1883,5 +1883,11 @@ int32_t BluetoothHostServer::EnableBluetoothToRestrictMode(void)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
+
+int32_t BluetoothHostServer::ControlDeviceAction(const std::string &deviceId, uint32_t controlType,
+    uint32_t controlTypeVal, uint32_t controlObject)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS

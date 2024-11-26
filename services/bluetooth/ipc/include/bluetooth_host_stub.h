@@ -109,6 +109,7 @@ private:
     int32_t SetVirtualAutoConnectTypeInner(MessageParcel &data, MessageParcel &reply);
     int32_t SetFastScanLevelInner(MessageParcel &data, MessageParcel &reply);
     int32_t EnableBluetoothToRestrictModeInner(MessageParcel &data, MessageParcel &reply);
+    int32_t ControlDeviceActionInner(MessageParcel &data, MessageParcel &reply);
 
     static const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParcel &, MessageParcel &)>>
         memberFuncMap_;
