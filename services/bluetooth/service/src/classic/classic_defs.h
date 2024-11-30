@@ -94,7 +94,7 @@ constexpr int BT_PROPERTY_ADAPTER_BONDED_MODE = 0x04;
 constexpr int BT_PROPERTY_ADAPTER_DISCOVERABLE_TIMEOUT = 0x05;
 
 /// Bluetooth device name's max length
-constexpr int MAX_LOC_BT_NAME_LEN = 30;
+constexpr int MAX_LOC_BT_NAME_LEN = 248;
 
 /// Extend inquiry response max length
 constexpr int MAX_EXTEND_INQUIRY_RESPONSE_LEN = 240;
