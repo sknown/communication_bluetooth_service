@@ -98,10 +98,7 @@ bool ClassicAdapterProperties::SetLocalName(const std::string &name)
 
     int length = name.length();
     if (length > MAX_LOC_BT_NAME_LEN) {
-        std::string ellipsis = "...";
-        int limitLength = MAX_LOC_BT_NAME_LEN - ellipsis.length();
-        deviceName_ = name.substr(0, limitLength);
-        deviceName_ += ellipsis;
+        deviceName_ = name.substr(0, MAX_LOC_BT_NAME_LEN);
     } else {
         deviceName_ = name;
     }
