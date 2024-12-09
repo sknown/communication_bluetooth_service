@@ -1615,6 +1615,16 @@ void BleAdapter::OnStopAdvertisingEvt() const
     }
 }
 
+void BleAdapter::SendDiscoveryResult(const RawAddress &device) const
+{
+    LOG_DEBUG("[BleAdapter] %{public}s", __func__);
+
+    if (pimpl->observer_ != nullptr) {
+        pimpl->observer_->ForEach(
+            [device](IAdapterBleObserver &observer) { observer.OnDiscoveryResult(device); });
+    }
+}
+
 int BleAdapter::GetAdvertisingStatus() const
 {
     LOG_DEBUG("[BleAdapter] %{public}s", __func__);

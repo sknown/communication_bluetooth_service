@@ -1114,8 +1114,10 @@ int32_t BluetoothHostServer::StartBtDiscovery()
         return BT_ERR_PERMISSION_FAILED;
     }
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
-    if (IsBtEnabled() && classicService) {
-        if (classicService->StartBtDiscovery()) {
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
+    if (IsBtEnabled()) {
+        if (classicService && bleService && classicService->StartBtDiscovery()) {
+            bleService->StartScan();
             return NO_ERROR;
         }
     } else {
@@ -1133,8 +1135,10 @@ int32_t BluetoothHostServer::CancelBtDiscovery()
         return BT_ERR_PERMISSION_FAILED;
     }
     auto classicService = IAdapterManager::GetInstance()->GetClassicAdapterInterface();
+    auto bleService = IAdapterManager::GetInstance()->GetBleAdapterInterface();
     if (IsBtEnabled() && classicService) {
-        if (classicService->CancelBtDiscovery()) {
+        if (classicService->CancelBtDiscovery() && bleService) {
+            bleService->StopScan();
             return NO_ERROR;
         }
     } else {

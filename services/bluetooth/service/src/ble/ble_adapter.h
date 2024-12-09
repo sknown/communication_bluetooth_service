@@ -163,6 +163,13 @@ public:
     void OnStopAdvertisingEvt() const;
 
     /**
+     * @brief Send discovery result.
+     *
+     * @param device Remote device.
+     */
+    void SendDiscoveryResult(const RawAddress &device) const;
+    
+    /**
      * @brief Read Remote Rssi Value.
      *
      * @return @c true sucessfull otherwise false.
