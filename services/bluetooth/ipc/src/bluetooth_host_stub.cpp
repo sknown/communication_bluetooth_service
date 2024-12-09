@@ -249,6 +249,9 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::SET_FAST_SCAN_LEVEL,
             std::bind(&BluetoothHostStub::SetFastScanLevelInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::GET_LOCAL_ACL_NUMS,
+            std::bind(&BluetoothHostStub::GetLocalAclNumsInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
         {BluetoothHostInterfaceCode::CTRL_DEVICE_ACTION,
             std::bind(&BluetoothHostStub::ControlDeviceActionInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
@@ -1351,6 +1354,11 @@ int32_t BluetoothHostStub::SetVirtualAutoConnectTypeInner(MessageParcel &data, M
 }
 
 int32_t BluetoothHostStub::SetFastScanLevelInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::GetLocalAclNumsInner(MessageParcel &data, MessageParcel &reply)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
