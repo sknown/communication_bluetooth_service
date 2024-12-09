@@ -518,7 +518,7 @@ int AvrcpCtService::FindTgService(const RawAddress &rawAddr) const
 }
 
 void AvrcpCtService::FindTgServiceCallback(
-   const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum, void *context)
+    const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum, void *context)
 {
     HILOGI("serviceNum: %{public}d", serviceNum);
 
