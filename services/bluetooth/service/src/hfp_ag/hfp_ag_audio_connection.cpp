@@ -227,7 +227,7 @@ int HfpAgAudioConnection::ConnectAudio() const
 
     BtAddr btAddr = ConvertToBtAddr(remoteAddr_);
     if (inUseCodec_ == HFP_AG_CODEC_MSBC) {
-        if (!msbcEscoFailed || (dev->lastParam == MSBC_ESCO_T2) && escoSupport_) {
+        if ((!msbcEscoFailed || (dev->lastParam == MSBC_ESCO_T2)) && escoSupport_) {
             return ConnectByMsbc(*dev, btAddr);
         } else {
             HILOGW("Need re-negotiate codec.");
