@@ -312,6 +312,8 @@ typedef struct {
 typedef struct {
     bool isPairing;
     BtAddr addr;
+    uint8_t isBonded;
+    LeEncKey encKey;
 } LeBondBlock;
 
 typedef struct {

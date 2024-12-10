@@ -542,7 +542,7 @@ bool BleSecurity::GapLeLocalEncryptionKeyReqEvent(const BleGapCallbackParam &par
         accept = GAP_ACCEPT;
         std::vector<uint8_t> vec;
         BleUtils::ConvertHexStringToInt(ltk, vec);
-        (void)memcpy_s(encKey.ltk, GAP_CSRK_SIZE, &vec[0], vec.size());
+        (void)memcpy_s(encKey.ltk, GAP_LTK_SIZE, &vec[0], vec.size());
         encKey.rand = std::stoull(rand);
         encKey.ediv = std::stoull(ediv);
     }
@@ -897,7 +897,23 @@ bool BleSecurity::StartPair(const RawAddress &device, uint8_t peerAddrType)
 
     BtAddr addr = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, peerAddrType};
     device.ConvertToUint8(addr.addr);
-    int ret = GAPIF_LePair(&addr);
+
+    LeEncKey encKey;
+    int ret = BT_SUCCESS;
+    (void)memset_s(&encKey, sizeof(encKey), 0x00, sizeof(encKey));
+    std::string ltk = BleConfig::GetInstance().GetLocalLtk(device.GetAddress());
+    std::string rand = BleConfig::GetInstance().GetLocalRand(device.GetAddress());
+    std::string ediv = BleConfig::GetInstance().GetLocalEdiv(device.GetAddress());
+    if ((!ltk.empty()) && (!rand.empty()) && (!ediv.empty())) {
+        std::vector<uint8_t> vec;
+        BleUtils::ConvertHexStringToInt(ltk, vec);
+        (void)memcpy_s(encKey.ltk, GAP_LTK_SIZE, &vec[0], vec.size());
+        encKey.rand = std::stoull(rand);
+        encKey.ediv = std::stoull(ediv);
+        ret = GAPIF_LePair(&addr, &encKey);
+    } else {
+        ret = GAPIF_LePair(&addr, nullptr);
+    }
     if (ret != BT_SUCCESS) {
         LOG_ERROR("[BleSecurity] %{public}s:GAP_LePair failed!", __func__);
     }

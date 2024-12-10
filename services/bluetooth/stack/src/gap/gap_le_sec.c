@@ -54,7 +54,7 @@ typedef struct {
 static LePairCallback g_lePairCallback;
 static LeSecurityCallback g_leSecurityCallback;
 
-static int GapLePair(const BtAddr *addr);
+static int GapLePair(const BtAddr *addr, const LeEncKey *encKey);
 
 static bool GapLeSecurityNeedAuthentication(const LeLocalInfo *localInfo)
 {
@@ -596,14 +596,14 @@ int GAP_LeRemoteEncryptionKeyRsp(const BtAddr *addr, uint8_t accept, LeEncKey en
             if (keyType == LE_KEY_TYPE_AUTHENTICATION) {
                 ret = SMP_StartEncryption(deviceInfo->handle, (uint8_t *)&encKey.rand, encKey.ediv, encKey.ltk);
             } else if (GapLeSecurityNeedAuthentication(localInfo)) {
-                ret = GapLePair(addr);
+                ret = GapLePair(addr, NULL);
                 GapGetLeBondBlock()->isPairing = true;
                 (void)memcpy_s(&GapGetLeBondBlock()->addr, sizeof(BtAddr), addr, sizeof(BtAddr));
             } else {
                 ret = SMP_StartEncryption(deviceInfo->handle, (uint8_t *)&encKey.rand, encKey.ediv, encKey.ltk);
             }
         } else if (accept == GAP_NOT_ACCEPT) {
-            ret = GapLePair(addr);
+            ret = GapLePair(addr, NULL);
             GapGetLeBondBlock()->isPairing = true;
             (void)memcpy_s(&GapGetLeBondBlock()->addr, sizeof(BtAddr), addr, sizeof(BtAddr));
         } else {
@@ -801,10 +801,11 @@ void GapClearPairingStatus(const BtAddr *addr)
     LeBondBlock *leBondBlock = GapGetLeBondBlock();
     if (GapAddrCompare(addr, &leBondBlock->addr)) {
         leBondBlock->isPairing = false;
+        leBondBlock->isBonded = false;
     }
 }
 
-static int GapLePair(const BtAddr *addr)
+static int GapLePair(const BtAddr *addr, const LeEncKey *encKey)
 {
     int ret = GAP_SUCCESS;
     LeConnectionInfoBlock *connectionInfoBlock = NULL;
@@ -819,34 +820,36 @@ static int GapLePair(const BtAddr *addr)
 
     connectionInfoBlock = GapGetLeConnectionInfoBlock();
     deviceInfo = ListForEachData(connectionInfoBlock->deviceList, GapFindLeConnectionDeviceByAddr, (void *)addr);
-    if (deviceInfo != NULL) {
-        if (deviceInfo->securityStatus == GAP_LE_SECURITY_STATUS_IDLE) {
-            deviceInfo->securityStatus = GAP_LE_SECURITY_STATUS_PAIR;
-            if (deviceInfo->role == LE_CONNECTION_ROLE_MASTER) {
+    if (deviceInfo == NULL) {
+        ret = GAP_ERR_INVAL_PARAM;
+    } else if (deviceInfo->securityStatus == GAP_LE_SECURITY_STATUS_IDLE) {
+        deviceInfo->securityStatus = GAP_LE_SECURITY_STATUS_PAIR;
+        if (deviceInfo->role == LE_CONNECTION_ROLE_MASTER) {
+            if (encKey == NULL) {
                 GapDoLePairFeatureReqCallback(deviceInfo);
             } else {
-                deviceInfo->isLocalSecurityRequest = true;
-                SMP_SendSecurityRequestToRemote(deviceInfo->handle, authReq);
+                SMP_StartEncryption(deviceInfo->handle, (uint8_t *)encKey->rand, encKey->ediv, encKey->ltk);
             }
         } else {
-            ret = GAP_ERR_INVAL_STATE;
+            deviceInfo->isLocalSecurityRequest = true;
+            SMP_SendSecurityRequestToRemote(deviceInfo->handle, authReq);
         }
     } else {
-        ret = GAP_ERR_INVAL_PARAM;
+        ret = GAP_ERR_INVAL_STATE;
     }
-
     return ret;
 }
 
 void GapLeDoPair(const void *addr)
 {
-    int ret = GapLePair(addr);
+    LeBondBlock *leBondBlock = GapGetLeBondBlock();
+    int ret = GapLePair(addr, leBondBlock->isBonded?&(leBondBlock->encKey):NULL);
     if (ret != BT_SUCCESS) {
         LOG_WARN("GapLePair ret = %{public}d", ret);
     }
 }
 
-int GAP_LePair(const BtAddr *addr)
+int GAP_LePair(const BtAddr *addr, const LeEncKey *encKey)
 {
     int ret;
 
@@ -864,12 +867,16 @@ int GAP_LePair(const BtAddr *addr)
         LeDeviceInfo *deviceInfo = NULL;
         deviceInfo = ListForEachData(connectionInfoBlock->deviceList, GapFindLeConnectionDeviceByAddr, (void *)addr);
         if (deviceInfo != NULL) {
-            ret = GapLePair(addr);
+            ret = GapLePair(addr, encKey);
         } else {
             ret = BTM_LeConnect(addr);
         }
         leBondBlock->isPairing = true;
         (void)memcpy_s(&leBondBlock->addr, sizeof(BtAddr), addr, sizeof(BtAddr));
+        if (encKey != NULL) {
+            leBondBlock->isBonded = true;
+            (void)memcpy_s(&leBondBlock->encKey, sizeof(LeEncKey), encKey, sizeof(LeEncKey));
+        }
     }
 
     return ret;

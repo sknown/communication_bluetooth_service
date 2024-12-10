@@ -816,10 +816,11 @@ BTSTACK_API int GAPIF_LeRequestSecurity(
 /**
  * @brief       BLE bonding procedure
  * @param[in]   addr                target device address
+ * @param[in]   encKey              target device LTK
  * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
-BTSTACK_API int GAPIF_LePair(const BtAddr *addr);
+BTSTACK_API int GAPIF_LePair(const BtAddr *addr, const LeEncKey *encKey);
 
 /**
  * @brief       Cancel BLE bonding procedure

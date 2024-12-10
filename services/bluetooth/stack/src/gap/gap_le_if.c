@@ -229,6 +229,12 @@ typedef struct {
     void *context;
 } GapLeDataSignatureConfirmationInfo;
 
+typedef struct {
+    int result;
+    BtAddr *addr;
+    LeEncKey *encKey;
+} GapLePairBondInfo;
+
 #ifdef GAP_LE_SUPPORT
 
 static void GapLeSetRoleTask(void *ctx)
@@ -1385,21 +1391,24 @@ int GAPIF_LeRequestSecurity(
 
 static void GapLePairTask(void *ctx)
 {
-    GapGeneralPointerInfo *info = ctx;
-    info->result = GAP_LePair(info->pointer);
+    GapLePairBondInfo *info = ctx;
+    info->result = GAP_LePair(info->addr, info->encKey);
 }
 
-int GAPIF_LePair(const BtAddr *addr)
+int GAPIF_LePair(const BtAddr *addr, const LeEncKey *encKey)
 {
     LOG_INFO("%{public}s: " BT_ADDR_FMT, __FUNCTION__, BT_ADDR_FMT_OUTPUT(addr->addr));
-    GapGeneralPointerInfo *ctx = MEM_MALLOC.alloc(sizeof(GapGeneralPointerInfo));
+    GapLePairBondInfo *ctx = MEM_MALLOC.alloc(sizeof(GapLePairBondInfo));
     if (ctx == NULL) {
         return BT_NO_MEMORY;
     }
 
-    (void)memset_s(ctx, sizeof(GapGeneralPointerInfo), 0x00, sizeof(GapGeneralPointerInfo));
+    (void)memset_s(ctx, sizeof(GapLePairBondInfo), 0x00, sizeof(GapLePairBondInfo));
 
-    ctx->pointer = (void *)addr;
+    ctx->addr = (BtAddr *)addr;
+    if (encKey != NULL) {
+        ctx->encKey = (LeEncKey *)encKey;
+    }
 
     int ret = GapRunTaskBlockProcess(GapLePairTask, ctx);
     if (ret == BT_SUCCESS) {

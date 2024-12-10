@@ -417,10 +417,11 @@ int GAP_LeRequestSecurity(
 /**
  * @brief       BLE bonding procedure
  * @param[in]   addr                target device address
+ * @param[in]   encKey              target device LTK
  * @return      @c BT_SUCCESS      : The function is executed successfully.
  *              @c otherwise        : The function is not executed successfully.
  */
-int GAP_LePair(const BtAddr *addr);
+int GAP_LePair(const BtAddr *addr, const LeEncKey *encKey);
 
 /**
  * @brief       Cancel BLE bonding procedure
