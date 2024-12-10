@@ -81,5 +81,10 @@ int BluetoothSocketServer::UpdateCocConnectionParams(const BluetoothSocketCocInf
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
+
+int BluetoothSocketServer::IsAllowSocketConnect(int socketType, const std::string &addr, bool &isAllowed)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
