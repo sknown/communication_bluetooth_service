@@ -137,7 +137,7 @@ int HfpAgAudioConnection::ConnectByMsbc(AudioDevice &dev, BtAddr btAddr) const
         ret = BTM_CreateEscoConnection(&param);
         HFP_AG_RETURN_IF_FAIL(ret);
         dev.lastParam = MSBC_ESCO_T2;
-    } else {
+    } else if(!BTM_IsSecureConnection(&btAddr)) {
         HILOGI("Try connect by MSBC T1.");
         BtmCreateEscoConnectionParam param = MSBC_T1_PARAM;
         param.addr = btAddr;
@@ -227,8 +227,7 @@ int HfpAgAudioConnection::ConnectAudio() const
 
     BtAddr btAddr = ConvertToBtAddr(remoteAddr_);
     if (inUseCodec_ == HFP_AG_CODEC_MSBC) {
-        if ((!msbcEscoFailed || ((dev->lastParam == MSBC_ESCO_T2) &&
-            !BTM_IsSecureConnection(&btAddr))) && escoSupport_) {
+        if (!msbcEscoFailed || (dev->lastParam == MSBC_ESCO_T2) && escoSupport_) {
             return ConnectByMsbc(*dev, btAddr);
         } else {
             HILOGW("Need re-negotiate codec.");
