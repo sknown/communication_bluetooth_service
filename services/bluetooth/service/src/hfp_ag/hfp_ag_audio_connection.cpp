@@ -137,7 +137,7 @@ int HfpAgAudioConnection::ConnectByMsbc(AudioDevice &dev, BtAddr btAddr) const
         ret = BTM_CreateEscoConnection(&param);
         HFP_AG_RETURN_IF_FAIL(ret);
         dev.lastParam = MSBC_ESCO_T2;
-    } else if(!BTM_IsSecureConnection(&btAddr)) {
+    } else if (!BTM_IsSecureConnection(&btAddr)) {
         HILOGI("Try connect by MSBC T1.");
         BtmCreateEscoConnectionParam param = MSBC_T1_PARAM;
         param.addr = btAddr;
