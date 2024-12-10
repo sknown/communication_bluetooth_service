@@ -56,7 +56,7 @@ std::string BleProperties::GetLocalName() const
 
 int BleProperties::GetUTF8StringLength(const char firstByte) const
 {
-    int length = UTF8_INVALID_BYTE_LENGTH;
+    int length = UTF8_SINGLE_BYTE_LENGTH;
     if ((firstByte & 0x80) == 0) {
         length = UTF8_SINGLE_BYTE_LENGTH;
     } else if ((firstByte & 0xE0) == 0xC0) {
@@ -74,14 +74,13 @@ int BleProperties::GetValidUTF8StringLength(const std::string &name) const
     int byteCount = 0;
     for (int i = 0; i < name.size();) {
         int utf8Length = GetUTF8StringLength(name[i]);
-        if (utf8Length == 0) {
-            ++i;
-            continue;
-        }
         if (byteCount + utf8Length > DEVICE_NAME_MAX_LEN) {
             break;
         }
         byteCount += utf8Length;
+        if (byteCount == DEVICE_NAME_MAX_LEN) {
+            return byteCount;
+        }
         i += utf8Length;
     }
     return byteCount;
