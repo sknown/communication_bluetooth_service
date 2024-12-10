@@ -26,6 +26,7 @@
 #include "classic_defs.h"
 #include "classic_utils.h"
 #include "compat.h"
+#include "dialog/dialog_pair.h"
 #include "interface_profile_manager.h"
 #include "securec.h"
 
@@ -1220,6 +1221,9 @@ void ClassicAdapter::SendPairConfirmed(const RawAddress &device, int reqType, in
 {
     HILOGI("reqType = %{public}d, number = %{public}d", reqType, number);
     BTTransport transport = ADAPTER_BREDR;
+    if (DialogPair::RequestBluetoothPairDialog(device, reqType, number)) {
+        HILOGI("ready to build dialog");
+    }
     pimpl->adapterObservers_.ForEach([transport, device, reqType, number](IAdapterClassicObserver &observer) {
         observer.OnPairConfirmed(transport, device, reqType, number);
     });
