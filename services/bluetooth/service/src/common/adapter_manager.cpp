@@ -32,12 +32,14 @@
 #include "base_observer_list.h"
 #include "bluetooth_common_event_helper.h"
 #include "class_creator.h"
+#include "foundation/communication/bluetooth_service/services/bluetooth/service/src/dialog/dialog_switch.h"
 #include "interface_adapter_classic.h"
 #include "permission_utils.h"
 #include "power_manager.h"
 #include "profile_config.h"
 #include "profile_service_manager.h"
 #include "sys_state_machine.h"
+
 
 namespace OHOS {
 namespace bluetooth {
@@ -351,6 +353,10 @@ bool AdapterManager::Enable(const BTTransport transport) const
     std::string propertynames[] = {PROPERTY_BREDR_TURNON, PROPERTY_BLE_TURNON};
 
     if (PermissionUtils::VerifyDiscoverBluetoothPermission() == PERMISSION_DENIED) {
+        if (GetState(transport) == BTStateID::STATE_TURN_OFF) {
+            LOG_INFO("RequestBluetoothSwitchDialog for permission confirm");
+            DialogSwitch::RequestBluetoothSwitchDialog(ENABLE_BLUETOOTH);
+        }
         LOG_ERROR("Enable() false, check permission failed");
         return false;
     }
