@@ -105,6 +105,7 @@ public:
     int DeregisterClientObserver(const BluetoothRawAddress &addr, const bluetooth::Uuid uuid,
         const sptr<IBluetoothClientSocketObserver> &observer) override;
     int UpdateCocConnectionParams(const BluetoothSocketCocInfo &info) override;
+    int IsAllowSocketConnect(int32_t socketType, const std::string &addr, bool &isAllowed) override;
 private:
     std::unique_ptr<SocketObserverList> socketObserverList_;
 };
