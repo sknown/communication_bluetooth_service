@@ -61,6 +61,7 @@ struct BluetoothHidHostServer::impl {
     std::unique_ptr<BluetoothHidHostCallback> observerImp_ = std::make_unique<BluetoothHidHostCallback>();
     IProfileHidHost *hidHostService_ = nullptr;
     std::vector<sptr<IBluetoothHidHostObserver>> advCallBack_;
+    std::mutex advCallBackMutex;
 
     IProfileHidHost *GetServicePtr()
     {
@@ -144,6 +145,7 @@ ErrCode BluetoothHidHostServer::RegisterObserver(const sptr<IBluetoothHidHostObs
     }
     auto func = std::bind(&BluetoothHidHostServer::DeregisterObserver, this, std::placeholders::_1);
     pimpl->observers_.Register(observer, func);
+    std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
     pimpl->advCallBack_.push_back(observer);
     return ERR_OK;
 }
@@ -159,12 +161,15 @@ ErrCode BluetoothHidHostServer::DeregisterObserver(const sptr<IBluetoothHidHostO
         HILOGE("pimpl is null");
         return ERR_NO_INIT;
     }
-    for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
-        if ((*iter)->AsObject() == observer->AsObject()) {
-            if (pimpl != nullptr) {
-                pimpl->observers_.Deregister(*iter);
-                pimpl->advCallBack_.erase(iter);
-                break;
+    {
+        std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
+        for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
+            if ((*iter)->AsObject() == observer->AsObject()) {
+                if (pimpl != nullptr) {
+                    pimpl->observers_.Deregister(*iter);
+                    pimpl->advCallBack_.erase(iter);
+                    break;
+                }
             }
         }
     }

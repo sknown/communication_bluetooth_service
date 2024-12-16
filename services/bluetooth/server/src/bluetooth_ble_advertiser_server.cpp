@@ -23,6 +23,7 @@
 #include "ipc_skeleton.h"
 #include "remote_observer_list.h"
 #include "permission_utils.h"
+#include "safe_map.h"
 
 namespace OHOS {
 namespace Bluetooth {
@@ -37,7 +38,7 @@ public:
         HILOGI("result: %{public}d, advHandle: %{public}d, opcode: %{public}d", result, advHandle, opcode);
 
         observers_->ForEach([this, result, advHandle, opcode](IBluetoothBleAdvertiseCallback *observer) {
-            int32_t uid = observersUid_[observer->AsObject()];
+            int32_t uid = observersUid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
                 HILOGD("uid:%{public}d is proxy uid, not callback.", uid);
                 return;
@@ -57,7 +58,7 @@ public:
         HILOGI("result: %{public}d, advHandle: %{public}d", result, advHandle);
 
         observers_->ForEach([this, result, advHandle](IBluetoothBleAdvertiseCallback *observer) {
-            int32_t uid = observersUid_[observer->AsObject()];
+            int32_t uid = observersUid_.ReadVal(observer->AsObject());
             if (BluetoothBleCentralManagerServer::IsProxyUid(uid)) {
                 HILOGD("uid:%{public}d is proxy uid, not callback.", uid);
                 return;
@@ -84,7 +85,7 @@ public:
         observers_ = observers;
     }
 
-    std::map<sptr<IRemoteObject>, int32_t> observersUid_;
+    SafeMap<sptr<IRemoteObject>, int32_t> observersUid_;
 
 private:
     RemoteObserverList<IBluetoothBleAdvertiseCallback> *observers_;
@@ -103,6 +104,7 @@ struct BluetoothBleAdvertiserServer::impl {
     RemoteObserverList<IBluetoothBleAdvertiseCallback> observers_;
     std::unique_ptr<BleAdvertiserCallback> observerImp_ = std::make_unique<BleAdvertiserCallback>();
     std::vector<sptr<IBluetoothBleAdvertiseCallback>> advCallBack_;
+    std::mutex advCallBackMutex;
 };
 
 class BluetoothBleAdvertiserServer::impl::SystemStateObserver : public ISystemStateObserver {
@@ -252,12 +254,12 @@ void BluetoothBleAdvertiserServer::RegisterBleAdvertiserCallback(const sptr<IBlu
         HILOGE("callback is null");
         return;
     }
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
     if (pimpl != nullptr) {
-        pimpl->observerImp_->observersUid_[callback->AsObject()] = IPCSkeleton::GetCallingUid();
+        pimpl->observerImp_->observersUid_.EnsureInsert(callback->AsObject(), IPCSkeleton::GetCallingUid());
         auto func = std::bind(&BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback,
             this, std::placeholders::_1);
         pimpl->observers_.Register(callback, func);
+        std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
         pimpl->advCallBack_.push_back(callback);
     }
 }
@@ -270,22 +272,18 @@ void BluetoothBleAdvertiserServer::DeregisterBleAdvertiserCallback(const sptr<IB
         HILOGE("callback is null, or pimpl is null");
         return;
     }
-    std::lock_guard<std::recursive_mutex> lock(mutex_);
-    for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
-        if ((*iter)->AsObject() == callback->AsObject()) {
-            HILOGI("Deregister observer");
-            pimpl->observers_.Deregister(*iter);
-            pimpl->advCallBack_.erase(iter);
-            break;
+    {
+        std::lock_guard<std::mutex> lock(pimpl->advCallBackMutex);
+        for (auto iter = pimpl->advCallBack_.begin(); iter != pimpl->advCallBack_.end(); ++iter) {
+            if ((*iter)->AsObject() == callback->AsObject()) {
+                HILOGI("Deregister observer");
+                pimpl->observers_.Deregister(*iter);
+                pimpl->advCallBack_.erase(iter);
+                break;
+            }
         }
     }
-    for (auto iter = pimpl->observerImp_->observersUid_.begin(); iter != pimpl->observerImp_->observersUid_.end();
-        ++iter) {
-        if (iter->first == callback->AsObject()) {
-            pimpl->observerImp_->observersUid_.erase(iter);
-            break;
-        }
-    }
+    pimpl->observerImp_->observersUid_.Erase(callback->AsObject());
 }
 
 int32_t BluetoothBleAdvertiserServer::GetAdvertiserHandle(int32_t &advHandle)
