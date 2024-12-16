@@ -252,6 +252,9 @@ const std::map<uint32_t, std::function<ErrCode(BluetoothHostStub *, MessageParce
         {BluetoothHostInterfaceCode::CTRL_DEVICE_ACTION,
             std::bind(&BluetoothHostStub::ControlDeviceActionInner,
                 std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
+        {BluetoothHostInterfaceCode::GET_CONNECTION_TIME,
+            std::bind(&BluetoothHostStub::GetLastConnectionTimeInner,
+                std::placeholders::_1, std::placeholders::_2, std::placeholders::_3)},
 };
 
 BluetoothHostStub::BluetoothHostStub(){};
@@ -1361,6 +1364,11 @@ int32_t BluetoothHostStub::EnableBluetoothToRestrictModeInner(MessageParcel &dat
 }
 
 int32_t BluetoothHostStub::ControlDeviceActionInner(MessageParcel &data, MessageParcel &reply)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
+
+int32_t BluetoothHostStub::GetLastConnectionTimeInner(MessageParcel &data, MessageParcel &reply)
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
