@@ -1889,5 +1889,10 @@ int32_t BluetoothHostServer::ControlDeviceAction(const std::string &deviceId, ui
 {
     return BT_ERR_API_NOT_SUPPORT;
 }
+
+int32_t BluetoothHostServer::GetLastConnectionTime(const std::string &address, int64_t &connectionTime)
+{
+    return BT_ERR_API_NOT_SUPPORT;
+}
 }  // namespace Bluetooth
 }  // namespace OHOS
