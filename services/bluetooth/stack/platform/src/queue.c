@@ -58,13 +58,13 @@ Queue *QueueCreate(uint32_t capacity)
     }
     return queue;
 ERROR:
-    if (queue != NULL) {
-        MutexDelete(queue->mutex);
-        SemaphoreDelete(queue->enqueueSem);
-        SemaphoreDelete(queue->dequeueSem);
-        ListDelete(queue->list);
-        free(queue);
-    }
+    
+    MutexDelete(queue->mutex);
+    SemaphoreDelete(queue->enqueueSem);
+    SemaphoreDelete(queue->dequeueSem);
+    ListDelete(queue->list);
+    free(queue);
+    
     return NULL;
 }
 
