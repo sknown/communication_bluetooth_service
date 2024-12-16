@@ -19,10 +19,12 @@ SUBSYSTEM_DIR = "//foundation/communication"
 BT_ROOT = "//foundation/communication/bluetooth_service/services/bluetooth"
 
 ohos_shared_library("bluetooth_server") {
-  # sanitize = {
-  #   cfi = true
-  #   blocklist = "./bluetooth_server_blocklist.txt"
-  # }
+  sanitize = {
+    cfi = true
+    blocklist = "./bluetooth_server_blocklist.txt"
+    cfi_cross_dso = true
+    debug = false
+  }
   stack_protector_ret = true
   include_dirs = [
     "include",

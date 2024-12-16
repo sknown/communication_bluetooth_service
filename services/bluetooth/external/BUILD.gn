@@ -32,9 +32,11 @@ config("btdummy_public_config") {
 }
 
 ohos_shared_library("btdummy") {
-  # sanitize = {
-  #   cfi = true
-  # }
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   stack_protector_ret = true
   configs = [ ":btdummy_config" ]
   public_configs = [ ":btdummy_public_config" ]

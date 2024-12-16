@@ -17,9 +17,11 @@ SUBSYSTEM_DIR = "//foundation/communication"
 PART_DIR = "$SUBSYSTEM_DIR/bluetooth_service/services/bluetooth"
 
 ohos_shared_library("bluetooth_hdi_adapter") {
-  # sanitize = {
-  #   cfi = true
-  # }
+  sanitize = {
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
   stack_protector_ret = true
   include_dirs = [
     "include",
