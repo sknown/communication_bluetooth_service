@@ -494,6 +494,7 @@ void HfpAgSystemInterface::GetVoiceNumber()
     HfpAgService *service = HfpAgService::GetService();
     if (service == nullptr) {
         LOG_ERROR("[HFP AG]%{public}s():service is nullptr", __FUNCTION__);
+        return;
     }
     std::string number = "1234567";
     // NEED TO GET VOICE TAG NUMBER, 1234567 JUST FOR TEST, INTERFACE NOT AVAIABLE NOW!
@@ -507,6 +508,7 @@ void HfpAgSystemInterface::GetResponseHoldState(std::string address)
     HfpAgService *service = HfpAgService::GetService();
     if (service == nullptr) {
         LOG_ERROR("[HFP AG]%{public}s():no service",  __FUNCTION__);
+        return;
     }
     int slotId = INVALID_SLOT_ID;
     CoreServiceClient::GetInstance().GetPrimarySlotId(slotId);
@@ -537,6 +539,7 @@ void HfpAgSystemInterface::SetResponseHoldState(std::string address, int btrh)
     HfpAgService *service = HfpAgService::GetService();
     if (service == nullptr) {
         LOG_ERROR("[HFP AG]%{public}s():no service",  __FUNCTION__);
+        return;
     }
     int slotId = INVALID_SLOT_ID;
     CoreServiceClient::GetInstance().GetPrimarySlotId(slotId);
@@ -693,6 +696,7 @@ void HfpAgSystemInterface::SendHfIndicator(const std::string &address, int indId
     HfpAgService *service = HfpAgService::GetService();
     if (service == nullptr) {
         LOG_ERROR("[HFP AG]%{public}s():service is nullptr", __FUNCTION__);
+        return;
     }
     if (indId == HFP_AG_HF_INDICATOR_ENHANCED_DRIVER_SAFETY_ID) {
         service->NotifyHfEnhancedDriverSafety(device, indValue);
