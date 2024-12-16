@@ -55,19 +55,19 @@ void BluetoothA2dpSrcObserverProxy::OnCaptureConnectionStateChanged(const RawAdd
 {
     MessageParcel data;
     if (!data.WriteInterfaceToken(BluetoothA2dpSrcObserverProxy::GetDescriptor())) {
-        HILOGE("BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged WriteInterfaceToken error");
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnCaptureConnectionStateChanged WriteInterfaceToken error");
         return;
     }
     if (!data.WriteString(device.GetAddress())) {
-        HILOGE("BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged write device error");
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnCaptureConnectionStateChanged write device error");
         return;
     }
     if (!data.WriteInt32(state)) {
-        HILOGE("BluetoothA2dpSrcObserverProxy::OnConnectionStateChanged state error");
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnCaptureConnectionStateChanged state error");
         return;
     }
     if (!data.WriteParcelable(&info)) {
-        HILOGE("BluetoothA2dpSrcObserverProxy::OnConfigurationChanged transport error");
+        HILOGE("BluetoothA2dpSrcObserverProxy::OnCaptureConnectionStateChanged transport error");
         return;
     }
 
