@@ -91,23 +91,12 @@ int AvrcCtProfile::Enable(bool isTgEnabled)
 
     int result = BT_SUCCESS;
     SetEnableFlag(true);
-
-    if (!isTgEnabled) {
-        /// If the following statement in the debt_config.xml. That means that TG allows to enable. CT do not
-        /// allow the passive connection. Because if CT and TG are registered passive connections, it will case that the
-        /// inability to distinguish between the end device
-        /// "<T1 property=" AvrcpTgService ">true</T1>"
-        AVCT_Register(controlMtu_, browseMtu_, AVCT_CT);
-
-        AvctConnectParam param = {eventCallback_, msgCallback_, AVRC_CT_AV_REMOTE_CONTROL, AVCT_ACPT, nullptr};
-        BtAddr btAddr = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, 0x00};
-        if (AVCT_ConnectReq(&connectId_, &param, &btAddr) != AVCT_SUCCESS) {
-            result = RET_BAD_STATUS;
-        }
-    } else {
-        /// CT is only allowed the active connection.
+    AVCT_Register(controlMtu_, browseMtu_, AVCT_CT);
+    AvctConnectParam param = {eventCallback_, msgCallback_, AVRC_CT_AV_REMOTE_CONTROL, AVCT_ACPT, nullptr};
+    BtAddr btAddr = {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, 0x00};
+    if (AVCT_ConnectReq(&connectId_, &param, &btAddr) != AVCT_SUCCESS) {
+        result = RET_BAD_STATUS;
     }
-
     return result;
 }
 

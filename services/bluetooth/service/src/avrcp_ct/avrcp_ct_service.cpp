@@ -211,7 +211,7 @@ int AvrcpCtService::EnableProfile(void)
     config->GetValue(SECTION_AVRCP_CT_SERVICE, PROPERTY_BROWSE_MTU, browseMtu);
     config->GetValue(SECTION_CLASSIC_ADAPTER, PROPERTY_AVRCP_TG_SERVICE, isTgEnabled);
 
-    profile_ = std::make_unique<AvrcCtProfile>(features_,
+    profile_ = std::make_unique<AvrcCtProfile>(features_ & AVRC_CT_SDP_ALL_SUPPORTED_FEATURES,
         AVRC_CT_DEFAULT_BLUETOOTH_SIG_COMPANY_ID,
         controlMtu,
         browseMtu,
@@ -487,6 +487,29 @@ void AvrcpCtService::RejectActiveConnect(const RawAddress &rawAddr) const
     HILOGI("address: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
 }
 
+// Parse AVRCP SDP Information
+// supports browsing || supports advanced control
+void AvrcpCtService::ParseSDPInformation(
+    const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum)
+{
+    HILOGI("serviceNum(%{public}d)\n", serviceNum);
+
+    uint16_t peerFeatures = 0;
+    uint16_t peerAvrcpVersion = 0;
+
+    for (int i = 0; i < serviceNum; i++) {
+        HILOGI("uuid16: %{public}4x\n", serviceArray[i].classId->uuid16);
+        if (serviceArray[i].classId->uuid16 == AVRC_CT_AV_REMOTE_CONTROL_TARGET) {
+            peerAvrcpVersion = serviceArray[i].profileDescriptor->versionNumber;
+            HILOGI("peerAvrcpVersion: %{public}x\n", peerAvrcpVersion);
+            if (peerAvrcpVersion >= AVCT_REV_1_4) {
+                peerFeatures = *(uint16_t*)serviceArray[i].attribute[0].attributeValue;
+                HILOGI("peerFeatures: %{public}x\n", peerFeatures);
+            }
+        }
+    }
+}
+
 int AvrcpCtService::FindTgService(const RawAddress &rawAddr) const
 {
     HILOGI("address: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
@@ -495,15 +518,16 @@ int AvrcpCtService::FindTgService(const RawAddress &rawAddr) const
 }
 
 void AvrcpCtService::FindTgServiceCallback(
-    const BtAddr *btAddr, const uint32_t *handleArray, uint16_t handleCount, void *context)
+    const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum, void *context)
 {
-    HILOGI("handleCount: %{public}d", handleCount);
+    HILOGI("serviceNum: %{public}d", serviceNum);
 
     auto servManager = IProfileManager::GetInstance();
     auto service = static_cast<AvrcpCtService *>(servManager->GetProfileService(PROFILE_NAME_AVRCP_CT));
     RawAddress rawAddr(RawAddress::ConvertToString(btAddr->addr));
     if (service != nullptr) {
-        if (handleCount > 0) {
+        if (serviceNum > 0) {
+            ParseSDPInformation(btAddr, serviceArray, serviceNum);
             service->GetDispatcher()->PostTask(std::bind(&AvrcpCtService::AcceptActiveConnect, service, rawAddr));
         } else {
             service->GetDispatcher()->PostTask(std::bind(&AvrcpCtService::RejectActiveConnect, service, rawAddr));
@@ -2211,7 +2235,9 @@ void AvrcpCtService::ChannelMessageCallback(
 {
     HILOGI("connectId: %{public}d, label: %{public}d, crType: %{public}d, chType: %{public}d",
         connectId, label, crType, chType);
-
+    if (!crType) {
+        return;
+    }
     auto servManager = IProfileManager::GetInstance();
     auto service = static_cast<AvrcpCtService *>(servManager->GetProfileService(PROFILE_NAME_AVRCP_CT));
     auto myPkt = PacketRefMalloc(pkt);
