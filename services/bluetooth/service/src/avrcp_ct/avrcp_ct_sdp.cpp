@@ -18,6 +18,8 @@
 
 namespace OHOS {
 namespace bluetooth {
+const int ATTR_NUMBER2 = 2;
+const int ATTR_NUMBER1 = 1;
 /// Number of items when add service class id list.
 const uint16_t AVRC_SERVICE_CLASS_ID_LIST_NUMBER = 0x0002;
 /// Number of items when add protocol descriptor.
@@ -114,19 +116,30 @@ int AvrcCtSdpManager::UnregisterService(void) const
 }
 
 int AvrcCtSdpManager::FindTgService(const RawAddress &rawAddr,
-    void (*callback)(const BtAddr *btAddr, const uint32_t *handleArray, uint16_t handleNum, void *context))
+    void (*callback)(const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum, void *context))
 {
     HILOGI("address: %{public}s", GET_ENCRYPT_AVRCP_ADDR(rawAddr));
 
     BtAddr btAddr;
     rawAddr.ConvertToUint8(btAddr.addr);
 
-    BtUuid classIdList[AVRC_SERVICE_CLASS_ID_LIST_NUMBER - 1];
+    BtUuid classIdList[AVRC_SERVICE_CLASS_ID_LIST_NUMBER];
     classIdList[0].type = BT_UUID_16;
-    classIdList[0].uuid16 = AVRC_CT_AV_REMOTE_CONTROL_TARGET;
-    SdpUuid sdpUuid = {.uuidNum = AVRC_SERVICE_CLASS_ID_LIST_NUMBER - 1, .uuid = classIdList};
+    classIdList[0].uuid16 = AVRC_CT_AV_REMOTE_CONTROL;
+    SdpUuid sdpUuid = {
+        .uuidNum = AVRC_SERVICE_CLASS_ID_LIST_NUMBER,
+        .uuid = classIdList
+    };
 
-    int result = SDP_ServiceSearch(&btAddr, &sdpUuid, nullptr, callback);
+    SdpAttributeIdList attributeIdList;
+    attributeIdList.type = SDP_TYPE_LIST;
+
+    attributeIdList.attributeIdList.attributeIdNumber = AVRC_SDP_ATTRIBUTE_NUM;
+    attributeIdList.attributeIdList.attributeId[0] = SDP_ATTRIBUTE_SERVICE_CLASS_ID_LIST;
+    attributeIdList.attributeIdList.attributeId[ATTR_NUMBER1] = SDP_ATTRIBUTE_BLUETOOTH_PROFILE_DESCRIPTOR_LIST;
+    attributeIdList.attributeIdList.attributeId[ATTR_NUMBER2] = AVRC_CT_ATTRIBUTE_ID_SUPPORTED_FEATURES;
+
+    int result = SDP_ServiceSearchAttribute(&btAddr, &sdpUuid, attributeIdList, nullptr, callback);
     (result == BT_SUCCESS) ? (result = BT_SUCCESS) : (result = RET_BAD_STATUS);
 
     return result;

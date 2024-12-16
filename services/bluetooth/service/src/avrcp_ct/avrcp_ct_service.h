@@ -610,7 +610,7 @@ private:
     /// The flag is used to indicate that the state of the AVRCP CT service.
     std::atomic_uint8_t state_ {AVRC_CT_SERVICE_STATE_DISABLED};
     /// The features supported by the AVRCP CT service.
-    uint16_t features_ {AVRC_CT_FEATURE_INVALID_FEATURE};
+    uint32_t features_ {AVRC_CT_FEATURE_INVALID_FEATURE};
 
     /// The observer registered by the AVRCP CT framework.
     /// @see AvrcCtProfile::Observer
@@ -770,13 +770,23 @@ private:
     /**
      * @brief The callback function that receives the search result return from the SDP.
      *
-     * @param[in] btAddr      The address of the peer Bluetooth device.
-     * @param[in] handleArray The list of handle to a qualifying service.
-     * @param[in] handleCount The number of handle to a qualifying service.
-     * @param[in] context     The context is used to send the event in the callback.
+     * @param[in] btAddr       The address of the peer Bluetooth device.
+     * @param[in] serviceArray The list of serviceArray to a qualifying service.
+     * @param[in] serviceNum   The number of serviceArray to a qualifying service.
+     * @param[in] context      The context is used to send the event in the callback.
      */
     static void FindTgServiceCallback(
-        const BtAddr *btAddr, const uint32_t *handleArray, uint16_t handleCount, void *context);
+        const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum, void *context);
+
+    // parse SDP_SERVICE_SEARCH_ATTR_RSP
+    /**
+     * @brief The parse function, which parse SDP search result.
+     *
+     * @param[in] btAddr        The address of the peer Bluetooth device.
+     * @param[in] serviceArray  The list of handle to a qualifying service.
+     * @param[in] serviceNum    The number of handle to a qualifying service.
+     */
+    static void ParseSDPInformation(const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum);
 
     /******************************************************************
      * BUTTON OPERATION                                               *

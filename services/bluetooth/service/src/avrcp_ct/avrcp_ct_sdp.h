@@ -17,6 +17,8 @@
 #define AVRCP_CT_SDP_H
 
 #include "avrcp_ct_internal.h"
+#include "sdp.h"
+#define AVRC_SDP_ATTRIBUTE_NUM 3
 
 namespace OHOS {
 namespace bluetooth {
@@ -71,7 +73,7 @@ public:
      * @retval RET_BAD_STATUS Execute failure.
      */
     static int FindTgService(const RawAddress &rawAddr,
-        void (*callback)(const BtAddr *btAddr, const uint32_t *handleArray, uint16_t handleNum, void *context));
+        void (*callback)(const BtAddr *btAddr, const SdpService *serviceArray, uint16_t serviceNum, void *context));
 
 private:
     uint32_t sdpHandle_;  // The handle got from the SDP.
